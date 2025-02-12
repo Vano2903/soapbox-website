@@ -1,38 +1,43 @@
 <script lang="ts">
 </script>
 
-<nav class="relative flex items-center justify-between bg-red-500">
-	<div class="flex">
-		<a class="mb-2 flex items-center bg-white leading-none lg:pr-10" href="/">
-			<img class="h-12 lg:h-16" src="/images/navbar/logo.jpg" alt="Logo ASD box rally" />
-			<span class="hidden h-12 items-end pb-2 text-base/6 whitespace-nowrap text-red-600 md:flex">
-				<span class="text-4xl font-bold">ASD</span>&nbsp;&nbsp;
-				<span class="hidden text-3xl lg:block"><span class="text-4xl">B</span>OXRALLY</span>
-			</span>
-		</a>
-		<div
-			class="border-t-[3rem] border-r-30 border-b-0 border-l-0 border-solid border-t-white border-r-transparent border-b-transparent border-l-transparent lg:border-t-[4rem]"
-		></div>
-	</div>
-	<div>
-		<a href="/chi-siamo">Chi siamo</a>
-		<a href="/campionati">Campionati</a>
-		<a href="/galleria">Galleria</a>
-	</div>
-	<div class="flex items-center">
-		<a href="/login" class="pr-2">Accedi</a>
-		<img class="h-12" src="/images/navbar/profile.svg" alt="Login icon" />
-	</div>
-	<!-- <div class="link-group">
-		<div class="links">
-			<a href="/chi-siamo">Chi siamo</a>
-			<a href="/campionati">Campionati</a>
-			<a href="/gallery">Galleria</a>
+<nav class="relative flex bg-red-600 md:justify-between">
+	<a
+		class="mb-2 flex flex-nowrap items-center bg-white leading-none md:pr-[2rem] lg:pr-[5rem]"
+		href="/"
+	>
+		<img class="h-12 md:pr-2 lg:h-16" src="/images/navbar/logo.jpg" alt="Logo ASD box rally" />
+		<span class="hidden h-12 items-end pb-1 text-base/6 whitespace-nowrap text-red-600 md:flex">
+			<span class="text-4xl font-extrabold lg:text-5xl">ASD</span>&nbsp;&nbsp;
+			<span class="hidden text-3xl font-bold lg:block"><span class="text-5xl">B</span>OXRALLY</span>
+		</span>
+	</a>
+
+	<div
+		class="border-t-[3rem] border-r-30 border-b-0 border-l-0 border-solid border-t-white border-r-transparent border-b-transparent border-l-transparent lg:border-t-[4rem]"
+	></div>
+
+	<div class="ml-2 hidden w-full items-center justify-between md:flex">
+		<div class="">
+			<!-- class="pr-10 text-2xl font-bold text-white"  -->
+			<a
+				class="rounded-md px-4 py-2 text-2xl font-bold text-white hover:bg-red-700 hover:text-white"
+				href="/chi-siamo">Chi siamo</a
+			>
+			<a
+				class="rounded-md px-4 py-2 text-2xl font-bold text-white hover:bg-red-700 hover:text-white"
+				href="/campionati">Campionati</a
+			>
+			<a
+				class="rounded-md px-4 py-2 text-2xl font-bold text-white hover:bg-red-700 hover:text-white"
+				href="/galleria">Galleria</a
+			>
 		</div>
-		<div class="login">
-			<a href="/login">Accedi</a>
+		<div class="flex items-center pr-2 text-white">
+			<a href="/login" class="pr-2">Accedi</a>
+			<img class="h-10 fill-current" src="/images/navbar/profile.svg" alt="Login icon" />
 		</div>
-	</div> -->
+	</div>
 </nav>
 
 <style>

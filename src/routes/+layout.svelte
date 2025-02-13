@@ -10,7 +10,7 @@
 
 	import { ModeWatcher } from 'mode-watcher';
 	import Navbar2 from '$components/navbar/Navbar2.svelte';
-	import Navbar3 from '$components/navbar/Navbar3.svelte';
+	// import Navbar3 from '$components/navbar/Navbar3.svelte';
 
 	let { children } = $props();
 </script>
@@ -28,9 +28,11 @@
 
 <!-- <ModeWatcher /> -->
 <div class="app">
-	<Navbar3 />
-	<hr class="py-10" />
-	<Navbar2 />
+	<!-- <Navbar3 /> -->
+	<!-- <hr class="py-10" /> -->
+	<header class="sticky top-0 z-50">
+		<Navbar2 />
+	</header>
 
 	<div class="content">
 		{@render children()}

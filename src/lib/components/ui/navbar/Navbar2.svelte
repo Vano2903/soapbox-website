@@ -1,7 +1,7 @@
 <script lang="ts">
 </script>
 
-<nav class="relative flex bg-red-600 md:justify-between">
+<nav class="relative flex bg-red-600 sm:pr-6 md:justify-between lg:pr-6">
 	<a
 		class="mb-2 flex flex-nowrap items-center bg-white leading-none md:pr-[2rem] lg:pr-[5rem]"
 		href="/"
@@ -17,7 +17,7 @@
 		class="border-t-[3rem] border-r-30 border-b-0 border-l-0 border-solid border-t-white border-r-transparent border-b-transparent border-l-transparent lg:border-t-[4rem]"
 	></div>
 
-	<div class="ml-2 hidden w-full items-center justify-between md:flex">
+	<div class="ml-2 hidden w-full items-center justify-between py-2 md:flex">
 		<div class="">
 			<!-- class="pr-10 text-2xl font-bold text-white"  -->
 			<a
@@ -33,7 +33,7 @@
 				href="/galleria">Galleria</a
 			>
 		</div>
-		<div class="flex items-center pr-2 text-white">
+		<div class="flex cursor-pointer items-center text-white">
 			<a href="/login" class="pr-2">Accedi</a>
 			<img class="h-10 fill-current" src="/images/navbar/profile.svg" alt="Login icon" />
 		</div>

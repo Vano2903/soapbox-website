@@ -26,11 +26,11 @@
 			>
 			<a
 				class="rounded-md px-4 py-2 text-2xl font-bold text-white hover:bg-red-700 hover:text-white"
-				href="/campionati">Campionati</a
+				href="/championships">Campionati</a
 			>
 			<a
 				class="rounded-md px-4 py-2 text-2xl font-bold text-white hover:bg-red-700 hover:text-white"
-				href="/galleria">Galleria</a
+				href="/gallery">Galleria</a
 			>
 		</div>
 		<div class="flex cursor-pointer items-center text-white">

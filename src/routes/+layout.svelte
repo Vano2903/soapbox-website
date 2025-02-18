@@ -9,8 +9,8 @@
 	import '../app.css';
 
 	import { ModeWatcher } from 'mode-watcher';
-	// import Navbar from '$components/navbar/Navbar.svelte';
 	import Navbar2 from '$components/navbar/Navbar2.svelte';
+	// import Navbar from '$components/navbar/Navbar.svelte';
 	// import Navbar3 from '$components/navbar/Navbar3.svelte';
 
 	let { children } = $props();

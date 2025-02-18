@@ -1,7 +1,25 @@
 <script lang="ts">
+	import type {
+		ChampionshipHeaderType,
+		ChampionshipLeaderboardType
+	} from '$tsTypes/championships/championshipLeaderboard';
+	import type { EventLeaderboardType } from '$tsTypes/championships/eventLeaderboard';
+	import type { LiveLeaderboardsType } from '$tsTypes/championships/liveLeaderboards';
 	import type { PageProps } from './$types';
 
-	const { liveLeaderboards, championshipLeaderboard, eventLeaderboard } = $props();
+	const {
+		liveLeaderboards,
+		championshipLeaderboard,
+		eventLeaderboard
+	}: {
+		liveLeaderboards: LiveLeaderboardsType;
+		championshipLeaderboard: ChampionshipLeaderboardType;
+		eventLeaderboard: EventLeaderboardType;
+	} = $props();
+
+	console.log('liveLeaderboards', liveLeaderboards);
+	console.log('championshipLeaderboard', championshipLeaderboard);
+	console.log('eventLeaderboard', eventLeaderboard);
 </script>
 
 <!-- #ich -->

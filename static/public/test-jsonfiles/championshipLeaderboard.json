@@ -1,0 +1,74 @@
+{
+	"year": 2024,
+	"header": [
+		{
+			"eventTitle": "Leffe",
+			"eventSubtitle": "23-04-2024"
+		},
+		{
+			"eventTitle": "Bergamo",
+			"eventSubtitle": "12-05-2024"
+		},
+		{
+			"eventTitle": "Villa d'Adda",
+			"eventSubtitle": "16-06-2024"
+		},
+		{
+			"eventTitle": "Peia",
+			"eventSubtitle": "29-09-2024"
+		}
+	],
+	"rows": [
+		{
+			"position": 1,
+			"teamId": 1,
+			"teamNumber": 1,
+			"teamName": "Rombo di Legno",
+			"results": [
+				{
+					"performed": true,
+					"status": "finished",
+					"position": 1,
+					"points": 22
+				},
+				{
+					"performed": true,
+					"status": "finished",
+					"position": 2,
+					"points": 18
+				},
+				{
+					"performed": true,
+					"status": "finished",
+					"position": 1,
+					"points": 22
+				}
+			],
+			"totalPoints": 62
+		},
+		{
+			"position": 8,
+			"teamId": 2,
+			"teamNumber": 44,
+			"teamName": "Il Muletto",
+			"results": [
+				{
+					"performed": true,
+					"status": "finished",
+					"position": 8,
+					"points": 4
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": true,
+					"status": "finished",
+					"position": 3,
+					"points": 15
+				}
+			],
+			"totalPoints": 19
+		}
+	]
+}

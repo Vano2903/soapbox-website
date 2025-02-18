@@ -14,7 +14,10 @@ const config = {
 		adapter: adapter(),
 		alias: {
 			$components: './src/lib/components/ui',
-			'@/*': './path/to/lib/*'
+			$tsTypes: './src/lib/types',
+			'@/*': './path/to/lib/*',
+
+			$testJson: './static/json-test'
 		}
 	}
 };

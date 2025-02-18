@@ -1,10 +1,10 @@
-import type { PageServerLoad } from './$types';
+import type { PageLoad } from './$types';
 
 import type { LiveLeaderboardsType } from '$tsTypes/championships/liveLeaderboards';
 import type { ChampionshipLeaderboardType } from '$tsTypes/championships/championshipLeaderboard';
 import type { EventLeaderboardType } from '$tsTypes/championships/eventLeaderboard';
 
-export const load: PageServerLoad = async ({
+export const load: PageLoad = async ({
 	fetch,
 	params
 }): Promise<{

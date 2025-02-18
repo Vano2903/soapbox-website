@@ -7,6 +7,8 @@
 	import type { LiveLeaderboardsType } from '$tsTypes/championships/liveLeaderboards';
 	import type { PageProps } from './$types';
 
+	const { data } = $props();
+
 	const {
 		liveLeaderboards,
 		championshipLeaderboard,
@@ -15,7 +17,7 @@
 		liveLeaderboards: LiveLeaderboardsType;
 		championshipLeaderboard: ChampionshipLeaderboardType;
 		eventLeaderboard: EventLeaderboardType;
-	} = $props();
+	} = data;
 
 	console.log('liveLeaderboards', liveLeaderboards);
 	console.log('championshipLeaderboard', championshipLeaderboard);
@@ -23,7 +25,7 @@
 </script>
 
 <!-- #ich -->
-{#if liveLeaderboards != null}
+{#if liveLeaderboards}
 	<h1>LIVE</h1>
 {/if}
 {#if championshipLeaderboard != null}

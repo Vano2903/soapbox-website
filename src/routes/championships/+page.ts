@@ -12,14 +12,14 @@ export const load: PageLoad = async ({
 	championshipLeaderboard: ChampionshipLeaderboardType;
 	eventLeaderboard: EventLeaderboardType;
 }> => {
-	let liveLeaderboardsJson = await fetch('test-jsonfiles/liveLeaderboards.json');
-	let championshipLeaderboardJson = await fetch('test-jsonfiles/championshipLeaderboard.json');
-	let eventLeaderboardJson = await fetch('test-jsonfiles/eventLeaderboard.json');
+	const liveLeaderboardsJson = await fetch('test-jsonfiles/liveLeaderboards.json');
+	const championshipLeaderboardJson = await fetch('test-jsonfiles/championshipLeaderboard.json');
+	const eventLeaderboardJson = await fetch('test-jsonfiles/eventLeaderboard.json');
 
-	let liveLeaderboards = (await liveLeaderboardsJson.json()) as LiveLeaderboardsType;
-	let championshipLeaderboard =
+	const liveLeaderboards = (await liveLeaderboardsJson.json()) as LiveLeaderboardsType;
+	const championshipLeaderboard =
 		(await championshipLeaderboardJson.json()) as ChampionshipLeaderboardType;
-	let eventLeaderboard = (await eventLeaderboardJson.json()) as EventLeaderboardType;
+	const eventLeaderboard = (await eventLeaderboardJson.json()) as EventLeaderboardType;
 
 	return {
 		liveLeaderboards,

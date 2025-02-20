@@ -49,9 +49,9 @@
 			</div>
 		{/each}
 	</div>
-	<div class="embla__controls">
-		<div class="embla__dots"></div>
-	</div>
+	<!-- <div class="embla__controls"> -->
+	<!-- 	<div class="embla__dots"></div> -->
+	<!-- </div> -->
 </div>
 
 <style>
@@ -59,7 +59,7 @@
 		overflow: hidden;
 	}
 	.embla__container {
-		height: calc(100%-72px);
+		max-height: calc(100vh - 72px);
 		display: flex;
 	}
 	.embla__slide {

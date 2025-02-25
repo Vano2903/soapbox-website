@@ -42,7 +42,7 @@
 					{/each}
 				</div>
 			</div>
-			<p class="pb-10 text-justify">
+			<p class="pb-4 text-justify text-base/5">
 				Lorem ipsum dolor, sit amet consectetur adipisicing elit. Recusandae tenetur explicabo odio
 				illum, et rationebeatae ipsa eum. Quaerat aut exercitationem rem laudantium id corrupti
 				libero blanditiis perspiciatis aspernatur esse. lorem ipsum dolor sit amet consectetur
@@ -54,8 +54,8 @@
 				voluptate fuga impedit ipsa culpa labore ab repellat, fugiat debitis molestias unde qui
 				soluta consequuntur rem!
 			</p>
-			<div class="flex justify-center">
-				<a href="/chi-siamo" class="group text-3xl font-bold transition duration-300">
+			<div class="flex justify-end">
+				<a href="/chi-siamo" class="group text-lg font-bold transition duration-300">
 					Conoscici Meglio
 					<span
 						class="mx-1 block h-1 max-w-0 bg-red-600 transition-all duration-500 group-hover:max-w-full"

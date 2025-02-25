@@ -1,7 +1,12 @@
 <script lang="ts">
+	const links = [
+		{ name: 'Chi siamo', href: '/chi-siamo' },
+		{ name: 'Campionati', href: '/championships' },
+		{ name: 'Galleria', href: '/gallery' }
+	];
 </script>
 
-<nav class="relative flex bg-red-600 sm:pr-6 md:justify-between lg:pr-6">
+<nav class="relative z-50 flex bg-red-600 sm:pr-6 md:justify-between lg:pr-6">
 	<a
 		class="mb-2 flex flex-nowrap items-center bg-white leading-none md:pr-[2rem] lg:pr-[5rem]"
 		href="/"
@@ -20,18 +25,12 @@
 	<div class="ml-2 hidden w-full items-center justify-between py-2 md:flex">
 		<div class="">
 			<!-- class="pr-10 text-2xl font-bold text-white"  -->
-			<a
-				class="rounded-md px-4 py-2 text-2xl font-bold text-white hover:bg-red-700 hover:text-white"
-				href="/chi-siamo">Chi siamo</a
-			>
-			<a
-				class="rounded-md px-4 py-2 text-2xl font-bold text-white hover:bg-red-700 hover:text-white"
-				href="/championships">Campionati</a
-			>
-			<a
-				class="rounded-md px-4 py-2 text-2xl font-bold text-white hover:bg-red-700 hover:text-white"
-				href="/gallery">Galleria</a
-			>
+			{#each links as link}
+				<a
+					class="rounded-md px-4 py-2 text-2xl font-bold text-white hover:bg-red-700 hover:text-white"
+					href={link.href}>{link.name}</a
+				>
+			{/each}
 		</div>
 		<div class="flex cursor-pointer items-center text-white">
 			<a href="/login" class="pr-2">Accedi</a>

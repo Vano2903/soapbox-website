@@ -1,4 +1,10 @@
-export type NewRaceType = {
+export enum EventKind {
+	NextEventKind = 'NextEventKind',
+	HighlightKind = 'HighlightKind'
+}
+
+export type EventType = {
+	kind: EventKind;
 	date: Date;
 	header: string;
 	title: string;

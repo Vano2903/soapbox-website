@@ -32,8 +32,5 @@
 	{/each}
 </Splide>
 
-.../lazy/blink.cmp/lua/blink/cmp/completion/accept/init.lua:85: attempt to call field
-'get_apply_end_position' (a nil value)
-
 <style>
 </style>

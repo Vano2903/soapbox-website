@@ -83,7 +83,12 @@
 				{#each sponsors as sponsor}
 					{#if sponsor.active}
 						<a href={sponsor.href} target="_blank">
-							<img class="w-24 object-contain" src={sponsor.link} alt={sponsor.alt} />
+							<img
+								loading="lazy"
+								class="w-24 object-contain"
+								src={sponsor.link}
+								alt={sponsor.alt}
+							/>
 						</a>
 					{/if}
 				{/each}

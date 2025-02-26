@@ -45,7 +45,7 @@
 	<div class="embla__container">
 		{#each images as { src, alt }}
 			<div class="embla__slide">
-				<img class="object-none sm:aspect-video sm:object-cover" {src} {alt} />
+				<img class="h-full w-full object-none sm:aspect-video sm:object-cover" {src} {alt} />
 			</div>
 		{/each}
 	</div>

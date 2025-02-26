@@ -36,7 +36,7 @@
 		<Navbar2 />
 	</header>
 
-	<div class="content">
+	<div class="page">
 		{@render children()}
 	</div>
 
@@ -44,6 +44,9 @@
 </div>
 
 <style>
+	.page {
+		min-height: calc(100dvh - 56px);
+	}
 	.app {
 		background-color: hsl(var(--background));
 		color: hsl(var(--foreground));

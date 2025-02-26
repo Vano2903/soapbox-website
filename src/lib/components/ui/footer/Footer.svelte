@@ -2,10 +2,10 @@
 	const basePath = '/images/footer/';
 	const sponsors = [
 		{
-			link: basePath + 'italianoptic.png',
+			link: basePath + 'eyc.svg',
 			active: true,
-			href: 'https://italianoptic.it/',
-			alt: 'italian optic'
+			href: 'https://eye-culture.webflow.io/',
+			alt: 'eye culture by ottica del borgo'
 		},
 		{
 			link: basePath + 'nettuno.avif',
@@ -62,14 +62,19 @@
 
 <footer class="flex min-h-[160px] flex-col bg-[#0d0f10] pt-2 pr-4 pl-4">
 	<hr class="mb-2 h-1.5 w-full rounded-sm border-0 bg-red-600" />
-	<div class="grid w-full grid-cols-6 gap-4">
-		<div class="col-span-3 space-y-2">
+	<div
+		class=" flex w-full grid-cols-1 grid-rows-4 flex-col gap-4 md:grid md:grid-cols-3 md:grid-rows-2 lg:grid-cols-6 lg:grid-rows-1"
+	>
+		<div class="flex flex-row flex-wrap space-y-2 md:col-span-full md:grid lg:col-span-3">
 			<div>
-				<span class="flex items-end pb-1 text-base/6 whitespace-nowrap text-gray-100">
-					<span class=" text-7xl font-extrabold">ASD</span>&nbsp;&nbsp;
-					<span class="text-5xl font-bold"><span class="text-7xl">B</span>OXRALLY</span>
+				<span class="flex flex-wrap items-end pb-1 text-base/6 text-gray-100 lg:whitespace-nowrap">
+					<span class="text-5xl font-extrabold md:text-7xl">ASD</span>&nbsp;&nbsp;
+					<span class="text-3xl font-bold md:text-5xl"
+						><span class="text-5xl md:text-7xl">B</span>OXRALLY</span
+					>
 				</span>
 			</div>
+			<div class="w-full"></div>
 			<!-- <div class="grid grid-cols-4 items-end justify-center"> -->
 			<!-- 	{#each sponsors as sponsor} -->
 			<!-- 		{#if sponsor.active} -->
@@ -79,7 +84,7 @@
 			<!-- 		{/if} -->
 			<!-- 	{/each} -->
 			<!-- </div> -->
-			<div class="flex items-center gap-3">
+			<div class="flex flex-wrap items-center gap-3 md:flex-nowrap">
 				{#each sponsors as sponsor}
 					{#if sponsor.active}
 						<a href={sponsor.href} target="_blank">

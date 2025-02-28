@@ -9,12 +9,13 @@
 	};
 
 	interface Props {
+		keysInteraction?: boolean;
 		handleClick: (value: string) => void;
 		elements: Element[];
 		offset: number;
 	}
 
-	let { handleClick, elements, offset }: Props = $props();
+	let { keysInteraction = false, handleClick, elements, offset }: Props = $props();
 
 	function getElements(): { left: Element[]; right: Element[]; current: Element } {
 		let currentIndex = elements.findIndex((elem) => elem.current);
@@ -65,6 +66,9 @@
 	};
 
 	function onKeyDown(e) {
+		if (keysInteraction === false) {
+			return;
+		}
 		switch (e.keyCode) {
 			case 37:
 				prevElement();

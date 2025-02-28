@@ -22,7 +22,12 @@
 <main>
 	<br />
 	<div class="flex justify-center">
-		<ElementSelection {offset} elements={years} handleClick={yearSelectionClick} />
+		<ElementSelection
+			{offset}
+			elements={years}
+			handleClick={yearSelectionClick}
+			keysInteraction={true}
+		/>
 	</div>
 </main>
 

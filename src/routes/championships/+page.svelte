@@ -9,7 +9,7 @@
 	import type { PageProps } from './$types';
 
 	import ElementSelection from '$components/elementSelection/elementSelection.svelte';
-	import { LucideOrigami, LucidePanelTop } from 'lucide-svelte';
+	import { LucideCalendarCheck, LucideRadio, LucideLock } from 'lucide-svelte';
 
 	// Page informations
 	const { data } = $props();
@@ -28,20 +28,20 @@
 	// console.log('eventLeaderboard', eventLeaderboard);
 
 	const years = [
-		{ value: '2020', current: false, disabled: false },
-		{ value: '2021', current: false, disabled: false },
-		{ value: '2022', current: false, disabled: false, icon: LucideOrigami },
-		{ value: '2023', current: false, disabled: false, icon: LucideOrigami },
-		{ value: '2024', current: true, disabled: false },
-		{ value: '2025', current: false, disabled: true, icon: LucidePanelTop },
-		{ value: '2026', current: false, disabled: true },
-		{ value: '2027', current: false, disabled: true }
+		{ value: '2020', current: false, disabled: false, icon: LucideCalendarCheck },
+		{ value: '2021', current: false, disabled: false, icon: LucideCalendarCheck },
+		{ value: '2022', current: false, disabled: false, icon: LucideCalendarCheck },
+		{ value: '2023', current: false, disabled: false, icon: LucideCalendarCheck },
+		{ value: '2024', current: true, disabled: false, icon: LucideRadio },
+		{ value: '2025', current: false, disabled: true, icon: LucideLock },
+		{ value: '2026', current: false, disabled: true, icon: LucideLock },
+		{ value: '2027', current: false, disabled: true, icon: LucideLock }
 	];
-	const stages = [
-		{ value: 'Leffe', current: false, disabled: false },
-		{ value: 'Bergamo', current: false, disabled: false },
-		{ value: "Villa d'Adda", current: true, disabled: false, icon: LucideOrigami },
-		{ value: 'Peia', current: false, disabled: false, icon: LucideOrigami }
+	const rallies = [
+		{ value: 'Leffe', current: false, disabled: false, icon: LucideCalendarCheck },
+		{ value: 'Bergamo', current: false, disabled: false, icon: LucideCalendarCheck },
+		{ value: "Villa d'Adda", current: false, disabled: false, icon: LucideCalendarCheck },
+		{ value: 'Peia', current: true, disabled: false, icon: LucideRadio }
 	];
 	const offset = 3;
 
@@ -60,7 +60,12 @@
 		<p class="text-gray-500">Lorem ipsum dolor sit amet</p>
 	</header>
 	<div class="flex justify-center pb-20">
-		<ElementSelection {offset} elements={years} handleClick={yearSelectionClick} />
+		<ElementSelection
+			{offset}
+			elements={years}
+			handleClick={yearSelectionClick}
+			keysInteraction={true}
+		/>
 	</div>
 	<div class="space-y-16">
 		<!--
@@ -71,7 +76,7 @@
 
 		{#if liveLeaderboards != null}
 			<section class="flex flex-col items-center">
-				<h1>CLASSIFICA EVENTO LIVE</h1>
+				<h1>CLASSIFICA RALLY LIVE</h1>
 			</section>
 		{/if}
 		{#if championshipLeaderboard != null}
@@ -126,9 +131,9 @@
 		{#if eventLeaderboard != null}
 			<section class="flex flex-col items-center">
 				<div class="flex justify-center pb-20">
-					<ElementSelection {offset} elements={stages} handleClick={stageSelectionClick} />
+					<ElementSelection {offset} elements={rallies} handleClick={stageSelectionClick} />
 				</div>
-				<h1>CLASSIFICA STAGES</h1>
+				<h1>CLASSIFICA RALLIES</h1>
 			</section>
 		{/if}
 	</div>

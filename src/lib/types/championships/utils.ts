@@ -4,7 +4,8 @@ export type PositionType = {
 }
 
 export enum ResultStatusType {
-	FINISHED = "Finished",
-	DNS = "Did Not Start",
-	DNF = "Did Not Finish",
+	CLASSIFIED = "CLS", // Classified
+	DID_NOT_START = "DNS", // Did Not Start
+	DID_NOT_FINISH = "DNF", // Did Not Finish
+	NOT_CLASSIFIED = "NC", // Not Classified
 }

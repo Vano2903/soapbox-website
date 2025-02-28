@@ -23,9 +23,9 @@
 		eventLeaderboard: EventLeaderboardType;
 	} = data;
 
-	// console.log('liveLeaderboards', liveLeaderboards);
-	// console.log('championshipLeaderboard', championshipLeaderboard);
-	// console.log('eventLeaderboard', eventLeaderboard);
+	console.log('liveLeaderboards', liveLeaderboards);
+	console.log('championshipLeaderboard', championshipLeaderboard);
+	console.log('eventLeaderboard', eventLeaderboard);
 
 	const years = [
 		{ value: '2020', current: false, disabled: false, icon: LucideCalendarCheck },
@@ -52,6 +52,9 @@
 	function stageSelectionClick(stage: string) {
 		console.log('stage click:', stage);
 	}
+
+	let showRowsNumber = $state(10);
+	let showAllButton = $state(championshipLeaderboard.rows.length > 10);
 </script>
 
 <main class="px-20 pb-16">
@@ -80,19 +83,25 @@
 			</section>
 		{/if}
 		{#if championshipLeaderboard != null}
-			<section class="flex flex-col items-center">
+			<section class="flex flex-col items-center overflow-x-auto">
 				<table class="border">
 					<thead>
 						<tr class="border text-3xl font-extrabold">
-							<th class="px-2">
+							<td class="px-2" colspan={3 + championshipLeaderboard.headers.length}>
 								CAMPIONATO {championshipLeaderboard.year}:
-							</th>
+							</td>
 						</tr>
 					</thead>
 					<tbody>
 						<tr class="border text-lg font-bold">
-							<th class="min-w-10 px-2"> Position </th>
-							<th class="min-w-10 px-2"> Team Number </th>
+							<th class="min-w-10 px-2">
+								<span class="md:hidden"> Pos. </span>
+								<span class="hidden md:block"> Position </span>
+							</th>
+							<th class="min-w-10 px-2">
+								<span class="md:hidden"> Number </span>
+								<span class="hidden md:block"> Team Number </span>
+							</th>
 							<th class="min-w-80 px-2"> Team Name </th>
 							{#each championshipLeaderboard.headers as header}
 								<th class="min-w-30 px-2">
@@ -100,18 +109,18 @@
 								</th>
 							{/each}
 						</tr>
-						{#each championshipLeaderboard.rows as row}
+						{#each championshipLeaderboard.rows.slice(0, showRowsNumber) as row}
 							<tr class="border">
-								<td class="min-w-10 px-2">{row.position}</td>
+								<td class="min-w-10 px-2 positionColor-{row.position}">{row.position}</td>
 								<td class="min-w-10 px-2">{row.teamNumber}</td>
 								<td class="min-w-80 px-2">{row.teamName}</td>
 								{#each row.results as result}
 									{#if result.performed === false}
 										<td class="min-w-30 px-2"></td>
-									{:else if result.status !== ResultStatusType.FINISHED}
+									{:else if result.status !== ResultStatusType.CLASSIFIED}
 										<td class="min-w-30 px-2">
 											<p class="flex justify-center">
-												{result.points} ({result.status.toString()})
+												{result.status}
 											</p>
 										</td>
 									{:else}
@@ -124,6 +133,18 @@
 								{/each}
 							</tr>
 						{/each}
+						<tr class="border" class:hidden={!showAllButton}>
+							<td
+								class="min-w-10 px-2"
+								colspan={3 + championshipLeaderboard.headers.length}
+								onclick={() => {
+									showRowsNumber = championshipLeaderboard.rows.length;
+									showAllButton = false;
+								}}
+							>
+								<p class="flex justify-center">Visualizza Tutti</p>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</section>
@@ -138,3 +159,15 @@
 		{/if}
 	</div>
 </main>
+
+<style>
+	.positionColor-1 {
+		background-color: var(--color-yellow-400);
+	}
+	.positionColor-2 {
+		background-color: var(--color-slate-300);
+	}
+	.positionColor-3 {
+		background-color: var(--color-amber-600);
+	}
+</style>

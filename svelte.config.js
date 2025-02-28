@@ -17,7 +17,7 @@ const config = {
 			$tsTypes: './src/lib/types',
 			'@/*': './path/to/lib/*',
 
-			$testJson: './static/json-test'
+			$testJson: './static/public/json-test'
 		}
 	}
 };

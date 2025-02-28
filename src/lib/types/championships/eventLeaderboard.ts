@@ -1,8 +1,8 @@
-import type { PositionType } from "$lib/types/championships/utils"
+import type { PositionType, ResultStatusType } from "$lib/types/championships/utils"
 
 export type EventLeaderboardType = {
 	race: string
-	header: EventHeaderType[]
+	headers: EventHeaderType[]
 	rows: EventRowType[]
 }
 
@@ -22,6 +22,7 @@ export type EventRowType = {
 
 export type StageResultType = {
 	performed: boolean
+	status: ResultStatusType
 	raceTime: string | null
 	penalties: string | null
 	finalTime: string | null

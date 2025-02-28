@@ -1,4 +1,4 @@
-import type { PositionType } from '$lib/types/championships/utils';
+import type { PositionType, ResultStatusType } from '$lib/types/championships/utils';
 
 export type LiveLeaderboardsType = {
 	event: LiveEventLeaderboardType;
@@ -13,6 +13,7 @@ export type LiveEventLeaderboardType = {
 
 export type LiveEventRowType = {
 	position: PositionType;
+	status: ResultStatusType;
 	teamId: number;
 	teamNumber: number;
 	teamName: string;
@@ -29,6 +30,7 @@ export type LiveChampionshipLeaderboardType = {
 
 export type LiveChampionshipRowType = {
 	position: PositionType;
+	status: ResultStatusType;
 	positionGain: number | null;
 	teamId: number;
 	teamNumber: number;

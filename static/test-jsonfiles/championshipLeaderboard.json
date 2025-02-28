@@ -1,6 +1,6 @@
 {
 	"year": 2024,
-	"header": [
+	"headers": [
 		{
 			"eventTitle": "Leffe",
 			"eventSubtitle": "23-04-2024"
@@ -27,19 +27,19 @@
 			"results": [
 				{
 					"performed": true,
-					"status": "finished",
+					"status": "Finished",
 					"position": 1,
 					"points": 22
 				},
 				{
 					"performed": true,
-					"status": "finished",
+					"status": "Finished",
 					"position": 2,
 					"points": 18
 				},
 				{
 					"performed": true,
-					"status": "finished",
+					"status": "Finished",
 					"position": 1,
 					"points": 22
 				}
@@ -54,7 +54,7 @@
 			"results": [
 				{
 					"performed": true,
-					"status": "finished",
+					"status": "Finished",
 					"position": 8,
 					"points": 4
 				},
@@ -63,7 +63,7 @@
 				},
 				{
 					"performed": true,
-					"status": "finished",
+					"status": "Finished",
 					"position": 3,
 					"points": 15
 				}

@@ -1,14 +1,14 @@
-import type { PositionType } from "$lib/types/championships/utils"
+import type { PositionType, ResultStatusType } from "$lib/types/championships/utils"
 
 export type ChampionshipLeaderboardType = {
 	year: number
-	header: ChampionshipHeaderType[]
+	headers: ChampionshipHeaderType[]
 	rows: ChampionshipRowType[]
 }
 
 export type ChampionshipHeaderType = {
-	title: string
-	subtitle: string
+	eventTitle: string
+	eventSubtitle: string
 }
 
 export type ChampionshipRowType = {
@@ -17,11 +17,12 @@ export type ChampionshipRowType = {
 	teamNumber: number
 	teamName: string
 	results: EventResultType[]
-	totalResult: number
+	totalPoints: number
 }
 
 export type EventResultType = {
 	performed: boolean
+	status: ResultStatusType
 	points: number | null
 	position: PositionType
 }

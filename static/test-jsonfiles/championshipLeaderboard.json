@@ -27,19 +27,19 @@
 			"results": [
 				{
 					"performed": true,
-					"status": "Finished",
+					"status": "CLS",
 					"position": 1,
 					"points": 22
 				},
 				{
 					"performed": true,
-					"status": "Finished",
+					"status": "CLS",
 					"position": 2,
 					"points": 18
 				},
 				{
 					"performed": true,
-					"status": "Finished",
+					"status": "CLS",
 					"position": 1,
 					"points": 22
 				}
@@ -47,14 +47,174 @@
 			"totalPoints": 62
 		},
 		{
-			"position": 8,
+			"position": 2,
 			"teamId": 2,
+			"teamNumber": 22,
+			"teamName": "A Però",
+			"results": [
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 2,
+					"points": 18
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 3,
+					"points": 15
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 2,
+					"points": 18
+				}
+			],
+			"totalPoints": 107
+		},
+		{
+			"position": 3,
+			"teamId": 3,
+			"teamNumber": 65,
+			"teamName": "FASSI Racing Team",
+			"results": [
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 5,
+					"points": 10
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 6,
+					"points": 8
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 4,
+					"points": 12
+				}
+			],
+			"totalPoints": 82
+		},
+		{
+			"position": 4,
+			"teamId": 4,
+			"teamNumber": 38,
+			"teamName": "Saeta de Legn",
+			"results": [
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 3,
+					"points": 15
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 4,
+					"points": 12
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 6,
+					"points": 8
+				}
+			],
+			"totalPoints": 78
+		},
+		{
+			"position": 5,
+			"teamId": 5,
+			"teamNumber": 4,
+			"teamName": "Noter de Desensa",
+			"results": [
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 7,
+					"points": 6
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 1,
+					"points": 22
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 7,
+					"points": 6
+				}
+			],
+			"totalPoints": 42
+		},
+		{
+			"position": 6,
+			"teamId": 6,
+			"teamNumber": 52,
+			"teamName": "Subaru Baracca",
+			"results": [
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 6,
+					"points": 8
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 7,
+					"points": 6
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 5,
+					"points": 10
+				}
+			],
+			"totalPoints": 36
+		},
+		{
+			"position": 7,
+			"teamId": 7,
+			"teamNumber": 2,
+			"teamName": "One Peace de Albì",
+			"results": [
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 4,
+					"points": 12
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 5,
+					"points": 10
+				},
+				{
+					"performed": true,
+					"status": "DNF"
+				}
+			],
+			"totalPoints": 33
+		},
+		{
+			"position": 8,
+			"teamId": 8,
 			"teamNumber": 44,
 			"teamName": "Il Muletto",
 			"results": [
 				{
 					"performed": true,
-					"status": "Finished",
+					"status": "CLS",
 					"position": 8,
 					"points": 4
 				},
@@ -63,12 +223,77 @@
 				},
 				{
 					"performed": true,
-					"status": "Finished",
+					"status": "CLS",
 					"position": 3,
 					"points": 15
 				}
 			],
-			"totalPoints": 19
+			"totalPoints": 32
+		},
+		{
+			"position": 9,
+			"teamId": 9,
+			"teamNumber": 19,
+			"teamName": "Banda Bassotti 1907",
+			"results": [
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 11,
+					"points": 1
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 8,
+					"points": 4
+				},
+				{
+					"performed": true,
+					"status": "DNS"
+				}
+			],
+			"totalPoints": 11
+		},
+		{
+			"position": 10,
+			"teamId": 10,
+			"teamNumber": 47,
+			"teamName": "BABY Hazzard",
+			"results": [
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 9,
+					"points": 3
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": true,
+					"status": "DNF"
+				}
+			],
+			"totalPoints": 8
+		},
+		{
+			"position": 11,
+			"teamId": 11,
+			"teamNumber": 26,
+			"teamName": "Cargoway Team",
+			"results": [
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": true
+				}
+			],
+			"totalPoints": 0
 		}
 	]
 }

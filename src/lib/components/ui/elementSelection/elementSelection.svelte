@@ -14,7 +14,7 @@
 		offset: number;
 	}
 
-	let { handleClick, elements, offset }: Props = $props();
+	let { handleClick, elements, offset = $bindable() }: Props = $props();
 
 	function getElements(): { left: Element[]; right: Element[]; current: Element } {
 		let currentIndex = elements.findIndex((elem) => elem.current);
@@ -36,6 +36,22 @@
 	}
 
 	let elementsToShow = $state(getElements());
+	let windowWidth = $state(0);
+
+	$effect(() => {
+		if (windowWidth <= 640) {
+			offset = 1;
+		} else if (windowWidth <= 1000) {
+			offset = 2;
+		} else if (windowWidth > 1000) {
+			offset = 3;
+		}
+	});
+
+	$effect(() => {
+		// console.log('offset', offset);
+		elementsToShow = getElements();
+	});
 
 	// onMount(() => {
 	// 	console.log('elementSelection mounted');
@@ -192,6 +208,6 @@
 		</div>
 	</div>
 </div>
-<svelte:window onkeydown={onKeyDown} />
+<svelte:window bind:innerWidth={windowWidth} onkeydown={onKeyDown} />
 
 <style></style>

@@ -17,7 +17,8 @@
 		{ value: '2026', current: false, disabled: true },
 		{ value: '2027', current: false, disabled: true }
 	];
-	const offset = 3;
+
+	let offset = $state(3);
 
 	type Image = {
 		height: number;
@@ -35,7 +36,7 @@
 				height: height,
 				width: width,
 				ratio: width / height,
-				url: `https://picsum.photos/${Math.floor(Math.random() * 1000) + 500}/${Math.floor(Math.random() * 1000) + 500}`
+				url: `https://picsum.photos/${width}/${height}`
 			});
 		}
 		return images;
@@ -45,35 +46,21 @@
 </script>
 
 <main>
-	<div class="flex justify-center py-4">
-		<ElementSelection {offset} elements={years} handleClick={yearSelectionClick} />
+	<div class=" flex w-full justify-center py-4">
+		<ElementSelection bind:offset elements={years} handleClick={yearSelectionClick} />
 	</div>
 
-	<section>
-		<!-- <Mansory stretchFirst={true} gridGap={'0.75rem'} colWidth={'minmax(Min(20em, 100%), 1fr)'}> -->
-		<!-- 	{#each mockImageArray(20) as image} -->
-		<!-- 		<img src={image.url} class="h-64 bg-gray-700" loading="lazy" alt="random" /> -->
-		<!-- 	{/each} -->
+	<section class="px-2">
 		<div id="mansory" class="flex flex-wrap gap-2">
 			{#each mockImageArray(imageCount) as image}
 				<div
-					class="h-64 flex-[1_0_auto] bg-amber-500"
-					style="background-image: url({image.url}); background-size: cover; background-position:
-			center center;"
+					class="md:64 h-32 flex-[1_0_auto] rounded-md border border-gray-300 bg-gray-200"
+					style="background-image: url({image.url}); width:calc({image.ratio}*8rem);  background-size: cover; background-position:
+				center center;"
 				></div>
 			{/each}
 		</div>
-		<!-- </Mansory> -->
 	</section>
 </main>
 
-<style lang="scss">
-	#mansory {
-		@for $i from 1 through 1000 {
-			div:nth-child(#{$i}) {
-				$h: (random(400) + 70) + px;
-				width: $h;
-			}
-		}
-	}
-</style>
+<style></style>

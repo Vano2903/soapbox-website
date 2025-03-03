@@ -1,8 +1,10 @@
 <script lang="ts">
+	const latestGalleryYear = 2015;
+
 	const links = [
 		{ name: 'Chi siamo', href: '/chi-siamo' },
 		{ name: 'Campionati', href: '/championships' },
-		{ name: 'Galleria', href: '/gallery' }
+		{ name: 'Galleria', href: `/gallery?year=${latestGalleryYear}` }
 	];
 </script>
 

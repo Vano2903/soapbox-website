@@ -66,7 +66,7 @@
 		<ElementSelection
 			{offset}
 			elements={years}
-			handleClick={yearSelectionClick}
+			handleSelection={yearSelectionClick}
 			keysInteraction={true}
 		/>
 	</div>
@@ -152,7 +152,7 @@
 		{#if eventLeaderboard != null}
 			<section class="flex flex-col items-center">
 				<div class="flex justify-center pb-20">
-					<ElementSelection {offset} elements={rallies} handleClick={stageSelectionClick} />
+					<ElementSelection {offset} elements={rallies} handleSelection={stageSelectionClick} />
 				</div>
 				<h1>CLASSIFICA RALLIES</h1>
 			</section>

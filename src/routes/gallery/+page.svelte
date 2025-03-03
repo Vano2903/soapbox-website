@@ -2,6 +2,7 @@
 	import ElementSelection from '$components/elementSelection/elementSelection.svelte';
 	import { LucideOrigami } from 'lucide-svelte';
 	import { onMount } from 'svelte';
+	import Image from '$components/gallery/image.svelte';
 
 	function yearSelectionClick(year: string) {
 		console.log('year click:', year);
@@ -20,14 +21,14 @@
 
 	let offset = $state(3);
 
-	type Image = {
+	type ImageType = {
 		height: number;
 		width: number;
 		url: string;
 		ratio: number;
 	};
 
-	function mockImageArray(num: number): Image[] {
+	function mockImageArray(num: number): ImageType[] {
 		let images = [];
 		for (let i = 0; i < num; i++) {
 			let width = Math.floor(Math.random() * 1000) + 500;
@@ -53,11 +54,7 @@
 	<section class="px-2">
 		<div id="mansory" class="flex flex-wrap gap-2">
 			{#each mockImageArray(imageCount) as image}
-				<div
-					class="md:64 h-32 flex-[1_0_auto] rounded-md border border-gray-300 bg-gray-200"
-					style="background-image: url({image.url}); width:calc({image.ratio}*8rem);  background-size: cover; background-position:
-				center center;"
-				></div>
+				<Image url={image.url} --ratio={image.ratio} />
 			{/each}
 		</div>
 	</section>

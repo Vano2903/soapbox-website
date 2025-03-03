@@ -2,19 +2,24 @@
 	const { url } = $props();
 </script>
 
-<div
-	class="h-48 flex-[1_0_auto] rounded-md border border-gray-300 bg-gray-200 md:h-64"
-	style="background-image: url({url});  background-size: cover; background-position:
-				center center;"
-></div>
+<img
+	class="h-32 flex-[1_0_auto] rounded-md border border-gray-300 bg-gray-200 object-cover object-center md:h-64"
+	src={url}
+	loading="lazy"
+	alt="Gallery "
+/>
+
+<!-- </img> -->
+<!-- style="background-image: url({url});  background-size: cover; background-position:
+				center center;" -->
 
 <style>
-	div {
-		width: calc(var(--ratio) * 10rem);
+	img {
+		width: calc(var(--ratio) * 8rem);
 	}
 
 	@media (min-width: 768px) {
-		div {
+		img {
 			width: calc(var(--ratio) * 16rem);
 		}
 	}

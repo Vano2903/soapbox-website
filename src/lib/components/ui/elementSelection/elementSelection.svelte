@@ -10,13 +10,18 @@
 
 	interface Props {
 		keysInteraction?: boolean;
-		handleClick: (value: string) => void;
+		handleSelection: (value: string) => void;
 		elements: Element[];
 		offset: number;
 	}
 
 	// let { handleClick, elements, offset = $bindable() }: Props = $props();
-	let { keysInteraction = false, handleClick, elements, offset = $bindable() }: Props = $props();
+	let {
+		keysInteraction = false,
+		handleSelection: handleClick,
+		elements,
+		offset = $bindable()
+	}: Props = $props();
 
 	function getElements(): { left: Element[]; right: Element[]; current: Element } {
 		let currentIndex = elements.findIndex((elem) => elem.current);
@@ -70,6 +75,7 @@
 		elements[currentIndex].current = false;
 		elements[currentIndex - 1].current = true;
 		elementsToShow = getElements();
+		handleClick(elements[currentIndex - 1].value);
 	};
 
 	const nextElement = () => {
@@ -80,6 +86,7 @@
 		elements[currentIndex].current = false;
 		elements[currentIndex + 1].current = true;
 		elementsToShow = getElements();
+		handleClick(elements[currentIndex + 1].value);
 	};
 
 	function onKeyDown(e) {
@@ -101,6 +108,7 @@
 		elements[currentIndex].current = false;
 		elements[elements.findIndex((elem) => elem.value === element)].current = true;
 		elementsToShow = getElements();
+		handleClick(element);
 	};
 </script>
 
@@ -120,12 +128,12 @@
 
 	{#each elementsToShow.left as elem, i}
 		<button
+			aria-label="Move to {elem.value} year"
 			onclick={() => {
 				if (elem.disabled) {
 					return;
 				}
 				moveToElement(elem.value);
-				handleClick(elem.value);
 			}}
 			class="text-gray-{900 -
 				(elementsToShow.left.length - i) * 200} w-12 text-xl sm:w-20 sm:text-3xl
@@ -142,7 +150,11 @@
 	{/each}
 
 	{#if elementsToShow.left.length > 0}
-		<button class="h-4 w-4 cursor-pointer text-xl sm:h-6 sm:w-6 sm:text-3xl" onclick={prevElement}>
+		<button
+			aria-label="move one year before {elementsToShow.current.value}"
+			class="h-4 w-4 cursor-pointer text-xl sm:h-6 sm:w-6 sm:text-3xl"
+			onclick={prevElement}
+		>
 			<ChevronLeft class="h-full w-full stroke-red-600 stroke-3 " />
 		</button>
 	{/if}
@@ -171,6 +183,7 @@
 	</button>
 	{#if elementsToShow.right.length > 0}
 		<button
+			aria-label="move one year after {elementsToShow.current.value}"
 			class="h-4 w-4 cursor-pointer align-baseline text-xl sm:h-6 sm:w-6 sm:text-3xl"
 			onclick={nextElement}
 		>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	const latestGalleryYear = 2015;
+	const latestGalleryYear = 2003;
 
 	const links = [
 		{ name: 'Chi siamo', href: '/chi-siamo' },
@@ -34,10 +34,10 @@
 				>
 			{/each}
 		</div>
-		<div class="flex cursor-pointer items-center text-white">
-			<a href="/login" class="pr-2">Accedi</a>
+		<a href="/login" class="flex cursor-pointer items-center text-white">
+			<span class="pr-2">Accedi</span>
 			<img class="h-10 fill-current" src="/images/navbar/profile.svg" alt="Login icon" />
-		</div>
+		</a>
 	</div>
 </nav>
 

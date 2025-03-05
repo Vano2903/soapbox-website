@@ -16,6 +16,7 @@
 <style>
 	img {
 		width: calc(var(--ratio) * 8rem);
+		aspect-ratio: var(--ratio);
 	}
 
 	@media (min-width: 768px) {

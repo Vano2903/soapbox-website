@@ -11,6 +11,8 @@
 	import ElementSelection from '$components/elementSelection/elementSelection.svelte';
 	import { LucideCalendarCheck, LucideRadio, LucideLock } from 'lucide-svelte';
 
+	import { goto } from '$app/navigation';
+
 	// Page informations
 	const { data } = $props();
 	const {
@@ -47,14 +49,21 @@
 
 	function yearSelectionClick(year: string) {
 		console.log('year click:', year);
-		// TODO: request new / update data structures [liveLeaderboards, championshipLeaderboard, eventLeaderboard] for the year clicked.
+
+		goto(`?year=${year}`);
+		console.log('should go to year', year);
 	}
-	function stageSelectionClick(stage: string) {
-		console.log('stage click:', stage);
+	function rallySelectionClick(rally: string) {
+		selectedEvent = rally;
+		console.log('rally click:', rally);
+
+		goto(`?rally=${rally}`);
+		console.log('should go to rally', rally);
 	}
 
 	let showRowsNumber = $state(10);
 	let showAllButton = $state(championshipLeaderboard.rows.length > 10);
+	let selectedEvent = $state('Bergamo');
 </script>
 
 <main class="px-20 pb-16">
@@ -84,6 +93,10 @@
 		{/if}
 		{#if championshipLeaderboard != null}
 			<section class="mx-auto p-4">
+				<hr class="h-1.5 w-full bg-red-600" />
+				<div class="mx-auto flex max-w-2/3 justify-center p-5 text-4xl font-bold">
+					CLASSIFICA CAMPIONATO:
+				</div>
 				<div class="overflow-x-auto">
 					<table class="w-full min-w-max border-collapse">
 						<caption class="caption-bottom py-2 text-sm font-light text-neutral-400">
@@ -203,11 +216,136 @@
 			</section>
 		{/if}
 		{#if eventLeaderboard != null}
-			<section class="flex flex-col items-center">
-				<div class="flex justify-center pb-20">
-					<ElementSelection {offset} elements={rallies} handleSelection={stageSelectionClick} />
+			<section class="mx-auto p-4">
+				<hr class="h-1.5 w-full bg-red-600" />
+				<div class="mx-auto flex max-w-2/3 justify-center pt-5 text-4xl font-bold">
+					CLASSIFICA RALLIES:
 				</div>
-				<h1>CLASSIFICA RALLIES</h1>
+				<div class="mx-auto flex max-w-5/6 justify-evenly pb-5 text-xl font-bold text-neutral-600">
+					{#each championshipLeaderboard.headers as header}
+						{#if header.eventTitle == selectedEvent}
+							<span class="text-red-600 hover:underline">{header.eventTitle.toUpperCase()}</span>
+						{:else}
+							<span>{header.eventTitle.toUpperCase()}</span>
+						{/if}
+					{/each}
+				</div>
+				<div class="overflow-x-auto">
+					<table class="w-full min-w-max border-collapse">
+						<caption class="caption-bottom py-2 text-sm font-light text-neutral-400">
+							<div class="flex max-w-2xl flex-row justify-evenly">
+								<span>'DNS': Non Partito</span>
+								<span>'DNF': Non Arrivato</span>
+								<span>'/': Non Classificato</span>
+							</div>
+						</caption>
+						<thead>
+							<tr class="bg-neutral-400 text-4xl font-extrabold">
+								<td class="p-3" colspan={4 + eventLeaderboard.headers.length}>
+									Rally di {eventLeaderboard.event}:
+								</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="border-b border-dashed border-neutral-700 bg-neutral-300 text-neutral-700">
+								<th class="min-w-10 p-2 text-xl">
+									<span class="xl:hidden"> Pos.: </span>
+									<span class="hidden xl:block"> Posizione: </span>
+								</th>
+								<th class="min-w-10 p-2 pr-3 text-right text-xl">
+									<span class="xl:hidden"> #: </span>
+									<span class="hidden xl:block"> Numero di Gara: </span>
+								</th>
+								<th class="min-w-30 p-2 text-left text-xl">
+									<span class="xl:hidden"> Nome: </span>
+									<span class="hidden xl:block"> Nome del Team: </span>
+								</th>
+								{#each championshipLeaderboard.headers as header, index}
+									<th
+										class="min-w-30 p-2 {index === championshipLeaderboard.headers.length - 1
+											? 'noborder'
+											: ''}"
+									>
+										<span class="text-xl">{header.eventTitle}</span>
+										<br />
+										<span class="font-medium">{header.eventSubtitle}</span>
+									</th>
+								{/each}
+								<th class="min-w-10 p-2 text-right text-xl">
+									<span class="xl:hidden"> Pts.: </span>
+									<span class="hidden xl:block"> Punteggio: </span>
+								</th>
+							</tr>
+							{#each championshipLeaderboard.rows.slice(0, showRowsNumber) as row, index}
+								<tr class="{index % 2 === 0 ? 'bg-neutral-50' : 'bg-neutral-100'} text-lg">
+									<td class="min-w-10 p-1 text-center positionColor-{row.position}"
+										>{row.position}°</td
+									>
+									<td class="min-w-10 p-1 pr-3 text-right">{row.teamNumber}</td>
+									<td class="min-w-30 p-1">{row.teamName}</td>
+									{#each row.results as result}
+										{#if result.performed === false}
+											<td class="min-w-30 p-1">
+												<span class="flex justify-center">/</span>
+											</td>
+										{:else if result.status !== ResultStatusType.CLASSIFIED}
+											<td class="min-w-30 p-1">
+												<span class="flex justify-center">
+													{result.status}
+												</span>
+											</td>
+										{:else}
+											<td class="min-w-30 p-1">
+												<span class="flex justify-center">
+													<span>
+														{result.points}
+													</span>
+													&nbsp;
+													<span
+														class="font-ligth text-xs positionColor-{result.position} rounded-full"
+													>
+														&nbsp;({result.position}°)&nbsp;
+													</span>
+												</span>
+											</td>
+										{/if}
+									{/each}
+									{#each { length: championshipLeaderboard.headers.length - row.results.length }}
+										<td class="min-w-30 p-1">
+											<span class="flex justify-center"></span>
+										</td>
+									{/each}
+									<td class="min-w-10 p-1 text-right font-medium">{row.totalPoints}</td>
+								</tr>
+							{/each}
+							<tr class="border-t border-dashed border-neutral-700 bg-neutral-200">
+								{#if showAllButton}
+									<td
+										class="min-w-10 px-2"
+										colspan={4 + championshipLeaderboard.headers.length}
+										onclick={() => {
+											showRowsNumber = championshipLeaderboard.rows.length;
+											showAllButton = false;
+										}}
+									>
+										<p class="flex justify-center text-xl">• Visualizza Tutti •</p>
+									</td>
+								{:else}
+									<td
+										class="min-w-10 px-2"
+										colspan={4 + championshipLeaderboard.headers.length}
+										onclick={() => {
+											showRowsNumber = 10;
+											showAllButton = true;
+										}}
+									>
+										<p class="flex justify-center text-xl">• Mostra meno •</p>
+									</td>
+								{/if}
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</section>
 		{/if}
 	</div>

@@ -1,1 +1,73 @@
-{}
+{
+	"event": "Bergamo",
+	"headers": [
+		{
+			"stageTitle": "Presentazione",
+			"stageSubtitle": "11-05-2024"
+		},
+		{
+			"stageTitle": "Stage 1",
+			"stageSubtitle": "12-05-2024"
+		},
+		{
+			"stageTitle": "Stage 2",
+			"stageSubtitle": "12-05-2024"
+		},
+		{
+			"stageTitle": "Special Stage",
+			"stageSubtitle": "12-05-2024"
+		}
+	],
+	"rows": [
+		{
+			"position": 1,
+			"teamId": 1,
+			"teamNumber": 1,
+			"teamName": "Rombo di Legno",
+			"results": [
+				{
+					"kind": "SHOW",
+					"result": {
+						"performed": true,
+						"status": "CLS",
+						"position": 1
+					}
+				},
+				{
+					"kind": "REGS",
+					"result": {
+						"performed": true,
+						"status": "CLS",
+						"raceTime": "00:01:37.967",
+						"penalties": "00:00:00.000",
+						"finalTime": "00:01:37.967",
+						"finalPosition": 1
+					}
+				},
+				{
+					"kind": "REGS",
+					"result": {
+						"performed": true,
+						"status": "CLS",
+						"raceTime": "00:01:37.967",
+						"penalties": "00:00:00.000",
+						"finalTime": "00:01:37.967",
+						"finalPosition": 1
+					}
+				},
+				{
+					"kind": "SPCS",
+					"result": {
+						"performed": true,
+						"status": "CLS",
+						"raceTime": "00:01:37.967",
+						"penalties": "00:00:00.000",
+						"finalTime": "00:01:37.967",
+						"finalPosition": 1
+					}
+				}
+			],
+			"totalPoints": 62
+		}
+	]
+}

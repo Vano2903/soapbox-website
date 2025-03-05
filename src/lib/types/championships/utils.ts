@@ -9,3 +9,9 @@ export enum ResultStatusType {
 	DID_NOT_FINISH = "DNF", // Did Not Finish
 	NOT_CLASSIFIED = "NC", // Not Classified
 }
+
+export enum StageKindType {
+	SHOWDOWN = "SHOW", // Showdown
+	STAGE = "REGS", // Regular Stage
+	SPECIAL_STAGE = "SPCS", // Special Stage
+}

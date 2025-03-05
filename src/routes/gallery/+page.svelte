@@ -1,9 +1,6 @@
 <script lang="ts">
 	import ElementSelection from '$components/elementSelection/elementSelection.svelte';
-	import { LucideOrigami } from 'lucide-svelte';
-	import { onMount } from 'svelte';
 	import Image from '$components/gallery/image.svelte';
-	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 
 	const { data } = $props();
@@ -28,6 +25,11 @@
 	// ];
 
 	const years = $derived.by(() => {
+		if (data.setQueryParameter || data.action === 'redirect') {
+			goto(`?year=${data.currentReturnedYear}`);
+			return;
+		}
+
 		console.log('deriving years');
 		const selectedYear = data.currentReturnedYear;
 		return data.availableYears?.map((year) => {
@@ -87,7 +89,7 @@
 					</h2>
 					<p class="text-xl md:text-3xl">
 						{!group.date.toString().startsWith('0001')
-							? group.date.slice(0, 10).replace(/-/g, '/')
+							? group.date.slice(1, 10).replace(/-/g, '/')
 							: ''}
 					</p>
 				</div>

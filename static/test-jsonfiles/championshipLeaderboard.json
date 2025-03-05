@@ -14,6 +14,18 @@
 			"eventSubtitle": "16-06-2024"
 		},
 		{
+			"eventTitle": "Premolo",
+			"eventSubtitle": "07-07-2024"
+		},
+		{
+			"eventTitle": "Bossico",
+			"eventSubtitle": "28-07-2024"
+		},
+		{
+			"eventTitle": "Vilminore",
+			"eventSubtitle": "01-09-2024"
+		},
+		{
 			"eventTitle": "Peia",
 			"eventSubtitle": "29-09-2024"
 		}
@@ -42,6 +54,24 @@
 					"status": "CLS",
 					"position": 1,
 					"points": 22
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 2,
+					"points": 18
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 3,
+					"points": 15
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 3,
+					"points": 15
 				}
 			],
 			"totalPoints": 62
@@ -69,6 +99,24 @@
 					"status": "CLS",
 					"position": 2,
 					"points": 18
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 4,
+					"points": 12
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 1,
+					"points": 22
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 1,
+					"points": 22
 				}
 			],
 			"totalPoints": 107
@@ -96,6 +144,24 @@
 					"status": "CLS",
 					"position": 4,
 					"points": 12
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 1,
+					"points": 22
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 4,
+					"points": 12
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 3,
+					"points": 18
 				}
 			],
 			"totalPoints": 82
@@ -123,6 +189,24 @@
 					"status": "CLS",
 					"position": 6,
 					"points": 8
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 3,
+					"points": 15
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 2,
+					"points": 18
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 5,
+					"points": 10
 				}
 			],
 			"totalPoints": 78
@@ -150,6 +234,24 @@
 					"status": "CLS",
 					"position": 7,
 					"points": 6
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 5,
+					"points": 10
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 7,
+					"points": 6
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 10,
+					"points": 2
 				}
 			],
 			"totalPoints": 42
@@ -177,6 +279,21 @@
 					"status": "CLS",
 					"position": 5,
 					"points": 10
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 6,
+					"points": 8
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 8,
+					"points": 4
+				},
+				{
+					"performed": false
 				}
 			],
 			"totalPoints": 36
@@ -202,6 +319,21 @@
 				{
 					"performed": true,
 					"status": "DNF"
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 5,
+					"points": 10
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 11,
+					"points": 1
 				}
 			],
 			"totalPoints": 33
@@ -226,6 +358,22 @@
 					"status": "CLS",
 					"position": 3,
 					"points": 15
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 11,
+					"points": 1
+				},
+				{
+					"performed": true,
+					"status": "DNF"
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 4,
+					"points": 12
 				}
 			],
 			"totalPoints": 32
@@ -251,6 +399,21 @@
 				{
 					"performed": true,
 					"status": "DNS"
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 10,
+					"points": 2
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 8,
+					"points": 4
 				}
 			],
 			"totalPoints": 11
@@ -273,6 +436,22 @@
 				{
 					"performed": true,
 					"status": "DNF"
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 8,
+					"points": 4
+				},
+				{
+					"performed": true,
+					"status": "CLS",
+					"position": 11,
+					"points": 1
+				},
+				{
+					"performed": true,
+					"status": "DNS"
 				}
 			],
 			"totalPoints": 8
@@ -280,8 +459,8 @@
 		{
 			"position": 11,
 			"teamId": 11,
-			"teamNumber": 26,
-			"teamName": "Cargoway Team",
+			"teamNumber": -1,
+			"teamName": "RANDOM TEAM 1",
 			"results": [
 				{
 					"performed": false
@@ -290,7 +469,124 @@
 					"performed": false
 				},
 				{
-					"performed": true
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				}
+			],
+			"totalPoints": 0
+		},
+		{
+			"position": 11,
+			"teamId": 12,
+			"teamNumber": -2,
+			"teamName": "RANDOM TEAM 2",
+			"results": [
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				}
+			],
+			"totalPoints": 0
+		},
+		{
+			"position": 11,
+			"teamId": 13,
+			"teamNumber": -3,
+			"teamName": "RANDOM TEAM 3",
+			"results": [
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				}
+			],
+			"totalPoints": 0
+		},
+		{
+			"position": 11,
+			"teamId": 14,
+			"teamNumber": -4,
+			"teamName": "RANDOM TEAM 4",
+			"results": [
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				}
+			],
+			"totalPoints": 0
+		},
+		{
+			"position": 11,
+			"teamId": 15,
+			"teamNumber": -5,
+			"teamName": "RANDOM TEAM 5",
+			"results": [
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
 				}
 			],
 			"totalPoints": 0

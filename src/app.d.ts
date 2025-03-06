@@ -1,5 +1,6 @@
-// See https://svelte.dev/docs/kit/types#app.d.ts
-// for information about these interfaces
+import type { TypedPocketBase } from '$lib/types/pocketbase';
+import type { User } from '$lib/types/user';
+
 declare global {
 	namespace App {
 		// interface Error {}
@@ -7,6 +8,10 @@ declare global {
 		// interface PageData {}
 		// interface PageState {}
 		// interface Platform {}
+		interface Locals {
+			pb: TypedPocketBase;
+			user: User | undefined;
+		}
 	}
 }
 

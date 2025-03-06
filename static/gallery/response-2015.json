@@ -2,11 +2,12 @@
 	"year": 2015,
 	"groups": [
 		{
-			"name": "01 - PUNZONATURA Bariano 15 marzo 2015 - Maria",
-			"author": "",
-			"date": "0001-01-01T00:00:00Z",
-			"number": 0,
-			"id": "",
+			"name": "Punzonatura",
+			"author": "Maria",
+			"location": "Bariano",
+			"date": "2015-03-15T00:00:00Z",
+			"number": 1,
+			"id": "2015-br-punz",
 			"images": [
 				{
 					"width": 1024,
@@ -341,11 +342,12 @@
 			]
 		},
 		{
-			"name": "02 - Bergamo/Maria",
-			"author": "",
-			"date": "0001-01-01T00:00:00Z",
-			"number": 0,
-			"id": "",
+			"name": "43° Soap Box Rally Bergamo - Città Altà - Varie",
+			"author": "Maria",
+			"location": "Bergamo",
+			"date": "2015-04-12T00:00:00Z",
+			"number": 2,
+			"id": "2015-br-var_1",
 			"images": [
 				{
 					"width": 3648,
@@ -1898,11 +1900,12 @@
 			]
 		},
 		{
-			"name": "02 - Bergamo/Piero",
-			"author": "",
-			"date": "0001-01-01T00:00:00Z",
-			"number": 0,
-			"id": "",
+			"name": "43° Soap Box Rally Bergamo - Città Altà - Varie",
+			"author": "Piero",
+			"location": "Bergamo",
+			"date": "2015-04-12T00:00:00Z",
+			"number": 2,
+			"id": "2015-br-var_2",
 			"images": [
 				{
 					"width": 1024,
@@ -2609,11 +2612,12 @@
 			]
 		},
 		{
-			"name": "03 - Songavazzo/Doriano Lucchese ... GRAZIE !!!!",
-			"author": "",
-			"date": "0001-01-01T00:00:00Z",
-			"number": 0,
-			"id": "",
+			"name": "3° Soap Box Songavazzo - Varie",
+			"author": "Doriano Lucchese",
+			"location": "Songavazzo",
+			"date": "2015-05-03T00:00:00Z",
+			"number": 3,
+			"id": "2015-sn-var",
 			"images": [
 				{
 					"width": 4272,
@@ -2720,11 +2724,12 @@
 			]
 		},
 		{
-			"name": "04 - Ponteranica by Sharon",
-			"author": "",
-			"date": "0001-01-01T00:00:00Z",
-			"number": 0,
-			"id": "",
+			"name": "3° Soap Box Amici di Sandro - 2° Manche",
+			"author": "Sharon",
+			"location": "Ponteranica",
+			"date": "2015-05-24T00:00:00Z",
+			"number": 4,
+			"id": "2015-pn-g2",
 			"images": [
 				{
 					"width": 960,
@@ -2969,11 +2974,12 @@
 			]
 		},
 		{
-			"name": "05 - Foresto Sparso/Foto By  Ennio Gelfi",
-			"author": "",
-			"date": "0001-01-01T00:00:00Z",
-			"number": 0,
-			"id": "",
+			"name": "1° Soap Box Paese della Grappa - Varie",
+			"author": "Ennio Gelfi",
+			"location": "Foresto Sparso",
+			"date": "2015-06-07T00:00:00Z",
+			"number": 5,
+			"id": "2015-fr-var_1",
 			"images": [
 				{
 					"width": 1024,
@@ -4112,11 +4118,12 @@
 			]
 		},
 		{
-			"name": "05 - Foresto Sparso/Foto By Mauro Pina",
-			"author": "",
-			"date": "0001-01-01T00:00:00Z",
-			"number": 0,
-			"id": "",
+			"name": "1° Soap Box Paese della Grappa - Varie",
+			"author": "Mauro Pina",
+			"location": "Foresto Sparso",
+			"date": "2015-06-07T00:00:00Z",
+			"number": 5,
+			"id": "2015-fr-var_2",
 			"images": [
 				{
 					"width": 4000,
@@ -4217,11 +4224,12 @@
 			]
 		},
 		{
-			"name": "05 - Foresto Sparso/Foto By San Marco Villongo",
-			"author": "",
-			"date": "0001-01-01T00:00:00Z",
-			"number": 0,
-			"id": "",
+			"name": "1° Soap Box Paese della Grappa - Varie",
+			"author": "San Marco Villongo",
+			"location": "Foresto Sparso",
+			"date": "2015-06-07T00:00:00Z",
+			"number": 5,
+			"id": "2015-fr-var_3",
 			"images": [
 				{
 					"width": 1024,
@@ -5624,11 +5632,12 @@
 			]
 		},
 		{
-			"name": "06 - PEIA/ Sabato Sera by FIL",
-			"author": "",
-			"date": "0001-01-01T00:00:00Z",
-			"number": 0,
-			"id": "",
+			"name": "10° Speedy Box Rally - 1° Manche",
+			"author": "FIL",
+			"location": "Peia",
+			"date": "2015-06-20T00:00:00Z",
+			"number": 6,
+			"id": "2015-pe-g1",
 			"images": [
 				{
 					"width": 2816,
@@ -5969,11 +5978,11 @@
 			]
 		},
 		{
-			"name": "06 - PEIA/Domenica Pomeriggio By FIL",
-			"author": "",
-			"date": "0001-01-01T00:00:00Z",
-			"number": 0,
-			"id": "",
+			"name": "10° Speedy Box Rally - 2° Manche",
+			"author": "FIL",
+			"date": "2015-06-21T00:00:00Z",
+			"number": 6,
+			"id": "2015-pe-g2",
 			"images": [
 				{
 					"width": 1024,
@@ -6584,11 +6593,12 @@
 			]
 		},
 		{
-			"name": "07 - Arco di Trento Ga Bo/Ga Bo by Omar",
-			"author": "",
-			"date": "0001-01-01T00:00:00Z",
-			"number": 0,
-			"id": "",
+			"name": "3° Trofeo Ga-Bo - Arco di Trento - Varie",
+			"author": "Omar",
+			"location": "Gazzi / Bolognano",
+			"date": "2015-07-05T00:00:00Z",
+			"number": 7,
+			"id": "2015-tr-var",
 			"images": [
 				{
 					"width": 1024,
@@ -7133,19 +7143,19 @@
 			]
 		},
 		{
-			"name": "08 - Una domenica diversa/ Leolandia con Golfie la mascotte dei Lions Bergamo",
-			"author": "",
-			"date": "0001-01-01T00:00:00Z",
-			"number": 0,
-			"id": "",
+			"name": "Leolandia - Golfie la Mascotte dei Lions Bergamo",
+			"author": "ASD",
+			"date": "2015",
+			"number": 8,
+			"id": "2015-cp-var_1",
 			"images": null
 		},
 		{
-			"name": "08 - Una domenica diversa/Bobadilla serale",
-			"author": "",
-			"date": "0001-01-01T00:00:00Z",
-			"number": 0,
-			"id": "",
+			"name": "Leolandia - Bobadilla serale",
+			"author": "ASD",
+			"date": "2015",
+			"number": 8,
+			"id": "2015-cp-var_2",
 			"images": [
 				{
 					"width": 720,
@@ -7300,11 +7310,11 @@
 			]
 		},
 		{
-			"name": "08 - Una domenica diversa/Leolandia con Golfie la mascotte dei Lions Bergamo",
-			"author": "",
-			"date": "0001-01-01T00:00:00Z",
-			"number": 0,
-			"id": "",
+			"name": "Leolandia - Golfie la Mascotte dei Lions Bergamo",
+			"author": "ASD",
+			"date": "2015",
+			"number": 8,
+			"id": "2015-cp-var_3",
 			"images": [
 				{
 					"width": 1024,

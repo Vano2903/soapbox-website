@@ -8,6 +8,7 @@
 	import { LucideCalendarCheck, LucideRadio, LucideLock } from 'lucide-svelte';
 
 	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 
 	// Page informations
 	const { data } = $props();
@@ -25,7 +26,7 @@
 	console.log('championshipLeaderboard', championshipLeaderboard);
 	console.log('eventLeaderboard', eventLeaderboard);
 
-	const years = [
+	const years = $state([
 		{ value: '2020', current: false, disabled: false, icon: LucideCalendarCheck },
 		{ value: '2021', current: false, disabled: false, icon: LucideCalendarCheck },
 		{ value: '2022', current: false, disabled: false, icon: LucideCalendarCheck },
@@ -34,7 +35,7 @@
 		{ value: '2025', current: false, disabled: true, icon: LucideLock },
 		{ value: '2026', current: false, disabled: true, icon: LucideLock },
 		{ value: '2027', current: false, disabled: true, icon: LucideLock }
-	];
+	]);
 	const offset = 3;
 
 	function yearSelectionClick(year: string) {
@@ -50,6 +51,22 @@
 		goto(`?rally=${rally}`, { noScroll: true });
 		console.log('should go to rally', rally);
 	}
+
+	onMount(() => {
+		const urlParams = new URLSearchParams(window.location.search);
+		const year = urlParams.get('year');
+		const rally = urlParams.get('rally');
+
+		if (year) {
+			years.forEach((y) => {
+				y.current = y.value === year;
+			});
+		}
+
+		if (rally) {
+			event_selected = rally;
+		}
+	});
 
 	let championship_defaultNumberRowsToShow = 10;
 	let championship_NumberRowsShowed = $state(championship_defaultNumberRowsToShow);
@@ -245,7 +262,8 @@
 						<thead>
 							<tr class="bg-neutral-400 text-4xl font-extrabold">
 								<td class="p-3" colspan={4 + eventLeaderboard.headers.length}>
-									Rally di {eventLeaderboard.event}:
+									Rally di {event_selected}:
+									<!-- {eventLeaderboard.event}: -->
 								</td>
 							</tr>
 						</thead>

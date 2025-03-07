@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ResultStatusType } from '$tsTypes/championships/utils';
+	import { ResultStatusType, StageKindType } from '$tsTypes/championships/utils';
 	import type {
 		ChampionshipHeaderType,
 		ChampionshipLeaderboardType
@@ -39,12 +39,6 @@
 		{ value: '2026', current: false, disabled: true, icon: LucideLock },
 		{ value: '2027', current: false, disabled: true, icon: LucideLock }
 	];
-	const rallies = [
-		{ value: 'Leffe', current: false, disabled: false, icon: LucideCalendarCheck },
-		{ value: 'Bergamo', current: false, disabled: false, icon: LucideCalendarCheck },
-		{ value: "Villa d'Adda", current: false, disabled: false, icon: LucideCalendarCheck },
-		{ value: 'Peia', current: true, disabled: false, icon: LucideRadio }
-	];
 	const offset = 3;
 
 	function yearSelectionClick(year: string) {
@@ -54,16 +48,21 @@
 		console.log('should go to year', year);
 	}
 	function rallySelectionClick(rally: string) {
-		selectedEvent = rally;
+		event_selected = rally;
 		console.log('rally click:', rally);
 
 		goto(`?rally=${rally}`);
 		console.log('should go to rally', rally);
 	}
 
-	let showRowsNumber = $state(10);
-	let showAllButton = $state(championshipLeaderboard.rows.length > 10);
-	let selectedEvent = $state('Bergamo');
+	let championship_NumberRowsShowned = $state(10);
+	let championship_ShowButtonSeeAll = $state(
+		championshipLeaderboard.rows.length > championship_NumberRowsShowned
+	);
+
+	let event_selected = $state('Bergamo');
+	let event_NumberRowsShowned = $state(10);
+	let event_ShowButtonSeeAll = $state(eventLeaderboard.rows.length > event_NumberRowsShowned);
 </script>
 
 <main class="px-20 pb-16">
@@ -80,16 +79,12 @@
 		/>
 	</div>
 	<div class="space-y-16">
-		<!--
-		<div class="flex flex-col items-center bg-red-600">
-			<p>YEAR SELECTION</p>
-		</div>
-		-->
-
 		{#if liveLeaderboards != null}
+			<!--
 			<section class="flex flex-col items-center">
 				<h1>CLASSIFICA RALLY LIVE</h1>
 			</section>
+			-->
 		{/if}
 		{#if championshipLeaderboard != null}
 			<section class="mx-auto p-4">
@@ -143,7 +138,7 @@
 									<span class="hidden xl:block"> Punteggio: </span>
 								</th>
 							</tr>
-							{#each championshipLeaderboard.rows.slice(0, showRowsNumber) as row, index}
+							{#each championshipLeaderboard.rows.slice(0, championship_NumberRowsShowned) as row, index}
 								<tr class="{index % 2 === 0 ? 'bg-neutral-50' : 'bg-neutral-100'} text-lg">
 									<td class="min-w-10 p-1 text-center positionColor-{row.position}"
 										>{row.position}°</td
@@ -186,24 +181,25 @@
 								</tr>
 							{/each}
 							<tr class="border-t border-dashed border-neutral-700 bg-neutral-200">
-								{#if showAllButton}
+								{#if championship_ShowButtonSeeAll}
 									<td
 										class="min-w-10 px-2"
 										colspan={4 + championshipLeaderboard.headers.length}
 										onclick={() => {
-											showRowsNumber = championshipLeaderboard.rows.length;
-											showAllButton = false;
+											championship_NumberRowsShowned = championshipLeaderboard.rows.length;
+											championship_ShowButtonSeeAll = false;
 										}}
 									>
 										<p class="flex justify-center text-xl">• Visualizza Tutti •</p>
 									</td>
-								{:else}
+								{:else if championshipLeaderboard.rows.length > championship_NumberRowsShowned}
 									<td
 										class="min-w-10 px-2"
 										colspan={4 + championshipLeaderboard.headers.length}
 										onclick={() => {
-											showRowsNumber = 10;
-											showAllButton = true;
+											championship_NumberRowsShowned = 10;
+											championship_ShowButtonSeeAll =
+												championshipLeaderboard.rows.length > championship_NumberRowsShowned;
 										}}
 									>
 										<p class="flex justify-center text-xl">• Mostra meno •</p>
@@ -223,10 +219,15 @@
 				</div>
 				<div class="mx-auto flex max-w-5/6 justify-evenly pb-5 text-xl font-bold text-neutral-600">
 					{#each championshipLeaderboard.headers as header}
-						{#if header.eventTitle == selectedEvent}
+						{#if header.eventTitle == event_selected}
 							<span class="text-red-600 hover:underline">{header.eventTitle.toUpperCase()}</span>
 						{:else}
-							<span>{header.eventTitle.toUpperCase()}</span>
+							<button
+								class="hover:underline"
+								onclick={() => rallySelectionClick(header.eventTitle)}
+							>
+								{header.eventTitle.toUpperCase()}
+							</button>
 						{/if}
 					{/each}
 				</div>
@@ -260,15 +261,15 @@
 									<span class="xl:hidden"> Nome: </span>
 									<span class="hidden xl:block"> Nome del Team: </span>
 								</th>
-								{#each championshipLeaderboard.headers as header, index}
+								{#each eventLeaderboard.headers as header, index}
 									<th
-										class="min-w-30 p-2 {index === championshipLeaderboard.headers.length - 1
+										class="min-w-30 p-2 {index === eventLeaderboard.headers.length - 1
 											? 'noborder'
 											: ''}"
 									>
-										<span class="text-xl">{header.eventTitle}</span>
+										<span class="text-xl">{header.stageTitle}</span>
 										<br />
-										<span class="font-medium">{header.eventSubtitle}</span>
+										<span class="font-medium">{header.stageSubtitle}</span>
 									</th>
 								{/each}
 								<th class="min-w-10 p-2 text-right text-xl">
@@ -276,7 +277,7 @@
 									<span class="hidden xl:block"> Punteggio: </span>
 								</th>
 							</tr>
-							{#each championshipLeaderboard.rows.slice(0, showRowsNumber) as row, index}
+							{#each eventLeaderboard.rows.slice(0, event_NumberRowsShowned) as row, index}
 								<tr class="{index % 2 === 0 ? 'bg-neutral-50' : 'bg-neutral-100'} text-lg">
 									<td class="min-w-10 p-1 text-center positionColor-{row.position}"
 										>{row.position}°</td
@@ -294,23 +295,39 @@
 													{result.status}
 												</span>
 											</td>
-										{:else}
+										{:else if result.kind === StageKindType.SHOWDOWN && result.showdown !== null}
 											<td class="min-w-30 p-1">
 												<span class="flex justify-center">
 													<span>
-														{result.points}
+														{result.showdown.points}
 													</span>
 													&nbsp;
 													<span
-														class="font-ligth text-xs positionColor-{result.position} rounded-full"
+														class="font-ligth text-xs positionColor-{result.showdown
+															.position} rounded-full"
 													>
-														&nbsp;({result.position}°)&nbsp;
+														&nbsp;({result.showdown.position}°)&nbsp;
+													</span>
+												</span>
+											</td>
+										{:else if result.kind !== StageKindType.SHOWDOWN && result.stage !== null}
+											<td class="min-w-30 p-1">
+												<span class="flex justify-center">
+													<span>
+														{result.stage.finalTime}
+													</span>
+													&nbsp;
+													<span
+														class="font-ligth text-xs positionColor-{result.stage
+															.position} rounded-full"
+													>
+														&nbsp;({result.stage.position}°)&nbsp;
 													</span>
 												</span>
 											</td>
 										{/if}
 									{/each}
-									{#each { length: championshipLeaderboard.headers.length - row.results.length }}
+									{#each { length: eventLeaderboard.headers.length - row.results.length }}
 										<td class="min-w-30 p-1">
 											<span class="flex justify-center"></span>
 										</td>
@@ -319,24 +336,25 @@
 								</tr>
 							{/each}
 							<tr class="border-t border-dashed border-neutral-700 bg-neutral-200">
-								{#if showAllButton}
+								{#if event_ShowButtonSeeAll}
 									<td
 										class="min-w-10 px-2"
-										colspan={4 + championshipLeaderboard.headers.length}
+										colspan={4 + eventLeaderboard.headers.length}
 										onclick={() => {
-											showRowsNumber = championshipLeaderboard.rows.length;
-											showAllButton = false;
+											event_NumberRowsShowned = eventLeaderboard.rows.length;
+											event_ShowButtonSeeAll = false;
 										}}
 									>
 										<p class="flex justify-center text-xl">• Visualizza Tutti •</p>
 									</td>
-								{:else}
+								{:else if eventLeaderboard.rows.length > event_NumberRowsShowned}
 									<td
 										class="min-w-10 px-2"
-										colspan={4 + championshipLeaderboard.headers.length}
+										colspan={4 + eventLeaderboard.headers.length}
 										onclick={() => {
-											showRowsNumber = 10;
-											showAllButton = true;
+											event_NumberRowsShowned = 10;
+											event_ShowButtonSeeAll =
+												eventLeaderboard.rows.length > event_NumberRowsShowned;
 										}}
 									>
 										<p class="flex justify-center text-xl">• Mostra meno •</p>
@@ -361,19 +379,4 @@
 	.positionColor-3 {
 		background-color: var(--color-amber-600);
 	}
-
-	/*table {
-		border: 1px solid var(--color-neutral-800);
-	}
-	th,
-	td {
-		border-left: 1px dashed var(--color-neutral-700);
-		border-right: 1px dashed var(--color-neutral-700);
-	}
-
-	th.noborder,
-	td.{
-		border-left: none;
-		border-right: none;
-	}*/
 </style>

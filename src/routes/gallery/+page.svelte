@@ -89,7 +89,7 @@
 					</h2>
 					<p class="text-xl md:text-3xl">
 						{!group.date.toString().startsWith('0001')
-							? group.date.slice(1, 10).replace(/-/g, '/')
+							? group.date.slice(0, 10).replace(/-/g, '/')
 							: ''}
 					</p>
 				</div>

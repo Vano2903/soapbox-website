@@ -47,7 +47,7 @@
 		event_selected = rally;
 		console.log('rally click:', rally);
 
-		goto(`?rally=${rally}`);
+		goto(`?rally=${rally}`, { noScroll: true });
 		console.log('should go to rally', rally);
 	}
 
@@ -212,16 +212,20 @@
 		{#if eventLeaderboard != null}
 			<section class="mx-auto p-4">
 				<hr class="h-1.5 w-full bg-red-600" />
-				<div class="mx-auto flex max-w-2/3 justify-center pt-5 text-4xl font-bold">
+				<div class="mx-auto mb-4 flex max-w-2/3 justify-center pt-5 text-4xl font-bold">
 					CLASSIFICA RALLIES:
 				</div>
-				<div class="mx-auto flex max-w-5/6 justify-evenly pb-5 text-xl font-bold text-neutral-600">
+				<div
+					class=" mx-auto flex max-w-5/6 items-center justify-evenly space-x-6 overflow-x-auto pb-5 text-xl font-bold text-neutral-600"
+				>
 					{#each championshipLeaderboard.headers as header}
 						{#if header.eventTitle == event_selected}
-							<span class="text-red-600 hover:underline">{header.eventTitle.toUpperCase()}</span>
+							<span class=" text-nowrap text-red-600 hover:underline"
+								>{header.eventTitle.toUpperCase()}</span
+							>
 						{:else}
 							<button
-								class="hover:underline"
+								class="text-nowrap hover:underline"
 								onclick={() => rallySelectionClick(header.eventTitle)}
 							>
 								{header.eventTitle.toUpperCase()}

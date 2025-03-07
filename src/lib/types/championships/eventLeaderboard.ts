@@ -22,21 +22,20 @@ export type EventRowType = {
 
 export type EventResultType = {
 	kind: StageKindType
-	result: ShowdownResultType | StageResultType
+	performed: boolean
+	status: ResultStatusType
+	showdown: ShowdownResultType | null
+	stage: StageResultType | null
 }
 
 export type ShowdownResultType = {
-	performed: boolean
-	status: ResultStatusType
 	points: number | null
 	position: PositionType
 }
 
 export type StageResultType = {
-	performed: boolean
-	status: ResultStatusType
 	raceTime: string | null
 	penalties: string | null
 	finalTime: string | null
-	finalPosition: PositionType
+	position: PositionType
 }

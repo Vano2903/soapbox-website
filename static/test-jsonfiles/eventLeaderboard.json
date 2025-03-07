@@ -27,47 +27,199 @@
 			"results": [
 				{
 					"kind": "SHOW",
-					"result": {
-						"performed": true,
-						"status": "CLS",
+					"performed": true,
+					"status": "CLS",
+					"showdown": {
+						"points": 22,
 						"position": 1
 					}
 				},
 				{
 					"kind": "REGS",
-					"result": {
-						"performed": true,
-						"status": "CLS",
+					"performed": true,
+					"status": "CLS",
+					"stage": {
 						"raceTime": "00:01:37.967",
 						"penalties": "00:00:00.000",
 						"finalTime": "00:01:37.967",
-						"finalPosition": 1
+						"position": 1
 					}
 				},
 				{
 					"kind": "REGS",
-					"result": {
-						"performed": true,
-						"status": "CLS",
-						"raceTime": "00:01:37.967",
-						"penalties": "00:00:00.000",
-						"finalTime": "00:01:37.967",
-						"finalPosition": 1
+					"performed": true,
+					"status": "CLS",
+					"stage": {
+						"raceTime": "00:01:48.124",
+						"penalties": "00:00:03.000",
+						"finalTime": "00:01:51.124",
+						"position": 2
 					}
 				},
 				{
 					"kind": "SPCS",
-					"result": {
-						"performed": true,
-						"status": "CLS",
-						"raceTime": "00:01:37.967",
+					"performed": true,
+					"status": "CLS",
+					"stage": {
+						"raceTime": "00:01:38.084",
 						"penalties": "00:00:00.000",
-						"finalTime": "00:01:37.967",
-						"finalPosition": 1
+						"finalTime": "00:01:38.084",
+						"position": 2
 					}
 				}
 			],
-			"totalPoints": 62
+			"totalPoints": 40
+		},
+		{
+			"position": 2,
+			"teamId": 2,
+			"teamNumber": 22,
+			"teamName": "A Però",
+			"results": [
+				{
+					"kind": "SHOW",
+					"performed": false
+				},
+				{
+					"kind": "REGS",
+					"performed": true,
+					"status": "CLS",
+					"stage": {
+						"raceTime": "00:01:35.193",
+						"penalties": "00:00:03.000",
+						"finalTime": "00:01:38.193",
+						"position": 2
+					}
+				},
+				{
+					"kind": "REGS",
+					"performed": true,
+					"status": "CLS",
+					"stage": {
+						"raceTime": "00:01:50.412",
+						"penalties": "00:00:00.000",
+						"finalTime": "00:01:50.412",
+						"position": 1
+					}
+				},
+				{
+					"kind": "SPCS",
+					"performed": true,
+					"status": "CLS",
+					"stage": {
+						"raceTime": "00:01:37.891",
+						"penalties": "00:00:00.000",
+						"finalTime": "00:01:37.891",
+						"position": 1
+					}
+				}
+			],
+			"totalPoints": 22
+		},
+		{
+			"position": 3,
+			"teamId": 11,
+			"teamNumber": -1,
+			"teamName": "RANDOM TEAM 1",
+			"results": [
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				}
+			],
+			"totalPoints": 0
+		},
+		{
+			"position": 3,
+			"teamId": 12,
+			"teamNumber": -2,
+			"teamName": "RANDOM TEAM 2",
+			"results": [
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				}
+			],
+			"totalPoints": 0
+		},
+		{
+			"position": 3,
+			"teamId": 13,
+			"teamNumber": -3,
+			"teamName": "RANDOM TEAM 3",
+			"results": [
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				}
+			],
+			"totalPoints": 0
+		},
+		{
+			"position": 3,
+			"teamId": 14,
+			"teamNumber": -4,
+			"teamName": "RANDOM TEAM 4",
+			"results": [
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				}
+			],
+			"totalPoints": 0
+		},
+		{
+			"position": 3,
+			"teamId": 15,
+			"teamNumber": -5,
+			"teamName": "RANDOM TEAM 5",
+			"results": [
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				},
+				{
+					"performed": false
+				}
+			],
+			"totalPoints": 0
 		}
 	]
 }

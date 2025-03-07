@@ -1,6 +1,5 @@
 <script>
-	import ModeDropDown from '$components/modeDropDown/modeDropDown.svelte';
-	import Carousel from '$components/carousel/carousel.svelte';
+	// import Carousel from '$components/carousel/carousel.svelte';
 	import Carousel2 from '$components/carousel/carousel2.svelte';
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
 	const { data } = $props();
@@ -31,7 +30,7 @@
 			</p>
 			<div class="flex h-64 w-full justify-center pb-4">
 				<div
-					class="divide-h-1/2 border-sm grid h-52 w-2/3 grid-cols-3 content-center divide-x-3 divide-neutral-400 rounded-sm border-0 bg-neutral-300"
+					class="divide-h-1/2 border-sm grid h-52 w-2/3 content-center divide-x-3 divide-neutral-400 rounded-sm border-0 bg-neutral-300 md:grid-cols-3"
 				>
 					{#each achivements as achivement}
 						<div class="flex flex-col content-center items-center justify-center">

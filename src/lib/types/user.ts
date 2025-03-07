@@ -1,4 +1,3 @@
-
 export type IsoDateString = string;
 
 export enum Roles {
@@ -18,4 +17,5 @@ export interface User {
 	banned: boolean;
 	created: IsoDateString;
 	updated: IsoDateString;
+	avatar?: string;
 }

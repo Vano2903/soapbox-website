@@ -1,10 +1,3 @@
-<!-- <script lang="ts">
-	import '../app.css';
-	
-	let { children } = $props();
-	</script>
-
-	{@render children()} -->
 <script lang="ts">
 	import '../app.css';
 
@@ -14,7 +7,7 @@
 	// import Navbar from '$components/navbar/Navbar.svelte';
 	// import Navbar3 from '$components/navbar/Navbar3.svelte';
 
-	let { children } = $props();
+	let { children, data } = $props();
 </script>
 
 <svelte:head>
@@ -33,7 +26,7 @@
 	<!-- <Navbar3 /> -->
 	<!-- <hr class="py-10" /> -->
 	<header class="sticky top-0 z-50">
-		<Navbar2 />
+		<Navbar2 user={data.user} />
 	</header>
 
 	<div class="page">

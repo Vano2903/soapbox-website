@@ -89,15 +89,15 @@
 		handleClick(elements[currentIndex + 1].value);
 	};
 
-	function onKeyDown(e) {
+	function onKeyDown(e: KeyboardEvent) {
 		if (keysInteraction === false) {
 			return;
 		}
-		switch (e.keyCode) {
-			case 37:
+		switch (e.code) {
+			case "ArrowLeft":
 				prevElement();
 				break;
-			case 39:
+			case "ArrowRight":
 				nextElement();
 				break;
 		}

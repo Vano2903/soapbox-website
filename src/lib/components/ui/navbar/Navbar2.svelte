@@ -6,6 +6,8 @@
 		{ name: 'Campionati', href: '/championships' },
 		{ name: 'Galleria', href: `/gallery?year=${latestGalleryYear}` }
 	];
+
+	const { user } = $props();
 </script>
 
 <nav class="relative z-50 flex bg-red-600 sm:pr-6 md:justify-between lg:pr-6">
@@ -34,10 +36,26 @@
 				>
 			{/each}
 		</div>
-		<a href="/login" class="flex cursor-pointer items-center text-white">
+
+		{#if user}
+			<a href="/dash" class="flex cursor-pointer items-center text-white">
+				<span class="pr-2">Dashboard</span>
+				<img
+					class="h-10 fill-current"
+					src={`https://avatar.iran.liara.run/public/boy?username=${user.name}`}
+					alt="Dashboard icon"
+				/>
+			</a>
+		{:else}
+			<a href="/login" class="flex cursor-pointer items-center text-white">
+				<span class="pr-2">Accedi</span>
+				<img class="h-10 fill-current" src="/images/navbar/profile.svg" alt="Login icon" />
+			</a>
+		{/if}
+		<!-- <a href="/login" class="flex cursor-pointer items-center text-white">
 			<span class="pr-2">Accedi</span>
 			<img class="h-10 fill-current" src="/images/navbar/profile.svg" alt="Login icon" />
-		</a>
+		</a> -->
 	</div>
 </nav>
 

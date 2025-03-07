@@ -1,14 +1,14 @@
 import { type Handle, error } from '@sveltejs/kit';
 import PocketBase from 'pocketbase';
 import type { TypedPocketBase } from '$lib/types/pocketbase';
-import { PB_INSTANCE } from '$env/static/private';
+import { PUBLIC_PB_INSTANCE } from '$env/static/public';
 
 const pocketbase: Handle = async ({ event, resolve }) => {
-	if (!PB_INSTANCE) {
+	if (!PUBLIC_PB_INSTANCE) {
 		error(500, 'Pocketbase instance not found');
 	}
 
-	const pb = new PocketBase(PB_INSTANCE) as TypedPocketBase;
+	const pb = new PocketBase(PUBLIC_PB_INSTANCE) as TypedPocketBase;
 
 	event.locals.pb = pb;
 

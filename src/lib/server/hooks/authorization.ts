@@ -24,6 +24,15 @@ const authorization: Handle = async ({ event, resolve }) => {
 		redirect(302, '/login');
 	}
 
+	if (!user.verified && !path.startsWith('/dash/verify')) {
+		redirect(302, '/dash/verify');
+	}
+
+	if (!user.completed && !path.startsWith('/dash/onboarding')) {
+		redirect(302, '/dash/onboarding');
+		// goto('/dash/onboarding');
+	}
+
 	// Role-based access control mapping for different routes
 	// const routePermissions = Object.entries({
 	// 	'/cogestione/registration': !hasRole(user, Roles.Staff, Roles.Docente),

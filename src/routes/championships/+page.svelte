@@ -3,6 +3,7 @@
 	import type { ChampionshipLeaderboardType } from '$tsTypes/championships/championshipLeaderboard';
 	import type { EventLeaderboardType } from '$tsTypes/championships/eventLeaderboard';
 	import type { LiveLeaderboardsType } from '$tsTypes/championships/liveLeaderboards';
+	import { innerWidth } from 'svelte/reactivity/window';
 
 	import ElementSelection from '$components/elementSelection/elementSelection.svelte';
 	import { LucideCalendarCheck, LucideRadio, LucideLock } from 'lucide-svelte';
@@ -40,15 +41,23 @@
 	function yearSelectionClick(year: string) {
 		console.log('year click:', year);
 
-		goto(`?year=${year}`);
-		console.log('should go to year', year);
+		// goto(`?year=${year}`);
+		// console.log('should go to year', year);
+
+		const url = new URL(window.location.href);
+		url.searchParams.set('year', year);
+		goto(url.toString());
 	}
 	function rallySelectionClick(rally: string) {
-		event_selected = rally;
+		rally_selected = rally;
 		console.log('rally click:', rally);
 
-		goto(`?rally=${rally}`);
-		console.log('should go to rally', rally);
+		//goto(`?rally=${rally}`);
+		//console.log('should go to rally', rally);
+
+		const url = new URL(window.location.href);
+		url.searchParams.set('rally', rally);
+		goto(url.toString());
 	}
 
 	let championship_defaultNumberRowsToShow = 10;
@@ -57,13 +66,13 @@
 		championshipLeaderboard.rows.length > championship_defaultNumberRowsToShow
 	);
 
-	let event_selected = $state('Bergamo');
-	let event_defaultNumberRowsToShow = 10;
-	let event_NumberRowsShowed = $state(event_defaultNumberRowsToShow);
-	let event_ShowButtonSeeAll = $state(eventLeaderboard.rows.length > event_defaultNumberRowsToShow);
+	let rally_selected = $state('Bergamo');
+	let rally_defaultNumberRowsToShow = 10;
+	let rally_NumberRowsShowed = $state(rally_defaultNumberRowsToShow);
+	let rally_ShowButtonSeeAll = $state(eventLeaderboard.rows.length > rally_defaultNumberRowsToShow);
 </script>
 
-<main class="px-20 pb-16">
+<main class="px-5 pb-16 lg:px-15">
 	<header class="flex flex-col items-center space-y-2 pt-14 pb-10">
 		<span class="text-5xl font-bold"> Campionati </span>
 		<p class="text-gray-500">Lorem ipsum dolor sit amet</p>
@@ -87,7 +96,7 @@
 		{#if championshipLeaderboard != null}
 			<section class="mx-auto p-4">
 				<hr class="h-1.5 w-full bg-red-600" />
-				<div class="mx-auto flex max-w-2/3 justify-center p-5 text-4xl font-bold">
+				<div class="mx-auto flex max-w-2/3 justify-center p-5 text-center text-4xl font-bold">
 					CLASSIFICA CAMPIONATO:
 				</div>
 				<div class="overflow-x-auto">
@@ -109,16 +118,25 @@
 						<tbody>
 							<tr class="border-b border-dashed border-neutral-700 bg-neutral-300 text-neutral-700">
 								<th class="min-w-10 p-2 text-xl">
+									<span> Pos.: </span>
+									<!--
 									<span class="xl:hidden"> Pos.: </span>
 									<span class="hidden xl:block"> Posizione: </span>
+									-->
 								</th>
 								<th class="min-w-10 p-2 pr-3 text-right text-xl">
+									<span> #: </span>
+									<!--
 									<span class="xl:hidden"> #: </span>
 									<span class="hidden xl:block"> Numero di Gara: </span>
+									-->
 								</th>
 								<th class="min-w-30 p-2 text-left text-xl">
+									<span> Team: </span>
+									<!--
 									<span class="xl:hidden"> Nome: </span>
 									<span class="hidden xl:block"> Nome del Team: </span>
+									-->
 								</th>
 								{#each championshipLeaderboard.headers as header, index}
 									<th
@@ -132,8 +150,11 @@
 									</th>
 								{/each}
 								<th class="min-w-10 p-2 text-right text-xl">
+									<span> Tot.: </span>
+									<!--
 									<span class="xl:hidden"> Pts.: </span>
 									<span class="hidden xl:block"> Punteggio: </span>
+									-->
 								</th>
 							</tr>
 							{#each championshipLeaderboard.rows.slice(0, championship_NumberRowsShowed) as row, index}
@@ -212,22 +233,48 @@
 		{#if eventLeaderboard != null}
 			<section class="mx-auto p-4">
 				<hr class="h-1.5 w-full bg-red-600" />
-				<div class="mx-auto flex max-w-2/3 justify-center pt-5 text-4xl font-bold">
+				<div class="mx-auto flex max-w-2/3 justify-center pt-5 text-center text-4xl font-bold">
 					CLASSIFICA RALLIES:
 				</div>
-				<div class="mx-auto flex max-w-5/6 justify-evenly pb-5 text-xl font-bold text-neutral-600">
-					{#each championshipLeaderboard.headers as header}
-						{#if header.eventTitle == event_selected}
-							<span class="text-red-600 hover:underline">{header.eventTitle.toUpperCase()}</span>
-						{:else}
+				<div
+					class="mx-auto flex max-w-5/6 flex-wrap justify-evenly pb-5 text-xl font-bold text-neutral-600"
+				>
+					<!-- swap selection method based on tailwind xl breakpoint -->
+					{#if innerWidth.current !== undefined && innerWidth.current < 1280}
+						<select
+							class="bg-white p-2 shadow-md focus:outline-none"
+							onchange={(event) => rallySelectionClick((event.target as HTMLSelectElement).value)}
+						>
+							{#each championshipLeaderboard.headers as header}
+								<option
+									class="!hover:bg-none !hover:underline {rally_selected === header.eventTitle
+										? 'text-red-600'
+										: ''}"
+									value={header.eventTitle}
+									selected={rally_selected === header.eventTitle}
+									onclick={rally_selected !== header.eventTitle
+										? () => rallySelectionClick(header.eventTitle)
+										: undefined}
+								>
+									{header.eventTitle.toUpperCase()}
+								</option>
+							{/each}
+						</select>
+					{:else}
+						{#each championshipLeaderboard.headers as header}
 							<button
-								class="hover:underline"
-								onclick={() => rallySelectionClick(header.eventTitle)}
+								class="hidden min-w-30 hover:underline xl:block {rally_selected ===
+								header.eventTitle
+									? 'text-red-600'
+									: ''}"
+								onclick={rally_selected !== header.eventTitle
+									? () => rallySelectionClick(header.eventTitle)
+									: undefined}
 							>
 								{header.eventTitle.toUpperCase()}
 							</button>
-						{/if}
-					{/each}
+						{/each}
+					{/if}
 				</div>
 				<div class="overflow-x-auto">
 					<table class="w-full min-w-max border-collapse">
@@ -248,16 +295,25 @@
 						<tbody>
 							<tr class="border-b border-dashed border-neutral-700 bg-neutral-300 text-neutral-700">
 								<th class="min-w-10 p-2 text-xl">
+									<span> Pos.: </span>
+									<!--
 									<span class="xl:hidden"> Pos.: </span>
 									<span class="hidden xl:block"> Posizione: </span>
+									-->
 								</th>
 								<th class="min-w-10 p-2 pr-3 text-right text-xl">
+									<span> #: </span>
+									<!--
 									<span class="xl:hidden"> #: </span>
 									<span class="hidden xl:block"> Numero di Gara: </span>
+									-->
 								</th>
 								<th class="min-w-30 p-2 text-left text-xl">
+									<span> Team: </span>
+									<!--
 									<span class="xl:hidden"> Nome: </span>
 									<span class="hidden xl:block"> Nome del Team: </span>
+									-->
 								</th>
 								{#each eventLeaderboard.headers as header, index}
 									<th
@@ -271,11 +327,14 @@
 									</th>
 								{/each}
 								<th class="min-w-10 p-2 text-right text-xl">
+									<span> Tot.: </span>
+									<!--
 									<span class="xl:hidden"> Pts.: </span>
 									<span class="hidden xl:block"> Punteggio: </span>
+									-->
 								</th>
 							</tr>
-							{#each eventLeaderboard.rows.slice(0, event_NumberRowsShowed) as row, index}
+							{#each eventLeaderboard.rows.slice(0, rally_NumberRowsShowed) as row, index}
 								<tr class="{index % 2 === 0 ? 'bg-neutral-50' : 'bg-neutral-100'} text-lg">
 									<td class="min-w-10 p-1 text-center positionColor-{row.position}"
 										>{row.position}°</td
@@ -334,25 +393,25 @@
 								</tr>
 							{/each}
 							<tr class="border-t border-dashed border-neutral-700 bg-neutral-200">
-								{#if event_ShowButtonSeeAll}
+								{#if rally_ShowButtonSeeAll}
 									<td
 										class="min-w-10 px-2"
 										colspan={4 + eventLeaderboard.headers.length}
 										onclick={() => {
-											event_NumberRowsShowed = eventLeaderboard.rows.length;
-											event_ShowButtonSeeAll = false;
+											rally_NumberRowsShowed = eventLeaderboard.rows.length;
+											rally_ShowButtonSeeAll = false;
 										}}
 									>
 										<p class="flex justify-center text-xl">• Visualizza Tutti •</p>
 									</td>
-								{:else if eventLeaderboard.rows.length > event_defaultNumberRowsToShow}
+								{:else if eventLeaderboard.rows.length > rally_defaultNumberRowsToShow}
 									<td
 										class="min-w-10 px-2"
 										colspan={4 + eventLeaderboard.headers.length}
 										onclick={() => {
-											event_NumberRowsShowed = event_defaultNumberRowsToShow;
-											event_ShowButtonSeeAll =
-												eventLeaderboard.rows.length > event_defaultNumberRowsToShow;
+											rally_NumberRowsShowed = rally_defaultNumberRowsToShow;
+											rally_ShowButtonSeeAll =
+												eventLeaderboard.rows.length > rally_defaultNumberRowsToShow;
 										}}
 									>
 										<p class="flex justify-center text-xl">• Mostra meno •</p>

@@ -5,6 +5,13 @@ export const load: PageServerLoad = async ({}) => {
 	return {
 		countryPhoneCodes: [
 			{
+				name: 'Italy',
+				dial_code: '+39',
+				emoji: '🇮🇹',
+				code: 'IT',
+				default: true
+			},
+			{
 				name: 'Afghanistan',
 				dial_code: '+93',
 				emoji: '🇦🇫',

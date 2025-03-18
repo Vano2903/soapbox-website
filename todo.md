@@ -1,0 +1,8 @@
+- pagina utenti
+    - [ ] login/registrazione google
+    - [ ] login password
+    - [ ] registrazione password
+    - [ ] onboarding
+        - [ ] username, nome, cognome, codice fiscale | (sesso, data di nascita), telefono
+    - [ ] homepage
+        - [ ] 

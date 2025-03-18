@@ -40,11 +40,7 @@
 		{#if user}
 			<a href="/dash" class="flex cursor-pointer items-center text-white">
 				<span class="pr-2">Dashboard</span>
-				<img
-					class="h-10 fill-current"
-					src={`https://avatar.iran.liara.run/public/boy?username=${user.name}`}
-					alt="Dashboard icon"
-				/>
+				<img class="h-10 rounded-full fill-current" src={user.avatar} alt="Dashboard icon" />
 			</a>
 		{:else}
 			<a href="/login" class="flex cursor-pointer items-center text-white">

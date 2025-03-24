@@ -40,6 +40,7 @@
 		"@tailwindcss/postcss": "^4.0.6",
 		"bits-ui": "^1.1.0",
 		"codice-fiscale-js": "^2.3.22",
+		"daisyui": "^5.0.6",
 		"embla-carousel-autoplay": "^8.5.2",
 		"embla-carousel-svelte": "^8.5.2",
 		"lucide-svelte": "^0.475.0",

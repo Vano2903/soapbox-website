@@ -16,7 +16,7 @@
 	<div class="carousel">
 		<!-- <Carousel /> -->
 		<Carousel2 />
-		<aside class="info-box">
+		<aside class="glass absolute z-20 box-border h-3/4 w-1/4 rounded-l-lg pt-2 pb-4 pl-2">
 			<div class="inner">
 				<EventInfoBox {event} />
 			</div>
@@ -82,7 +82,7 @@
 		z-index: 20;
 		padding: 0.5rem 0 0 0.5rem;
 		box-sizing: border-box;
-		background: white;
+		/* background: white; */
 		padding-bottom: 1rem;
 	}
 

@@ -38,10 +38,8 @@
 		>
 	</p>
 
-	<button
-		class="w-32 cursor-pointer rounded bg-red-600 px-4 py-2 font-bold text-white hover:bg-red-800"
-		>Iscriviti</button
-	>
+	<button class="btn btn-error text-foreground">Iscriviti</button>
+	<!-- class="w-32 cursor-pointer rounded bg-red-600 px-4 py-2 font-bold text-white hover:bg-red-800" -->
 </div>
 
 <style>

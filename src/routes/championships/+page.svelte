@@ -47,13 +47,16 @@
 
 		const url = new URL(window.location.href);
 		url.searchParams.set('year', year);
-		goto(url.toString());
+		goto(url.toString(), { noScroll: true });
 	}
 	function rallySelectionClick(rally: string) {
 		rally_selected = rally;
 		console.log('rally click:', rally);
 
-		goto(`?rally=${rally}`);
+		// goto(`?rally=${rally}`);
+		const url = new URL(window.location.href);
+		url.searchParams.set('rally', rally);
+		goto(url.toString(), { noScroll: true });
 		console.log('should go to rally', rally);
 	}
 
@@ -108,7 +111,9 @@
 						<thead>
 							<tr class="bg-neutral-400 text-4xl font-extrabold">
 								<td class="p-3" colspan={4 + championshipLeaderboard.headers.length}>
-									CAMPIONATO {championshipLeaderboard.year}:
+									CAMPIONATO {years.find((year) => {
+										return year.current;
+									})?.value}:
 								</td>
 							</tr>
 						</thead>
@@ -285,7 +290,7 @@
 						<thead>
 							<tr class="bg-neutral-400 text-4xl font-extrabold">
 								<td class="p-3" colspan={4 + eventLeaderboard.headers.length}>
-									Rally di {event_selected}:
+									Rally di {rally_selected}:
 									<!-- {eventLeaderboard.event}: -->
 								</td>
 							</tr>

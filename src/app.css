@@ -4,9 +4,11 @@
 
 @plugin "daisyui/theme" {
 	name: "soapboxaro-lg";
-	default: false;
-	prefersdark: true;
+	default: true;
+	prefersdark: false;
 	color-scheme: "light";
+	--color-white: oklch(100% 0 0);
+	--color-black: oklch(0% 0 0);
 	--color-base-100: oklch(100% 0 0);
 	--color-base-200: oklch(98% 0 0);
 	--color-base-300: oklch(96% 0.001 286.375);
@@ -42,6 +44,8 @@
 	default: false;
 	prefersdark: true;
 	color-scheme: "dark";
+	--color-white: oklch(100% 0 0);
+	--color-black: oklch(0% 0 0);
 	--color-base-100: oklch(26% 0 0);
 	--color-base-200: oklch(20% 0 0);
 	--color-base-300: oklch(14% 0 0);
@@ -74,8 +78,8 @@
 
 @plugin "daisyui" {
 	themes: soapboxaro-lg --default, soapboxaro-dk --prefersdark;
-  }
-
+  logs: true;
+}
 
 
 /*
@@ -97,82 +101,12 @@
 }
 
 @layer base {
-	:root {
-		--background: 0 0% 100%;
-		--foreground: 240 10% 3.9%;
-
-		--muted: 240 4.8% 95.9%;
-		--muted-foreground: 240 3.8% 46.1%;
-
-		--popover: 0 0% 100%;
-		--popover-foreground: 240 10% 3.9%;
-
-		--card: 0 0% 100%;
-		--card-foreground: 240 10% 3.9%;
-
-		--border: 240 5.9% 90%;
-		--input: 240 5.9% 90%;
-
-		--primary: 240 5.9% 10%;
-		--primary-foreground: 0 0% 98%;
-
-		--secondary: 240 4.8% 95.9%;
-		--secondary-foreground: 240 5.9% 10%;
-
-		--accent: 240 4.8% 95.9%;
-		--accent-foreground: 240 5.9% 10%;
-
-		--destructive: 0 72.2% 50.6%;
-		--destructive-foreground: 0 0% 98%;
-
-		--ring: 240 10% 3.9%;
-
-		--radius: 0.5rem;
-
-		--red: 0, 84%, 60%; /* red-500*/
-	}
-
-	.dark {
-		--background: 240 10% 3.9%;
-		--foreground: 0 0% 98%;
-
-		--muted: 240 3.7% 15.9%;
-		--muted-foreground: 240 5% 64.9%;
-
-		--popover: 240 10% 3.9%;
-		--popover-foreground: 0 0% 98%;
-
-		--card: 240 10% 3.9%;
-		--card-foreground: 0 0% 98%;
-
-		--border: 240 3.7% 15.9%;
-		--input: 240 3.7% 15.9%;
-
-		--primary: 0 0% 98%;
-		--primary-foreground: 240 5.9% 10%;
-
-		--secondary: 240 3.7% 15.9%;
-		--secondary-foreground: 0 0% 98%;
-
-		--accent: 240 3.7% 15.9%;
-		--accent-foreground: 0 0% 98%;
-
-		--destructive: 0 62.8% 30.6%;
-		--destructive-foreground: 0 0% 98%;
-
-		--ring: 240 4.9% 83.9%;
-
-		--red: 0, 91%, 71%; /* red-400*/
-	}
-}
-
-@layer base {
-	* {
+	/* * {
 		@apply border-border;
 	}
 	body {
 		@apply bg-background text-foreground;
-	}
+	} */
 
 	/* @font-face {
 		font-family: 'marsden';
@@ -202,7 +136,7 @@
 		line-height: 1;
 	}
 
-	::-webkit-scrollbar-track {
+	/* ::-webkit-scrollbar-track {
 		-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 		border-radius: 10px;
 		background-color: #f5f5f5;
@@ -216,11 +150,10 @@
 	::-webkit-scrollbar-thumb {
 		border-radius: 10px;
 		-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-		/* background-color: #d62929; */
 		background-color: #555;
 	}
 
 	::-webkit-scrollbar-thumb:hover {
 		background-color: #787373;
-	}
+	} */
 }

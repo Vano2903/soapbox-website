@@ -49,5 +49,6 @@ export interface User {
 export enum GenderKind {
 	Male = 'male',
 	Female = 'female',
-	Other = 'other'
+	Other = 'other',
+	NotDisclosed = 'not-disclosed'
 }

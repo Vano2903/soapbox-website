@@ -30,7 +30,11 @@ const authorization: Handle = async ({ event, resolve }) => {
 
 	if (!user.completed && !path.startsWith('/dash/onboarding')) {
 		redirect(302, '/dash/onboarding');
-		// goto('/dash/onboarding');
+	}
+
+	// Redirect authenticated users to the dashboard if they have completed the onboarding process
+	if (path.startsWith('/dash/onboarding') && user.completed) {
+		redirect(302, '/dash');
 	}
 
 	// Role-based access control mapping for different routes

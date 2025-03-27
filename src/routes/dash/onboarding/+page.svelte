@@ -3,11 +3,35 @@
 	import CodiceFiscale from 'codice-fiscale-js';
 	import { untrack } from 'svelte';
 	import SuperDebug, { dateProxy, superForm } from 'sveltekit-superforms';
+	import { debounce } from 'throttle-debounce';
 
 	const { data } = $props();
 	// const { user } = data;
 	const { countryPhoneCodes } = data;
-	const { form, errors, constraints, enhance } = superForm(data.form);
+
+	const { form, errors, message, constraints, enhance } = superForm(data.form);
+
+	const {
+		delayed,
+		submit: submitCheckUsername,
+		enhance: submitEnhance
+	} = superForm(
+		{ username: '' },
+		{
+			invalidateAll: false,
+			applyAction: false,
+			multipleSubmits: 'abort',
+			onSubmit({ cancel }) {
+				if (!$form.username) cancel();
+			},
+			onUpdated({ form }) {
+				// Update the other form to show the error message
+				$errors.username = form.errors.username;
+			}
+		}
+	);
+
+	const checkUsername = debounce(200, submitCheckUsername);
 
 	let fiscalCode = $state('');
 	let username = $state('');
@@ -260,8 +284,19 @@
 						bind:value={username}
 						aria-invalid={$errors.username ? 'true' : undefined}
 						placeholder="mario-rossi"
+						oninput={checkUsername}
 					/>
 				</label>
+
+				{#if $delayed}
+					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+					<span class="loading loading-spinner loading-sm"></span>
+				{:else if $errors.username}
+					❌
+				{:else if $form.username && 'username' in $errors}
+					✅
+				{/if}
+
 				<p class="text-base-content mb-2 text-xs/5">
 					Il nickname sará usato per creare il tuo URL personalizzato con la quale potrai
 					condividere il profilo.

@@ -27,25 +27,6 @@ export interface User {
 	birthDate: Date;
 }
 
-// type User = {
-// 	id: string;
-// 	email: string;
-// 	emailVisibiliy?: boolean;
-// 	verified: boolean;
-// 	name: string;
-// 	roles: Roles[];
-// 	banned: boolean;
-// 	created: string;
-// 	updated: string;
-// 	avatar?: string;
-// 	completed: boolean;
-// 	nick: string;
-// 	fiscalCode: string; // redacted
-// 	phone: string;
-// 	gender: GenderKind;
-// 	birthDate: Date;
-// };
-
 export enum GenderKind {
 	Male = 'male',
 	Female = 'female',

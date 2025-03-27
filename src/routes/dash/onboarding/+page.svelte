@@ -11,24 +11,23 @@
 
 	let fiscalCode = $state('');
 	let username = $state('');
-	let birthDate = $state('');
 	const proxyDate = dateProxy(form, 'birthDate', { format: 'date' });
 
 	let prefixes = $state(countryPhoneCodes);
 	let gender = $state() as GenderKind;
 
 	$effect(() => {
-		$form.username = username.trimStart().replaceAll(' ', '-').toLowerCase();
+		username = username.trimStart().replaceAll(' ', '-').toLowerCase();
+		untrack(() => {
+			$form.username = username;
+		});
 	});
 
 	$effect(() => {
 		try {
 			const cf = new CodiceFiscale(fiscalCode.toUpperCase());
-			birthDate = cf.birthday.toISOString().split('T')[0];
-			// $proxyDate = birthDate;
-			// proxyDate.update((v) => {
-			// 	return birthDate;
-			// });
+			// birthDate =cf.birthday.toISOString().split('T')[0];
+			$proxyDate = cf.birthday.toISOString().split('T')[0];
 			if (cf.gender === 'M') {
 				gender = GenderKind.Male;
 			} else {
@@ -48,13 +47,6 @@
 		$form.fiscalCode = fiscalCode;
 	});
 
-	// $effect(() => {
-	// 	$form.birthDate = new Date(birthDate);
-	// });
-	$effect(() => {
-		console.log('birthdate proxy', $proxyDate);
-	});
-
 	let files = $state<FileList | null | undefined>(undefined);
 
 	function clear() {
@@ -69,7 +61,7 @@
 
 	<h1 class="text-primary mb-8 text-3xl font-bold">Completa il tuo profilo</h1>
 
-	<form method="POST" class="flex flex-col space-y-8">
+	<form method="POST" class="flex flex-col space-y-8" use:enhance>
 		<!-- Contact Information Section -->
 		<div class="border-base-content space-y-6 border-b pb-8">
 			<h2 class="text-primary text-lg font-semibold">Informazioni di Contatto</h2>
@@ -231,20 +223,19 @@
 
 			<fieldset class="fieldset flex-1 text-base">
 				<legend class="fieldset-legend">Data di Nascita</legend>
-
 				<input
+					readonly={!!$form.fiscalCode}
 					{...$constraints.birthDate}
 					min={$constraints.birthDate?.min?.toString().slice(0, 10)}
-					disabled={!!$form.fiscalCode}
 					id="birthDate"
 					name="birthDate"
 					type="date"
 					autocomplete="bday"
 					class="input w-full"
+					class:disabled-input={$form.fiscalCode}
 					bind:value={$proxyDate}
 					aria-invalid={$errors.birthDate ? 'true' : undefined}
 				/>
-				<!-- rounded-lg border border-gray-300 px-4 py-2 focus:border-red-600 focus:ring-2 focus:ring-red-600" -->
 				{#if $errors.birthDate}
 					<p class="fieldset-label text-error">{$errors.birthDate}</p>
 				{/if}
@@ -293,4 +284,15 @@
 	</form>
 </main>
 
-<style></style>
+<style>
+	.disabled-input {
+		border-color: var(--color-base-200);
+		background-color: var(--color-base-200);
+		color: var(--color-base-content/40);
+		&::placeholder {
+			color: var(--color-base-content/20);
+		}
+		cursor: not-allowed;
+		box-shadow: none;
+	}
+</style>

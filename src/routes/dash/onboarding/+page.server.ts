@@ -1,9 +1,10 @@
 import { fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { message, superValidate } from 'sveltekit-superforms';
+import { message, setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { z } from 'zod';
-import { GenderKind } from '$tsTypes/user';
+import { GenderKind, type User } from '$tsTypes/user';
+import type { TypedPocketBase } from '$tsTypes/pocketbase';
 
 // https://gist.github.com/anubhavshrimal/75f6183458db8c453306f93521e93d37?permalink_comment_id=4493502#gistcomment-4493502
 const countryPhoneCodes = [
@@ -1529,21 +1530,65 @@ export const load: PageServerLoad = async ({ parent }) => {
 	return { form, countryPhoneCodes };
 };
 
+async function isUsernameValid(username: string, pb: TypedPocketBase): Promise<boolean> {
+	const bannedUsernames = ['admin', 'root', 'superuser'];
+	if (bannedUsernames.includes(username)) {
+		return false;
+	}
+	try {
+		const user = await pb.collection('users').getFirstListItem(`nick="${username}"`);
+		return false;
+	} catch (e) {
+		return true;
+	}
+}
+
 export const actions = {
-	default: async ({ request }) => {
-		console.log('request', request);
+	default: async ({ request, locals }) => {
 		const form = await superValidate(request, zod(schema));
 		console.log('form', form);
-		console.log('received a form request');
-
 		if (!form.valid) {
 			// Return { form } and things will just work.
 			return fail(400, { form });
 		}
-
-		// TODO: Do something with the validated form.data
 		console.log(form.data);
+
+		const pb = locals.pb;
+
+		const { username } = form.data;
+		const isUsernameAvailable = await isUsernameValid(username, pb);
+		console.log('isUsernameAvailable', isUsernameAvailable);
+		if (!isUsernameAvailable) {
+			return setError(form, 'username', 'Il nome utente non è disponibile');
+		}
 		// Return the form with a status message
-		return message(form, 'Form posted successfully!');
+
+		let user = locals.user as User;
+		user.name = form.data.name;
+		user.lastName = form.data.lastName;
+		user.birthDate = form.data.birthDate;
+		user.fiscalCode = form.data.fiscalCode ?? '';
+		user.gender = form.data.gender;
+		user.completed = true;
+		user.phone = `${form.data.prefix}-${form.data.phone}`;
+		user.nick = form.data.username;
+		try {
+			await pb.collection('users').update(user.id, {
+				name: form.data.name,
+				lastName: form.data.lastName,
+				birthDate: form.data.birthDate,
+				fiscalCode: form.data.fiscalCode ?? '',
+				gender: form.data.gender,
+				completed: true,
+				phone: `${form.data.prefix}-${form.data.phone}`,
+				nick: form.data.username
+			});
+		} catch (e) {
+			console.log(e);
+			return message(form, 'Errore durante la registrazione del pilota, riprova più tardi', {
+				status: 500
+			});
+		}
+		return message(form, 'Hai completato la registrazione pilota!');
 	}
 };

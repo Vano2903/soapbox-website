@@ -15,7 +15,9 @@
 
 <div class="p-2">
 	<p>
-		Ciao <span class="font-bold"> {data.user?.name}</span>, benvenuto nella tua dashboard.
+		Ciao <span class="font-bold"
+			>{data.user?.name} {data.user?.lastName} aka {data.user?.nick}
+		</span>, benvenuto nella tua dashboard.
 	</p>
 
 	<button

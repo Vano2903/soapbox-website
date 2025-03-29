@@ -1,10 +1,16 @@
 import { fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { message, setError, superValidate } from 'sveltekit-superforms';
+import {
+	message,
+	setError,
+	superValidate,
+	type SuperValidated,
+	type Infer
+} from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { z } from 'zod';
-import { GenderKind, type User } from '$tsTypes/user';
+import { type User } from '$tsTypes/user';
 import type { TypedPocketBase } from '$tsTypes/pocketbase';
+import { schema } from './schema';
 
 // https://gist.github.com/anubhavshrimal/75f6183458db8c453306f93521e93d37?permalink_comment_id=4493502#gistcomment-4493502
 const countryPhoneCodes = [
@@ -1469,53 +1475,7 @@ const countryPhoneCodes = [
 	}
 ];
 
-// Define outside the load function so the adapter can be cached
-const schema = z.object({
-	name: z.string({
-		required_error: 'Il nome è obbligatorio',
-		invalid_type_error: 'Il nome deve essere una stringa'
-	}),
-	lastName: z.string({
-		required_error: 'Il cognome è obbligatorio',
-		invalid_type_error: 'Il cognome deve essere una stringa'
-	}),
-	birthDate: z.date({
-		required_error: 'La data di nascita è obbligatoria',
-		invalid_type_error: 'La data di nascita deve essere una data'
-	}),
-	// .min(new Date('1900-01-01'), {
-	// 	message: 'La data di nascita deve essere successiva al 1900/01/01'
-	// })
-	// .max(new Date(), {
-	// 	message: 'La data di nascita non può essere futura'
-	// }),
-	gender: z.nativeEnum(GenderKind, {
-		required_error: 'selezionare almeno un sesso'
-	}),
-	prefix: z.string({
-		required_error: 'Il prefisso è obbligatorio',
-		invalid_type_error: 'Il prefisso deve essere una stringa'
-	}),
-	phone: z.string({
-		required_error: 'Il numero di telefono è obbligatorio',
-		invalid_type_error: 'Il numero di telefono deve essere una stringa'
-	}),
-	fiscalCode: z.optional(z.string()),
-	username: z
-		.string({
-			required_error: 'Il nome utente è obbligatorio',
-			invalid_type_error: 'Il nome utente deve essere una stringa'
-		})
-		.min(3, {
-			message: 'Il nome utente deve avere almeno 3 caratteri'
-		})
-		.max(20, {
-			message: 'Il nome utente deve avere al massimo 20 caratteri'
-		})
-		.regex(/^[a-zA-Z0-9\-]+$/, {
-			message: 'Il nome utente può contenere solo lettere, numeri e trattini'
-		})
-});
+const usernameSchema = schema.pick({ username: true });
 
 export const load: PageServerLoad = async ({ parent }) => {
 	const { user } = await parent();
@@ -1530,13 +1490,22 @@ export const load: PageServerLoad = async ({ parent }) => {
 	return { form, countryPhoneCodes };
 };
 
-async function isUsernameValid(username: string, pb: TypedPocketBase): Promise<boolean> {
+async function isUsernameValid(
+	form: SuperValidated<Infer<typeof usernameSchema>>,
+	pb: TypedPocketBase
+): Promise<boolean> {
 	const bannedUsernames = ['admin', 'root', 'superuser'];
-	if (bannedUsernames.includes(username)) {
+	if (bannedUsernames.includes(form.data.username)) {
+		setError(form, 'username', 'Il nome utente non è valido', {
+			overwrite: true
+		});
 		return false;
 	}
 	try {
-		const user = await pb.collection('users').getFirstListItem(`nick="${username}"`);
+		await pb.collection('users').getFirstListItem(`nick="${form.data.username}"`);
+		setError(form, 'username', 'Il nome utente non è disponibile', {
+			overwrite: true
+		});
 		return false;
 	} catch (e) {
 		return true;
@@ -1544,7 +1513,7 @@ async function isUsernameValid(username: string, pb: TypedPocketBase): Promise<b
 }
 
 export const actions = {
-	default: async ({ request, locals }) => {
+	onboard: async ({ request, locals }) => {
 		const form = await superValidate(request, zod(schema));
 		console.log('form', form);
 		if (!form.valid) {
@@ -1555,25 +1524,13 @@ export const actions = {
 
 		const pb = locals.pb;
 
-		const { username } = form.data;
-		const isUsernameAvailable = await isUsernameValid(username, pb);
+		const isUsernameAvailable = await isUsernameValid(form, pb);
 		console.log('isUsernameAvailable', isUsernameAvailable);
-		if (!isUsernameAvailable) {
-			return setError(form, 'username', 'Il nome utente non è disponibile');
-		}
-		// Return the form with a status message
+		if (!form.valid || !isUsernameAvailable) return fail(400, { form });
 
-		let user = locals.user as User;
-		user.name = form.data.name;
-		user.lastName = form.data.lastName;
-		user.birthDate = form.data.birthDate;
-		user.fiscalCode = form.data.fiscalCode ?? '';
-		user.gender = form.data.gender;
-		user.completed = true;
-		user.phone = `${form.data.prefix}-${form.data.phone}`;
-		user.nick = form.data.username;
 		try {
-			await pb.collection('users').update(user.id, {
+			let user = locals.user as User;
+			locals.user = await pb.collection('users').update(user.id, {
 				name: form.data.name,
 				lastName: form.data.lastName,
 				birthDate: form.data.birthDate,
@@ -1583,12 +1540,23 @@ export const actions = {
 				phone: `${form.data.prefix}-${form.data.phone}`,
 				nick: form.data.username
 			});
+
+			return message(form, 'Hai completato la registrazione pilota!');
 		} catch (e) {
 			console.log(e);
 			return message(form, 'Errore durante la registrazione del pilota, riprova più tardi', {
 				status: 500
 			});
 		}
-		return message(form, 'Hai completato la registrazione pilota!');
+	},
+
+	checkUsername: async ({ request, locals }) => {
+		const form = await superValidate(request, zod(usernameSchema));
+		const pb = locals.pb;
+		const isUsernameAvailable = await isUsernameValid(form, pb);
+
+		if (!form.valid || !isUsernameAvailable) return fail(400, { form });
+
+		return { form };
 	}
 };

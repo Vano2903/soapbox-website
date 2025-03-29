@@ -4,12 +4,18 @@
 	import { untrack } from 'svelte';
 	import SuperDebug, { dateProxy, superForm } from 'sveltekit-superforms';
 	import { debounce } from 'throttle-debounce';
+	import { zod } from 'sveltekit-superforms/adapters';
+	import { schema } from './schema';
 
 	const { data } = $props();
 	// const { user } = data;
 	const { countryPhoneCodes } = data;
 
-	const { form, errors, message, constraints, enhance } = superForm(data.form);
+	const { form, errors, message, constraints, enhance } = superForm(data.form, {
+		validators: zod(schema)
+		// scrollToError: 'smooth',
+		// stickyNavbar: 'body > div > div.app > header'
+	});
 
 	const {
 		delayed,
@@ -25,7 +31,6 @@
 				if (!$form.username) cancel();
 			},
 			onUpdated({ form }) {
-				// Update the other form to show the error message
 				$errors.username = form.errors.username;
 			}
 		}
@@ -48,6 +53,8 @@
 	});
 
 	$effect(() => {
+		$form.fiscalCode = fiscalCode;
+
 		try {
 			const cf = new CodiceFiscale(fiscalCode.toUpperCase());
 			// birthDate =cf.birthday.toISOString().split('T')[0];
@@ -59,23 +66,26 @@
 			}
 			$form.gender = gender;
 
-			errors.set({ fiscalCode: undefined });
+			// errors.set({ fiscalCode: undefined });
 		} catch (error) {
-			if (!!fiscalCode) {
-				errors.set({ fiscalCode: ['Il codice fiscale inserito non è valido'] });
-				console.log('cf', 'invalid');
-			} else {
-				errors.set({ fiscalCode: undefined });
-			}
+			// if (!!fiscalCode) {
+			// 	errors.set({ fiscalCode: ['Il codice fiscale inserito non è valido'] });
+			// 	console.log('cf', 'invalid');
+			// } else {
+			// 	errors.set({ fiscalCode: undefined });
+			// }
 		}
-		$form.fiscalCode = fiscalCode;
 	});
 
-	let files = $state<FileList | null | undefined>(undefined);
+	$effect(() => {
+		console.log('errors:', $errors);
+		console.log('form:', $form);
+	});
+	// let files = $state<FileList | null | undefined>(undefined);
 
-	function clear() {
-		files = new DataTransfer().files; // null or undefined does not work
-	}
+	// function clear() {
+	// 	files = new DataTransfer().files; // null or undefined does not work
+	// }
 
 	const userDomain = 'boxrally.eu/u/';
 </script>
@@ -85,7 +95,7 @@
 
 	<h1 class="text-primary mb-8 text-3xl font-bold">Completa il tuo profilo</h1>
 
-	<form method="POST" class="flex flex-col space-y-8" use:enhance>
+	<form method="POST" class="flex flex-col space-y-8" use:enhance action="?/onboard">
 		<!-- Contact Information Section -->
 		<div class="border-base-content space-y-6 border-b pb-8">
 			<h2 class="text-primary text-lg font-semibold">Informazioni di Contatto</h2>
@@ -94,6 +104,8 @@
 					<legend class="fieldset-legend">Nome</legend>
 					<input
 						{...$constraints.name}
+						class:input-error={$errors.name}
+						class:input-success={$form.name && 'name' in $errors && !$errors.name}
 						type="text"
 						aria-invalid={$errors.name ? 'true' : undefined}
 						bind:value={$form.name}
@@ -109,6 +121,8 @@
 					<legend class="fieldset-legend">Cognome</legend>
 					<input
 						{...$constraints.lastName}
+						class:input-error={$errors.lastName}
+						class:input-success={$form.lastName && 'lastName' in $errors && !$errors.lastName}
 						type="text"
 						aria-invalid={$errors.lastName ? 'true' : undefined}
 						bind:value={$form.lastName}
@@ -142,6 +156,8 @@
 						</select>
 						<input
 							{...$constraints.phone}
+							class:input-error={$errors.phone}
+							class:input-success={$form.phone && 'phone' in $errors && !$errors.phone}
 							type="text"
 							alt="phone"
 							name="phone"
@@ -172,6 +188,8 @@
 				<legend class="fieldset-legend">Codice Fiscale</legend>
 				<input
 					{...$constraints.fiscalCode}
+					class:input-error={$errors.fiscalCode}
+					class:input-success={$form.fiscalCode && 'fiscalCode' in $errors && !$errors.fiscalCode}
 					type="text"
 					id="fiscalCode"
 					alt="fiscalCode"
@@ -248,8 +266,10 @@
 			<fieldset class="fieldset flex-1 text-base">
 				<legend class="fieldset-legend">Data di Nascita</legend>
 				<input
-					readonly={!!$form.fiscalCode}
 					{...$constraints.birthDate}
+					class:input-error={$errors.birthDate}
+					class:input-success={$form.birthDate && 'birthDate' in $errors && !$errors.birthDate}
+					readonly={!!$form.fiscalCode}
 					min={$constraints.birthDate?.min?.toString().slice(0, 10)}
 					id="birthDate"
 					name="birthDate"
@@ -273,12 +293,21 @@
 			<fieldset class="fieldset flex-1 text-base">
 				<legend class="fieldset-legend">Username</legend>
 
-				<label class="input w-full">
+				<label
+					class="input w-full"
+					class:input-error={$errors.username}
+					class:input-success={$form.username &&
+						'username' in $errors &&
+						!$errors.username &&
+						!$delayed}
+				>
+					<!-- class:input-success={$form.username && 'username' in $errors} -->
 					<span class="label">{userDomain}</span>
 					<input
 						{...$constraints.username}
 						autocomplete="username"
 						type="text"
+						form="check"
 						name="username"
 						id="username"
 						bind:value={username}
@@ -286,37 +315,46 @@
 						placeholder="mario-rossi"
 						oninput={checkUsername}
 					/>
+					<!-- class:input-error={$errors.username}
+						class:input-success={$form.username && 'username' in $errors} -->
 				</label>
 
-				{#if $delayed}
-					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-					<span class="loading loading-spinner loading-sm"></span>
-				{:else if $errors.username}
-					❌
-				{:else if $form.username && 'username' in $errors}
-					✅
-				{/if}
-
+				<input type="hidden" name="username" value={$form.username} />
 				<p class="text-base-content mb-2 text-xs/5">
 					Il nickname sará usato per creare il tuo URL personalizzato con la quale potrai
 					condividere il profilo.
 				</p>
 
-				<!-- rounded-lg border border-gray-300 px-4 py-2 focus:border-red-600 focus:ring-2 focus:ring-red-600" -->
-				{#if $errors.username}
-					<p class="fieldset-label text-error">{$errors.username}</p>
+				{#if $delayed}
+					<span class="loading loading-spinner loading-sm"></span>
+				{:else if $errors.username}
+					<!-- ❌ -->
+					<!-- <p class="fieldset-label text-error">Username errors:</p> -->
+					<ul class="fieldset-label text-error flex-col items-start">
+						{#each $errors.username as error}
+							<li>
+								{error}
+							</li>
+						{/each}
+					</ul>
+					<!-- {:else if $form.username && 'username' in $errors}
+					✅ -->
 				{/if}
+
+				<!-- rounded-lg border border-gray-300 px-4 py-2 focus:border-red-600 focus:ring-2 focus:ring-red-600" -->
+				<!-- {#if $errors.username}
+				{/if} -->
 			</fieldset>
 
 			<!-- Submit Button -->
-			<button
-				type="submit"
-				class="mt-8 w-full rounded-lg bg-red-600 py-3 font-medium text-white transition-colors hover:bg-red-700 focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:outline-none"
-			>
+			<button disabled={$delayed} type="submit" class="btn btn-primary w-full">
+				<!-- class="mt-8 w-full rounded-lg bg-red-600 py-3 font-medium text-white transition-colors hover:bg-red-700 focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:outline-none" -->
 				Completa registrazione
 			</button>
 		</div>
 	</form>
+
+	<form id="check" method="POST" action="?/checkUsername" use:submitEnhance></form>
 </main>
 
 <style>

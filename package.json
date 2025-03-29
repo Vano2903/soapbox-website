@@ -40,6 +40,7 @@
 	"dependencies": {
 		"@splidejs/svelte-splide": "^0.2.9",
 		"@tailwindcss/postcss": "^4.0.6",
+		"@types/throttle-debounce": "^5.0.2",
 		"bits-ui": "^1.1.0",
 		"codice-fiscale-js": "^2.3.22",
 		"daisyui": "^5.0.6",
@@ -50,7 +51,8 @@
 		"pocketbase": "^0.25.2",
 		"sass-embedded": "^1.85.1",
 		"tailwind-merge": "^3.0.1",
-		"tailwind-variants": "^0.3.1"
+		"tailwind-variants": "^0.3.1",
+		"throttle-debounce": "^5.0.2"
 	},
 	"exports": {
 		".": {

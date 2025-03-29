@@ -2,19 +2,16 @@
 	import { GenderKind } from '$tsTypes/user.js';
 	import CodiceFiscale from 'codice-fiscale-js';
 	import { untrack } from 'svelte';
-	import SuperDebug, { dateProxy, superForm } from 'sveltekit-superforms';
+	import { dateProxy, superForm } from 'sveltekit-superforms';
 	import { debounce } from 'throttle-debounce';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { schema } from './schema';
 
 	const { data } = $props();
-	// const { user } = data;
 	const { countryPhoneCodes } = data;
 
 	const { form, errors, message, constraints, enhance } = superForm(data.form, {
 		validators: zod(schema)
-		// scrollToError: 'smooth',
-		// stickyNavbar: 'body > div > div.app > header'
 	});
 
 	const {
@@ -57,7 +54,6 @@
 
 		try {
 			const cf = new CodiceFiscale(fiscalCode.toUpperCase());
-			// birthDate =cf.birthday.toISOString().split('T')[0];
 			$proxyDate = cf.birthday.toISOString().split('T')[0];
 			if (cf.gender === 'M') {
 				gender = GenderKind.Male;
@@ -65,22 +61,9 @@
 				gender = GenderKind.Female;
 			}
 			$form.gender = gender;
-
-			// errors.set({ fiscalCode: undefined });
-		} catch (error) {
-			// if (!!fiscalCode) {
-			// 	errors.set({ fiscalCode: ['Il codice fiscale inserito non è valido'] });
-			// 	console.log('cf', 'invalid');
-			// } else {
-			// 	errors.set({ fiscalCode: undefined });
-			// }
-		}
+		} catch (error) {}
 	});
 
-	$effect(() => {
-		console.log('errors:', $errors);
-		console.log('form:', $form);
-	});
 	// let files = $state<FileList | null | undefined>(undefined);
 
 	// function clear() {
@@ -91,8 +74,6 @@
 </script>
 
 <main class="mx-auto max-w-2xl px-4 py-8">
-	<SuperDebug data={$form} />
-
 	<h1 class="text-primary mb-8 text-3xl font-bold">Completa il tuo profilo</h1>
 
 	<form method="POST" class="flex flex-col space-y-8" use:enhance action="?/onboard">

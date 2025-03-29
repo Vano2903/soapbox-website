@@ -25,9 +25,9 @@ const authentication: Handle = async ({ event, resolve }) => {
 				pb.files.getURL(pb.authStore.record, pb.authStore.record.avatar) ??
 				`https://avatar.iran.liara.run/public/boy?username=${pb.authStore.record.name}`;
 			console.log('avatar', event.locals.user.avatar);
+			event.locals.user.created = new Date(event.locals.user.created);
+			event.locals.user.updated = new Date(event.locals.user.updated);
 		}
-		event.locals.user.created = new Date(event.locals.user.created);
-		event.locals.user.updated = new Date(event.locals.user.updated);
 	}
 
 	const response = await resolve(event);

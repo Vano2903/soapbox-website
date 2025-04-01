@@ -1502,12 +1502,13 @@ async function isUsernameValid(
 		return false;
 	}
 	try {
-		await pb.collection('users').getFirstListItem(`nick="${form.data.username}"`);
+		const data = await pb.collection('usernames').getFirstListItem(`nick="${form.data.username}"`);
 		setError(form, 'username', 'Il nome utente non è disponibile', {
 			overwrite: true
 		});
 		return false;
 	} catch (e) {
+		console.log('error seraching for username in isUsernameValid:', e);
 		return true;
 	}
 }

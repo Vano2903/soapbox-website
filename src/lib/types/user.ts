@@ -21,10 +21,16 @@ export interface User {
 	avatar?: string;
 	completed: boolean;
 	nick: string;
+	visibilty: UserVisiblityKind;
 	fiscalCode: string;
 	phone: string;
 	gender: GenderKind;
 	birthDate: Date;
+}
+
+export enum UserVisiblityKind {
+	Public = 'public',
+	Private = 'private'
 }
 
 export enum GenderKind {

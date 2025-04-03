@@ -8,7 +8,7 @@ import {
 	type Infer
 } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { type User } from '$tsTypes/user';
+import { Roles, type User } from '$tsTypes/user';
 import type { TypedPocketBase } from '$tsTypes/pocketbase';
 import { schema } from './schema';
 
@@ -1531,13 +1531,15 @@ export const actions = {
 
 		try {
 			let user = locals.user as User;
+			console.log('user in onboard action', user);
 			locals.user = await pb.collection('users').update(user.id, {
+				completed: true,
 				name: form.data.name,
 				lastName: form.data.lastName,
 				birthDate: form.data.birthDate,
 				fiscalCode: form.data.fiscalCode ?? '',
 				gender: form.data.gender,
-				completed: true,
+				visibility: form.data.visibility,
 				phone: `${form.data.prefix}-${form.data.phone}`,
 				nick: form.data.username
 			});

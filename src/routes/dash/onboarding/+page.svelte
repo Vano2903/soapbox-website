@@ -2,7 +2,7 @@
 	import { GenderKind } from '$tsTypes/user.js';
 	import CodiceFiscale from 'codice-fiscale-js';
 	import { untrack } from 'svelte';
-	import { dateProxy, superForm } from 'sveltekit-superforms';
+	import SuperDebug, { dateProxy, superForm } from 'sveltekit-superforms';
 	import { debounce } from 'throttle-debounce';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { schema } from './schema';
@@ -75,7 +75,7 @@
 
 <main class="mx-auto max-w-2xl px-4 py-8">
 	<h1 class="text-primary mb-8 text-3xl font-bold">Completa il tuo profilo</h1>
-
+	<SuperDebug data={$form} />
 	<form method="POST" class="flex flex-col space-y-8" use:enhance action="?/onboard">
 		<!-- Contact Information Section -->
 		<div class="border-base-content space-y-6 border-b pb-8">
@@ -325,6 +325,45 @@
 				<!-- rounded-lg border border-gray-300 px-4 py-2 focus:border-red-600 focus:ring-2 focus:ring-red-600" -->
 				<!-- {#if $errors.username}
 				{/if} -->
+			</fieldset>
+
+			<fieldset class="fieldset flex-1 flex-col text-base md:flex-row">
+				<legend class="fieldset-legend">Vuoi che il tuo account pubblico?</legend>
+				<p class="text-base-content mb-2 text-xs/5">
+					Se rendi il tuo account pubblico chiunque potrà vedere le informazioni del tuo profilo e
+					le tue statistiche da pilota. <br />
+					Se selezioni di no invece il tuo profilo sarà visibile solo a te e ad eventuali membri del
+					tuo team. Puoi sempre cambiare questa opzione in un secondo momento.
+				</p>
+
+				<div class="flex items-center gap-2">
+					<input
+						type="radio"
+						class="radio"
+						alt="pubblico"
+						bind:group={$form.visibility}
+						name="visibility"
+						id="visibility-public"
+						value="public"
+					/>
+					<label for="visibility-public">Pubblico</label>
+				</div>
+				<div class="flex items-center gap-2">
+					<input
+						type="radio"
+						class="radio"
+						alt="privato"
+						bind:group={$form.visibility}
+						name="visibility"
+						id="visibility-private"
+						value="private"
+					/>
+					<label for="visibility-private">Privato</label>
+				</div>
+
+				{#if $errors.visibility}
+					<p class="fieldset-label text-error">{$errors.visibility}</p>
+				{/if}
 			</fieldset>
 
 			<!-- Submit Button -->

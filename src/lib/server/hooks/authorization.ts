@@ -32,8 +32,12 @@ const authorization: Handle = async ({ event, resolve }) => {
 		redirect(302, '/login');
 	}
 
-	if (!user.verified && !path.startsWith('/dash/verify')) {
+	if (!user.verified) {
+		if (!path.startsWith('/dash/verify')) {
 		redirect(302, '/dash/verify');
+		} else {
+			return await resolve(event);
+		}
 	}
 
 	if (!user.completed && !path.startsWith('/dash/onboarding')) {

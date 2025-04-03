@@ -1,4 +1,4 @@
-import { GenderKind } from '$tsTypes/user';
+import { GenderKind, UserVisiblityKind } from '$tsTypes/user';
 import CodiceFiscale from 'codice-fiscale-js';
 import { z } from 'zod';
 
@@ -65,5 +65,23 @@ export const schema = z.object({
 		})
 		.regex(/^[a-z0-9\-]+$/, {
 			message: 'Il nome utente può contenere solo minuscole, numeri e trattini'
-		})
+		}),
+	visibility: z.nativeEnum(UserVisiblityKind, {
+		errorMap: (gender, _ctx) => {
+			switch (gender.code) {
+				case 'invalid_type':
+					return {
+						message: `La visibilità dell'account è richiesta, scegliere tra uno dei seguenti`
+					};
+				case 'invalid_enum_value':
+					return {
+						message: `La visibilità dell'account è richiesta, scegliere tra uno dei seguenti`
+					};
+				default:
+					return {
+						message: `La visibilità dell'account è richiesta, scegliere tra uno dei seguenti`
+					};
+			}
+		}
+	})
 });

@@ -8,15 +8,23 @@ const authorization: Handle = async ({ event, resolve }) => {
 	const user = event.locals.user;
 	const path = event.url.pathname;
 
-	if (user?.banned) {
-		error(403, `You don't have access to the system :(`);
-	}
-
-	const publicPaths = ['/', '/chi-siamo', '/login', '/register', '/gallery', '/championships'];
+	const publicPaths = [
+		'/',
+		'/chi-siamo',
+		'/login',
+		'/register',
+		'/forgot-password',
+		'/gallery',
+		'/championships'
+	];
 
 	// Allow access to public paths without authentication
 	if (publicPaths.includes(path)) {
 		return await resolve(event);
+	}
+
+	if (user?.banned) {
+		error(403, `You don't have access to the system :(`);
 	}
 
 	// Redirect unauthenticated users to the login page

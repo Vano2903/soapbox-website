@@ -26,7 +26,7 @@ export const actions = {
 				email: form.data.email,
 				password: form.data.password,
 				passwordConfirm: form.data.confirmPassword,
-				role: Roles.User
+				role: [Roles.User]
 			});
 			console.log('created user:', user);
 			pb.collection('users').requestVerification(form.data.email);

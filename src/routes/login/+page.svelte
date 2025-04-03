@@ -1,31 +1,65 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import type { TypedPocketBase } from '$tsTypes/pocketbase.js';
 	import PocketBase, { type RecordModel } from 'pocketbase';
-	import { onMount } from 'svelte';
+	import { schema } from './schema.js';
+	import { zod } from 'sveltekit-superforms/adapters';
+	import { superForm } from 'sveltekit-superforms';
 
 	const { data } = $props();
 
-	const pb = new PocketBase(data.pbUri) as TypedPocketBase;
-	let error = $state(false);
+	const { form, errors, message, constraints, enhance } = superForm(data.form, {
+		validators: zod(schema)
+	});
 
-	async function auth() {
-		// const pb = new PocketBase(data.pbUri);
-		// try {
-		// 	const authData = await pb.collection('users').authWithOAuth2({
-		// 		provider: 'google'
-		// 	});
-		// 	pb.authStore.save(authData!.token, authData!.record);
-		// 	document.cookie = pb.authStore.exportToCookie({
-		// 		httpOnly: false,
-		// 		secure: true,
-		// 		sameSite: 'strict'
-		// 	});
-		// 	window.location.href = '/cogestione';
-		// } catch {
-		// 	error = true;
-		// }
-	}
+	const pb = new PocketBase(data.pbUri) as TypedPocketBase;
+	let error = $state('');
+
+	// async function signInWithEmail() {
+	// 	console.log('Sign in with email');
+	// 	const email = (document.getElementById('email') as HTMLInputElement)?.value;
+	// 	if (!email) {
+	// 		error = "L'indirizzo email è obbligatorio";
+	// 		return;
+	// 	}
+	// 	const password = (document.getElementById('password') as HTMLInputElement)?.value;
+	// 	if (!password) {
+	// 		error = 'La password è obbligatoria';
+	// 		return;
+	// 	}
+	// 	console.log('email:', email);
+	// 	console.log('password:', password);
+
+	// 	try {
+	// 		const user = await pb.collection('users').authWithPassword(email, password);
+	// 		if (pb.authStore.isValid) {
+	// 			console.log('User is logged in');
+	// 			document.cookie = pb.authStore.exportToCookie({
+	// 				httpOnly: false,
+	// 				secure: true
+	// 				// sameSite: 'strict'
+	// 			});
+	// 			document.location.href = '/dash';
+	// 			console.log('going to /dash');
+	// 		}
+	// 	} catch (err) {
+	// 		console.error(err);
+	// 		if (err instanceof Error) {
+	// 			error = err.message;
+	// 		} else if (typeof err === 'string') {
+	// 			error = err;
+	// 		} else {
+	// 			error = 'Errore sconosciuto';
+	// 		}
+	// 		return;
+	// 	}
+	// }
+
+	$effect(() => {
+		console.log('form', $form);
+		console.log('errors', $errors);
+		console.log('message', $message);
+	});
 
 	async function singInWithGoogle() {
 		console.log('Sign in with Google');
@@ -41,7 +75,6 @@
 					}
 				}
 			});
-			// console.error(err);
 			if (pb.authStore.isValid) {
 				console.log('User is logged in');
 				document.cookie = pb.authStore.exportToCookie({
@@ -49,10 +82,7 @@
 					secure: true
 					// sameSite: 'strict'
 				});
-				// goto('/dash');
 				document.location.href = '/dash';
-				console.log('going to /dash');
-				// pb.router.push('/u/' + pb.authStore.user.username);
 			}
 		} catch (err) {
 			console.error(err);
@@ -63,59 +93,82 @@
 
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
 	<div class="sm:mx-auto sm:w-full sm:max-w-sm">
-		<h2 class="text-center text-2xl/9 font-bold tracking-tight text-gray-900 lg:mt-6">
+		<h2 class="text-content text-center text-2xl/9 font-bold tracking-tight lg:mt-6">
 			Accedi al tuo account
 		</h2>
 	</div>
 
 	<div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
 		{#if data.authMethods?.password.enabled}
-			<form class="space-y-6" action="#" method="POST">
-				<div>
-					<label for="email" class="block text-sm/6 font-medium text-gray-900">Indirizzo Mail</label
-					>
-					<div class="mt-2">
-						<input
-							type="email"
-							name="email"
-							id="email"
-							autocomplete="email"
-							required
-							class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-600 sm:text-sm/6"
-						/>
-					</div>
-				</div>
+			<form class="space-y-6" action="?/login" method="POST" use:enhance>
+				<fieldset class="fieldset">
+					<legend class="fieldset-legend">Indirizzo Mail</legend>
+					<input
+						type="email"
+						id="email"
+						name="email"
+						autocomplete="email"
+						required
+						class="input w-full"
+						placeholder="mario.rossi@gmail.com"
+						{...$constraints.email}
+						class:input-error={$errors.email}
+						class:input-success={$form.email && 'email' in $errors && !$errors.email}
+						aria-invalid={$errors.email ? 'true' : undefined}
+						bind:value={$form.email}
+					/>
+					{#if $errors.email}
+						<p class="fieldset-label text-error">{$errors.email}</p>
+					{/if}
+				</fieldset>
 
-				<div>
+				<fieldset class="fieldset">
 					<div class="flex items-center justify-between">
-						<label for="password" class="block text-sm/6 font-medium text-gray-900">Password</label>
-						<div class="text-sm">
-							<a href="#" class="font-semibold text-red-600 hover:text-red-500 hover:underline"
-								>Hai dimenticato la password?</a
-							>
-						</div>
+						<legend class="fieldset-legend">Password</legend>
+						<a href="/forgot-password" class="link link-hover link-accent"
+							>Hai dimenticato la password?</a
+						>
 					</div>
-					<div class="mt-2">
-						<input
-							type="password"
-							name="password"
-							id="password"
-							autocomplete="current-password"
-							required
-							class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-600 sm:text-sm/6"
-						/>
-					</div>
-				</div>
+					<input
+						autocomplete="current-password"
+						type="password"
+						required
+						name="password"
+						class="input w-full"
+						placeholder=""
+						id="password"
+						{...$constraints.password}
+						class:input-error={$errors.password}
+						class:input-success={$form.password && 'password' in $errors && !$errors.password}
+						aria-invalid={$errors.password ? 'true' : undefined}
+						bind:value={$form.password}
+					/>
+					{#if $errors.password}
+						{#if $errors.password.length == 1}
+							<p class="fieldset-label text-error">{$errors.password}</p>
+						{:else}
+							<ul>
+								{#each $errors.password as error}
+									<li class="fieldset-label text-error">{error}</li>
+								{/each}
+							</ul>
+						{/if}
+					{/if}
+				</fieldset>
 
 				<div>
-					<button
-						aria-label="Accedi"
-						type="submit"
-						class="flex w-full cursor-pointer justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs transition hover:scale-x-101 hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-						>Accedi</button
-					>
+					<button aria-label="Accedi" type="submit" class="btn btn-primary w-full">Accedi</button>
 				</div>
 			</form>
+			{#if $message}
+				{#if $page.status >= 400}
+					<div class="alert alert-error alert-soft mt-4">
+						{@html $message}
+					</div>
+				{:else}
+					{(window.location.href = '/dash')}
+				{/if}
+			{/if}
 		{/if}
 
 		{#if data.authMethods?.oauth2.enabled && data.authMethods?.oauth2.providers.length > 0 && data.authMethods?.password.enabled}
@@ -128,7 +181,7 @@
 					onclick={singInWithGoogle}
 					aria-label="Login with Google"
 					type="button"
-					class="flex cursor-pointer items-center gap-x-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm/6 font-semibold text-gray-900 shadow-xs transition hover:scale-x-101 hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+					class="btn focus-visible:outline-primary bg-white text-black transition hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2"
 				>
 					<svg
 						class="size-6"
@@ -162,11 +215,9 @@
 		<!-- <p class="mt-6 text-center text-sm/6 text-red-600">Credenziali non valide</p> -->
 		<!-- {/if} -->
 
-		<p class="mt-10 text-center text-sm/6 text-gray-700">
+		<p class="text-content mt-10 text-center text-sm/6">
 			Non hai un account pilota?
-			<a href="/register" class="font-semibold text-red-600 hover:text-red-500 hover:underline"
-				>Creane uno ora</a
-			>
+			<a href="/register" class="link link-accent">Creane uno ora</a>
 		</p>
 	</div>
 </div>

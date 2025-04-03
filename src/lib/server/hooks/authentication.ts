@@ -22,9 +22,8 @@ const authentication: Handle = async ({ event, resolve }) => {
 		event.locals.user = (pb.authStore.record as unknown as User) || undefined;
 		if (pb.authStore.record) {
 			event.locals.user.avatar =
-				pb.files.getURL(pb.authStore.record, pb.authStore.record.avatar) ??
-				`https://avatar.iran.liara.run/public/boy?username=${pb.authStore.record.name}`;
-			console.log('avatar', event.locals.user.avatar);
+				pb.files.getURL(pb.authStore.record, pb.authStore.record.avatar) ||
+				`https://avatar.iran.liara.run/public?username=${pb.authStore.record.name || pb.authStore.record.email}`;
 			event.locals.user.created = new Date(event.locals.user.created);
 			event.locals.user.updated = new Date(event.locals.user.updated);
 		}

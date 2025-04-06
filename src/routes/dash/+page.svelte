@@ -1,5 +1,9 @@
 <script lang="ts">
+	import type { TypedPocketBase } from '$tsTypes/pocketbase.js';
+	import PocketBase, { type RecordModel } from 'pocketbase';
+
 	const { data } = $props();
+	const pb = new PocketBase(data.pbUri) as TypedPocketBase;
 
 	function logout() {
 		console.log('logout');
@@ -20,10 +24,8 @@
 		</span>, benvenuto nella tua dashboard.
 	</p>
 
-	<button
-		onclick={logout}
-		class="my-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
-	>
-		logout
-	</button>
+	<button class="btn">Crea un nuovo team</button>
+	<button class="btn">Entra a far parte di un nuovo team</button>
+
+	<button onclick={logout} class="btn btn-info my-4"> logout </button>
 </div>

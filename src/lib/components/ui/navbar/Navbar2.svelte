@@ -1,4 +1,6 @@
 <script lang="ts">
+	import UserButton from './UserButton.svelte';
+
 	const latestGalleryYear = 2003;
 
 	const links = [
@@ -28,37 +30,11 @@
 
 	<div class="ml-2 hidden w-full items-center justify-between py-2 md:flex">
 		<div class="space-x-4">
-			<!-- class="pr-10 text-2xl font-bold text-white"  -->
 			{#each links as link}
 				<a class="btn btn-primary border-0 text-2xl font-bold" href={link.href}>{link.name}</a>
-				<!-- class="rounded-md px-4 py-2 text-2xl font-bold text-white hover:bg-red-700 hover:text-white" -->
 			{/each}
 		</div>
-
-		<a
-			href={user ? '/dash' : '/login'}
-			data-sveltekit-reload
-			class=" link-hover flex cursor-pointer items-center text-white"
-		>
-			<span class="hidden pr-2 font-bold lg:block">{user ? 'Dashboard' : 'Accedi'}</span>
-			<!-- <div class="avatar">
-				<div class="ring-primary w-10 rounded-full ring ring-offset-1">
-					<img
-						src={user ? user.avatar : '/images/navbar/profile.svg'}
-						alt={user ? 'Dashboard icon' : 'Login icon'}
-					/>
-				</div>
-			</div> -->
-
-			<div class="avatar">
-				<div class="ring-offset-primary w-10 rounded-full ring-2 ring-white ring-offset-2">
-					<img
-						src={user ? user.avatar : '/images/navbar/profile.svg'}
-						alt={user ? 'Dashboard icon' : 'Login icon'}
-					/>
-				</div>
-			</div>
-		</a>
+		<UserButton {user} />
 	</div>
 </nav>
 

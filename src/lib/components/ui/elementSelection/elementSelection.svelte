@@ -1,5 +1,21 @@
 <script lang="ts">
 	import { ChevronRight, ChevronLeft, type Icon as IconType } from 'lucide-svelte';
+	import { onDestroy, onMount } from 'svelte';
+	import { writable } from 'svelte/store';
+
+	const theme = writable('light');
+	let prefersDarkMode: MediaQueryList;
+	onMount(() => {
+		prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
+		theme.set(prefersDarkMode.matches ? 'dark' : 'light');
+		prefersDarkMode.addEventListener('change', updateThemeOnChange);
+	});
+
+	const updateThemeOnChange = (e: MediaQueryListEvent) => theme.set(e.matches ? 'dark' : 'light');
+	onDestroy(() => prefersDarkMode?.removeEventListener('change', updateThemeOnChange));
+
+	//debugging
+	theme.subscribe((newTheme) => console.log('Swapped to theme:', newTheme));
 
 	type Element = {
 		value: string;
@@ -56,16 +72,8 @@
 	});
 
 	$effect(() => {
-		// console.log('offset', offset);
 		elementsToShow = getElements();
 	});
-
-	// onMount(() => {
-	// 	console.log('elementSelection mounted');
-	// 	console.log('elements offsetted:', getElements());
-	// 	console.log('elements:', elements);
-	// 	console.log('elements.l', elements.length - 1);
-	// });
 
 	const prevElement = () => {
 		let currentIndex = elements.findIndex((value) => value.current);
@@ -94,10 +102,12 @@
 			return;
 		}
 		switch (e.code) {
-			case "ArrowLeft":
+			case 'ArrowLeft':
+				e.preventDefault();
 				prevElement();
 				break;
-			case "ArrowRight":
+			case 'ArrowRight':
+				e.preventDefault();
 				nextElement();
 				break;
 		}
@@ -113,6 +123,20 @@
 </script>
 
 <div class="block whitespace-break-spaces">
+	<div class="hidden" aria-hidden="true">
+		<!-- i know this is ugly but it is what i gotta do to make tailwind compile the colors -->
+		<div class="text-gray-900">900</div>
+		<div class="text-gray-800">800</div>
+		<div class="text-gray-700">700</div>
+		<div class="text-gray-600">600</div>
+		<div class="text-gray-500">500</div>
+		<div class="text-gray-400">400</div>
+		<div class="text-gray-300">300</div>
+		<div class="text-gray-200">200</div>
+		<div class="text-gray-100">100</div>
+		<div class="text-gray-50">50</div>
+	</div>
+
 	<div class="inline-block">
 		<div class="flex items-baseline">
 			{#if elementsToShow.left.length < elementsToShow.right.length}
@@ -130,17 +154,17 @@
 		<button
 			aria-label="Move to {elem.value} year"
 			onclick={() => {
-				if (elem.disabled) {
-					return;
-				}
-				moveToElement(elem.value);
+				if (!elem.disabled) moveToElement(elem.value);
 			}}
-			class="text-gray-{900 -
-				(elementsToShow.left.length - i) * 200} w-12 text-xl sm:w-20 sm:text-3xl
-      {elem.disabled ? `cursor-not-allowed` : `cursor-pointer`}"
+			class="text-gray-{$theme == 'dark'
+				? (elementsToShow.left.length - i) * 200
+				: 900 - (elementsToShow.left.length - i) * 200}
+			 w-12 text-xl sm:w-20 sm:text-3xl"
+			class:cursor-not-allowed={elem.disabled}
+			class:cursor-pointer={!elem.disabled}
 			disabled={elem.disabled}
 		>
-			<div class="flex justify-center {elem.icon ? 'flex flex-col items-center' : ''}">
+			<div class=" flex justify-center {elem.icon ? 'flex flex-col items-center' : ''}">
 				<span>{elem.value}</span>
 				{#if elem.icon}
 					<elem.icon class="h-4 w-4 pt-2 sm:h-6 sm:w-6" />
@@ -155,16 +179,13 @@
 			class="h-4 w-4 cursor-pointer text-xl sm:h-6 sm:w-6 sm:text-3xl"
 			onclick={prevElement}
 		>
-			<ChevronLeft class="h-full w-full stroke-red-600 stroke-3 " />
+			<ChevronLeft class="stroke-primary h-full w-full stroke-3 " />
 		</button>
 	{/if}
 
 	<button
 		onclick={() => {
-			if (elementsToShow.current.disabled) {
-				return;
-			}
-			handleClick(elementsToShow.current.value);
+			if (!elementsToShow.current.disabled) handleClick(elementsToShow.current.value);
 		}}
 		class="w-12 text-xl sm:w-20 sm:text-4xl {elementsToShow.current.disabled
 			? `cursor-not-allowed`
@@ -177,9 +198,6 @@
 				<elementsToShow.current.icon class="h-4 w-4 pt-2 sm:h-6 sm:w-6" />
 			{/if}
 		</div>
-
-		<!-- <span style="height: calc(var(--spacing) * 0.2);" class="mx-4 mt-2 block w-full bg-black" -->
-		<!-- ></span> -->
 	</button>
 	{#if elementsToShow.right.length > 0}
 		<button
@@ -187,21 +205,20 @@
 			class="h-4 w-4 cursor-pointer align-baseline text-xl sm:h-6 sm:w-6 sm:text-3xl"
 			onclick={nextElement}
 		>
-			<ChevronRight class="h-full w-full stroke-red-600 stroke-3 " />
+			<ChevronRight class="stroke-primary h-full w-full stroke-3 " />
 		</button>
 	{/if}
 
 	{#each elementsToShow.right as elem, i}
 		<button
+			aria-label="Move to {elem.value} year"
 			onclick={() => {
-				if (elem.disabled) {
-					return;
-				}
-				moveToElement(elem.value);
-				handleClick(elem.value);
+				if (!elem.disabled) moveToElement(elem.value);
 			}}
-			class=" text-gray-{900 - (i + 1) * 200} w-12 text-xl sm:w-20 sm:text-3xl
-      {elem.disabled ? `cursor-not-allowed` : `cursor-pointer`}"
+			class="text-gray-{$theme == 'dark' ? (i + 1) * 200 : 900 - (i + 1) * 200}
+		 w-12 text-xl sm:w-20 sm:text-3xl"
+			class:cursor-not-allowed={elem.disabled}
+			class:cursor-pointer={!elem.disabled}
 			disabled={elem.disabled}
 		>
 			<div class="flex justify-center {elem.icon ? 'flex flex-col items-center' : ''}">

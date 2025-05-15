@@ -36,18 +36,18 @@
 	const checkUsername = debounce(200, submitCheckUsername);
 
 	let fiscalCode = $state('');
-	let username = $state('');
+	// let username = $state('');
 	const proxyDate = dateProxy(form, 'birthDate', { format: 'date' });
 
 	let prefixes = $state(countryPhoneCodes);
 	let gender = $state() as GenderKind;
 
-	$effect(() => {
-		username = username.trimStart().replaceAll(' ', '-').toLowerCase();
-		untrack(() => {
-			$form.username = username;
-		});
-	});
+	// $effect(() => {
+	// 	username = username.trimStart().replaceAll(' ', '-').toLowerCase();
+	// 	untrack(() => {
+	// 		$form.username = username;
+	// 	});
+	// });
 
 	$effect(() => {
 		$form.fiscalCode = fiscalCode;
@@ -291,7 +291,10 @@
 						form="check"
 						name="username"
 						id="username"
-						bind:value={username}
+						bind:value={
+							() => $form.username,
+							(n) => ($form.username = n.trimStart().replaceAll(' ', '-').toLowerCase())
+						}
 						aria-invalid={$errors.username ? 'true' : undefined}
 						placeholder="mario-rossi"
 						oninput={checkUsername}

@@ -1,0 +1,67 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36" version="27.0.1">
+  <diagram name="Page-1" id="GxcJLQxmQlNdvxZ07zA7">
+    <mxGraphModel dx="1348" dy="601" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ra9y6oQOf7fL091lrW0G-1" value="Teams" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="585" y="115" width="160" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="ra9y6oQOf7fL091lrW0G-2" value="nick&lt;div&gt;name&lt;/div&gt;&lt;div&gt;description&lt;/div&gt;&lt;div&gt;number&lt;/div&gt;&lt;div&gt;logo&lt;/div&gt;&lt;div&gt;banner&lt;/div&gt;&lt;div&gt;owner: People&lt;/div&gt;&lt;div&gt;members: []People&lt;/div&gt;&lt;div&gt;created&lt;/div&gt;&lt;div&gt;updated&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" parent="ra9y6oQOf7fL091lrW0G-1" vertex="1">
+          <mxGeometry y="50" width="160" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="ra9y6oQOf7fL091lrW0G-3" value="Users" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="105" y="80" width="160" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="ra9y6oQOf7fL091lrW0G-4" value="auth-collection&lt;div&gt;completed&lt;/div&gt;&lt;div&gt;nick&lt;/div&gt;&lt;div&gt;lastName&lt;/div&gt;&lt;div&gt;name&lt;/div&gt;&lt;div&gt;avatar&lt;/div&gt;&lt;div&gt;roles: user, admin&lt;/div&gt;&lt;div&gt;fiscalCode&lt;/div&gt;&lt;div&gt;phone&lt;/div&gt;&lt;div&gt;gender&lt;/div&gt;&lt;div&gt;birthDate&lt;/div&gt;&lt;div&gt;bio&lt;/div&gt;&lt;div&gt;person: People&lt;/div&gt;&lt;div&gt;created&lt;/div&gt;&lt;div&gt;updated&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" parent="ra9y6oQOf7fL091lrW0G-3" vertex="1">
+          <mxGeometry y="50" width="160" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="ra9y6oQOf7fL091lrW0G-5" value="TeamPartecipations" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="550" y="460" width="190" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="ra9y6oQOf7fL091lrW0G-6" value="team: Teams&lt;div&gt;people: []People&lt;br&gt;&lt;div&gt;stage: Stages&lt;/div&gt;&lt;div&gt;event: Events&lt;/div&gt;&lt;div&gt;championship: Campionships&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" parent="ra9y6oQOf7fL091lrW0G-5" vertex="1">
+          <mxGeometry y="50" width="190" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ra9y6oQOf7fL091lrW0G-7" value="TeamInvitations" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="350" y="450" width="160" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="ra9y6oQOf7fL091lrW0G-8" value="team: Teams&lt;div&gt;uses&lt;/div&gt;&lt;div&gt;expiration&lt;/div&gt;&lt;div&gt;joined: []Users&lt;/div&gt;&lt;div&gt;disabled&lt;/div&gt;&lt;div&gt;created&lt;/div&gt;&lt;div&gt;updated&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" parent="ra9y6oQOf7fL091lrW0G-7" vertex="1">
+          <mxGeometry y="50" width="160" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="ra9y6oQOf7fL091lrW0G-9" value="Events" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="200" y="680" width="205" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="ra9y6oQOf7fL091lrW0G-10" value="type&lt;div&gt;championships: []Championships&lt;br&gt;&lt;div&gt;stages; []Stages&lt;/div&gt;&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" parent="ra9y6oQOf7fL091lrW0G-9" vertex="1">
+          <mxGeometry y="50" width="205" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="ra9y6oQOf7fL091lrW0G-11" value="Stages" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="440" y="680" width="210" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="ra9y6oQOf7fL091lrW0G-12" value="leaderboard: []LeaderboardResults&lt;div&gt;&lt;div&gt;results&lt;/div&gt;&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" parent="ra9y6oQOf7fL091lrW0G-11" vertex="1">
+          <mxGeometry y="50" width="210" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="ra9y6oQOf7fL091lrW0G-13" value="Championships" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="10" y="680" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="ra9y6oQOf7fL091lrW0G-14" value="&lt;div&gt;name&lt;/div&gt;&lt;div&gt;startDate&lt;/div&gt;&lt;div&gt;endDate&lt;/div&gt;&lt;div&gt;events: []Events&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" parent="ra9y6oQOf7fL091lrW0G-13" vertex="1">
+          <mxGeometry y="50" width="160" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="ra9y6oQOf7fL091lrW0G-15" value="ChampionshipLeaderboardView" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="45" y="850" width="270" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ra9y6oQOf7fL091lrW0G-22" value="LeaderboardResults" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="680" y="680" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="ra9y6oQOf7fL091lrW0G-23" value="position&lt;div&gt;team: Team&lt;/div&gt;&lt;div&gt;people: []People&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" parent="ra9y6oQOf7fL091lrW0G-22" vertex="1">
+          <mxGeometry y="50" width="160" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="eb9jcMbAwNMqb9fgouds-1" value="People" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="345" y="160" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="eb9jcMbAwNMqb9fgouds-2" value="nick&lt;br&gt;lastName&lt;div&gt;name&lt;/div&gt;&lt;div&gt;mail | Users&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;spacingRight=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;whiteSpace=wrap;" vertex="1" parent="eb9jcMbAwNMqb9fgouds-1">
+          <mxGeometry y="50" width="160" height="70" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

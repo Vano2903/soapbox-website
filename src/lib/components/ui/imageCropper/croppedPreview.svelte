@@ -3,16 +3,18 @@
 
 	let {
 		blobUrl,
+		fileName,
 		cropArea,
-		shape
-		// originalWidth,
-		// originalHeight
+		shape,
+		fileType,
+		cropped = $bindable()
 	}: {
 		blobUrl: string;
 		cropArea: Area;
+		fileName: string;
 		shape: string;
-		// originalWidth: number;
-		// originalHeight: number;
+		fileType: string;
+		cropped: FileList | null;
 	} = $props();
 
 	const createImage = (url: string): Promise<HTMLImageElement> =>
@@ -20,17 +22,22 @@
 			const image = new Image();
 			image.addEventListener('load', () => resolve(image));
 			image.addEventListener('error', (error) => reject(error));
-			image.setAttribute('crossOrigin', 'anonymous'); // Needed for canvas Tainted check
+			image.setAttribute('crossOrigin', 'anonymous');
 			image.src = url;
 		});
 
 	async function getCroppedImg(
 		imageSrc: string,
 		pixelCrop: Area,
-		outputWidth: number = pixelCrop.width, // Optional: specify output size
-		outputHeight: number = pixelCrop.height
+		outputWidth: number = pixelCrop?.width,
+		outputHeight: number = pixelCrop?.height
 	): Promise<Blob | null> {
 		try {
+			console.log('imageurl', imageSrc);
+			console.log('pixelCrop', pixelCrop);
+			console.log('outputWidth', outputWidth);
+			console.log('outputHeight', outputHeight);
+
 			const image = await createImage(imageSrc);
 			const canvas = document.createElement('canvas');
 			const ctx = canvas.getContext('2d');
@@ -39,11 +46,9 @@
 				return null;
 			}
 
-			// Set canvas size to desired output size
 			canvas.width = outputWidth;
 			canvas.height = outputHeight;
 
-			// Draw the cropped image onto the canvas
 			ctx.drawImage(
 				image,
 				pixelCrop.x,
@@ -52,15 +57,14 @@
 				pixelCrop.height,
 				0,
 				0,
-				outputWidth, // Draw onto the output size
+				outputWidth,
 				outputHeight
 			);
 
-			// Convert canvas to blob
 			return new Promise((resolve) => {
 				canvas.toBlob((blob) => {
 					resolve(blob);
-				}, 'image/jpeg'); // Specify format and quality if needed
+				}, fileType);
 			});
 		} catch (error) {
 			console.error('Error in getCroppedImg:', error);
@@ -68,34 +72,68 @@
 		}
 	}
 
-	let croppedImage = $derived.by(async () => {
-		if (blobUrl) {
-			const blob = await getCroppedImg(blobUrl, cropArea, cropArea.width, cropArea.height);
-			if (blob) {
-				return URL.createObjectURL(blob);
-			}
-			return null;
+	// Create a stable key for the cropping parameters
+	let cropKey = $derived(
+		`${blobUrl}-${cropArea.x}-${cropArea.y}-${cropArea.width}-${cropArea.height}-${fileName}-${fileType}`
+	);
+
+	// Store the last processed key and result
+	let lastCropKey = $state('');
+	let cachedCroppedImage = $state<string | null>(null);
+	let isProcessing = $state(false);
+
+	// Only recalculate when the crop parameters actually change
+	$effect(() => {
+		if (cropKey !== lastCropKey && blobUrl && cropArea && fileName && fileType) {
+			lastCropKey = cropKey;
+			isProcessing = true;
+
+			console.log('Cropping image with blobUrl:', blobUrl);
+
+			getCroppedImg(blobUrl, cropArea)
+				.then((blob) => {
+					if (blob) {
+						const files = new DataTransfer();
+						files.items.add(new File([blob], fileName + '.cropped', { type: fileType }));
+						cropped = files.files;
+						cachedCroppedImage = URL.createObjectURL(blob);
+					} else {
+						cropped = null;
+						cachedCroppedImage = null;
+					}
+				})
+				.catch((error) => {
+					console.error('Error cropping image', error);
+					cropped = null;
+					cachedCroppedImage = null;
+				})
+				.finally(() => {
+					isProcessing = false;
+				});
 		}
+	});
+
+	// Clean up blob URLs when component is destroyed
+	$effect(() => {
+		return () => {
+			if (cachedCroppedImage) {
+				URL.revokeObjectURL(cachedCroppedImage);
+			}
+		};
 	});
 </script>
 
 <div class="relative h-44">
-	{#await croppedImage}
+	{#if isProcessing}
 		<p>Loading...</p>
-	{:then croppedImage}
-		{#if !croppedImage}
-			<p>Oops! c'è stato un errore nel tagliare l'immagine</p>
-			{console.error('Error cropping image')}
-		{:else}
-			<img
-				src={croppedImage}
-				alt="Cropped result"
-				class:rounded-full={shape === 'round'}
-				class="max-h-full max-w-full border object-contain"
-			/>
-		{/if}
-	{:catch error}
+	{:else if !cachedCroppedImage}
 		<p>Oops! c'è stato un errore nel tagliare l'immagine</p>
-		{console.error('Error cropping image', error)}
-	{/await}
+	{:else}
+		<img
+			src={cachedCroppedImage}
+			alt="Cropped result"
+			class:rounded-full={shape === 'round'}
+			class="max-h-full max-w-full border object-contain"
+		/>
+	{/if}
 </div>

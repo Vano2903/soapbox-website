@@ -17,6 +17,12 @@ declare global {
 			pb: TypedPocketBase;
 			user: User | undefined;
 		}
+		namespace Superforms {
+			type Message = {
+				type: 'error' | 'success';
+				text: string;
+			};
+		}
 	}
 }
 

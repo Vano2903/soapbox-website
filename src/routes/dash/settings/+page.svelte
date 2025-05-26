@@ -16,26 +16,26 @@
 		validators: zod(schema)
 	});
 
-	let successMessage = $state('');
+	// let successMessage = $state('');
 
-	$effect(() => {
-		if (page.status === 200 && $message) {
-			console.log('invalidating and reloading');
-			localStorage.setItem('user-update-message', $message);
-			// reload page
-			invalidateAll();
-			// goto('/dash/settings');
-			window.location.href = '/dash/settings';
-		}
-	});
+	// $effect(() => {
+	// 	if (page.status === 200 && $message) {
+	// 		console.log('invalidating and reloading');
+	// 		localStorage.setItem('user-update-message', $message);
+	// 		// reload page
+	// 		invalidateAll();
+	// 		// goto('/dash/settings');
+	// 		window.location.href = '/dash/settings';
+	// 	}
+	// });
 
-	onMount(() => {
-		successMessage = localStorage.getItem('user-update-message') ?? '';
-		if (successMessage) {
-			successMessage += ` torna alla <a href="/dash" class="link">dashboard</a>`;
-		}
-		localStorage.removeItem('user-update-message');
-	});
+	// onMount(() => {
+	// 	successMessage = localStorage.getItem('user-update-message') ?? '';
+	// 	if (successMessage) {
+	// 		successMessage += ` torna alla <a href="/dash" class="link">dashboard</a>`;
+	// 	}
+	// 	localStorage.removeItem('user-update-message');
+	// });
 
 	const {
 		delayed,
@@ -388,18 +388,13 @@
 				<!-- class="mt-8 w-full rounded-lg bg-red-600 py-3 font-medium text-white transition-colors hover:bg-red-700 focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:outline-none" -->
 				Aggiorna il tuo account
 			</button>
-			{#if $message && page.status !== 200}
-				<div class="alert alert-error">
-					<!-- class:alert-success={page.status == 200}
-					class:alert-error={page.status !== 200} -->
-					{$message}
-				</div>
-			{/if}
-			{#if successMessage}
-				<div class="alert alert-success">
-					<!-- class:alert-success={page.status == 200}
-					class:alert-error={page.status !== 200} -->
-					{@html successMessage}
+			{#if $message}
+				<div
+					class="alert"
+					class:alert-success={$message.type === 'success'}
+					class:alert-error={$message.type === 'error'}
+				>
+					{@html $message.text}
 				</div>
 			{/if}
 		</div>

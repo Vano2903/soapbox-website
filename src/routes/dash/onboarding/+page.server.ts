@@ -54,7 +54,7 @@ async function isUsernameValid(
 		});
 		return false;
 	} catch (e) {
-		console.log('error seraching for username in isUsernameValid:', e);
+		console.log('error searching for username in isUsernameValid:', e);
 		return true;
 	}
 }
@@ -90,12 +90,19 @@ export const actions = {
 				nick: form.data.username
 			});
 
-			return message(form, 'Hai completato la registrazione pilota!');
+			return message(form, {
+				type: 'success',
+				text: 'Hai completato la registrazione, benvenuto pilota!'
+			});
 		} catch (e) {
 			console.log(e);
-			return message(form, 'Errore durante la registrazione del pilota, riprova più tardi', {
-				status: 500
-			});
+			return message(
+				form,
+				{ type: 'error', text: 'Errore durante la registrazione del pilota, riprova più tardi' },
+				{
+					status: 500
+				}
+			);
 		}
 	},
 

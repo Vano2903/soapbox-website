@@ -108,12 +108,19 @@ export const actions = {
 				nick: form.data.nick
 			});
 
-			return message(form, 'Profilo aggiornato con successo');
+			return message(form, {
+				type: 'success',
+				text: `Profilo aggiornato con successo torna alla<a href="/dash" class="link">dashboard</a>`
+			});
 		} catch (e) {
 			console.log(e);
-			return message(form, "Errore durante l'aggiornamento del profilo, riprova più tardi", {
-				status: 500
-			});
+			return message(
+				form,
+				{ type: 'error', text: "Errore durante l'aggiornamento del profilo, riprova più tardi" },
+				{
+					status: 500
+				}
+			);
 		}
 	},
 

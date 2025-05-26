@@ -1,0 +1,34 @@
+id = @request.auth.id
+ && @request.body.verified:isset = false  
+ && @request.body.roles:isset = false 
+ && @request.body.banned:isset = false
+ && (
+   (completed = false 
+    && @request.body.completed = true
+    && @request.body.nick:isset = true 
+    && @request.body.lastName:isset = true
+    && @request.body.name:isset = true
+    && @request.body.phone:isset = true
+    && @request.body.gender:isset = true
+    && @request.body.birthDate:isset = true)
+   || (completed = true
+      && @request.body.completed:isset = false)
+      )
+
+
+(@request.auth.id = @collection.teamInvitations.team.owner.id
+ && @request.body.team:isset = false
+ && @request.body.joined:isset = false)
+  || (
+    @request.body.team:isset = false
+  && @request.body.expiration:isset = false
+  && @request.body.disabled:isset = false
+  && @request.body.created:isset = false
+  && @request.body.updated:isset = false
+  && @request.body.team:isset = false
+  && @request.body.joined:isset = true
+  && uses > 0
+  && disabled = false
+  && (expiration = null || expiration >= @now)
+    && team.members:each != @request.auth.person.id
+  )

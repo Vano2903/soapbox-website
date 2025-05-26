@@ -47,7 +47,7 @@
 		"daisyui": "^5.0.6",
 		"embla-carousel-autoplay": "^8.5.2",
 		"embla-carousel-svelte": "^8.5.2",
-		"isomorphic-dompurify": "^2.23.0",
+		"isomorphic-dompurify": "^2.25.0",
 		"lucide-svelte": "^0.475.0",
 		"mode-watcher": "^0.5.1",
 		"pocketbase": "^0.25.2",

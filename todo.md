@@ -1,10 +1,10 @@
 - pagina utenti
 
-  - [ ] login/registrazione google
-  - [ ] login password
-  - [ ] registrazione password
-  - [ ] onboarding
-    - [ ] username, nome, cognome, codice fiscale | (sesso, data di nascita), telefono
+  - [x] login/registrazione google
+  - [x] login password
+  - [x] registrazione password
+  - [x] onboarding
+    - [x] username, nome, cognome, codice fiscale | (sesso, data di nascita), telefono
   - [ ] homepage
     - [ ]
 
@@ -18,7 +18,7 @@
     - [x] logout
     - [x] edit (onboarding (formono))
   - [ ] team page [as leader]
-    - [ ] creare un team
+    - [x] creare un team
     - [ ] modificare un team (info + crud partecipanti)
     - [ ] via tag
     - [ ] dati personali (onboarding (formono))

@@ -1,55 +1,18 @@
 <script lang="ts">
-	import { GenderKind } from '$tsTypes/user.js';
-	import CodiceFiscale from 'codice-fiscale-js';
-	import { onMount, untrack } from 'svelte';
-	import SuperDebug, { dateProxy, fileProxy, superForm } from 'sveltekit-superforms';
+	import SuperDebug, { fieldProxy, fileProxy, superForm } from 'sveltekit-superforms';
 	import { debounce } from 'throttle-debounce';
 	import { zod } from 'sveltekit-superforms/adapters';
-	import { page } from '$app/state';
 	import { schema } from './schema';
-	import { goto, invalidateAll } from '$app/navigation';
-	import { Carta, MarkdownEditor } from 'carta-md';
-	import 'carta-md/default.css'; /* Default theme */
-	import DOMPurify from 'isomorphic-dompurify';
 	import ImageCropper from '$components/imageCropper/imageCropper.svelte';
-
 	const { data } = $props();
 
 	const { form, errors, message, constraints, enhance } = superForm(data.form, {
+		dataType: 'json',
 		validators: zod(schema)
 	});
 
-	let successMessage = $state('');
-
-	$effect(() => {
-		if (page.status === 200 && $message) {
-			console.log('invalidating and reloading');
-			localStorage.setItem('user-update-message', $message);
-			// reload page
-			invalidateAll();
-			// goto('/dash/settings');
-			window.location.href = '/dash/settings';
-		}
-	});
-
-	onMount(() => {
-		successMessage = localStorage.getItem('user-update-message') ?? '';
-		if (successMessage) {
-			successMessage += ` torna alla <a href="/dash" class="link">dashboard</a>`;
-		}
-		localStorage.removeItem('user-update-message');
-	});
-
 	// --- username
-	let nick = $state($form.nick);
 	const teamDomain = 'boxrally.eu/t/';
-
-	$effect(() => {
-		nick = nick.trimStart().replaceAll(' ', '-').toLowerCase();
-		untrack(() => {
-			$form.nick = nick;
-		});
-	});
 
 	const {
 		delayed,
@@ -72,26 +35,21 @@
 
 	const checkUsername = debounce(200, submitCheckUsername);
 
-	// --- bio
-	let theme = $state('github-light');
-	const carta = new Carta({
-		theme: 'github-dark',
-		sanitizer: DOMPurify.sanitize
-	});
-	let value = $state('');
-
 	// --- images
-	const logo = fileProxy(form, 'logo.file');
-	const banner = fileProxy(form, 'banner');
-
+	// const logotest = fileProxy(form, 'logoTest');
+	const logo = fileProxy(form, 'logoOriginal');
+	const logoCropped = $state(fileProxy(form, 'logoCropped'));
+	const banner = fileProxy(form, 'bannerOriginal');
+	const bannerCropped = $state(fileProxy(form, 'bannerCropped'));
+	const bioProxy = fieldProxy(form, 'bio');
 	let crop = $state({ x: 0, y: 0 });
 	let zoom = $state(1);
-	let croppedArea = $state({ x: 0, y: 0, width: 0, height: 0 });
+	let username = fieldProxy(form, 'nick');
 </script>
 
 <main class="mx-auto max-w-2xl px-4 py-8">
 	<h1 class="text-primary mb-8 text-3xl font-bold">Crea il tuo team</h1>
-	<!-- <SuperDebug data={$form} /> -->
+	<SuperDebug data={$form} />
 	<form
 		method="POST"
 		class="flex flex-col space-y-8"
@@ -138,7 +96,12 @@
 						form="check"
 						name="nick"
 						id="nick"
-						bind:value={nick}
+						bind:value={
+							() => $username,
+							(n) => {
+								$username = n.trimStart().replaceAll(' ', '-').toLowerCase();
+							}
+						}
 						aria-invalid={$errors.nick ? 'true' : undefined}
 						placeholder="mario-rossi"
 						oninput={checkUsername}
@@ -172,38 +135,65 @@
 			</fieldset>
 
 			<ImageCropper
-				name="logo"
-				value={$logo}
-				label="carica un logo per il tuo team"
-				errors={$errors.logo?.file}
-				constraints={$constraints.logo?.file}
+				name="logoOriginal"
+				bind:value={$logo}
+				label="Carica un logo per il tuo team"
+				constraints={{ required: false }}
+				errors={$errors.logoOriginal}
+				bind:cropped={$logoCropped}
+				bind:pixels={$form.logoCroppedInfo}
 				{crop}
 				{zoom}
 				shape="round"
-				pixels={croppedArea}
 			/>
-			<!-- </div> -->
+
+			<ImageCropper
+				name="banner"
+				bind:value={$banner}
+				label="Carica un immagine di sfondo (banner) per la pagina del tuo team"
+				constraints={{ required: false }}
+				errors={$errors.bannerOriginal}
+				bind:cropped={$bannerCropped}
+				bind:pixels={$form.bannerCroppedInfo}
+				{crop}
+				{zoom}
+				shape="rect"
+			/>
 		</div>
 
 		<!-- Personal Information Section -->
+		<fieldset class="fieldset flex-1 text-base">
+			<legend class="fieldset-legend">Descrizione del team</legend>
+			<textarea
+				{...$constraints.bio}
+				class:textarea-error={$errors.bio}
+				class:textarea-success={$form.bio && 'bio' in $errors && !$errors.bio}
+				aria-invalid={$errors.bio ? 'true' : undefined}
+				bind:value={$bioProxy}
+				class="textarea h-24 w-full"
+				placeholder="Bio"
+				name="bio"
+				id="bio"
+			></textarea>
+
+			{#if $errors.bio}
+				<p class="fieldset-label text-error">{$errors.bio}</p>
+			{/if}
+		</fieldset>
 
 		<!-- Submit Button -->
 		<button disabled={$delayed} type="submit" class="btn btn-primary w-full">
 			<!-- class="mt-8 w-full rounded-lg bg-red-600 py-3 font-medium text-white transition-colors hover:bg-red-700 focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:outline-none" -->
 			Crea il tuo team
 		</button>
-		{#if $message && page.status !== 200}
-			<div class="alert alert-error">
-				<!-- class:alert-success={page.status == 200}
-					class:alert-error={page.status !== 200} -->
-				{$message}
-			</div>
-		{/if}
-		{#if successMessage}
-			<div class="alert alert-success">
-				<!-- class:alert-success={page.status == 200}
-					class:alert-error={page.status !== 200} -->
-				{@html successMessage}
+
+		{#if $message}
+			<div
+				class="alert"
+				class:alert-success={$message.type === 'success'}
+				class:alert-error={$message.type === 'error'}
+			>
+				{@html $message.text}
 			</div>
 		{/if}
 	</form>

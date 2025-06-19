@@ -17,7 +17,7 @@ export const schema = z.object({
 			invalid_type_error: 'La data di nascita deve essere una data'
 		})
 		.min(new Date('1900-01-01'), {
-			message: 'La data di nascita deve essere successiva al 1900/01/01'
+			message: 'La data di nascita deve essere successiva al 01/01/1900'
 		})
 		.max(new Date(), {
 			message: 'La data di nascita non può essere futura'

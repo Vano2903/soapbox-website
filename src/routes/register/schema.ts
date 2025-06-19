@@ -18,7 +18,7 @@ export const schema = z
 			.min(minLength, `La password deve contenere almeno ${minLength} caratteri`)
 			.max(maxLength, `La password non può superare i ${maxLength} caratteri`)
 			.regex(
-				/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+				/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&-_])[A-Za-z\d@$!%*?&-_]{8,}$/,
 				'La password deve contenere almeno una lettera maiuscola, una minuscola, un numero e un carattere speciale'
 			),
 		confirmPassword: z.string({

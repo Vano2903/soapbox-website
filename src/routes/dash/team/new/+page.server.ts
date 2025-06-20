@@ -13,7 +13,7 @@ import { schema } from './schema';
 import { _ } from '$env/static/private';
 import DOMPurify from 'isomorphic-dompurify';
 
-const nickSchema = schema.pick({ nick: true });
+const nickSchema = schema.pick({ slug: true });
 
 export const load: PageServerLoad = async ({ parent }) => {
 	const form = await superValidate(zod(schema));
@@ -26,10 +26,10 @@ async function isTeamNickValid(
 	pb: TypedPocketBase
 ): Promise<boolean> {
 	try {
-		const query = `nick="${form.data.nick}"`;
+		const query = `slug="${form.data.slug}"`;
 		console.log('searching team username:', query);
 		const data = await pb.collection('teams').getFirstListItem(query);
-		setError(form, 'nick', 'Esiste già un team con questo username', {
+		setError(form, 'slug', 'Esiste già un team con questo username', {
 			overwrite: true
 		});
 		return false;
@@ -59,7 +59,7 @@ export const actions = {
 		const isTeamNickAvailable = await isTeamNickValid(form, pb);
 		console.log('isTeamNickAvailable', isTeamNickAvailable);
 		if (!form.valid || !isTeamNickAvailable) {
-			console.log('form is not valid or team nick is not available');
+			console.log('form is not valid or team slug is not available');
 			return fail(400, { form });
 		}
 
@@ -67,7 +67,7 @@ export const actions = {
 			console.log('creating team');
 			const createdTeam = await pb.collection('teams').create({
 				name: form.data.name,
-				nick: form.data.nick,
+				slug: form.data.slug,
 				description: DOMPurify.sanitize(form.data.bio || ''),
 
 				banner: form.data.bannerOriginal,
@@ -82,7 +82,7 @@ export const actions = {
 			console.log('createdTeam', createdTeam);
 			return message(form, {
 				type: 'success',
-				text: `Team creato con successo, vai alla sua pagina per invitare altri partecipanti ed iscriverti alle gare: <a href="/dash/team/${createdTeam.nick}">${createdTeam.name}</a>`
+				text: `Team creato con successo, vai alla sua pagina per invitare altri partecipanti ed iscriverti alle gare: <a href="/dash/team/${createdTeam.slug}">${createdTeam.name}</a>`
 			});
 		} catch (e) {
 			console.log(e);

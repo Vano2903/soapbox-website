@@ -25,10 +25,10 @@
 			applyAction: false,
 			multipleSubmits: 'abort',
 			onSubmit({ cancel }) {
-				if (!$form.nick) cancel();
+				if (!$form.slug) cancel();
 			},
 			onUpdated({ form }) {
-				$errors.nick = form.errors.username;
+				$errors.slug = form.errors.username;
 			}
 		}
 	);
@@ -44,7 +44,7 @@
 	const bioProxy = fieldProxy(form, 'bio');
 	let crop = $state({ x: 0, y: 0 });
 	let zoom = $state(1);
-	let username = fieldProxy(form, 'nick');
+	let username = fieldProxy(form, 'slug');
 </script>
 
 <main class="mx-auto max-w-2xl px-4 py-8">
@@ -84,31 +84,31 @@
 
 				<label
 					class="input w-full"
-					class:input-error={$errors.nick}
-					class:input-success={$form.nick && 'nick' in $errors && !$errors.nick && !$delayed}
+					class:input-error={$errors.slug}
+					class:input-success={$form.slug && 'slug' in $errors && !$errors.slug && !$delayed}
 				>
-					<!-- class:input-success={$form.nick && 'nick' in $errors} -->
+					<!-- class:input-success={$form.slug && 'slug' in $errors} -->
 					<span class="label">{teamDomain}</span>
 					<input
-						{...$constraints.nick}
+						{...$constraints.slug}
 						autocomplete="username"
 						type="text"
 						form="check"
-						name="nick"
-						id="nick"
+						name="slug"
+						id="slug"
 						bind:value={
 							() => $username,
 							(n) => {
 								$username = n.trimStart().replaceAll(' ', '-').toLowerCase();
 							}
 						}
-						aria-invalid={$errors.nick ? 'true' : undefined}
+						aria-invalid={$errors.slug ? 'true' : undefined}
 						placeholder="mario-rossi"
 						oninput={checkUsername}
 					/>
 				</label>
 
-				<input type="hidden" name="nick" value={$form.nick} />
+				<input type="hidden" name="slug" value={$form.slug} />
 				<p class="text-base-content mb-2 text-xs/5">
 					L'username sará usato per creare una pagina pubblica per il tuo team.
 					<br />
@@ -123,9 +123,9 @@
 						<span>verifica disponibilità</span>
 						<span class="loading loading-spinner loading-sm"></span>
 					</div>
-				{:else if $errors.nick}
+				{:else if $errors.slug}
 					<ul class="fieldset-label text-error flex-col items-start">
-						{#each $errors.nick as error}
+						{#each $errors.slug as error}
 							<li>
 								{error}
 							</li>

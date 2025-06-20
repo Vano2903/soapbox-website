@@ -114,7 +114,7 @@ export const schema = z.object({
 	// 			})
 	// 	)
 	// ),
-	nick: z
+	slug: z
 		.string({
 			required_error: "L'username del team è obbligatorio",
 			invalid_type_error: "L'username del team deve essere una stringa"

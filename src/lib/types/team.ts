@@ -2,7 +2,7 @@ import type { User } from './user';
 
 export type Team = {
 	id: string;
-	nick: string;
+	slug: string;
 	name: string;
 	description: string;
 	number: number;

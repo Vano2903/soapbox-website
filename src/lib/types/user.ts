@@ -23,6 +23,7 @@ export interface UserBase {
 	nick: string;
 	visibilty: UserVisiblityKind;
 	fiscalCode: string;
+	person: UserId;
 	phone: string;
 	gender: GenderKind;
 	birthDate: Date;
@@ -37,17 +38,17 @@ export interface Person {
 	created: Date;
 	updated: Date;
 }
-export interface UserExpanded extends UserBase {
-	expanded: true;
-	person: Person;
+export interface UserExpand extends UserBase {
+	isexpand: true;
+	expand: Person;
 }
 
-export interface UserNonExpanded extends UserBase {
-	expanded: false;
-	person: UserId;
+export interface UserNonExpand extends UserBase {
+	isexpand: false;
+	expand: undefined;
 }
 
-export type User = UserNonExpanded | UserExpanded;
+export type User = UserNonExpand | UserExpand;
 
 export enum UserVisiblityKind {
 	Public = 'public',

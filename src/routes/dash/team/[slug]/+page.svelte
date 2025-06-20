@@ -9,7 +9,7 @@
 	la pagina del tuo team
 
 	<div class="mx-3 my-3 grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-		<button class="btn">Crea un nuovo team</button>
+		<a href="/dash/team/new" class="btn">Crea un nuovo team</a>
 		<button class="btn">Entra a far parte di un nuovo team</button>
 		<button class="btn">lascia il team</button>
 		<button class="btn">elimina team</button>

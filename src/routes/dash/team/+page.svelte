@@ -3,10 +3,6 @@
 
 	const { data } = $props();
 	const team = data.teams;
-
-	if (team && team.totalItems == 1) {
-		redirect(303, `/dash/team/${team.items[0].slug}`);
-	}
 </script>
 
 {#if !team || team.totalItems == 0}
@@ -18,7 +14,7 @@
 				<h2 class="card-title">{t.name}</h2>
 				<p>{t.description}</p>
 				<div class="card-actions justify-end">
-					<a href={`/dash/team/${t.slug}`} class="btn btn-primary">Vai alslugm</a>
+					<a href={`/dash/team/${t.slug}`} class="btn btn-primary">Vai al team</a>
 				</div>
 			</div>
 		</div>

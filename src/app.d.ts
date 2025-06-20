@@ -17,7 +17,8 @@ declare global {
 		interface Locals {
 			pb: TypedPocketBase;
 			user: User | undefined;
-			teams?: ListResult<Team>;
+			teamsCount?: number;
+			// teams?: ListResult<Team>;
 		}
 		namespace Superforms {
 			type Message = {

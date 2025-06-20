@@ -8,16 +8,20 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 		redirect(303, '/login');
 	}
 
-	console.log("getting user's teams", user.person);
-	const res = await pb.collection('teams').getList(1, 10, {
-		filter: `members:each ?= "${user.person}" || owner.id = "${user.person}"`,
-		expand: 'owner, members',
-		sort: '-created'
-	});
-
-	locals.teams = res;
+	if (!locals.teamsCount) {
+		console.log("getting user's teams", user.person);
+		const [res, err] = await goCatch(
+			pb.collection('teams').getList(1, 1, {
+				filter: `members:each ?= "${user.person}" || owner.id = "${user.person}"`
+				// expand: 'owner, members',
+				// sort: '-created'
+			})
+		);
+		console.log('teams in layout server dash/:', res);
+		locals.teamsCount = res?.totalItems ?? 0;
+	}
 
 	return {
-		teams: res
+		teamsCount: locals.teamsCount
 	};
 };

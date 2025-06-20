@@ -5,10 +5,10 @@
 
 	const { data } = $props();
 	const pb = new PocketBase(data.pbUri) as TypedPocketBase;
-	const teams = data.teams;
-	onMount(async () => {
-		console.log('teams', teams);
-	});
+	const teamsCount = data.teamsCount;
+	// onMount(async () => {
+	// 	console.log('teams', teams);
+	// });
 
 	// 	console.log('subscribed to teams');
 	// 	pb.collection('teams').subscribe('*', (e) => {
@@ -24,8 +24,11 @@
 		</span>, benvenuto nella tua dashboard.
 	</p>
 
-	{#if teams.totalItems > 0}
+	{#if teamsCount == 1}
 		<a class="btn" href="/dash/team">Visualizza il tuo team</a>
+	{:else if teamsCount > 1}
+		<p class="my-4">Hai {teamsCount} teams:</p>
+		<a class="btn" href="/dash/team">Visualizza i tuoi teams</a>
 	{:else}
 		<p class="my-4">Non fai parte di nessun team.</p>
 		<a class="btn" href="/dash/team/new">Crea un nuovo team</a>

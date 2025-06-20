@@ -1,37 +1,26 @@
 <script lang="ts">
+	import { redirect } from '@sveltejs/kit';
+
 	const { data } = $props();
 	const team = data.teams;
+
+	if (team && team.totalItems == 1) {
+		redirect(303, `/dash/team/${team.items[0].slug}`);
+	}
 </script>
 
-la pagina del tuo team
-
-<button class="btn">Crea un nuovo team</button>
-<button class="btn">Entra a far parte di un nuovo team</button>
-<button class="btn">lascia il team</button>
-<button class="btn">elimina team</button>
-<button class="btn">trasferisci la proprietà del team</button>
-
-<div class="overflow-x-auto">
-	<table class="table w-full">
-		<thead>
-			<tr>
-				<th>Nome</th>
-				<th>Ruolo</th>
-				<th>Azioni</th>
-			</tr>
-		</thead>
-		<tbody>
-			{#each team.members as member}
-				<tr>
-					<td>{member.name} {member.lastName}</td>
-					<td>{member.role}</td>
-					<td>
-						<button class="btn btn-info">Modifica</button>
-						<button class="btn btn-error">Rimuovi</button>
-					</td>
-				</tr>
-			{/each}
-		</tbody>
-	</table>
-</div>
-<div class="divider"></div>
+{#if !team || team.totalItems == 0}
+	<p class="text-center">Non sei ancora in nessun team</p>
+{:else}
+	{#each team.items as t}
+		<div class="card bg-base-100 mb-4 w-full shadow-xl">
+			<div class="card-body">
+				<h2 class="card-title">{t.name}</h2>
+				<p>{t.description}</p>
+				<div class="card-actions justify-end">
+					<a href={`/dash/team/${t.slug}`} class="btn btn-primary">Vai alslugm</a>
+				</div>
+			</div>
+		</div>
+	{/each}
+{/if}

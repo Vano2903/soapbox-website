@@ -13,10 +13,10 @@
 	<!-- search bar -->
 	<div class="flex">
 		<div class="form-control mb-4">
-			<label class="label">
+			<label class="label" for="team-search">
 				<span class="label-text">Cerca tra i tuoi team:</span>
 			</label>
-			<input type="text" disabled placeholder="secondo te funziona ora?" class="input input-bordered" />
+			<input id="team-search" type="text" disabled placeholder="secondo te funziona ora?" class="input input-bordered" />
 		</div>
 		<a href="/dash/team/new" class="btn max-w-64 bg-red-600">Crea un Nuovo Team</a>
 	</div>

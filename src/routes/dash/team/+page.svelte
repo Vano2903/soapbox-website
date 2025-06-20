@@ -1,34 +1,6 @@
 <script lang="ts">
-	const team = {
-		name: 'team name',
-		id: 'team-1',
-		owner: {
-			id: '1'
-		},
-		members: [
-			{
-				id: '1',
-				name: 'Mario',
-				lastName: 'Rossi',
-				nick: 'mario.rossi',
-				role: 'admin'
-			},
-			{
-				id: '2',
-				name: 'Luigi',
-				lastName: 'Verdi',
-				nick: 'luigi.verdi',
-				role: 'member'
-			},
-			{
-				id: '3',
-				name: 'Giovanni',
-				lastName: 'Bianchi',
-				nick: 'giovanni.bianchi',
-				role: 'member'
-			}
-		]
-	};
+	const { data } = $props();
+	const team = data.teams;
 </script>
 
 la pagina del tuo team

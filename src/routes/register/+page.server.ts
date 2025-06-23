@@ -35,12 +35,18 @@ export const actions = {
 			// }
 			// let user = locals.user as User;
 
-			return message(form, 'Loggato, varifica la tua email per completare la registrazione');
+			return message(form, {
+				type: 'success',
+				text: 'Registrato, varifica la tua email per completare la registrazione'
+			});
 		} catch (e) {
 			console.log(e);
 			return message(
 				form,
-				'<span>Credenziali errate, se hai dimenticato la password puoi richiederne una nuova <a class="link" href="/forgot-password">qui</a></span>',
+				{
+					type: 'error',
+					text: '<span>Credenziali errate, se hai dimenticato la password puoi richiederne una nuova <a class="link" href="/forgot-password">qui</a></span>'
+				},
 				{
 					status: 400
 				}

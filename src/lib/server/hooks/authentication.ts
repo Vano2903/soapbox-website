@@ -18,8 +18,9 @@ const authentication: Handle = async ({ event, resolve }) => {
 			pb.authStore.clear();
 		}
 
-		console.log('authStore after refresh', pb.authStore.record);
+		// console.log('authStore after refresh', pb.authStore.record);
 		event.locals.user = (pb.authStore.record as unknown as User) || undefined;
+		event.locals.user.isexpand = false;
 		if (pb.authStore.record) {
 			event.locals.user.avatar =
 				pb.files.getURL(pb.authStore.record, pb.authStore.record.avatar) ||

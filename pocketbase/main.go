@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"strings"
 
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
@@ -18,9 +19,9 @@ func main() {
 		}
 
 		person := core.NewRecord(peopleCollection)
-		person.Set("name", e.Record.GetString("name"))
-		person.Set("lastName", e.Record.GetString("lastName"))
-		person.Set("email", e.Record.GetString("email"))
+		person.Set("name", strings.ToLower(e.Record.GetString("name")))
+		person.Set("lastName", strings.ToLower(e.Record.GetString("lastName")))
+		person.Set("email", strings.ToLower(e.Record.GetString("email")))
 		person.Set("id:autogenerate", "")
 
 		e.Record.Set("person", person.Id)
@@ -43,9 +44,9 @@ func main() {
 		if err != nil {
 			return err
 		}
-		person.Set("name", e.Record.GetString("name"))
-		person.Set("lastName", e.Record.GetString("lastName"))
-		person.Set("email", e.Record.GetString("email"))
+		person.Set("name", strings.ToLower(e.Record.GetString("name")))
+		person.Set("lastName", strings.ToLower(e.Record.GetString("lastName")))
+		person.Set("email", strings.ToLower(e.Record.GetString("email")))
 
 		if err := e.App.Save(person); err != nil {
 			return err

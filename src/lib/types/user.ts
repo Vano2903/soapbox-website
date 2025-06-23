@@ -7,7 +7,7 @@ export enum Roles {
 
 export type UserId = string;
 
-export interface User {
+export interface UserBase {
 	id: UserId;
 	email: string;
 	emailVisibiliy?: boolean;
@@ -23,10 +23,32 @@ export interface User {
 	nick: string;
 	visibilty: UserVisiblityKind;
 	fiscalCode: string;
+	person: UserId;
 	phone: string;
 	gender: GenderKind;
 	birthDate: Date;
 }
+
+export interface Person {
+	id: UserId;
+	name: string;
+	lastName: string;
+	email: string;
+	user: string;
+	created: Date;
+	updated: Date;
+}
+export interface UserExpand extends UserBase {
+	isexpand: true;
+	expand: Person;
+}
+
+export interface UserNonExpand extends UserBase {
+	isexpand: false;
+	expand: undefined;
+}
+
+export type User = UserNonExpand | UserExpand;
 
 export enum UserVisiblityKind {
 	Public = 'public',

@@ -4,7 +4,7 @@
 	import { schema } from './schema.js';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { superForm } from 'sveltekit-superforms';
-	import { render } from 'svelte/server';
+	// import { render } from 'svelte/server';
 
 	const { data } = $props();
 
@@ -13,7 +13,7 @@
 	});
 
 	const pb = new PocketBase(data.pbUri) as TypedPocketBase;
-	let error = $state('');
+	// let error = $state('');
 
 	async function singInWithGoogle() {
 		console.log('Sign in with Google');
@@ -145,7 +145,13 @@
 				</div>
 			</form>
 			{#if $message}
-				<div class="alert alert-error alert-soft mt-4">{@html $message}</div>
+				<div
+					class="alert alert-soft mt-4"
+					class:alert-success={$message.type === 'success'}
+					class:alert-error={$message.type === 'error'}
+				>
+					{@html $message.text}
+				</div>
 			{/if}
 			<!-- {#if error}
 				<p class="alert alert-soft alert-error mt-6 text-center text-white">

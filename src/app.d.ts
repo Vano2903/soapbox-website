@@ -1,5 +1,6 @@
 import type { TypedPocketBase } from '$lib/types/pocketbase';
 import type { User } from '$lib/types/user';
+import type { ListResult } from 'pocketbase';
 
 declare global {
 	async function goCatch<T, E extends new (message?: string) => Error>(
@@ -16,6 +17,8 @@ declare global {
 		interface Locals {
 			pb: TypedPocketBase;
 			user: User | undefined;
+			teamsCount?: number;
+			// teams?: ListResult<Team>;
 		}
 		namespace Superforms {
 			type Message = {

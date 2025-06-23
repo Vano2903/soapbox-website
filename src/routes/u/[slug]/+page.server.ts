@@ -1,3 +1,4 @@
+import type { UserNonExpand } from '$tsTypes/user';
 import { redirect, type ServerLoad } from '@sveltejs/kit';
 
 export const load: ServerLoad = async ({ locals, params }) => {
@@ -7,21 +8,17 @@ export const load: ServerLoad = async ({ locals, params }) => {
 		redirect(303, '/users');
 	}
 
-	try {
-		const foundUser = await pb.collection('users').getFirstListItem(`nick="${params.slug}"`);
+	const [foundUser, err] = (await goCatch(
+		pb.collection('users').getFirstListItem(`nick="${params.slug}"`)
+	)) as [UserNonExpand, undefined] | [undefined, Error];
 
-		if (!team) {
-			throw error(404, 'Team not found');
-		}
-
-		if (team.members.includes(user.id)) {
-			return {
-				team
-			};
-		} else {
-			throw error(403, 'You are not a member of this team');
-		}
-	} catch (error) {
-		throw error(404, 'Utente non trovato');
+	if (err || !foundUser) {
+		console.error('User not found:', err);
+		throw redirect(303, '/users?error=user-not-found&slug=' + params.slug);
 	}
+
+	return {
+		user: foundUser,
+		slug: params.slug
+	};
 };

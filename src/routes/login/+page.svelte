@@ -13,7 +13,7 @@
 	});
 
 	const pb = new PocketBase(data.pbUri) as TypedPocketBase;
-	let error = $state('');
+	// let error = $state('');
 
 	// async function signInWithEmail() {
 	// 	console.log('Sign in with email');
@@ -161,9 +161,9 @@
 				</div>
 			</form>
 			{#if $message}
-				{#if $page.status >= 400}
+				{#if $message.type == 'error'}
 					<div class="alert alert-error alert-soft mt-4">
-						{@html $message}
+						{@html $message.text}
 					</div>
 				{:else}
 					{(window.location.href = '/dash')}

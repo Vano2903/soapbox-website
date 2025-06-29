@@ -25,7 +25,7 @@ services:
     depends_on:
       - pb
     environment:
-      - PUBLIC_PB_INSTANCE=${PUBLIC_PB_INSTANCE}
+      - PUBLIC_PB_INSTANCE=${PUBLIC_PB_INSTANCE:-'https://pb.bruum.cargoway.cloud'}
     networks:
       - traefik
 

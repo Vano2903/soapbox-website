@@ -1,0 +1,35 @@
+services:
+  pb:
+    build: './pocketbase'
+    container_name: 'bruum-pb-prod'
+    restart: 'unless-stopped'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.bruum-pb-prod.rule=Host(`pb.bruum.cargoway.cloud`)'
+      - 'traefik.http.routers.bruum-pb-prod.entrypoints=https'
+      - 'traefik.http.routers.bruum-pb-prod.tls=true'
+      - 'traefik.http.services.bruum-pb-prod.loadbalancer.server.port=8080'
+    volumes:
+      - './pocketdb:/app/pb_data'
+
+  frontend:
+    build: '.'
+    container_name: 'bruum-frontend-prod'
+    restart: 'unless-stopped'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.bruum-frontend-prod.rule=Host(`bruum.cargoway.cloud`)'
+      - 'traefik.http.routers.bruum-frontend-prod.entrypoints=https'
+      - 'traefik.http.routers.bruum-frontend-prod.tls=true'
+      - 'traefik.http.services.bruum-frontend-prod.loadbalancer.server.port=3000'
+    depends_on:
+      - pb
+    environment:
+      - PUBLIC_PB_INSTANCE=${PUBLIC_PB_INSTANCE}
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
+    name: traefik-servicenet

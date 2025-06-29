@@ -1,0 +1,7 @@
+*
+!./src/
+!./static/
+!./vite.config.js
+!./package.json
+!./tsconfig.json
+!./svelte.config.js

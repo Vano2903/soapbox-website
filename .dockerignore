@@ -1,0 +1,6 @@
+**
+!./src/
+!./static/
+!*.js
+!*.ts
+!*.json

@@ -1,5 +1,5 @@
 
-FROM --platform=$BUILDPLATFORM golang:1.24 AS builder
+FROM --platform=$BUILDPLATFORM golang:1.24-alpine AS builder
 
 ARG CGO_ENABLED=0
 WORKDIR /app
@@ -20,7 +20,10 @@ RUN --mount=type=cache,target=/go/pkg/mod/ \
 
 FROM alpine
 
-RUN apk add --no-cache \
+RUN apk update && \
+  apk upgrade && \
+  rm -rf /var/cache/apk/* && \
+  apk add --no-cache \
   unzip \
   ca-certificates
 

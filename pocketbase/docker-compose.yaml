@@ -1,9 +1,0 @@
-services:
-  pocketbase:
-    build: .
-    container_name: bruum-pb
-    restart: unless-stopped
-    ports:
-      - 8080:8080
-    volumes:
-      - './pocketdb:/app/pb_data'

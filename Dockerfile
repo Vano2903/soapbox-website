@@ -6,6 +6,9 @@ COPY package*.json /app/
 RUN npm ci
 
 COPY . /app/
+
+EXPOSE 3000
+
 CMD [ "npm","run","serve" ]
 # RUN npm prune --production
 

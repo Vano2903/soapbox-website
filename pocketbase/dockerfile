@@ -20,7 +20,10 @@ RUN --mount=type=cache,target=/go/pkg/mod/ \
 
 FROM alpine
 
-RUN apk add --no-cache \
+RUN apk update && \
+  apk upgrade && \
+  rm -rf /var/cache/apk/* && \
+  apk add --no-cache \
   unzip \
   ca-certificates
 

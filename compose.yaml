@@ -9,12 +9,13 @@ services:
       - 'traefik.enable=true'
       - 'traefik.http.routers.bruum-pb-prod.rule=Host(`pb.bruum.cargoway.cloud`)'
       - 'traefik.http.routers.bruum-pb-prod.entrypoints=https'
+      - "traefik.http.routers.bruum-frontend-prod.tls.certresolver=letsencrypt"
       - 'traefik.http.routers.bruum-pb-prod.tls=true'
       - 'traefik.http.services.bruum-pb-prod.loadbalancer.server.port=8080'
     volumes:
       - './pocketdb:/app/pb_data'
-    # networks:
-    #   - traefik
+    networks:
+      - traefik
 
   frontend:
     build:
@@ -26,14 +27,15 @@ services:
       - 'traefik.enable=true'
       - 'traefik.http.routers.bruum-frontend-prod.entrypoints=https'
       - 'traefik.http.routers.bruum-frontend-prod.tls=true'
+      - "traefik.http.routers.bruum-frontend-prod.tls.certresolver=letsencrypt"
       - 'traefik.http.routers.bruum-frontend-prod.rule=Host(`bruum.cargoway.cloud`)'
       - 'traefik.http.services.bruum-frontend-prod.loadbalancer.server.port=3000'
     depends_on:
       - pb
     environment:
       - *public_pb_instance_env
-    # networks:
-    #   - traefik
+    networks:
+      - traefik
 
 networks:
   traefik:

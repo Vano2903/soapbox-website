@@ -9,7 +9,7 @@ services:
       - 'traefik.enable=true'
       - 'traefik.http.routers.bruum-pb-prod.rule=Host(`pb.bruum.cargoway.cloud`)'
       - 'traefik.http.routers.bruum-pb-prod.entrypoints=https'
-      - "traefik.http.routers.bruum-frontend-prod.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.bruum-pb-prod.tls.certresolver=letsencrypt"
       - 'traefik.http.routers.bruum-pb-prod.tls=true'
       - 'traefik.http.services.bruum-pb-prod.loadbalancer.server.port=8080'
     volumes:

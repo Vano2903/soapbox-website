@@ -32,7 +32,7 @@
   - [ ] light
   - [ ] system
 
-- [ ] hide "dashboard" or "accedi" if it makes the navbar go to a new line
+- [x] hide "dashboard" or "accedi" if it makes the navbar go to a new line
 
 - [ ] element selection:
 

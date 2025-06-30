@@ -1,3 +1,5 @@
+x-public_pb_instance_env: &public_pb_instance_env PUBLIC_PB_INSTANCE=${PUBLIC_PB_INSTANCE:-https://pb.bruum.cargoway.cloud}
+
 services:
   pb:
     build: './pocketbase'
@@ -11,23 +13,27 @@ services:
       - 'traefik.http.services.bruum-pb-prod.loadbalancer.server.port=8080'
     volumes:
       - './pocketdb:/app/pb_data'
+    # networks:
+    #   - traefik
 
   frontend:
-    build: '.'
+    build:
+      context: './'
+      dockerfile: 'Dockerfile'
     container_name: 'bruum-frontend-prod'
     restart: 'unless-stopped'
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.bruum-frontend-prod.rule=Host(`bruum.cargoway.cloud`)'
       - 'traefik.http.routers.bruum-frontend-prod.entrypoints=https'
       - 'traefik.http.routers.bruum-frontend-prod.tls=true'
+      - 'traefik.http.routers.bruum-frontend-prod.rule=Host(`bruum.cargoway.cloud`)'
       - 'traefik.http.services.bruum-frontend-prod.loadbalancer.server.port=3000'
     depends_on:
       - pb
     environment:
-      - PUBLIC_PB_INSTANCE=${PUBLIC_PB_INSTANCE:-'https://pb.bruum.cargoway.cloud'}
-    networks:
-      - traefik
+      - *public_pb_instance_env
+    # networks:
+    #   - traefik
 
 networks:
   traefik:

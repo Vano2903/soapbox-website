@@ -1,15 +1,22 @@
-FROM node:22-alpine
+FROM node:22 AS build
 
 WORKDIR /app
-
-COPY . .
+COPY package*.json /app/
 
 RUN npm ci
 
-EXPOSE 3000
+COPY . /app/
+CMD [ "npm","run","serve" ]
+# RUN npm prune --production
 
-ENV NODE_ENV=production
 
-RUN ulimit -c unlimited
+# FROM node:22 AS run
 
-ENTRYPOINT ["npm", "run", "serve"]
+# ENV NODE_ENV=production
+
+# WORKDIR /app
+# COPY --from=build /app/build ./build
+# COPY --from=build /app/package.json ./package.json
+# COPY --from=build /app/node_modules ./node_modules
+# RUN ulimit -c unlimited
+# ENTRYPOINT ["node", "build"]

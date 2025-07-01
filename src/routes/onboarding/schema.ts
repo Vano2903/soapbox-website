@@ -63,8 +63,8 @@ export const schema = z.object({
 		.max(20, {
 			message: 'Il nome utente deve avere al massimo 20 caratteri'
 		})
-		.regex(/^[a-z0-9\-]+$/, {
-			message: 'Il nome utente può contenere solo minuscole, numeri e trattini'
+		.regex(/^[a-z0-9\-_]+$/, {
+			message: 'Il nome utente può contenere solo minuscole, numeri, trattini e trattini bassi'
 		}),
 	visibility: z.nativeEnum(UserVisiblityKind, {
 		errorMap: (gender, _ctx) => {

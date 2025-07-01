@@ -9,22 +9,28 @@ const authorization: Handle = async ({ event, resolve }) => {
 	const path = event.url.pathname;
 
 	const publicPaths = [
-		'/',
-		'/chi-siamo',
-		'/login',
-		'/register',
-		'/forgot-password',
-		'/gallery',
-		'/championships'
+		'/$',
+		'/chi-siamo$',
+		'/login$',
+		'/register$',
+		'/forgot-password$',
+		'/gallery$',
+		'/championships$',
+		'/users$',
+		'/user/[a-z0-9_-]+$'
 	];
-
-	// Allow access to public paths without authentication
-	if (publicPaths.includes(path)) {
+	const publicPathsRegex = publicPaths
+		.map((p) => p.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&'))
+		.join('|');
+	console.log('Public paths regex:', publicPathsRegex);
+	const re = new RegExp(publicPathsRegex, 'i');
+	if (re.test(path)) {
+		console.log('Public path accessed:', path);
 		return await resolve(event);
 	}
 
 	if (user?.banned) {
-		error(403, `You don't have access to the system :(`);
+		error(403, `You don't have access to the system, womp womp :(`);
 	}
 
 	// Redirect unauthenticated users to the login page
@@ -33,20 +39,29 @@ const authorization: Handle = async ({ event, resolve }) => {
 	}
 
 	if (!user.verified) {
-		if (!path.startsWith('/dash/verify')) {
-		redirect(302, '/dash/verify');
+		if (!path.startsWith('/verify')) {
+			redirect(302, '/verify');
 		} else {
 			return await resolve(event);
 		}
 	}
 
-	if (!user.completed && !path.startsWith('/dash/onboarding')) {
-		redirect(302, '/dash/onboarding');
+	if (!user.completed) {
+		if (!path.startsWith('/onboarding')) {
+			redirect(302, '/onboarding');
+		}
+		return await resolve(event);
 	}
 
 	// Redirect authenticated users to the dashboard if they have completed the onboarding process
-	if (path.startsWith('/dash/onboarding') && user.completed) {
-		redirect(302, '/dash');
+	if (path.startsWith('/onboarding')) {
+		redirect(302, `/user/${user.nick}/`);
+	}
+
+	if (path.startsWith('/dash')) {
+		console.log('we shold be going to the users dash');
+		const rest = path.replace('/dash', '');
+		redirect(302, `/user/${user.nick}/dash${rest}`);
 	}
 
 	// Role-based access control mapping for different routes

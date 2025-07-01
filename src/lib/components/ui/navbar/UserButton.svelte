@@ -53,8 +53,12 @@
 			aria-hidden={!isDropdownOpen}
 		>
 			<div class="join join-vertical">
-				<li><a class="btn join-item btn-soft" href="/dash">Dashboard</a></li>
-				<li><a class="btn join-item btn-soft" href="/dash/settings">Settings</a></li>
+				<li>
+					<a class="btn join-item btn-soft" href={'/user/' + user.nick + '/dash'}>Dashboard</a>
+				</li>
+				<li>
+					<a class="btn join-item btn-soft" href={'/user/' + user.nick + '/settings'}>Settings</a>
+				</li>
 			</div>
 
 			<div class="divider"></div>

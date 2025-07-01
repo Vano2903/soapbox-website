@@ -4,7 +4,7 @@ const SHEET_ID = '1NABWpOsyOXXQ4egnotZySWwydPt7u44s3zWD5bTV_BU';
 
 export async function fetchSheetData(RANGE: string) {
 	const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}?ranges=${RANGE}&includeGridData=true&key=${GSHEETS_APIKEY}`;
-	// console.log("[DEBUG] Fetch url: ", url);
+	console.log("[DEBUG] Fetch url: ", url);
 
 	const res = await fetch(url);
 	const json = await res.json();

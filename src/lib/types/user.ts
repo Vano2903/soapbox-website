@@ -29,6 +29,15 @@ export interface UserBase {
 	birthDate: Date;
 }
 
+export interface UserPublicInfo {
+	id: UserId;
+	name: string;
+	lastName: string;
+	avatar?: string;
+	nick: string;
+	visibilty: UserVisiblityKind;
+}
+
 export interface Person {
 	id: UserId;
 	name: string;

@@ -10,7 +10,6 @@ import {
 import { zod } from 'sveltekit-superforms/adapters';
 import type { TypedPocketBase } from '$tsTypes/pocketbase';
 import { schema } from './schema';
-import { _ } from '$env/static/private';
 import DOMPurify from 'isomorphic-dompurify';
 
 const nickSchema = schema.pick({ slug: true });

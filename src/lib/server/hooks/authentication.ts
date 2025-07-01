@@ -16,6 +16,8 @@ const authentication: Handle = async ({ event, resolve }) => {
 		if (error) {
 			console.log('ERROR CLEAR', error);
 			pb.authStore.clear();
+			event.locals.user = undefined;
+			return await resolve(event);
 		}
 
 		// console.log('authStore after refresh', pb.authStore.record);

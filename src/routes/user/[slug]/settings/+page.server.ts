@@ -1,4 +1,4 @@
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import {
 	message,
@@ -12,17 +12,15 @@ import { Roles, type User } from '$tsTypes/user';
 import type { TypedPocketBase } from '$tsTypes/pocketbase';
 import { schema } from './schema';
 
-const usernameSchema = schema.pick({ username: true });
+const nickSchema = schema.pick({ nick: true });
 
-export const load: PageServerLoad = async ({ fetch, parent }) => {
-	const { user } = await parent();
+export const load: PageServerLoad = async ({ fetch, parent, locals }) => {
+	const { user } = locals;
+	if (!user) {
+		redirect(303, '/login');
+	}
 
-	let name = user.name.split(' ').slice(0, -1).join(' ');
-	let surname = user.name.split(' ').slice(-1).join(' ');
-	user.name = name;
-	user.lastName = surname;
-	const form = await superValidate({ ...user, prefix: '+39' }, zod(schema));
-
+	// https://gist.github.com/anubhavshrimal/75f6183458db8c453306f93521e93d37?permalink_comment_id=4493502#gistcomment-4493502
 	const countryPhoneCodesJson = await fetch('/phonePrefixes.json');
 	const countryPhoneCodes = (await countryPhoneCodesJson.json()) as {
 		name: string;
@@ -32,35 +30,55 @@ export const load: PageServerLoad = async ({ fetch, parent }) => {
 		default: boolean;
 	}[];
 
+	let prefix = user.phone.split('-')[0];
+	let currentDefault = countryPhoneCodes.findIndex((countryPhone) => {
+		return countryPhone.default;
+	});
+	currentDefault == -1 ? 0 : currentDefault;
+	const newCurrent = countryPhoneCodes.findIndex((phoneCode) => {
+		return phoneCode.dial_code == prefix;
+	});
+	newCurrent == -1 ? 0 : currentDefault;
+
+	countryPhoneCodes[currentDefault].default = false;
+	countryPhoneCodes[newCurrent].default = true;
+	user.phone = user.phone.split('-')[1];
+	const form = await superValidate({ ...user, prefix }, zod(schema));
+
 	// Always return { form } in load functions
 	return { form, countryPhoneCodes };
 };
 
 async function isUsernameValid(
-	form: SuperValidated<Infer<typeof usernameSchema>>,
+	user: User,
+	form: SuperValidated<Infer<typeof nickSchema>>,
 	pb: TypedPocketBase
 ): Promise<boolean> {
 	const bannedUsernames = ['admin', 'root', 'superuser'];
-	if (bannedUsernames.includes(form.data.username)) {
-		setError(form, 'username', 'Il nome utente non è valido', {
+	if (bannedUsernames.includes(form.data.nick)) {
+		setError(form, 'nick', 'Il nome utente non è valido', {
 			overwrite: true
 		});
 		return false;
 	}
 	try {
-		const data = await pb.collection('usernames').getFirstListItem(`nick="${form.data.username}"`);
-		setError(form, 'username', 'Il nome utente non è disponibile', {
+		console.log('searching:', `id!="${user.id}" && nick="${form.data.nick}"`);
+
+		const data = await pb
+			.collection('publicUserInfo')
+			.getFirstListItem(`id!="${user.id}" && nick="${form.data.nick}"`);
+		setError(form, 'nick', 'Il nome utente non è disponibile', {
 			overwrite: true
 		});
 		return false;
 	} catch (e) {
-		console.log('error searching for username in isUsernameValid:', e);
+		console.log('error seraching for username in isUsernameValid:', e);
 		return true;
 	}
 }
 
 export const actions = {
-	onboard: async ({ request, locals }) => {
+	updateAccount: async ({ request, locals }) => {
 		const form = await superValidate(request, zod(schema));
 		console.log('form', form);
 		if (!form.valid) {
@@ -69,9 +87,12 @@ export const actions = {
 		}
 		console.log(form.data);
 
-		const pb = locals.pb;
+		const { pb, user } = locals;
+		if (!user) {
+			redirect(303, '/login');
+		}
 
-		const isUsernameAvailable = await isUsernameValid(form, pb);
+		const isUsernameAvailable = await isUsernameValid(user, form, pb);
 		console.log('isUsernameAvailable', isUsernameAvailable);
 		if (!form.valid || !isUsernameAvailable) return fail(400, { form });
 
@@ -79,7 +100,6 @@ export const actions = {
 			let user = locals.user as User;
 			console.log('user in onboard action', user);
 			locals.user = await pb.collection('users').update(user.id, {
-				completed: true,
 				name: form.data.name,
 				lastName: form.data.lastName,
 				birthDate: form.data.birthDate,
@@ -87,18 +107,18 @@ export const actions = {
 				gender: form.data.gender,
 				visibility: form.data.visibility,
 				phone: `${form.data.prefix}-${form.data.phone}`,
-				nick: form.data.username
+				nick: form.data.nick
 			});
 
 			return message(form, {
 				type: 'success',
-				text: 'Hai completato la registrazione, benvenuto pilota!'
+				text: `Profilo aggiornato con successo torna alla<a href="/dash" class="link">dashboard</a>`
 			});
 		} catch (e) {
 			console.log(e);
 			return message(
 				form,
-				{ type: 'error', text: 'Errore durante la registrazione del pilota, riprova più tardi' },
+				{ type: 'error', text: "Errore durante l'aggiornamento del profilo, riprova più tardi" },
 				{
 					status: 500
 				}
@@ -107,9 +127,12 @@ export const actions = {
 	},
 
 	checkUsername: async ({ request, locals }) => {
-		const form = await superValidate(request, zod(usernameSchema));
-		const pb = locals.pb;
-		const isUsernameAvailable = await isUsernameValid(form, pb);
+		const form = await superValidate(request, zod(nickSchema));
+		const { pb, user } = locals;
+		if (!user) {
+			redirect(303, '/login');
+		}
+		const isUsernameAvailable = await isUsernameValid(user, form, pb);
 
 		if (!form.valid || !isUsernameAvailable) return fail(400, { form });
 

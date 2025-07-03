@@ -5,6 +5,7 @@
 	import { schema } from './schema.js';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { superForm } from 'sveltekit-superforms';
+	import { onMount } from 'svelte';
 
 	const { data } = $props();
 
@@ -61,6 +62,23 @@
 		console.log('message', $message);
 	});
 
+	// let redirectLocation = $derived(() => {
+	// 	const urlParams = new URLSearchParams(window.location.search);
+	// 	return urlParams.get('redirect') || '/dash';
+	// });
+
+	let redirectLocation = $state('/me');
+
+	onMount(() => {
+		const urlParams = new URLSearchParams(window.location.search);
+		const redirect = urlParams.get('redirect');
+		if (redirect) {
+			redirectLocation = redirect;
+		} else {
+			redirectLocation = '/me';
+		}
+	});
+
 	async function singInWithGoogle() {
 		console.log('Sign in with Google');
 		try {
@@ -82,7 +100,8 @@
 					secure: true
 					// sameSite: 'strict'
 				});
-				document.location.href = '/dash';
+
+				document.location.href = redirectLocation;
 			}
 		} catch (err) {
 			console.error(err);

@@ -6,21 +6,21 @@ import { error } from '@sveltejs/kit';
 // Authorization middleware for route access control
 const authorization: Handle = async ({ event, resolve }) => {
 	const user = event.locals.user;
-	const path = event.url.pathname;
+	const path = event.url.pathname.toLowerCase();
 
 	const publicPaths = [
-		'/$',
-		'/chi-siamo$',
-		'/login$',
-		'/register$',
-		'/forgot-password$',
-		'/gallery$',
-		'/championships$',
-		'/users$',
-		'/user/[a-z0-9_-]+$'
+		'\/$',
+		'\/chi-siamo$',
+		'\/login$',
+		'\/register$',
+		'\/forgot-password$',
+		'\/gallery$',
+		'\/championships$',
+		'\/users$',
+		'\/user/[a-z0-9_-]+$'
 	];
 	const publicPathsRegex = publicPaths
-		.map((p) => p.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&'))
+		// .map((p) => p.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&'))
 		.join('|');
 	console.log('Public paths regex:', publicPathsRegex);
 	const re = new RegExp(publicPathsRegex, 'i');
@@ -35,7 +35,7 @@ const authorization: Handle = async ({ event, resolve }) => {
 
 	// Redirect unauthenticated users to the login page
 	if (!user) {
-		redirect(302, '/login');
+		redirect(302, '/login?redirect=' + encodeURIComponent(path));
 	}
 
 	if (!user.verified) {
@@ -59,9 +59,17 @@ const authorization: Handle = async ({ event, resolve }) => {
 	}
 
 	if (path.startsWith('/dash')) {
-		console.log('we shold be going to the users dash');
 		const rest = path.replace('/dash', '');
 		redirect(302, `/user/${user.nick}/dash${rest}`);
+	}
+
+	if (path.startsWith('/settings')) {
+		const rest = path.replace('/settings', '');
+		redirect(302, `/user/${user.nick}/settings${rest}`);
+	}
+
+	if (path.startsWith('/me')) {
+		redirect(302, `/user/${user.nick}/`);
 	}
 
 	// Role-based access control mapping for different routes

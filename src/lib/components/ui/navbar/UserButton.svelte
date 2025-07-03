@@ -56,7 +56,7 @@
 				<li><a class="btn join-item btn-soft" href={'/user/' + user.nick}>Profilo</a></li>
 				<li><a class="btn join-item btn-soft" href="/dash">Dashboard</a></li>
 				<br />
-				<li><a class="btn join-item btn-soft" href="/dash/settings">Settings</a></li>
+				<li><a class="btn join-item btn-soft" href="/settings">Settings</a></li>
 			</div>
 
 			<div class="divider"></div>

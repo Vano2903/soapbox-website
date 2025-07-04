@@ -106,7 +106,7 @@
 					<div class="flex flex-col pl-2">
 						{#each section.links as link}
 							{#if link.active}
-								<a href={link.href} class="text-gray-500">{link.name}</a>
+								<a href={link.href} class="text-gray-500 hover:text-red-600">{link.name}</a>
 							{/if}
 						{/each}
 					</div>

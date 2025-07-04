@@ -12,6 +12,7 @@ export default defineConfig({
 	// 	hmr: false
 	// }
 	server: {
+		hmr: { host: "localhost", protocol: "ws", },
 		watch: {
 			ignored: ['**/pocketbase/**']
 		}

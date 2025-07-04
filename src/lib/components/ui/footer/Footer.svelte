@@ -49,7 +49,7 @@
 		},
 		{
 			name: 'assistenza',
-			active: true,
+			active: false,
 			links: [
 				{ herf: '/content-removal', name: 'rimozione contenuti', active: true },
 				{ herf: '/faq', name: 'domande frequenti', active: true },
@@ -118,20 +118,20 @@
 	<div class="flex w-full items-center justify-center py-2 pt-4 text-center text-gray-700">
 		<span class="inner-container">
 			Copyright &copy {new Date().getFullYear()} all rights reserved | Made with love by
-			<a target="_blank" class="underline" href="https://github.com/vano2903">Vano</a>
+			<a target="_blank" class="underline hover:text-red-600" href="https://github.com/vano2903"
+				>Vano</a
+			>
 			and
-			<a target="_blank" class="underline" href="https://github.com/MoraGames">Morandi</a>
+			<a target="_blank" class="underline hover:text-red-600" href="https://github.com/MoraGames"
+				>Morandi</a
+			>
 		</span>
 	</div>
 </footer>
 
 <style>
 	a {
-		transition: color 0.3s ease;
+		transition: color 0.25s ease;
 		cursor: pointer;
-	}
-
-	a:hover {
-		color: hsl(var(--red));
 	}
 </style>

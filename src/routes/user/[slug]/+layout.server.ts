@@ -27,6 +27,11 @@ export const load: ServerLoad = async ({ locals, params, url }) => {
 	}
 
 	console.log('Found user:', foundUser);
+	foundUser.avatarCropped =
+		pb.files.getURL(foundUser, foundUser.avatarCropped || '') ||
+		`https://avatar.iran.liara.run/public?username=${foundUser.nick}`;
+
+	foundUser.bannerCropped = pb.files.getURL(foundUser, foundUser.bannerCropped || '') || undefined;
 
 	return {
 		user: foundUser,

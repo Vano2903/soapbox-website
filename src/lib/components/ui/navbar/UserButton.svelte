@@ -33,7 +33,7 @@
 	<div class="avatar">
 		<div class="ring-offset-primary w-10 rounded-full ring-2 ring-white ring-offset-2">
 			<img
-				src={user ? user.avatar : '/images/navbar/profile.svg'}
+				src={user ? user.avatarCropped : '/images/navbar/profile.svg'}
 				alt={user ? 'User icon' : 'Login icon'}
 			/>
 		</div>
@@ -55,7 +55,7 @@
 			aria-hidden={!isDropdownOpen}
 		>
 			<div class="join join-vertical">
-				<li><a class="btn join-item btn-soft" href={'/user/' + user.nick}>Profilo</a></li>
+				<li><a class="btn join-item btn-soft" href="/me">Profilo</a></li>
 				<li><a class="btn join-item btn-soft" href="/dash">Dashboard</a></li>
 				<br />
 				<li><a class="btn join-item btn-soft" href="/settings">Impostazioni</a></li>

@@ -7,6 +7,13 @@ export enum Roles {
 
 export type UserId = string;
 
+export interface CropInfo {
+	x: number;
+	y: number;
+	width: number;
+	height: number;
+}
+
 export interface UserBase {
 	id: UserId;
 	email: string;
@@ -19,6 +26,11 @@ export interface UserBase {
 	created: Date;
 	updated: Date;
 	avatar?: string;
+	avatarCropped?: string;
+	avatarCrop: CropInfo;
+	banner?: string;
+	bannerCropped?: string;
+	bannerCrop: CropInfo;
 	completed: boolean;
 	nick: string;
 	visibilty: UserVisiblityKind;
@@ -33,7 +45,9 @@ export interface UserPublicInfo {
 	id: UserId;
 	name: string;
 	lastName: string;
-	avatar?: string;
+	avatarCropped?: string;
+	bannerCropped?: string;
+	bio: string;
 	nick: string;
 	visibilty: UserVisiblityKind;
 }

@@ -2,6 +2,15 @@ import { redirect, type Handle } from '@sveltejs/kit';
 import type { User } from '$lib/types/user';
 import { userPrefersMode } from 'mode-watcher';
 
+function createRandomString(length) {
+	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	let result = '';
+	for (let i = 0; i < length; i++) {
+		result += chars.charAt(Math.floor(Math.random() * chars.length));
+	}
+	return result;
+}
+
 // Authentication middleware for handling user sessions
 const authentication: Handle = async ({ event, resolve }) => {
 	const pb = event.locals.pb;
@@ -24,9 +33,9 @@ const authentication: Handle = async ({ event, resolve }) => {
 		event.locals.user = (pb.authStore.record as unknown as User) || undefined;
 		event.locals.user.isexpand = false;
 		if (pb.authStore.record) {
-			event.locals.user.avatar =
-				pb.files.getURL(pb.authStore.record, pb.authStore.record.avatar) ||
-				`https://avatar.iran.liara.run/public?username=${pb.authStore.record.name || pb.authStore.record.email}`;
+			event.locals.user.avatarCropped =
+				pb.files.getURL(pb.authStore.record, pb.authStore.record.avatarCropped) ||
+				`https://avatar.iran.liara.run/public?username=${pb.authStore.record.name || createRandomString(8)}`;
 			event.locals.user.created = new Date(event.locals.user.created);
 			event.locals.user.updated = new Date(event.locals.user.updated);
 		}

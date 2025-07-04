@@ -1,11 +1,14 @@
 <script lang="ts">
 	import type { User } from '$tsTypes/user';
+	import { Menu, LogIn } from 'lucide-svelte';
 
 	let { user }: { user: User } = $props();
 	let isDropdownOpen = $state(false);
 	const handleDropdownClick = () => {
+		console.log('Dropdown click handled.');
 		if (!user) window.location.href = '/login';
 		isDropdownOpen = !isDropdownOpen;
+		console.log('Updated isDropdownOpen = ', isDropdownOpen);
 	};
 
 	const handleDropdownFocusLoss = ({
@@ -27,7 +30,6 @@
 </script>
 
 {#snippet avatar(user: User)}
-	<span class="hidden pr-2 font-bold xl:block">{user ? 'Dashboard' : 'Accedi'}</span>
 	<div class="avatar">
 		<div class="ring-offset-primary w-10 rounded-full ring-2 ring-white ring-offset-2">
 			<img
@@ -56,15 +58,29 @@
 				<li><a class="btn join-item btn-soft" href={'/user/' + user.nick}>Profilo</a></li>
 				<li><a class="btn join-item btn-soft" href="/dash">Dashboard</a></li>
 				<br />
-				<li><a class="btn join-item btn-soft" href="/settings">Settings</a></li>
+				<li><a class="btn join-item btn-soft" href="/settings">Impostazioni</a></li>
 			</div>
 
 			<div class="divider"></div>
 			<li><button class="btn btn-soft bg-info" onclick={logout}>Logout</button></li>
 		</ul>
 	{:else}
-		<a class="link-hover flex cursor-pointer items-center text-white" href="/login">
+		<a
+			class="link-hover flex cursor-pointer items-center text-white"
+			href="/login"
+			data-tooltip-target="tooltip-bottom"
+			data-tooltip-placement="bottom"
+		>
 			{@render avatar(user)}
 		</a>
+
+		<div
+			id="tooltip-bottom"
+			role="tooltip"
+			class="tooltip invisible absolute z-10 inline-block rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 opacity-0 shadow-xs"
+		>
+			Accedi
+			<div class="tooltip-arrow" data-popper-arrow></div>
+		</div>
 	{/if}
 </div>

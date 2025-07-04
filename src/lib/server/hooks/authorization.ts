@@ -17,12 +17,11 @@ const authorization: Handle = async ({ event, resolve }) => {
 		'\/gallery$',
 		'\/championships$',
 		'\/users$',
-		'\/user/[a-z0-9_-]+$'
+		'\/user\/[a-z0-9_-]+$'
 	];
 	const publicPathsRegex = publicPaths
 		// .map((p) => p.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&'))
 		.join('|');
-	console.log('Public paths regex:', publicPathsRegex);
 	const re = new RegExp(publicPathsRegex, 'i');
 	if (re.test(path)) {
 		console.log('Public path accessed:', path);

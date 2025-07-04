@@ -2,17 +2,19 @@
 	import { GenderKind } from '$tsTypes/user.js';
 	import CodiceFiscale from 'codice-fiscale-js';
 	import { onMount, untrack } from 'svelte';
-	import SuperDebug, { dateProxy, superForm } from 'sveltekit-superforms';
+	import SuperDebug, { dateProxy, fileProxy, superForm } from 'sveltekit-superforms';
 	import { debounce } from 'throttle-debounce';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { page } from '$app/state';
 	import { schema } from './schema';
 	import { goto, invalidateAll } from '$app/navigation';
+	import ImageCropper from '$components/imageCropper/imageCropper.svelte';
 
 	const { data } = $props();
 	const { countryPhoneCodes } = data;
 
 	const { form, errors, message, constraints, enhance } = superForm(data.form, {
+		dataType: 'json',
 		validators: zod(schema)
 	});
 
@@ -65,6 +67,14 @@
 	let prefixes = $state(countryPhoneCodes);
 	let gender = $state() as GenderKind;
 
+	const avatar = fileProxy(form, 'avatarOriginal');
+	const avatarCropped = $state(fileProxy(form, 'avatarCropped'));
+	const banner = fileProxy(form, 'bannerOriginal');
+	const bannerCropped = $state(fileProxy(form, 'bannerCropped'));
+	// const bioProxy = fieldProxy(form, 'bio');
+	let crop = $state({ x: 0, y: 0 });
+	let zoom = $state(1);
+
 	// $effect(() => {
 	// 	nick = nick.trimStart().replaceAll(' ', '-').toLowerCase();
 	// 	untrack(() => {
@@ -93,7 +103,13 @@
 <main class="mx-auto max-w-2xl px-4 py-8">
 	<h1 class="text-primary mb-8 text-3xl font-bold">Modifica il tuo profilo</h1>
 	<!-- <SuperDebug data={$form} /> -->
-	<form method="POST" class="flex flex-col space-y-8" use:enhance action="?/updateAccount">
+	<form
+		method="POST"
+		enctype="multipart/form-data"
+		class="flex flex-col space-y-8"
+		use:enhance
+		action="?/updateAccount"
+	>
 		<!-- Contact Information Section -->
 		<div class="border-base-content space-y-6 border-b pb-8">
 			<h2 class="text-primary text-lg font-semibold">Informazioni di Contatto</h2>
@@ -382,6 +398,32 @@
 					<p class="fieldset-label text-error">{$errors.visibility}</p>
 				{/if}
 			</fieldset>
+
+			<ImageCropper
+				name="avatarOriginal"
+				bind:value={$avatar}
+				label="Carica un logo per il tuo team"
+				constraints={{ required: false }}
+				errors={$errors.avatarOriginal}
+				bind:cropped={$avatarCropped}
+				bind:pixels={$form.avatarCroppedInfo}
+				{crop}
+				{zoom}
+				shape="round"
+			/>
+
+			<ImageCropper
+				name="banner"
+				bind:value={$banner}
+				label="Carica un immagine di sfondo (banner) per la tua pagina"
+				constraints={{ required: false }}
+				errors={$errors.bannerOriginal}
+				bind:cropped={$bannerCropped}
+				bind:pixels={$form.bannerCroppedInfo}
+				{crop}
+				{zoom}
+				shape="rect"
+			/>
 
 			<!-- Submit Button -->
 			<button disabled={$delayed} type="submit" class="btn btn-primary w-full">

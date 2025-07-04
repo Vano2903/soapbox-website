@@ -48,7 +48,9 @@ async function isUsernameValid(
 		return false;
 	}
 	try {
-		const data = await pb.collection('publicUserInfo').getFirstListItem(`nick="${form.data.username}"`);
+		const data = await pb
+			.collection('publicUserInfo')
+			.getFirstListItem(`nick="${form.data.username}"`);
 		setError(form, 'username', 'Il nome utente non è disponibile', {
 			overwrite: true
 		});
@@ -80,14 +82,22 @@ export const actions = {
 			console.log('user in onboard action', user);
 			locals.user = await pb.collection('users').update(user.id, {
 				completed: true,
+
 				name: form.data.name,
 				lastName: form.data.lastName,
 				birthDate: form.data.birthDate,
 				fiscalCode: form.data.fiscalCode ?? '',
 				gender: form.data.gender,
-				visibility: form.data.visibility,
 				phone: `${form.data.prefix}-${form.data.phone}`,
-				nick: form.data.username
+
+				visibility: form.data.visibility,
+				nick: form.data.username,
+				avatar: form.data.avatarOriginal,
+				avatarCropped: form.data.avatarCropped,
+				avatarCrop: form.data.avatarCroppedInfo,
+				banner: form.data.bannerOriginal,
+				bannerCropped: form.data.bannerCropped,
+				bannerCrop: form.data.bannerCroppedInfo
 			});
 
 			return message(form, {

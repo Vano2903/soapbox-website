@@ -106,6 +106,12 @@ export const actions = {
 				fiscalCode: form.data.fiscalCode ?? '',
 				gender: form.data.gender,
 				visibility: form.data.visibility,
+				avatar: form.data.avatarOriginal,
+				avatarCropped: form.data.avatarCropped,
+				avatarCrop: form.data.avatarCroppedInfo,
+				banner: form.data.bannerOriginal,
+				bannerCropped: form.data.bannerCropped,
+				bannerCrop: form.data.bannerCroppedInfo,
 				phone: `${form.data.prefix}-${form.data.phone}`,
 				nick: form.data.nick
 			});

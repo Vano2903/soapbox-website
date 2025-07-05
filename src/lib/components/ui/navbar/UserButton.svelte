@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { User } from '$tsTypes/user';
-	import { Menu, LogIn } from 'lucide-svelte';
 
 	let { user }: { user: User } = $props();
 	let isDropdownOpen = $state(false);
@@ -65,22 +64,8 @@
 			<li><button class="btn btn-soft bg-info" onclick={logout}>Logout</button></li>
 		</ul>
 	{:else}
-		<a
-			class="link-hover flex cursor-pointer items-center text-white"
-			href="/login"
-			data-tooltip-target="tooltip-bottom"
-			data-tooltip-placement="bottom"
-		>
+		<a class="link-hover flex cursor-pointer items-center text-white" href="/login">
 			{@render avatar(user)}
 		</a>
-
-		<div
-			id="tooltip-bottom"
-			role="tooltip"
-			class="tooltip invisible absolute z-10 inline-block rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 opacity-0 shadow-xs"
-		>
-			Accedi
-			<div class="tooltip-arrow" data-popper-arrow></div>
-		</div>
 	{/if}
 </div>

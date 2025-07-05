@@ -16,14 +16,22 @@
 	<div class="carousel">
 		<!-- <Carousel /> -->
 		<Carousel2 />
-		<aside class="absolute z-20 box-border h-3/4 w-1/4 rounded-l-lg bg-white pt-2 pb-4 pl-2">
+		<aside
+			class="absolute z-20 box-border hidden h-3/4 max-h-[650px] w-1/4 max-w-[430px] rounded-l-lg bg-white pt-2 pb-4 pl-2 lg:block"
+		>
 			<div class="inner">
-				<EventInfoBox {event} />
+				<EventInfoBox {event} deviceSize={'large'} />
 			</div>
 		</aside>
 	</div>
 	<div class="px-4">
 		<hr class="mb-3 h-1 w-auto rounded-sm border-0 bg-red-600" />
+		<div class="box-border hidden rounded-xl bg-neutral-100 p-2 pb-4 md:block lg:hidden">
+			<EventInfoBox {event} deviceSize={'medium'} />
+		</div>
+		<div class="box-border rounded-xl bg-neutral-100 p-2 pb-4 md:hidden">
+			<EventInfoBox {event} deviceSize={'small'} />
+		</div>
 		<div class=" px-2">
 			<p class="pb-10 text-5xl font-bold">
 				Questa é <span class="text-red-600">ASD BOXRALLY</span>!

@@ -2,7 +2,23 @@
 	import { Menu } from 'lucide-svelte';
 	import UserButton from './UserButton.svelte';
 
-	const handleMenuClick = () => {};
+	let isMenuOpen = $state(false);
+	const handleMenuClick = () => {
+		console.log('Menu click handled.');
+		isMenuOpen = !isMenuOpen;
+		console.log('Updated isMenuOpen = ', isMenuOpen);
+	};
+
+	const handleMenuFocusLoss = ({
+		relatedTarget,
+		currentTarget
+	}: {
+		relatedTarget: EventTarget | null;
+		currentTarget: EventTarget & Element;
+	}) => {
+		if (relatedTarget instanceof HTMLElement && currentTarget.contains(relatedTarget)) return; // check if the new focus target doesn't present in the dropdown tree (exclude ul\li padding area because relatedTarget, in this case, will be null)
+		isMenuOpen = false;
+	};
 
 	const latestGalleryYear = 2003;
 
@@ -46,8 +62,28 @@
 		{@render logohome()}
 	</div>
 	<div class="ml-2 flex w-full items-center justify-between">
-		<div class="block space-x-4 py-2 md:hidden">
-			<Menu color="white" onclick={handleMenuClick} />
+		<div
+			class="dropdown dropdown-start block space-x-4 py-2 md:hidden"
+			onfocusout={handleMenuFocusLoss}
+		>
+			<button
+				onclick={handleMenuClick}
+				class="m-0 border-none bg-transparent p-0 focus:outline-none"
+				aria-label="Menu"
+			>
+				<Menu color="white" />
+			</button>
+			<ul
+				class="dropdown-content menu bg-base-100 rounded-box mt-2 w-52 border-2 p-2 shadow"
+				class:hidden={!isMenuOpen}
+				aria-hidden={!isMenuOpen}
+			>
+				<div class="join join-vertical">
+					{#each links as link}
+						<li><a class="btn join-item btn-soft" href={link.href}>{link.name}</a></li>
+					{/each}
+				</div>
+			</ul>
 		</div>
 		<div class="block md:hidden">
 			{@render logohome()}

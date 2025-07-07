@@ -425,6 +425,23 @@
 				shape="rect"
 			/>
 
+			<fieldset class="fieldset flex-1 text-base">
+				<legend class="fieldset-legend">Bio</legend>
+				<textarea
+					class:input-error={$errors.bio}
+					class:input-success={$form.bio && 'bio' in $errors && !$errors.bio}
+					name="bio"
+					id="bio"
+					rows="3"
+					bind:value={$form.bio}
+					placeholder="Scrivi qualcosa su di te..."
+					class="textarea w-full"
+				></textarea>
+				{#if $errors.bio}
+					<p class="fieldset-label text-error">{$errors.bio}</p>
+				{/if}
+			</fieldset>
+
 			<!-- Submit Button -->
 			<button disabled={$delayed} type="submit" class="btn btn-primary w-full">
 				<!-- class="mt-8 w-full rounded-lg bg-red-600 py-3 font-medium text-white transition-colors hover:bg-red-700 focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:outline-none" -->

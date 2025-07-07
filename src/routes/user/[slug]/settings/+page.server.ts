@@ -104,16 +104,18 @@ export const actions = {
 				lastName: form.data.lastName,
 				birthDate: form.data.birthDate,
 				fiscalCode: form.data.fiscalCode ?? '',
+				phone: `${form.data.prefix}-${form.data.phone}`,
 				gender: form.data.gender,
+
 				visibility: form.data.visibility,
+				nick: form.data.nick,
 				avatar: form.data.avatarOriginal,
 				avatarCropped: form.data.avatarCropped,
 				avatarCrop: form.data.avatarCroppedInfo,
 				banner: form.data.bannerOriginal,
 				bannerCropped: form.data.bannerCropped,
 				bannerCrop: form.data.bannerCroppedInfo,
-				phone: `${form.data.prefix}-${form.data.phone}`,
-				nick: form.data.nick
+				bio: form.data.bio
 			});
 
 			return message(form, {

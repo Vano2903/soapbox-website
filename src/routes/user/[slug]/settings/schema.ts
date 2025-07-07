@@ -1,5 +1,6 @@
 import { GenderKind, UserVisiblityKind } from '$tsTypes/user';
 import CodiceFiscale from 'codice-fiscale-js';
+import { Biohazard } from 'lucide-svelte';
 import { z } from 'zod';
 
 const MEGA5 = 5000000;
@@ -145,5 +146,15 @@ export const schema = z.object({
 				(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
 				'Solo formati .jpg, .jpeg, .png e .webp sono supportati'
 			)
+	),
+	bio: z.optional(
+		z
+			.string({
+				required_error: 'La biografia è obbligatoria',
+				invalid_type_error: 'La biografia deve essere una stringa'
+			})
+			.max(500, {
+				message: 'La biografia deve avere al massimo 500 caratteri'
+			})
 	)
 });

@@ -45,10 +45,10 @@
 	let prefixes = $state(countryPhoneCodes);
 	let gender = $state() as GenderKind;
 
-	const avatar = fileProxy(form, 'avatarOriginal');
-	const avatarCropped = $state(fileProxy(form, 'avatarCropped'));
-	const banner = fileProxy(form, 'bannerOriginal');
-	const bannerCropped = $state(fileProxy(form, 'bannerCropped'));
+	// const avatar = fileProxy(form, 'avatarOriginal');
+	// const avatarCropped = $state(fileProxy(form, 'avatarCropped'));
+	// const banner = fileProxy(form, 'bannerOriginal');
+	// const bannerCropped = $state(fileProxy(form, 'bannerCropped'));
 	// const bioProxy = fieldProxy(form, 'bio');
 	let crop = $state({ x: 0, y: 0 });
 	let zoom = $state(1);
@@ -395,7 +395,7 @@
 				{/if}
 			</fieldset>
 
-			<ImageCropper
+			<!-- <ImageCropper
 				name="avatarOriginal"
 				bind:value={$avatar}
 				label="Carica un logo per il tuo team"
@@ -419,7 +419,7 @@
 				{crop}
 				{zoom}
 				shape="rect"
-			/>
+			/> -->
 
 			<!-- Submit Button -->
 			<button disabled={$delayed} type="submit" class="btn btn-primary w-full">

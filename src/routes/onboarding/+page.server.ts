@@ -91,13 +91,13 @@ export const actions = {
 				phone: `${form.data.prefix}-${form.data.phone}`,
 
 				visibility: form.data.visibility,
-				nick: form.data.username,
-				avatar: form.data.avatarOriginal,
-				avatarCropped: form.data.avatarCropped,
-				avatarCrop: form.data.avatarCroppedInfo,
-				banner: form.data.bannerOriginal,
-				bannerCropped: form.data.bannerCropped,
-				bannerCrop: form.data.bannerCroppedInfo
+				nick: form.data.username
+				// avatar: form.data.avatarOriginal,
+				// avatarCropped: form.data.avatarCropped,
+				// avatarCrop: form.data.avatarCroppedInfo,
+				// banner: form.data.bannerOriginal,
+				// bannerCropped: form.data.bannerCropped,
+				// bannerCrop: form.data.bannerCroppedInfo
 			});
 
 			return message(form, {

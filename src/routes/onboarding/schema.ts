@@ -87,63 +87,63 @@ export const schema = z.object({
 					};
 			}
 		}
-	}),
-	avatarOriginal: z.optional(
-		z
-			.any()
-			.refine((file) => file?.size <= MEGA2, 'Il file deve essere di dimensioni inferiori a 2MB')
-			.refine(
-				(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-				'Solo formati .jpg, .jpeg, .png e .webp sono supportati'
-			)
-	),
-	avatarCroppedInfo: z.optional(
-		z.object({
-			x: z.number().min(0),
-			y: z.number().min(0),
-			width: z.number().min(0),
-			height: z.number().min(0)
-		})
-	),
-	avatarCropped: z.optional(
-		z
-			.any()
-			.refine(
-				(file) => file?.size <= MEGA2,
-				'Il file croppato deve essere di dimensioni inferiori a 2MB'
-			)
-			.refine(
-				(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-				'Solo formati .jpg, .jpeg, .png e .webp sono supportati'
-			)
-	),
-	bannerOriginal: z.optional(
-		z
-			.any()
-			.refine((file) => file?.size <= MEGA2, 'Il file deve essere di dimensioni inferiori a 2MB')
-			.refine(
-				(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-				'Solo formati .jpg, .jpeg, .png e .webp sono supportati'
-			)
-	),
-	bannerCroppedInfo: z.optional(
-		z.object({
-			x: z.number().min(0),
-			y: z.number().min(0),
-			width: z.number().min(0),
-			height: z.number().min(0)
-		})
-	),
-	bannerCropped: z.optional(
-		z
-			.any()
-			.refine(
-				(file) => file?.size <= MEGA2,
-				'Il file croppato deve essere di dimensioni inferiori a 2MB'
-			)
-			.refine(
-				(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-				'Solo formati .jpg, .jpeg, .png e .webp sono supportati'
-			)
-	)
+	})
+	// avatarOriginal: z.optional(
+	// 	z
+	// 		.any()
+	// 		.refine((file) => file?.size <= MEGA2, 'Il file deve essere di dimensioni inferiori a 2MB')
+	// 		.refine(
+	// 			(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+	// 			'Solo formati .jpg, .jpeg, .png e .webp sono supportati'
+	// 		)
+	// ),
+	// avatarCroppedInfo: z.optional(
+	// 	z.object({
+	// 		x: z.number().min(0),
+	// 		y: z.number().min(0),
+	// 		width: z.number().min(0),
+	// 		height: z.number().min(0)
+	// 	})
+	// ),
+	// avatarCropped: z.optional(
+	// 	z
+	// 		.any()
+	// 		.refine(
+	// 			(file) => file?.size <= MEGA2,
+	// 			'Il file croppato deve essere di dimensioni inferiori a 2MB'
+	// 		)
+	// 		.refine(
+	// 			(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+	// 			'Solo formati .jpg, .jpeg, .png e .webp sono supportati'
+	// 		)
+	// ),
+	// bannerOriginal: z.optional(
+	// 	z
+	// 		.any()
+	// 		.refine((file) => file?.size <= MEGA2, 'Il file deve essere di dimensioni inferiori a 2MB')
+	// 		.refine(
+	// 			(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+	// 			'Solo formati .jpg, .jpeg, .png e .webp sono supportati'
+	// 		)
+	// ),
+	// bannerCroppedInfo: z.optional(
+	// 	z.object({
+	// 		x: z.number().min(0),
+	// 		y: z.number().min(0),
+	// 		width: z.number().min(0),
+	// 		height: z.number().min(0)
+	// 	})
+	// ),
+	// bannerCropped: z.optional(
+	// 	z
+	// 		.any()
+	// 		.refine(
+	// 			(file) => file?.size <= MEGA2,
+	// 			'Il file croppato deve essere di dimensioni inferiori a 2MB'
+	// 		)
+	// 		.refine(
+	// 			(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+	// 			'Solo formati .jpg, .jpeg, .png e .webp sono supportati'
+	// 		)
+	// )
 });

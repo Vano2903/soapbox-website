@@ -28,24 +28,35 @@
 	let options = { loop: true };
 	let plugins = [Autoplay()];
 
-	const images = [
-		{ src: 'images/carousel/1.jpeg', alt: 'Car 1' },
-		{ src: 'images/carousel/2.jpeg', alt: 'Car 2' },
-		{ src: 'images/carousel/3.jpeg', alt: 'Car 3' },
-		{ src: 'images/carousel/4.jpeg', alt: 'Car 4' },
-		{ src: 'images/carousel/5.jpeg', alt: 'Car 5' },
-		{ src: 'images/carousel/6.jpeg', alt: 'Car 6' },
-		{ src: 'images/carousel/7.jpeg', alt: 'Car 7' },
-		{ src: 'images/carousel/8.jpeg', alt: 'Car 8' },
-		{ src: 'images/carousel/9.jpeg', alt: 'Car 9' }
+	type Image = {
+		src: string;
+		alt: string;
+		loading: 'eager' | 'lazy';
+	};
+
+	const images: Image[] = [
+		{ src: 'images/carousel/1.jpeg', alt: 'Car 1', loading: 'eager' },
+		{ src: 'images/carousel/2.jpeg', alt: 'Car 2', loading: 'lazy' },
+		{ src: 'images/carousel/3.jpeg', alt: 'Car 3', loading: 'lazy' },
+		{ src: 'images/carousel/4.jpeg', alt: 'Car 4', loading: 'lazy' },
+		{ src: 'images/carousel/5.jpeg', alt: 'Car 5', loading: 'lazy' },
+		{ src: 'images/carousel/6.jpeg', alt: 'Car 6', loading: 'lazy' },
+		{ src: 'images/carousel/7.jpeg', alt: 'Car 7', loading: 'lazy' },
+		{ src: 'images/carousel/8.jpeg', alt: 'Car 8', loading: 'lazy' },
+		{ src: 'images/carousel/9.jpeg', alt: 'Car 9', loading: 'lazy' }
 	];
 </script>
 
 <div class="embla" use:emblaCarouselSvelte={{ options, plugins }}>
 	<div class="embla__container">
-		{#each images as { src, alt }}
+		{#each images as { src, alt, loading }}
 			<div class="embla__slide">
-				<img class="h-full w-full object-none sm:aspect-video sm:object-cover" {src} {alt} />
+				<img
+					class="h-full w-full object-none sm:aspect-video sm:object-cover"
+					{loading}
+					{src}
+					{alt}
+				/>
 			</div>
 		{/each}
 	</div>

@@ -35,6 +35,7 @@ services:
     environment:
       - *public_pb_instance_env
       - GSHEETS_APIKEY=${GSHEETS_APIKEY}
+      - GSHEETS_CLIENTID=${GSHEETS_CLIENTID}
     networks:
       - traefik
 

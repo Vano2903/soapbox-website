@@ -2,7 +2,7 @@ import { redirect, type Handle } from '@sveltejs/kit';
 import type { User } from '$lib/types/user';
 import { userPrefersMode } from 'mode-watcher';
 
-function createRandomString(length) {
+function createRandomString(length: number = 8): string {
 	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 	let result = '';
 	for (let i = 0; i < length; i++) {
@@ -30,7 +30,7 @@ const authentication: Handle = async ({ event, resolve }) => {
 		}
 
 		// console.log('authStore after refresh', pb.authStore.record);
-		event.locals.user = (pb.authStore.record as unknown as User) || undefined;
+		event.locals.user = structuredClone(pb.authStore.record as unknown as User) || undefined;
 		event.locals.user.isexpand = false;
 		if (pb.authStore.record) {
 			event.locals.user.avatarCropped =

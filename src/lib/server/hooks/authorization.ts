@@ -2,29 +2,14 @@ import { type Handle, redirect } from '@sveltejs/kit';
 import { Roles } from '$lib/types/user';
 // import hasRole from '$lib/utils/hasRole';
 import { error } from '@sveltejs/kit';
+import { isPublicPath } from './publicPathes';
 
 // Authorization middleware for route access control
 const authorization: Handle = async ({ event, resolve }) => {
 	const user = event.locals.user;
 	const path = event.url.pathname.toLowerCase();
 
-	const publicPaths = [
-		'\/$',
-		'\/chi-siamo$',
-		'\/login$',
-		'\/register$',
-		'\/forgot-password$',
-		'\/gallery$',
-		'\/championships$',
-		'\/users$',
-		'\/user\/[a-z0-9_-]+$'
-	];
-	const publicPathsRegex = publicPaths
-		// .map((p) => p.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&'))
-		.join('|');
-	const re = new RegExp(publicPathsRegex, 'i');
-	if (re.test(path)) {
-		console.log('Public path accessed:', path);
+	if (isPublicPath(path)) {
 		return await resolve(event);
 	}
 

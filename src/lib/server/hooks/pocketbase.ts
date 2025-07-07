@@ -1,16 +1,57 @@
 import { type Handle, error } from '@sveltejs/kit';
 import PocketBase from 'pocketbase';
 import type { TypedPocketBase } from '$lib/types/pocketbase';
-import { PUBLIC_PB_INSTANCE } from '$env/static/public';
+import { env } from '$env/dynamic/public';
+
+const createPocketBaseInstance = (instanceUrl: string): TypedPocketBase => {
+	if (!instanceUrl) {
+		throw new Error('Pocketbase instance not found');
+	}
+	const pb = new PocketBase(instanceUrl) as TypedPocketBase;
+	console.log('Creating PocketBase instance:', instanceUrl);
+	// pb.autoCancellation(false);
+	// pb.health.check({}).catch((err) => {
+	// 	console.error('Pocketbase instance is not reachable:', err);
+	// 	throw new Error('Pocketbase instance is not reachable');
+	// });
+	return pb;
+};
 
 const pocketbase: Handle = async ({ event, resolve }) => {
-	if (!PUBLIC_PB_INSTANCE) {
-		error(500, 'Pocketbase instance not found');
+	try {
+		if (!event.locals.pb) {
+			event.locals.pb = createPocketBaseInstance(env.PUBLIC_PB_INSTANCE);
+		} else {
+			console.log('pocketbaese instance already exists in locals');
+		}
+
+		event.locals.pb.health.check().catch((err) => {
+			console.log('not reachable, creating new instance', err);
+			const pb = createPocketBaseInstance(env.PUBLIC_PB_INSTANCE);
+			event.locals.pb = pb;
+		});
+	} catch (err) {
+		console.error('Error initializing PocketBase:', err);
+		error(500, 'Failed to initialize PocketBase');
 	}
+	// 	event.locals.pb.health.check().catch(() => {
+	// 		const PUBLIC_PB_INSTANCE = env.PUBLIC_PB_INSTANCE;
+	// 		if (!PUBLIC_PB_INSTANCE) {
+	// 			error(500, 'Pocketbase instance not found');
+	// 		}
+	// 		const pb = new PocketBase(PUBLIC_PB_INSTANCE) as TypedPocketBase;
+	// 		pb.health.check().catch(() => {
+	// 			error(500, 'Pocketbase instance is not reachable');
+	// 		});
+	// 		event.locals.pb = pb;
+	// 	});
+	// }
 
-	const pb = new PocketBase(PUBLIC_PB_INSTANCE) as TypedPocketBase;
-
-	event.locals.pb = pb;
+	// const pb = new PocketBase(PUBLIC_PB_INSTANCE) as TypedPocketBase;
+	// pb.health.check().catch(() => {
+	// 	error(500, 'Pocketbase instance is not reachable');
+	// });
+	// event.locals.pb = pb;
 
 	return await resolve(event);
 };

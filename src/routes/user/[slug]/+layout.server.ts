@@ -1,3 +1,4 @@
+import type { Team, TeamNonexpand } from '$tsTypes/team';
 import type { UserPublicInfo } from '$tsTypes/user';
 import { redirect, type ServerLoad } from '@sveltejs/kit';
 
@@ -20,7 +21,9 @@ export const load: ServerLoad = async ({ locals, params, url }) => {
 	const startPathname = '/user/' + params.slug;
 	const path = url.pathname;
 	if (
-		(path.startsWith(startPathname + '/dash') || path.startsWith(startPathname + '/settings')) &&
+		(path.startsWith(startPathname + '/dash') ||
+			path.startsWith(startPathname + '/settings') ||
+			path.startsWith(startPathname + '/new')) &&
 		user?.id !== foundUser.id
 	) {
 		redirect(303, '/user/' + params.slug);
@@ -33,8 +36,40 @@ export const load: ServerLoad = async ({ locals, params, url }) => {
 
 	foundUser.bannerCropped = pb.files.getURL(foundUser, foundUser.bannerCropped || '') || undefined;
 
+	let [teams, errTeam] = (await goCatch(
+		pb.collection('teams').getFullList({
+			filter: `members.id?="${foundUser.person}" ||
+				owner.id="${foundUser.person}"`,
+			sort: '-created'
+		})
+	)) as [TeamNonexpand[], undefined] | [undefined, Error];
+
+	// if (errTeam) {
+	// 	console.error('Error fetching teams:', errTeam);
+	// 	throw redirect(303, '/users?error=teams-fetch-error');
+	// }
+
+	let error = {};
+	if (errTeam || !teams) {
+		console.log('Error fetching teams:', errTeam);
+		error = {
+			kind: 'teams',
+			message: 'Errore durante il recupero dei team.'
+		};
+		teams = [];
+	}
+
+	const teamsWithAvatars = teams.map((team) => {
+		team.logoCropped = pb.files.getURL(team, team.logoCropped || '') || undefined;
+		return team;
+	});
+
+	console.log('teams:', teamsWithAvatars);
+
 	return {
 		user: foundUser,
+		teams: teamsWithAvatars || [],
+		error: error,
 		isCurrentUser: user?.id === foundUser.id,
 		slug: params.slug
 	};

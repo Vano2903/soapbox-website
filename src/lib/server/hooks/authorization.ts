@@ -56,6 +56,10 @@ const authorization: Handle = async ({ event, resolve }) => {
 		redirect(302, `/user/${user.nick}/`);
 	}
 
+	if (path.startsWith('/new')) {
+		redirect(302, `/user/${user.nick}/dash/new`);
+	}
+
 	// Role-based access control mapping for different routes
 	// const routePermissions = Object.entries({
 	// 	'/cogestione/registration': !hasRole(user, Roles.Staff, Roles.Docente),

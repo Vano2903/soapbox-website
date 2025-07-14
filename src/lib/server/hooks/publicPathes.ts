@@ -12,7 +12,8 @@ export const isPublicPath = (path: string): boolean => {
 		'\/gallery$',
 		'\/championships$',
 		'\/users$',
-		'\/user\/[a-z0-9_-]+$'
+		'\/user\/[a-z0-9_-]+$',
+		'\/users\/[a-z0-9_-]+$'
 	];
 	const publicPathsRegex = publicPaths
 		// .map((p) => p.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&'))

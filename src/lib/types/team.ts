@@ -9,9 +9,23 @@ interface TeamBase {
 	created: Date;
 	updated: Date;
 	members: string[];
-	owner: string | User;
+	owner: string;
 	logo?: string;
+	logoCropped?: string;
+	logoCrop?: {
+		x: number;
+		y: number;
+		width: number;
+		height: number;
+	};
 	banner?: string;
+	bannerCropped?: string;
+	bannerCrop?: {
+		x: number;
+		y: number;
+		width: number;
+		height: number;
+	};
 }
 
 export interface TeamNonexpand extends TeamBase {

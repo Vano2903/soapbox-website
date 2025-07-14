@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const minLength = 8;
-const maxLength = 64;
+const maxLength = 30;
 export const schema = z.object({
 	email: z
 		.string({
@@ -16,8 +16,4 @@ export const schema = z.object({
 		})
 		.min(minLength, `La password deve contenere almeno ${minLength} caratteri`)
 		.max(maxLength, `La password non può superare i ${maxLength} caratteri`)
-		.regex(
-			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-			'La password deve contenere almeno una lettera maiuscola, una minuscola, un numero e un carattere speciale'
-		)
 });

@@ -11,11 +11,17 @@
 	import ImageCropper from '$components/imageCropper/imageCropper.svelte';
 
 	const { data } = $props();
-	const { countryPhoneCodes } = data;
+	const { countryPhoneCodes, fileUrls } = data;
 
 	const { form, errors, message, constraints, enhance } = superForm(data.form, {
 		dataType: 'json',
 		validators: zod(schema)
+	});
+
+	$effect(() => {
+		console.log('form', $form);
+		console.log('errors', $errors);
+		console.log('message', $message);
 	});
 
 	// let successMessage = $state('');
@@ -57,6 +63,61 @@
 			}
 		}
 	);
+
+	async function createFile(
+		url: string,
+		format: string,
+		name: string
+	): Promise<FileList | undefined> {
+		try {
+			const files = new DataTransfer();
+
+			let response = await fetch(url);
+			let data = await response.blob();
+			let metadata = {
+				type: format
+			};
+			files.items.add(new File([data], name, metadata));
+			return files.files;
+		} catch (e) {
+			console.error('Error creating file from URL:', e);
+			return undefined;
+		}
+		// ... do something with the file or return it
+	}
+
+	$effect(() => {
+		if (fileUrls) {
+			if (fileUrls.avatarOriginal) {
+				createFile(fileUrls.avatarOriginal, 'image/png', 'avatar.png').then((file) => {
+					if (file) {
+						$avatar = file;
+					}
+				});
+			}
+			if (fileUrls.bannerOriginal) {
+				createFile(fileUrls.bannerOriginal, 'image/png', 'banner.png').then((file) => {
+					if (file) {
+						$banner = file;
+					}
+				});
+			}
+			if (fileUrls.avatarCropped) {
+				createFile(fileUrls.avatarCropped, 'image/png', 'avatar-cropped.png').then((file) => {
+					if (file) {
+						$avatarCropped = file;
+					}
+				});
+			}
+			if (fileUrls.bannerCropped) {
+				createFile(fileUrls.bannerCropped, 'image/png', 'banner-cropped.png').then((file) => {
+					if (file) {
+						$bannerCropped = file;
+					}
+				});
+			}
+		}
+	});
 
 	const checkUsername = debounce(200, submitCheckUsername);
 
@@ -402,7 +463,8 @@
 			<ImageCropper
 				name="avatarOriginal"
 				bind:value={$avatar}
-				label="Carica un logo per il tuo team"
+				confirmed={!!$avatarCropped}
+				label="Carica una foto profilo"
 				constraints={{ required: false }}
 				errors={$errors.avatarOriginal}
 				bind:cropped={$avatarCropped}
@@ -415,6 +477,7 @@
 			<ImageCropper
 				name="banner"
 				bind:value={$banner}
+				confirmed={!!$bannerCropped}
 				label="Carica un immagine di sfondo (banner) per la tua pagina"
 				constraints={{ required: false }}
 				errors={$errors.bannerOriginal}

@@ -5,7 +5,8 @@ import {
 	setError,
 	superValidate,
 	type SuperValidated,
-	type Infer
+	type Infer,
+	withFiles
 } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { Roles, type User } from '$tsTypes/user';
@@ -15,7 +16,7 @@ import { schema } from './schema';
 const nickSchema = schema.pick({ nick: true });
 
 export const load: PageServerLoad = async ({ fetch, parent, locals }) => {
-	const { user } = locals;
+	const { user, pb } = locals;
 	if (!user) {
 		redirect(303, '/login');
 	}
@@ -43,10 +44,30 @@ export const load: PageServerLoad = async ({ fetch, parent, locals }) => {
 	countryPhoneCodes[currentDefault].default = false;
 	countryPhoneCodes[newCurrent].default = true;
 	user.phone = user.phone.split('-')[1];
-	const form = await superValidate({ ...user, prefix }, zod(schema));
+	console.log('user in load', user);
+	user.avatar = pb.files.getURL(user, user.avatar || '') || '';
+	user.avatarCropped = user.avatarCropped || '';
+	user.banner = pb.files.getURL(user, user.banner || '') || '';
+	user.bannerCropped = pb.files.getURL(user, user.bannerCropped || '') || '';
 
-	// Always return { form } in load functions
-	return { form, countryPhoneCodes };
+	const fileUrls = {
+		avatarOriginal: user.avatar,
+		avatarCropped: user.avatarCropped,
+		bannerOriginal: user.banner,
+		bannerCropped: user.bannerCropped
+	};
+
+	const form = await superValidate(
+		{
+			...user,
+			avatarCroppedInfo: user.avatarCrop,
+			bannerCroppedInfo: user.bannerCrop,
+			prefix
+		},
+		zod(schema)
+	);
+
+	return { form, countryPhoneCodes, fileUrls, user };
 };
 
 async function isUsernameValid(
@@ -83,7 +104,7 @@ export const actions = {
 		console.log('form', form);
 		if (!form.valid) {
 			// Return { form } and things will just work.
-			return fail(400, { form });
+			return fail(400, withFiles({ form }));
 		}
 		console.log(form.data);
 
@@ -94,7 +115,7 @@ export const actions = {
 
 		const isUsernameAvailable = await isUsernameValid(user, form, pb);
 		console.log('isUsernameAvailable', isUsernameAvailable);
-		if (!form.valid || !isUsernameAvailable) return fail(400, { form });
+		if (!form.valid || !isUsernameAvailable) return fail(400, withFiles({ form }));
 
 		try {
 			let user = locals.user as User;

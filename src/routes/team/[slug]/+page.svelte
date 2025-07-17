@@ -38,7 +38,7 @@
 			{/if}
 		</div>
 
-		<div class="flex w-full items-center justify-center space-x-5 px-2 pb-8">
+		<div class="flex w-full items-center justify-center space-x-5 pb-8">
 			<div class="mt-[-1rem] mb-4 h-20 w-20 rounded-full bg-gray-200 md:h-24 md:w-24">
 				<div class="avatar">
 					<div class="w-20 rounded-full ring-1 ring-black md:w-24">
@@ -46,16 +46,14 @@
 					</div>
 				</div>
 			</div>
-			<div class="mt-[-1rem] min-w-0">
-				<h2 class="text-xl font-bold md:text-2xl">{user.name} {user.lastName}</h2>
-				<a
-					href={'/user/' + user.nick}
-					target="_blank"
-					rel="noopener noreferrer"
-					class="ml-2 block max-w-full min-w-0 truncate font-semibold text-red-600 md:font-bold"
-				>
+			<div class="mt-[-1rem]">
+				<h2 class="text-2xl font-bold">{user.name} {user.lastName}</h2>
+				<!-- <div class="flex flex-nowrap items-center space-x-2"> -->
+				<a href={'/user/' + user.nick} target="_blank" class="ml-2 font-bold text-red-600">
 					@{user.nick}
 				</a>
+				<!-- <ExternalLink size={16} /> -->
+				<!-- </div> -->
 			</div>
 		</div>
 

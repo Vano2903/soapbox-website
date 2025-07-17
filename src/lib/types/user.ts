@@ -39,6 +39,7 @@ export interface UserBase {
 	phone: string;
 	gender: GenderKind;
 	birthDate: Date;
+	bio: string;
 }
 
 export interface UserPublicInfo {
@@ -50,6 +51,7 @@ export interface UserPublicInfo {
 	bio: string;
 	nick: string;
 	visibilty: UserVisiblityKind;
+	person: UserId;
 }
 
 export interface Person {

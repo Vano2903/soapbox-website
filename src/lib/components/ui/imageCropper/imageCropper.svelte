@@ -2,6 +2,7 @@
 	import Cropper from 'svelte-easy-crop';
 	import type { InputConstraint } from 'sveltekit-superforms';
 	import CroppedPreview from './croppedPreview.svelte';
+	import { onMount } from 'svelte';
 
 	let {
 		name,
@@ -16,6 +17,7 @@
 		zoom = $bindable(),
 		shape,
 		pixels = $bindable(),
+		confirmed = $bindable(),
 		...rest
 	}: {
 		name: string;
@@ -29,10 +31,15 @@
 		cropped: FileList | null;
 		zoom: number;
 		shape: 'round' | 'rect';
-		pixels: { width: number; height: number; x: number; y: number } | undefined;
+		pixels?: { width: number; height: number; x: number; y: number };
+		confirmed?: boolean;
 	} = $props();
 
-	let confirmed = $state(false);
+	$effect(() => {
+		console.log('image cropper data:', value, cropped, crop, zoom, shape);
+	});
+
+	let confirmedState = $state(confirmed || false);
 	let croppedProxy = $state<FileList | null>(null);
 	$effect(() => {
 		if (croppedProxy) {
@@ -49,7 +56,7 @@
 		{@const file = value[0]}
 		{@const blob = URL.createObjectURL(file)}
 		{#if accepts.includes(file.type)}
-			{#if !confirmed}
+			{#if !confirmedState}
 				<div style="position: relative; width: 100%; height: 16rem;">
 					<Cropper
 						image={blob}
@@ -62,7 +69,7 @@
 				</div>
 				<button
 					onclick={() => {
-						confirmed = true;
+						confirmedState = true;
 					}}>conferma</button
 				>
 				<button
@@ -83,7 +90,7 @@
 				/>
 				<button
 					onclick={() => {
-						confirmed = false;
+						confirmedState = false;
 					}}>modifica/cambia immagine</button
 				>
 			{/if}

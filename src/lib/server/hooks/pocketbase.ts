@@ -2,20 +2,7 @@ import { type Handle, error } from '@sveltejs/kit';
 import PocketBase from 'pocketbase';
 import type { TypedPocketBase } from '$lib/types/pocketbase';
 import { env } from '$env/dynamic/public';
-
-const createPocketBaseInstance = (instanceUrl: string): TypedPocketBase => {
-	if (!instanceUrl) {
-		throw new Error('Pocketbase instance not found');
-	}
-	const pb = new PocketBase(instanceUrl) as TypedPocketBase;
-	console.log('Creating PocketBase instance:', instanceUrl);
-	// pb.autoCancellation(false);
-	// pb.health.check({}).catch((err) => {
-	// 	console.error('Pocketbase instance is not reachable:', err);
-	// 	throw new Error('Pocketbase instance is not reachable');
-	// });
-	return pb;
-};
+import { createPocketBaseInstance } from '$lib/utils/pocketbase';
 
 const pocketbase: Handle = async ({ event, resolve }) => {
 	try {

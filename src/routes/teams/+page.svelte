@@ -6,7 +6,6 @@
 	import { createPocketBaseInstance } from '$lib/utils/pocketbase';
 	import type { ListResult } from 'pocketbase';
 	import { onMount } from 'svelte';
-	import EntityCard from '$components/entityCard/entityCard.svelte';
 
 	interface Props {
 		data: {
@@ -84,27 +83,7 @@
 		</div>
 	{/if}
 
-	<div class="space-y-1">
-		{#each expandedUsers as user}
-			<EntityCard
-				pictureUrl={user.avatarCropped || ''}
-				title={`${user.name} ${user.lastName}`}
-				slug={user.nick}
-				description={user.bio}
-				link={`/user/${user.nick}`}
-			/>
-		{/each}
-	</div>
-
 	{#each expandedUsers as user}
-		<!-- <EntityCard
-			pictureUrl={user.avatarCropped || ''}
-			title={`${user.name} ${user.lastName}`}
-			slug={user.nick}
-			description={user.bio}
-			link={`/user/${user.nick}`}
-		/> -->
-
 		<a href={'/user/' + user.nick} class="cursor-pointer">
 			<div class="flex items-center space-x-4 border-b p-4">
 				<div class="avatar">

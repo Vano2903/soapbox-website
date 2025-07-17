@@ -42,7 +42,7 @@
 	--noise: 0;
 }
 
-@plugin "daisyui/theme" {
+/* @plugin "daisyui/theme" {
 	name: "soapboxaro-dk";
 	default: false;
 	prefersdark: true;
@@ -77,11 +77,12 @@
 	--border: 1px;
 	--depth: 1;
 	--noise: 0;
-}
+  } */
 
 @plugin "daisyui" {
-	themes: soapboxaro-lg --default, soapboxaro-dk --prefersdark;
-	logs: true;
+	themes: soapboxaro-lg --default
+		/* , soapboxaro-dk --prefersdark; */
+		logs: true;
 }
 
 

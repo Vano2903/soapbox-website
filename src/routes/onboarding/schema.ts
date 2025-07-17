@@ -64,8 +64,8 @@ export const schema = z.object({
 		.min(3, {
 			message: 'Il nome utente deve avere almeno 3 caratteri'
 		})
-		.max(20, {
-			message: 'Il nome utente deve avere al massimo 20 caratteri'
+		.max(30, {
+			message: 'Il nome utente deve avere al massimo 30 caratteri'
 		})
 		.regex(/^[a-z0-9\-_]+$/, {
 			message: 'Il nome utente può contenere solo minuscole, numeri, trattini e trattini bassi'

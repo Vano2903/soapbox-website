@@ -3,7 +3,7 @@ name: Build And Deploy PROD
 on:
   push:
     branches: 
-      - main
+      - master
       - dev
 
 env:
@@ -41,7 +41,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-              type=raw,priority=1000,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+              type=raw,priority=1000,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'master') }}
               type=raw,priority=1000,value=dev,enable=${{ github.ref == format('refs/heads/{0}', 'dev') }}
               type=sha,enable=true,priority=100,prefix=sha-,suffix=,format=short
           

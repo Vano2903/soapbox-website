@@ -94,7 +94,7 @@
 				.then((blob) => {
 					if (blob) {
 						const files = new DataTransfer();
-						files.items.add(new File([blob], fileName + '.cropped', { type: fileType }));
+						files.items.add(new File([blob], 'cropped-' + fileName, { type: fileType }));
 						cropped = files.files;
 						cachedCroppedImage = URL.createObjectURL(blob);
 					} else {
@@ -123,7 +123,7 @@
 	});
 </script>
 
-<div class="relative h-44">
+<div class="relative flex h-44 items-center justify-center">
 	{#if isProcessing}
 		<p>Loading...</p>
 	{:else if !cachedCroppedImage}
@@ -133,7 +133,7 @@
 			src={cachedCroppedImage}
 			alt="Cropped result"
 			class:rounded-full={shape === 'round'}
-			class="max-h-full max-w-full border object-contain"
+			class="max-h-full min-h-32 max-w-full min-w-32 border object-contain"
 		/>
 	{/if}
 </div>

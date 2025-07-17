@@ -6,11 +6,11 @@ export const load: ServerLoad = async ({ locals, params, url }) => {
 	const { user, pb } = locals;
 
 	if (!params.slug) {
-		redirect(303, '/users');
+		redirect(303, '/teams');
 	}
 
 	const [foundUser, err] = (await goCatch(
-		pb.collection('publicUserInfo').getFirstListItem(`nick="${params.slug}"`)
+		pb.collection('teams').getFirstListItem(`slug="${params.slug}"`)
 	)) as [UserPublicInfo, undefined] | [undefined, Error];
 
 	if (err || !foundUser) {

@@ -17,10 +17,28 @@ services:
     networks:
       - traefik
 
-  frontend:
-    build:
-      context: './'
-      dockerfile: 'Dockerfile'
+  # frontend:
+  #   build:
+  #     context: './'
+  #     dockerfile: 'Dockerfile'
+  #   container_name: 'bruum-frontend-dev'
+  #   restart: 'unless-stopped'
+  #   labels:
+  #     - 'traefik.enable=true'
+  #     - 'traefik.http.routers.bruum-frontend-prod.entrypoints=https'
+  #     - 'traefik.http.routers.bruum-frontend-prod.tls=true'
+  #     - 'traefik.http.routers.bruum-frontend-prod.tls.certresolver=letsencrypt'
+  #     - 'traefik.http.routers.bruum-frontend-prod.rule=Host(`bruum.cargoway.cloud`)'
+  #     - 'traefik.http.services.bruum-frontend-prod.loadbalancer.server.port=3000'
+  #   depends_on:
+  #     - pb
+  #   environment:
+  #     - *public_pb_instance_env
+  #     - GSHEETS_APIKEY=${GSHEETS_APIKEY}
+  #     - GSHEETS_CLIENTID=${GSHEETS_CLIENTID}
+
+  frontend-prod:
+    image: 'ghcr.io/vano2903/soapbox-website:latest'
     container_name: 'bruum-frontend-prod'
     restart: 'unless-stopped'
     labels:

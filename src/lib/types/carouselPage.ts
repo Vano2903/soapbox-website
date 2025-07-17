@@ -1,10 +1,14 @@
 export type CarouselPage = {
-	horizontal: { src: string; alt: string } | null;
-	vertical: { src: string; alt: string } | null;
+	layout: 'horizontal' | 'vertical' | 'both';
+	breakpoint?: string;
+	horizontal?: { src: string; alt: string };
+	vertical?: { src: string; alt: string };
 	loading: 'eager' | 'lazy';
 };
 
 export const defaultCarouselPage = {
-	horizontal: null,
-	vertical: null
+	layout: 'horizontal',
+	breakpoint: 'md',
+	horizontal: { src: '', alt: '' },
+	loading: 'lazy'
 }

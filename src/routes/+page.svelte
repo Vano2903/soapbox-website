@@ -20,46 +20,64 @@
 
 	let carouselImages: CarouselPage[] = [
 		{
+			layout: 'both',
+			breakpoint: 'md',
 			horizontal: { src: 'images/carousel/1.jpeg', alt: 'Car 1' },
 			vertical: { src: 'images/carousel/1.jpeg', alt: 'Car 1' },
 			loading: 'eager'
 		},
 		{
+			layout: 'both',
+			breakpoint: 'md',
 			horizontal: { src: 'images/carousel/2.jpeg', alt: 'Car 2' },
 			vertical: { src: 'images/carousel/2.jpeg', alt: 'Car 2' },
 			loading: 'lazy'
 		},
 		{
+			layout: 'both',
+			breakpoint: 'md',
 			horizontal: { src: 'images/carousel/3.jpeg', alt: 'Car 3' },
 			vertical: { src: 'images/carousel/3.jpeg', alt: 'Car 3' },
 			loading: 'lazy'
 		},
 		{
+			layout: 'both',
+			breakpoint: 'md',
 			horizontal: { src: 'images/carousel/4.jpeg', alt: 'Car 4' },
 			vertical: { src: 'images/carousel/4.jpeg', alt: 'Car 4' },
 			loading: 'lazy'
 		},
 		{
+			layout: 'both',
+			breakpoint: 'md',
 			horizontal: { src: 'images/carousel/5.jpeg', alt: 'Car 5' },
 			vertical: { src: 'images/carousel/5.jpeg', alt: 'Car 5' },
 			loading: 'lazy'
 		},
 		{
+			layout: 'both',
+			breakpoint: 'md',
 			horizontal: { src: 'images/carousel/6.jpeg', alt: 'Car 6' },
 			vertical: { src: 'images/carousel/6.jpeg', alt: 'Car 6' },
 			loading: 'lazy'
 		},
 		{
+			layout: 'both',
+			breakpoint: 'md',
 			horizontal: { src: 'images/carousel/7.jpeg', alt: 'Car 7' },
 			vertical: { src: 'images/carousel/7.jpeg', alt: 'Car 7' },
 			loading: 'lazy'
 		},
 		{
+			layout: 'both',
+			breakpoint: 'md',
 			horizontal: { src: 'images/carousel/8.jpeg', alt: 'Car 8' },
 			vertical: { src: 'images/carousel/8.jpeg', alt: 'Car 8' },
 			loading: 'lazy'
 		},
 		{
+			layout: 'both',
+			breakpoint: 'md',
 			horizontal: { src: 'images/carousel/9.jpeg', alt: 'Car 9' },
 			vertical: { src: 'images/carousel/9.jpeg', alt: 'Car 9' },
 			loading: 'lazy'

@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { EventKind, type EventType } from '$tsTypes/newRace.js';
 	import type { OrganizationStatType } from '$tsTypes/organizationStat.js';
-	// import Carousel from '$components/carousel/carousel.svelte';
-	import Carousel2 from '$components/carousel/carousel2.svelte';
+	import Carousel3 from '$components/carousel/carousel3.svelte';
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
 	import { fade } from 'svelte/transition';
 	import { Eye, Hammer, MapPinned, Trophy, Heart, VolumeX, Volume2 } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import type { SponsorSlider } from '$tsTypes/SponsorSlider.js';
+	import type { CarouselPage } from '$tsTypes/carouselPage.js';
 
 	const { data } = $props();
 	const {
@@ -17,6 +17,54 @@
 		eventInfo: EventType;
 		organizationStats: OrganizationStatType[];
 	} = data;
+
+	let carouselImages: CarouselPage[] = [
+		{
+			horizontal: { src: 'images/carousel/1.jpeg', alt: 'Car 1' },
+			vertical: { src: 'images/carousel/1.jpeg', alt: 'Car 1' },
+			loading: 'eager'
+		},
+		{
+			horizontal: { src: 'images/carousel/2.jpeg', alt: 'Car 2' },
+			vertical: { src: 'images/carousel/2.jpeg', alt: 'Car 2' },
+			loading: 'lazy'
+		},
+		{
+			horizontal: { src: 'images/carousel/3.jpeg', alt: 'Car 3' },
+			vertical: { src: 'images/carousel/3.jpeg', alt: 'Car 3' },
+			loading: 'lazy'
+		},
+		{
+			horizontal: { src: 'images/carousel/4.jpeg', alt: 'Car 4' },
+			vertical: { src: 'images/carousel/4.jpeg', alt: 'Car 4' },
+			loading: 'lazy'
+		},
+		{
+			horizontal: { src: 'images/carousel/5.jpeg', alt: 'Car 5' },
+			vertical: { src: 'images/carousel/5.jpeg', alt: 'Car 5' },
+			loading: 'lazy'
+		},
+		{
+			horizontal: { src: 'images/carousel/6.jpeg', alt: 'Car 6' },
+			vertical: { src: 'images/carousel/6.jpeg', alt: 'Car 6' },
+			loading: 'lazy'
+		},
+		{
+			horizontal: { src: 'images/carousel/7.jpeg', alt: 'Car 7' },
+			vertical: { src: 'images/carousel/7.jpeg', alt: 'Car 7' },
+			loading: 'lazy'
+		},
+		{
+			horizontal: { src: 'images/carousel/8.jpeg', alt: 'Car 8' },
+			vertical: { src: 'images/carousel/8.jpeg', alt: 'Car 8' },
+			loading: 'lazy'
+		},
+		{
+			horizontal: { src: 'images/carousel/9.jpeg', alt: 'Car 9' },
+			vertical: { src: 'images/carousel/9.jpeg', alt: 'Car 9' },
+			loading: 'lazy'
+		}
+	];
 
 	let activeTab = $state('Guarda');
 	const tabs = [
@@ -200,7 +248,7 @@
 <main class="gap-2 pb-10">
 	<div class="carousel">
 		<!-- <Carousel /> -->
-		<Carousel2 />
+		<Carousel3 pages={carouselImages} />
 		<aside
 			class="absolute z-10 box-border hidden h-87/100 max-h-[380px] w-1/3 max-w-[430px] rounded-l-xl bg-white py-2 pl-2 md:block lg:h-3/4 lg:max-h-[450px] lg:w-1/4 xl:max-h-[550px]"
 		>
@@ -209,6 +257,8 @@
 			</div>
 		</aside>
 	</div>
+	<p class="xs:block hidden">EXTRA-SMALL</p>
+	<p class="hidden sm:block">SMALL</p>
 	<div>
 		<!-- Aspettando l'Evento -->
 		<hr class="mx-4 my-3 h-1 w-auto rounded-sm border-0 bg-red-600 md:hidden lg:mt-0" />

@@ -124,12 +124,6 @@
 			]
 		}
 	];
-	// Only count the active sections
-	$: activeSections = sections.filter((section) => section.active);
-
-	// Clamp to max 3 to avoid going beyond Tailwind defaults
-	$: gridCols = `lg:grid-cols-${Math.min(activeSections.length, 6)}`;
-	$: sectionGridCols = Math.min(sections.filter((section) => section.active).length, 6);
 </script>
 
 <footer class="flex min-h-[160px] flex-col bg-black pt-2 pr-4 pl-4">
@@ -197,7 +191,7 @@
 			</div>
 		</div>
 		<!-- Navigations link -->
-		<div class={`flex flex-col flex-wrap justify-center gap-4 sm:flex-row lg:mr-4`}>
+		<div class="flex flex-col flex-wrap justify-center gap-4 sm:flex-row lg:mr-4">
 			<!-- <div class={`m-auto grid grid-cols-1 ${largeSectionGridCols}`}> -->
 			<!-- <div class="m-auto grid grid-cols-1 lg:grid-cols-{sectionsGridCols}"> -->
 			<!-- <div class="lg:grid-cols- grid w-100 grid-cols-1"> -->

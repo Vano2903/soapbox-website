@@ -1,5 +1,71 @@
 <script lang="ts">
+	import SocialIcons from '@rodneylab/svelte-social-icons';
+
 	const basePath = '/images/footer/';
+
+	const socialColors = {
+		foreground: '#000000',
+		background: '#f5f5f5'
+	};
+	const socials = [
+		{
+			active: true,
+			network: 'youtube',
+			fgColor: socialColors.foreground,
+			bgColor: socialColors.background,
+			alt: 'Canale Youtube',
+			href: ''
+		},
+		{
+			active: true,
+			network: 'facebook',
+			fgColor: socialColors.foreground,
+			bgColor: socialColors.background,
+			alt: 'Pagina Facebook',
+			href: ''
+		},
+		{
+			active: true,
+			network: 'instagram',
+			fgColor: socialColors.foreground,
+			bgColor: socialColors.background,
+			alt: 'Pagina Instagram',
+			href: ''
+		},
+		{
+			active: true,
+			network: 'telegram',
+			fgColor: socialColors.foreground,
+			bgColor: socialColors.background,
+			alt: 'Canale Telegram',
+			href: ''
+		},
+		{
+			active: false,
+			network: 'whatsapp',
+			fgColor: socialColors.foreground,
+			bgColor: socialColors.background,
+			alt: 'Feed WhatsApp',
+			href: ''
+		},
+		{
+			active: false,
+			network: 'reddit',
+			fgColor: socialColors.foreground,
+			bgColor: socialColors.background,
+			alt: 'Community Reddit',
+			href: ''
+		},
+		{
+			active: false,
+			network: 'facebook',
+			fgColor: socialColors.foreground,
+			bgColor: socialColors.background,
+			alt: 'Profilo Twitter',
+			href: ''
+		}
+	];
+
 	const sponsors = [
 		{
 			link: basePath + 'eyc.svg',
@@ -49,7 +115,7 @@
 		},
 		{
 			name: 'assistenza',
-			active: false,
+			active: true,
 			links: [
 				{ herf: '/content-removal', name: 'rimozione contenuti', active: true },
 				{ herf: '/faq', name: 'domande frequenti', active: true },
@@ -58,63 +124,101 @@
 			]
 		}
 	];
+	// Only count the active sections
+	$: activeSections = sections.filter((section) => section.active);
+
+	// Clamp to max 3 to avoid going beyond Tailwind defaults
+	$: gridCols = `lg:grid-cols-${Math.min(activeSections.length, 6)}`;
+	$: sectionGridCols = Math.min(sections.filter((section) => section.active).length, 6);
 </script>
 
-<footer class="flex min-h-[160px] flex-col bg-[#0d0f10] pt-2 pr-4 pl-4">
-	<hr class="mb-2 h-1.5 w-full rounded-sm border-0 bg-red-600" />
+<footer class="flex min-h-[160px] flex-col bg-black pt-2 pr-4 pl-4">
+	<hr class="mx-4 mt-0.75 mb-3 h-1 w-auto rounded-sm border-0 bg-red-600" />
 	<div
-		class=" flex w-full grid-cols-1 grid-rows-4 flex-col gap-4 md:grid md:grid-cols-3 md:grid-rows-2 lg:grid-cols-6 lg:grid-rows-1"
+		class="flex flex-col flex-wrap items-center justify-center gap-2 text-center lg:flex-row lg:items-start lg:justify-between lg:text-left"
 	>
-		<div class="flex flex-row flex-wrap space-y-2 md:col-span-full md:grid lg:col-span-3">
+		<!-- Brand and Socials -->
+		<div
+			class="flex flex-col items-center justify-center gap-1 lg:ml-4 lg:max-w-1/2 lg:flex-row lg:items-start lg:justify-normal lg:gap-4"
+		>
+			<!--
+			<img
+				class="h-16 w-16 md:hidden lg:block lg:h-32 lg:w-32"
+				src="/images/footer/logo.jpg"
+				alt="Logo ASD Boxrally"
+			/>
+			-->
 			<div>
-				<span class="flex flex-wrap items-end pb-1 text-base/6 text-gray-100 lg:whitespace-nowrap">
-					<span class="text-5xl font-extrabold md:text-7xl">ASD</span>&nbsp;&nbsp;
-					<span class="text-3xl font-bold md:text-5xl"
-						><span class="text-5xl md:text-7xl">B</span>OXRALLY</span
+				<span class="flex flex-wrap justify-center p-1 text-base/6 whitespace-nowrap">
+					<span
+						class="xs:block hidden text-4xl leading-none font-bold text-neutral-100 md:text-5xl xl:text-7xl"
+						>ASD</span
+					>&nbsp;&nbsp;
+					<span class="text-4xl leading-none font-bold text-red-600 md:text-5xl xl:text-7xl"
+						>BOXRALLY</span
 					>
 				</span>
-			</div>
-			<div class="w-full"></div>
-			<!-- <div class="grid grid-cols-4 items-end justify-center"> -->
-			<!-- 	{#each sponsors as sponsor} -->
-			<!-- 		{#if sponsor.active} -->
-			<!-- 			<div class="flex h-full w-full"> -->
-			<!-- 				<img class="w-24 object-contain" src={sponsor.link} alt={sponsor.alt} /> -->
-			<!-- 			</div> -->
-			<!-- 		{/if} -->
-			<!-- 	{/each} -->
-			<!-- </div> -->
-			<div class="flex flex-wrap items-center gap-3 md:flex-nowrap">
-				{#each sponsors as sponsor}
-					{#if sponsor.active}
-						<a href={sponsor.href} target="_blank">
-							<img
-								loading="lazy"
-								class="w-24 object-contain"
-								src={sponsor.link}
-								alt={sponsor.alt}
-							/>
-						</a>
-					{/if}
-				{/each}
+				<div
+					class="flex flex-wrap items-center justify-center gap-3 lg:flex-nowrap lg:justify-normal"
+				>
+					{#each socials as social}
+						{#if social.active}
+							<a class="block md:hidden" href={social.href} target="_blank">
+								<SocialIcons
+									network={social.network}
+									alt={social.alt}
+									fgColor={social.fgColor}
+									bgColor={social.bgColor}
+									width="36"
+									height="36"
+								/>
+							</a>
+							<a class="hidden md:block xl:hidden" href={social.href} target="_blank">
+								<SocialIcons
+									network={social.network}
+									alt={social.alt}
+									fgColor={social.fgColor}
+									bgColor={social.bgColor}
+									width="42"
+									height="42"
+								/>
+							</a>
+							<a class="hidden xl:block" href={social.href} target="_blank">
+								<SocialIcons
+									network={social.network}
+									alt={social.alt}
+									fgColor={social.fgColor}
+									bgColor={social.bgColor}
+								/>
+							</a>
+						{/if}
+					{/each}
+				</div>
 			</div>
 		</div>
-		{#each sections as section}
-			{#if section.active}
-				<div class="flex flex-col pt-4">
-					<div class="text-2xl font-bold text-gray-500 uppercase">{section.name}</div>
-					<div class="flex flex-col pl-2">
-						{#each section.links as link}
-							{#if link.active}
-								<a href={link.href} class="text-gray-500 hover:text-red-600">{link.name}</a>
-							{/if}
-						{/each}
+		<!-- Navigations link -->
+		<div class={`flex flex-col flex-wrap justify-center gap-4 sm:flex-row lg:mr-4`}>
+			<!-- <div class={`m-auto grid grid-cols-1 ${largeSectionGridCols}`}> -->
+			<!-- <div class="m-auto grid grid-cols-1 lg:grid-cols-{sectionsGridCols}"> -->
+			<!-- <div class="lg:grid-cols- grid w-100 grid-cols-1"> -->
+			{#each sections as section}
+				{#if section.active}
+					<div class="flex flex-col">
+						<span class="text-base font-bold text-gray-500 uppercase md:text-xl lg:text-2xl"
+							>{section.name}</span
+						>
+						<span class="flex flex-col pl-2 text-sm md:text-base">
+							{#each section.links as link}
+								{#if link.active}
+									<a href={link.href} class="text-gray-500 hover:text-red-600">{link.name}</a>
+								{/if}
+							{/each}
+						</span>
 					</div>
-				</div>
-			{/if}
-		{/each}
+				{/if}
+			{/each}
+		</div>
 	</div>
-
 	<div class="flex w-full items-center justify-center py-2 pt-4 text-center text-gray-700">
 		<span class="inner-container">
 			Copyright &copy {new Date().getFullYear()} all rights reserved | Made with love by

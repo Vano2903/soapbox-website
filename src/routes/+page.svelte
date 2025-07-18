@@ -275,8 +275,6 @@
 			</div>
 		</aside>
 	</div>
-	<p class="xs:block hidden">EXTRA-SMALL</p>
-	<p class="hidden sm:block">SMALL</p>
 	<div>
 		<!-- Aspettando l'Evento -->
 		<hr class="mx-4 my-3 h-1 w-auto rounded-sm border-0 bg-red-600 md:hidden lg:mt-0" />

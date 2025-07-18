@@ -4,6 +4,7 @@ export enum EventKind {
 }
 
 export type EventType = {
+	id: string;
 	kind: EventKind;
 	date: Date;
 	header: string;

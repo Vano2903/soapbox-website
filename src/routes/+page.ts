@@ -5,10 +5,11 @@ import type { OrganizationStatType } from '$lib/types/organizationStat';
 
 export const load: PageLoad = async (): Promise<{ eventInfo: EventType; organizationStats: OrganizationStatType[]; }> => {
 	const eventInfo = {
-		kind: EventKind.HighlightKind,
-		date: new Date(2024, 2, 24, 14),
-		header: 'Campionato 2024',
-		title: '11° Cinghial Box Rally',
+		id: '2025-7',
+		kind: EventKind.NextEventKind,
+		date: new Date(2025, 7, 27, 14, 30),
+		header: 'Campionato 2025',
+		title: '3° Soap BoXXico Rally',
 		totalSubscriptions: 48,
 		currentSubscriptions: 24
 	} as EventType;

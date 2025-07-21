@@ -111,7 +111,7 @@
 			</div>
 			<div class="divider"></div>
 			{#if isCurrentOwner}
-				<a class="btn my-4 w-full bg-gray-100" href="/team/settings">Modifica Profilo</a>
+				<a class="btn my-4 w-full bg-gray-100" href="./settings">Modifica Profilo</a>
 			{/if}
 		</div>
 
@@ -213,7 +213,7 @@
 										(maxUses !== -1 && joinedCount >= maxUses)}
 
 									{@const daysRemaining = invite.expiration
-										? datediff(new Date(), new Date(invite.expiration))
+										? datediff(new Date().valueOf(), invite.expiration.valueOf())
 										: null}
 
 									<div
@@ -267,14 +267,14 @@
 												<button
 													class="btn btn-sm btn-outline"
 													onclick={() =>
-														(window.location.href = `/team/${team.slug}/dash/invite/${invite.id}/edit`)}
+														(window.location.href = `/team/${team.slug}/dash/invite/${invite.code}/edit`)}
 												>
 													Modifica
 												</button>
 
 												<button
 													class="btn btn-sm btn-error"
-													onclick={() => disableInvite(invite.id)}
+													onclick={() => disableInvite(invite.code)}
 												>
 													Disattiva
 												</button>

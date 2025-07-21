@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { TypedPocketBase } from '$tsTypes/pocketbase.js';
 	import PocketBase, { type RecordModel } from 'pocketbase';
-	import { registerSchema } from '../../lib/schemas/registerSchema.js';
+	import { registerSchema } from '$lib/schemas/registerSchema.js';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { superForm } from 'sveltekit-superforms';
 	// import { render } from 'svelte/server';

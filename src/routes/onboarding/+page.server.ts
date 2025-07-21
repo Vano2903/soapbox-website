@@ -10,7 +10,7 @@ import {
 import { zod } from 'sveltekit-superforms/adapters';
 import { type User } from '$tsTypes/user';
 import type { TypedPocketBase } from '$tsTypes/pocketbase';
-import { onboardingSchema } from '../../lib/schemas/onboardingSchema';
+import { onboardingSchema } from '$lib/schemas/onboardingSchema';
 
 const usernameSchema = onboardingSchema.pick({ username: true });
 

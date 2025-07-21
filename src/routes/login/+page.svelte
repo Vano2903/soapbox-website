@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { TypedPocketBase } from '$tsTypes/pocketbase.js';
 	import PocketBase from 'pocketbase';
-	import { loginSchema } from '../../lib/schemas/loginSchema.js';
+	import { loginSchema } from '$lib/schemas/loginSchema.js';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { superForm } from 'sveltekit-superforms';
 	import { onMount } from 'svelte';

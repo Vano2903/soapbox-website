@@ -1,7 +1,7 @@
 import { fail } from '@sveltejs/kit';
 import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { loginSchema } from '../../lib/schemas/loginSchema.js';
+import { loginSchema } from '$lib/schemas/loginSchema.js';
 import type { PageServerLoad } from './$types.js';
 
 export const load: PageServerLoad = async () => {

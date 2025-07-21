@@ -1,7 +1,7 @@
 import { fail } from '@sveltejs/kit';
 import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { registerSchema } from '../../lib/schemas/registerSchema.js';
+import { registerSchema } from '$lib/schemas/registerSchema.js';
 import type { PageServerLoad } from './$types.js';
 import { Roles } from '$tsTypes/user.js';
 

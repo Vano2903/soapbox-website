@@ -11,7 +11,7 @@ import {
 import { zod } from 'sveltekit-superforms/adapters';
 import { type User } from '$tsTypes/user';
 import type { TypedPocketBase } from '$tsTypes/pocketbase';
-import { userSettingsSchema } from '../../../../lib/schemas/userSettingsSchema';
+import { userSettingsSchema } from '$lib/schemas/userSettingsSchema';
 
 const nickSchema = userSettingsSchema.pick({ nick: true });
 

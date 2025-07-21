@@ -20,7 +20,6 @@
 	}
 
 	const { data } = $props();
-	const pb = new PocketBase(data.pbUri) as TypedPocketBase;
 	// const teamsCount = data.teamsCount;
 	// onMount(async () => {
 	// 	console.log('teams', teams);
@@ -96,7 +95,7 @@
 						<p class="mt-4 text-lg font-semibold">Non fai parte di nessun team</p>
 					{/if}
 					{#each teams as team}
-						<a href={'/dash/team/' + team.slug} class="group my-4 w-full cursor-pointer">
+						<a href={'/team/' + team.slug + '/dash'} class="group my-4 w-full cursor-pointer">
 							<div class="rounded-lg bg-gray-200 p-4 transition-colors group-hover:bg-gray-300">
 								<div class="flex items-start space-x-3">
 									<img src={team.logoCropped} alt="Team Logo" class="size-16 rounded-full" />

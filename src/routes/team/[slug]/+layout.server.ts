@@ -1,76 +1,82 @@
-import type { Team, TeamNonexpand } from '$tsTypes/team';
+import type { TeamNonexpand } from '$tsTypes/team';
 import type { UserPublicInfo } from '$tsTypes/user';
-import { redirect, type ServerLoad } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
+import type { LayoutServerLoad } from './$types';
 
-export const load: ServerLoad = async ({ locals, params, url }) => {
+export const load: LayoutServerLoad = async ({ locals, params, url }) => {
 	const { user, pb } = locals;
 
 	if (!params.slug) {
 		redirect(303, '/teams');
 	}
 
-	const [foundUser, err] = (await goCatch(
+	const [foundTeam, err] = (await goCatch(
 		pb.collection('teams').getFirstListItem(`slug="${params.slug}"`)
-	)) as [UserPublicInfo, undefined] | [undefined, Error];
+	)) as [TeamNonexpand, undefined] | [undefined, Error];
 
-	if (err || !foundUser) {
-		console.error('User not found:', err);
-		throw redirect(303, '/users?error=user-not-found&slug=' + params.slug);
+	if (err || !foundTeam) {
+		console.error('Team not found:', err);
+		throw redirect(303, '/teams?error=not-found&slug=' + params.slug);
 	}
 
-	const startPathname = '/user/' + params.slug;
+	const startPathname = '/team/' + params.slug;
 	const path = url.pathname;
-	if (
-		(path.startsWith(startPathname + '/dash') ||
-			path.startsWith(startPathname + '/settings') ||
-			path.startsWith(startPathname + '/new')) &&
-		user?.id !== foundUser.id
-	) {
-		redirect(303, '/user/' + params.slug);
+
+	if (path.startsWith(startPathname + '/dash') || path.startsWith(startPathname + '/settings')) {
+		if (user?.person !== foundTeam.owner || !foundTeam.members.includes(user?.person || '')) {
+			redirect(303, '/teams/' + params.slug);
+		}
 	}
 
-	console.log('Found user:', foundUser);
-	foundUser.avatarCropped =
-		pb.files.getURL(foundUser, foundUser.avatarCropped || '') ||
-		`https://avatar.iran.liara.run/public?username=${foundUser.nick}`;
+	console.log('Found user:', foundTeam);
+	foundTeam.logoCropped =
+		pb.files.getURL(foundTeam, foundTeam.logoCropped || '') ||
+		`https://avatar.iran.liara.run/public?username=${foundTeam.slug}`;
 
-	foundUser.bannerCropped = pb.files.getURL(foundUser, foundUser.bannerCropped || '') || undefined;
+	foundTeam.bannerCropped = pb.files.getURL(foundTeam, foundTeam.bannerCropped || '') || undefined;
 
-	let [teams, errTeam] = (await goCatch(
-		pb.collection('teams').getFullList({
-			filter: `members.id?="${foundUser.person}" ||
-				owner.id="${foundUser.person}"`,
-			sort: '-created'
-		})
-	)) as [TeamNonexpand[], undefined] | [undefined, Error];
-
-	// if (errTeam) {
-	// 	console.error('Error fetching teams:', errTeam);
-	// 	throw redirect(303, '/users?error=teams-fetch-error');
-	// }
-
-	let error = {};
-	if (errTeam || !teams) {
-		console.log('Error fetching teams:', errTeam);
-		error = {
-			kind: 'teams',
-			message: 'Errore durante il recupero dei team.'
-		};
-		teams = [];
-	}
-
-	const teamsWithAvatars = teams.map((team) => {
-		team.logoCropped = pb.files.getURL(team, team.logoCropped || '') || undefined;
-		return team;
+	let filter = `person="${foundTeam.owner}"`;
+	foundTeam.members.forEach((member) => {
+		filter += ` || person="${member}"`;
 	});
 
-	console.log('teams:', teamsWithAvatars);
+	const [fetchedMembers, errTeam] = (await goCatch(
+		pb.collection('publicUserInfo').getFullList({
+			filter: filter
+			// sort: '-created'
+		})
+	)) as [UserPublicInfo[], undefined] | [undefined, Error];
+	let members = fetchedMembers;
+
+	let error = {};
+	if (errTeam || !members) {
+		console.log('Error fetching members:', errTeam);
+		error = {
+			kind: 'members',
+			message: 'Errore durante il recupero dei membri.'
+		};
+		members = [];
+	}
+
+	const membersWithAvatars = members.map((member) => {
+		member.avatarCropped =
+			pb.files.getURL(member, member.avatarCropped || '') ||
+			`https://avatar.iran.liara.run/public?username=${member.nick}`;
+		member.bannerCropped = pb.files.getURL(member, member.bannerCropped || '') || undefined;
+		return member;
+	});
+
+	console.log('members:', membersWithAvatars);
+
+	locals.team = foundTeam;
 
 	return {
-		user: foundUser,
-		teams: teamsWithAvatars || [],
+		team: foundTeam,
+		members: membersWithAvatars || [],
 		error: error,
-		isCurrentUser: user?.id === foundUser.id,
+		// isCurrentUser: user?.id === foundTeam.id
+		isCurrentOwner: user?.person === foundTeam.owner,
+		isCurrentMember: foundTeam.members.includes(user?.person || ''),
 		slug: params.slug
 	};
 };

@@ -33,19 +33,19 @@ export interface TeamNonexpand extends TeamBase {
 	expand?: undefined;
 }
 
-export interface Teamexpand extends TeamBase {
+export interface TeamExpand extends TeamBase {
 	isexpand: true;
 	expand: { members: User[]; owner: User };
 }
 
-export type Team = Teamexpand | TeamNonexpand;
+export type Team = TeamExpand | TeamNonexpand;
 
 interface TeamInvitationBase {
 	team: string | Team;
 	// max number of users that can join the team with this invatation, -1 for unlimited
 	uses: number;
 	expiration: Date;
-	joined?: string[]; //ids of the users that have joined the team with this invitation
+	joined: string[]; //ids of the users that have joined the team with this invitation
 
 	// can de disabled by the user and it's equivalent to deleting the invitation
 	// it will be marked as disabled when the expiration date is reached or
@@ -56,14 +56,14 @@ interface TeamInvitationBase {
 	updated: Date;
 }
 
-export interface TeamInvitationexpand extends TeamInvitationBase {
+export interface TeamInvitationExpand extends TeamInvitationBase {
 	isexpand: true;
 	expand: { joined: User[]; team: Team };
 }
 
-export interface TeamInvitationNonexpand extends TeamInvitationBase {
+export interface TeamInvitationNonExpand extends TeamInvitationBase {
 	isexpand: false;
 	expand: undefined;
 }
 
-export type TeamInvitation = TeamInvitationexpand | TeamInvitationNonexpand;
+export type TeamInvitation = TeamInvitationExpand | TeamInvitationNonExpand;

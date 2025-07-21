@@ -1,5 +1,4 @@
-import type { UserPublicInfo } from '$tsTypes/user';
-import { redirect, type Load } from '@sveltejs/kit';
+import { type Load } from '@sveltejs/kit';
 import { env } from '$env/dynamic/public';
 import { createPocketBaseInstance } from '$lib/utils/pocketbase';
 import type { Team } from '$tsTypes/team';
@@ -30,10 +29,10 @@ export const load: Load = async ({ url }) => {
 	}
 
 	const paginatedTeams = await pb.collection('teams').getList(1, 10, {
-		sort: 'nick'
+		sort: 'slug'
 	});
 
-	let expandedUsers = paginatedTeams.items.map((team: Team) => {
+	const expandedTeams = paginatedTeams.items.map((team: Team) => {
 		team.logoCropped =
 			pb.files.getURL(team, team.logoCropped || '') ||
 			`https://avatar.iran.liara.run/public?username=${team.slug}`;
@@ -42,8 +41,8 @@ export const load: Load = async ({ url }) => {
 	});
 
 	return {
-		paginatedUsers: paginatedTeams,
-		expandedUsers,
+		paginatedTeams,
+		expandedTeams,
 		pb,
 		error
 	};

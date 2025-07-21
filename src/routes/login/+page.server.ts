@@ -1,18 +1,18 @@
-import { error, fail } from '@sveltejs/kit';
+import { fail } from '@sveltejs/kit';
 import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { schema } from './schema.js';
+import { loginSchema } from '../../lib/schemas/loginSchema.js';
 import type { PageServerLoad } from './$types.js';
 
-export const load: PageServerLoad = async ({}) => {
-	const form = await superValidate(zod(schema));
+export const load: PageServerLoad = async () => {
+	const form = await superValidate(zod(loginSchema));
 
 	return { form };
 };
 
 export const actions = {
 	login: async ({ request, locals }) => {
-		const form = await superValidate(request, zod(schema));
+		const form = await superValidate(request, zod(loginSchema));
 		console.log('form', form);
 		if (!form.valid) {
 			return fail(400, { form });
@@ -21,9 +21,7 @@ export const actions = {
 		const pb = locals.pb;
 
 		try {
-			const user = await pb
-				.collection('users')
-				.authWithPassword(form.data.email, form.data.password);
+			await pb.collection('users').authWithPassword(form.data.email, form.data.password);
 			// if (!user) {
 			// 	return message(form, 'Login effettuato con successo!');
 			// }

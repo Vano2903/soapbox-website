@@ -1,19 +1,19 @@
-import { error, fail } from '@sveltejs/kit';
+import { fail } from '@sveltejs/kit';
 import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { schema } from './schema.js';
+import { registerSchema } from '../../lib/schemas/registerSchema.js';
 import type { PageServerLoad } from './$types.js';
 import { Roles } from '$tsTypes/user.js';
 
-export const load: PageServerLoad = async ({}) => {
-	const form = await superValidate(zod(schema));
+export const load: PageServerLoad = async () => {
+	const form = await superValidate(zod(registerSchema));
 
 	return { form };
 };
 
 export const actions = {
 	register: async ({ request, locals }) => {
-		const form = await superValidate(request, zod(schema));
+		const form = await superValidate(request, zod(registerSchema));
 		console.log('form', form);
 		if (!form.valid) {
 			return fail(400, { form });

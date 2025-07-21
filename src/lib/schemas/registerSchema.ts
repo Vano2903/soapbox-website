@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const minLength = 8;
 const maxLength = 64;
-export const schema = z
+export const registerSchema = z
 	.object({
 		email: z
 			.string({

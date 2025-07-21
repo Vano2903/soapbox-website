@@ -1,6 +1,5 @@
-import { redirect, type Handle } from '@sveltejs/kit';
+import { type Handle } from '@sveltejs/kit';
 import type { User } from '$lib/types/user';
-import { userPrefersMode } from 'mode-watcher';
 
 function createRandomString(length: number = 8): string {
 	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -16,10 +15,10 @@ const authentication: Handle = async ({ event, resolve }) => {
 	const pb = event.locals.pb;
 
 	// Load existing authentication state from cookies
-	pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
+	pb.authStore.loadFromCookie(event.request.headers.get('cookie') ?? '');
 
 	if (pb.authStore.isValid) {
-		const [_, error] = await goCatch(pb.collection('users').authRefresh());
+		const [, error] = await goCatch(pb.collection('users').authRefresh());
 
 		// Clear auth store if token refresh fails
 		if (error) {
@@ -34,8 +33,8 @@ const authentication: Handle = async ({ event, resolve }) => {
 		event.locals.user.isexpand = false;
 		if (pb.authStore.record) {
 			event.locals.user.avatarCropped =
-				pb.files.getURL(pb.authStore.record, pb.authStore.record.avatarCropped) ||
-				`https://avatar.iran.liara.run/public?username=${pb.authStore.record.name || createRandomString(8)}`;
+				pb.files.getURL(pb.authStore.record, pb.authStore.record.avatarCropped) ??
+				`https://avatar.iran.liara.run/public?username=${pb.authStore.record.name ?? createRandomString(8)}`;
 			event.locals.user.created = new Date(event.locals.user.created);
 			event.locals.user.updated = new Date(event.locals.user.updated);
 		}

@@ -2,13 +2,13 @@
 	import SuperDebug, { fieldProxy, fileProxy, superForm } from 'sveltekit-superforms';
 	import { debounce } from 'throttle-debounce';
 	import { zod } from 'sveltekit-superforms/adapters';
-	import { schema } from './schema';
+	import { teamSchema } from '../../../../../../lib/schemas/teamSchema';
 	import ImageCropper from '$components/imageCropper/imageCropper.svelte';
 	const { data } = $props();
 
 	const { form, errors, message, constraints, enhance } = superForm(data.form, {
 		dataType: 'json',
-		validators: zod(schema)
+		validators: zod(teamSchema)
 	});
 
 	// --- username

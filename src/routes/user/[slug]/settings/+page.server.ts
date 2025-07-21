@@ -9,13 +9,13 @@ import {
 	withFiles
 } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { Roles, type User } from '$tsTypes/user';
+import { type User } from '$tsTypes/user';
 import type { TypedPocketBase } from '$tsTypes/pocketbase';
-import { schema } from './schema';
+import { userSettingsSchema } from '../../../../lib/schemas/userSettingsSchema';
 
-const nickSchema = schema.pick({ nick: true });
+const nickSchema = userSettingsSchema.pick({ nick: true });
 
-export const load: PageServerLoad = async ({ fetch, parent, locals }) => {
+export const load: PageServerLoad = async ({ fetch, locals }) => {
 	const { user, pb } = locals;
 	if (!user) {
 		redirect(303, '/login');
@@ -31,15 +31,15 @@ export const load: PageServerLoad = async ({ fetch, parent, locals }) => {
 		default: boolean;
 	}[];
 
-	let prefix = user.phone.split('-')[0];
+	const prefix = user.phone.split('-')[0];
 	let currentDefault = countryPhoneCodes.findIndex((countryPhone) => {
 		return countryPhone.default;
 	});
-	currentDefault == -1 ? 0 : currentDefault;
-	const newCurrent = countryPhoneCodes.findIndex((phoneCode) => {
+	currentDefault = currentDefault == -1 ? 0 : currentDefault;
+	let newCurrent = countryPhoneCodes.findIndex((phoneCode) => {
 		return phoneCode.dial_code == prefix;
 	});
-	newCurrent == -1 ? 0 : currentDefault;
+	newCurrent = newCurrent == -1 ? 0 : currentDefault;
 
 	countryPhoneCodes[currentDefault].default = false;
 	countryPhoneCodes[newCurrent].default = true;
@@ -64,7 +64,7 @@ export const load: PageServerLoad = async ({ fetch, parent, locals }) => {
 			bannerCroppedInfo: user.bannerCrop,
 			prefix
 		},
-		zod(schema)
+		zod(userSettingsSchema)
 	);
 
 	return { form, countryPhoneCodes, fileUrls, user };
@@ -85,7 +85,7 @@ async function isUsernameValid(
 	try {
 		console.log('searching:', `id!="${user.id}" && nick="${form.data.nick}"`);
 
-		const data = await pb
+		await pb
 			.collection('publicUserInfo')
 			.getFirstListItem(`id!="${user.id}" && nick="${form.data.nick}"`);
 		setError(form, 'nick', 'Il nome utente non è disponibile', {
@@ -100,7 +100,7 @@ async function isUsernameValid(
 
 export const actions = {
 	updateAccount: async ({ request, locals }) => {
-		const form = await superValidate(request, zod(schema));
+		const form = await superValidate(request, zod(userSettingsSchema));
 		console.log('form', form);
 		if (!form.valid) {
 			// Return { form } and things will just work.
@@ -118,7 +118,7 @@ export const actions = {
 		if (!form.valid || !isUsernameAvailable) return fail(400, withFiles({ form }));
 
 		try {
-			let user = locals.user as User;
+			const user = locals.user as User;
 			console.log('user in onboard action', user);
 			locals.user = await pb.collection('users').update(user.id, {
 				name: form.data.name,

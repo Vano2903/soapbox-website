@@ -1,4 +1,4 @@
-import type { Team, TeamNonexpand } from '$tsTypes/team';
+import type { TeamNonexpand } from '$tsTypes/team';
 import type { UserPublicInfo } from '$tsTypes/user';
 import { redirect, type ServerLoad } from '@sveltejs/kit';
 
@@ -36,13 +36,14 @@ export const load: ServerLoad = async ({ locals, params, url }) => {
 
 	foundUser.bannerCropped = pb.files.getURL(foundUser, foundUser.bannerCropped || '') || undefined;
 
-	let [teams, errTeam] = (await goCatch(
+	const [teamsInitial, errTeam] = (await goCatch(
 		pb.collection('teams').getFullList({
 			filter: `members.id?="${foundUser.person}" ||
 				owner.id="${foundUser.person}"`,
 			sort: '-created'
 		})
 	)) as [TeamNonexpand[], undefined] | [undefined, Error];
+	let teams = teamsInitial;
 
 	// if (errTeam) {
 	// 	console.error('Error fetching teams:', errTeam);

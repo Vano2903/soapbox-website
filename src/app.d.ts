@@ -18,6 +18,7 @@ declare global {
 			pb: TypedPocketBase;
 			user: User | undefined;
 			teamsCount?: number;
+			team?: Team;
 			// teams?: ListResult<Team>;
 		}
 		namespace Superforms {

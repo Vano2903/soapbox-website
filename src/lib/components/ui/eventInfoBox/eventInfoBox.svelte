@@ -1,12 +1,11 @@
 <script lang="ts">
-	import type { EventType } from '$tsTypes/newRace';
-	import { EventKind } from '$tsTypes/newRace';
+	import { EventKind, type EventInfoType } from '$tsTypes/event';
 
 	let {
 		eventInfo,
 		locatedOnCarousel
 	}: {
-		eventInfo: EventType;
+		eventInfo: EventInfoType;
 		locatedOnCarousel: boolean;
 	} = $props();
 </script>

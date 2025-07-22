@@ -7,7 +7,7 @@ const enableTestURL = false;
 const testURL = `'TEST-API'!$B$2:$F$21`;
 
 const categoryValues: string[] = ['SoapBox', 'Pinocchio', 'Trike'];
-const leaderboardRanges = new Map<string, string>([
+const leaderboardsRange = new Map<string, string>([
 	['Creatività', '$B$2:$H$55'],
 	['Originalità', '$B$2:$K$55'],
 	['Manche 1', '$B$2:$H$55'],
@@ -27,11 +27,11 @@ export async function GET({ url }) {
 	}
 	if (leaderboard == null) {
 		error(400, "leaderboard must be specified")
-	} else if (!leaderboardRanges.has(leaderboard)) {
+	} else if (!leaderboardsRange.has(leaderboard)) {
 		error(404, "leaderboard not found")
 	}
 
-	const data = await fetchSheetData((enableTestURL ? testURL : `'Cl. ${leaderboard} [${category.toUpperCase()}]'!${leaderboardRanges.get(leaderboard)}`))
+	const data = await fetchSheetData((enableTestURL ? testURL : `'Cl. ${leaderboard} [${category.toUpperCase()}]'!${leaderboardsRange.get(leaderboard)}`))
 
 	// return new Response(String(formatSheetData(data)))
 	return new Response(String(formatSheetDataFromFullJson(data)))

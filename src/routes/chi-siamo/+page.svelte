@@ -11,17 +11,17 @@
 				{
 					layout: 'horizontal',
 					horizontal: { src: '/images/chi-siamo/soapbox.jpg', alt: 'macchine soapbox' },
-					loading: 'lazy'
+					loading: 'eager'
 				},
 				{
 					layout: 'horizontal',
 					horizontal: { src: '/images/chi-siamo/soapbox.jpg', alt: 'macchine soapbox' },
-					loading: 'lazy'
+					loading: 'eager'
 				},
 				{
 					layout: 'horizontal',
 					horizontal: { src: '/images/chi-siamo/soapbox.jpg', alt: 'macchine soapbox' },
-					loading: 'lazy'
+					loading: 'eager'
 				}
 			] as CarouselPage[],
 			activePage: 1

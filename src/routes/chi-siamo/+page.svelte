@@ -163,8 +163,8 @@
 				</div>
 				<div class="hidden flex-col content-between gap-4 md:flex md:w-1/2">
 					<img
-						loading="lazy"
 						class="rounded-sm object-cover"
+						loading={section.pages[section.activePage].loading}
 						src={section.pages[section.activePage].horizontal?.src}
 						alt={section.pages[section.activePage].horizontal?.alt}
 					/>

@@ -1,16 +1,13 @@
 <script lang="ts">
 	import type { TypedPocketBase } from '$tsTypes/pocketbase';
-	import type { UserNonExpand, UserPublicInfo } from '$tsTypes/user';
-	import { ExternalLink } from 'lucide-svelte';
-	import { env } from '$env/dynamic/public';
-	import { createPocketBaseInstance } from '$lib/utils/pocketbase';
 	import type { ListResult } from 'pocketbase';
-	import { onMount } from 'svelte';
+	import type { Team } from '$tsTypes/team';
+	import EntityCard from '$components/entityCard/entityCard.svelte';
 
 	interface Props {
 		data: {
-			paginatedUsers: ListResult<UserPublicInfo>;
-			expandedUsers: UserPublicInfo[];
+			paginatedTeams: ListResult<Team>;
+			expandedTeams: Team[];
 			pb: TypedPocketBase;
 			error: string | null;
 		};
@@ -18,15 +15,15 @@
 
 	const { data }: Props = $props();
 	let { pb, error } = data;
-	let paginatedUsers = $state(data.paginatedUsers);
-	let expandedUsers = $state(data.expandedUsers);
+	let paginatedTeams = $state(data.paginatedTeams);
+	let expandedTeams = $state(data.expandedTeams);
 
 	async function fetchnNewPage(page: number) {
 		if (pb) {
-			const result = await pb.collection('publicUserInfo').getList(page, 10, {
+			const result = await pb.collection('teams').getList(page, 10, {
 				sort: 'nick'
 			});
-			paginatedUsers = result;
+			paginatedTeams = result;
 		}
 	}
 
@@ -83,35 +80,27 @@
 		</div>
 	{/if}
 
-	{#each expandedUsers as user}
-		<a href={'/user/' + user.nick} class="cursor-pointer">
-			<div class="flex items-center space-x-4 border-b p-4">
-				<div class="avatar">
-					<div class="w-12 rounded-full ring-1 ring-black">
-						<img src={user.avatarCropped} alt="User Avatar" />
-					</div>
-				</div>
-				<div>
-					<h3 class="text-lg font-semibold">{user.name} {user.lastName}</h3>
-					<!-- <a href={'/user/' + user.nick} class="text-blue-600 hover:underline"> -->
-					<span class="text-red-600">
-						@{user.nick}
-					</span>
-					<!-- </a> -->
-				</div>
-				<!-- <a href={'/user/' + user.nick} class="ml-2 font-bold text-red-600">
-					<ExternalLink size={16} />
-				</a> -->
-			</div>
-		</a>
-	{/each}
+	<div class="space-y-1">
+		{#each expandedTeams as team}
+			<EntityCard
+				title={team.name}
+				slug={team.slug}
+				description={team.description}
+				link={`/team/${team.slug}`}
+			>
+				{#snippet picture()}
+					<img src={team.logoCropped} alt="Team Logo" class="size-16 rounded-full ring-1" />
+				{/snippet}
+			</EntityCard>
+		{/each}
+	</div>
 
 	<br />
 	<div class="join">
-		{#each paginatedUsers.totalPages > 0 ? Array(paginatedUsers.totalPages) : [] as _, i}
+		{#each paginatedTeams.totalPages > 0 ? Array(paginatedTeams.totalPages) : [] as _, i}
 			<button
 				class="join-item btn"
-				class:btn-active={i === paginatedUsers.page}
+				class:btn-active={i === paginatedTeams.page}
 				onclick={() => fetchnNewPage(i + 1)}>{i + 1}</button
 			>
 		{/each}

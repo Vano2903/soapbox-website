@@ -1,4 +1,5 @@
 <script lang="ts">
+	import EntityCard from '$components/entityCard/entityCard.svelte';
 	import type { Team } from '$tsTypes/team';
 	import type { UserNonExpand } from '$tsTypes/user';
 	import { Crown, ExternalLink } from 'lucide-svelte';
@@ -85,36 +86,25 @@
 					</p>
 				{/if}
 			{/if}
-			{#each teams as team}
-				<a href={'/team/' + team.slug} class="group my-4 w-full cursor-pointer">
-					<div class="rounded-lg bg-gray-200 p-4 transition-colors group-hover:bg-gray-300">
-						<div class="flex items-start space-x-3">
-							<img src={team.logoCropped} alt="Team Logo" class="size-16 rounded-full" />
-							<div class="flex-1">
-								<div class="justify-right flex items-center space-x-2">
-									<div class="flex flex-nowrap items-center">
-										<p class="group text-lg font-bold transition duration-300">
-											{team.name}
-											<span
-												class="mx-1 block h-0.5 max-w-0 bg-red-600 transition-all duration-500 group-hover:max-w-full"
-											></span>
-										</p>
-
-										<!-- <h3 class="text-xl font-bold group-hover:underline md:text-2xl"></h3> -->
-										{#if team.owner == user.person}
-											<Crown class="ml-1 text-yellow-600" size={16} />
-										{/if}
-									</div>
-									<span class="text-sm font-semibold text-red-600 group-hover:font-bold"
-										>@{team.slug}</span
-									>
-								</div>
-								<p class="mt-1 line-clamp-1 text-gray-700">{team.description}</p>
-							</div>
-						</div>
-					</div>
-				</a>
-			{/each}
+			<div class="w-full space-y-2">
+				{#each teams as team}
+					<EntityCard
+						title={team.name}
+						slug={team.slug}
+						description={team.description}
+						link={`/team/${team.slug}`}
+					>
+						{#snippet picture()}
+							<img src={team.logoCropped} alt="Team Logo" class="ring-1 size-16 rounded-full" />
+						{/snippet}
+						{#snippet iconSnippet()}
+							{#if team.owner == user.person}
+								<Crown class="ml-1 text-yellow-600" size={16} />
+							{/if}
+						{/snippet}
+					</EntityCard>
+				{/each}
+			</div>
 		</div>
 		<!-- <img src={user.avatarCropped} alt="User Avatar" class="mb-4 h-24 w-24 rounded-full" /> -->
 		<!-- 

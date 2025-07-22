@@ -30,6 +30,7 @@ export default defineConfig({
 		hmr: { host: 'localhost', protocol: 'ws' },
 		watch: {
 			ignored: ['**/pocketbase/**']
-		}
+		},
+		allowedHosts: true
 	}
 });

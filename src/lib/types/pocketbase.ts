@@ -1,5 +1,5 @@
 import PocketBase, { type RecordService } from 'pocketbase';
-import type { User } from '$lib/types/user';
+import type { User, UserPublicInfo } from '$lib/types/user';
 import type { Team, TeamInvitation } from './team';
 
 export interface TypedPocketBase extends PocketBase {

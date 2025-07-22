@@ -5,7 +5,7 @@
 	import SuperDebug, { dateProxy, fieldProxy, fileProxy, superForm } from 'sveltekit-superforms';
 	import { debounce } from 'throttle-debounce';
 	import { zod } from 'sveltekit-superforms/adapters';
-	import { schema } from './schema';
+	import { onboardingSchema } from '../../lib/schemas/onboardingSchema';
 	import ImageCropper from '$components/imageCropper/imageCropper.svelte';
 	import ProgressBar from '$components/progress/progressBar.svelte';
 
@@ -14,7 +14,7 @@
 
 	const { form, errors, message, constraints, enhance } = superForm(data.form, {
 		dataType: 'json',
-		validators: zod(schema)
+		validators: zod(onboardingSchema)
 	});
 
 	const {

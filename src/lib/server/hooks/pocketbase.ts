@@ -1,6 +1,4 @@
 import { type Handle, error } from '@sveltejs/kit';
-import PocketBase from 'pocketbase';
-import type { TypedPocketBase } from '$lib/types/pocketbase';
 import { env } from '$env/dynamic/public';
 import { createPocketBaseInstance } from '$lib/utils/pocketbase';
 

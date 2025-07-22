@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const minLength = 8;
 const maxLength = 30;
-export const schema = z.object({
+export const loginSchema = z.object({
 	email: z
 		.string({
 			required_error: 'La mail è obbligatoria',

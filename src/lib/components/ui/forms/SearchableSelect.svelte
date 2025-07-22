@@ -2,7 +2,7 @@
 	// JavaScript to toggle the dropdown
 	const dropdownButton = document.getElementById('dropdown-button');
 	const dropdownMenu = document.getElementById('dropdown-menu');
-	const searchInput = document.getElementById('search-input');
+	const searchInput = document.getElementById('search-input') as HTMLInputElement;
 	let isOpen = false; // Set to true to open the dropdown by default
 
 	// Function to toggle the dropdown state
@@ -23,8 +23,8 @@
 		const searchTerm = searchInput.value.toLowerCase();
 		const items = dropdownMenu?.querySelectorAll('a');
 
-		items.forEach((item) => {
-			const text = item?.textContent.toLowerCase();
+		items?.forEach((item) => {
+			const text = item?.textContent?.toLowerCase() ?? '';
 			if (text.includes(searchTerm)) {
 				item.style.display = 'block';
 			} else {

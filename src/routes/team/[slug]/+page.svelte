@@ -1,17 +1,19 @@
 <script lang="ts">
+	import EntityCard from '$components/entityCard/entityCard.svelte';
 	import type { Team } from '$tsTypes/team';
 	import type { UserNonExpand } from '$tsTypes/user';
 	import { Crown, ExternalLink } from 'lucide-svelte';
 	interface Props {
 		data: {
-			user: UserNonExpand;
-			slug: string;
-			teams: Team[];
+			team: Team;
+			members: UserNonExpand[];
 			error: {
-				kind: 'teams' | 'other';
+				kind: 'teams' | 'members' | 'other';
 				message: string;
 			} | null;
-			isCurrentUser: boolean;
+			isCurrentOwner: boolean;
+			isCurrentMember: boolean;
+			slug: string;
 		};
 	}
 	// }
@@ -22,15 +24,15 @@
 	// 	user: UserNonExpand;
 	// 	slug: string;
 	// }>();
-	let { user, slug, teams, isCurrentUser } = data;
+	let { team, slug, members, isCurrentOwner, isCurrentMember } = data;
 </script>
 
 <div class="flex w-full justify-center">
 	<div class="flex w-full flex-col items-center justify-center md:max-w-[80%] lg:max-w-[55%]">
 		<div class="h-2xl line-clamp-3 w-full">
-			{#if user.bannerCropped}
+			{#if team.bannerCropped}
 				<!-- <img src={user.bannerCropped} alt="banner" class="h-full w-full object-fill" /> -->
-				<img src={user.bannerCropped} alt="banner" class="h-full w-full object-fill" />
+				<img src={team.bannerCropped} alt="banner" class="h-full w-full object-fill" />
 			{:else}
 				<div class="h-48 w-full bg-blue-400">
 					<!-- <p class="text-center text-gray-500">No banner available</p> -->
@@ -42,77 +44,77 @@
 			<div class="mt-[-1rem] mb-4 h-20 w-20 rounded-full bg-gray-200 md:h-24 md:w-24">
 				<div class="avatar">
 					<div class="w-20 rounded-full ring-1 ring-black md:w-24">
-						<img src={user.avatarCropped} alt="User Avatar" />
+						<img src={team.logoCropped} alt="User Avatar" />
 					</div>
 				</div>
 			</div>
 			<div class="mt-[-1rem]">
-				<h2 class="text-2xl font-bold">{user.name} {user.lastName}</h2>
+				<h2 class="text-2xl font-bold">{team.name}</h2>
 				<!-- <div class="flex flex-nowrap items-center space-x-2"> -->
-				<a href={'/user/' + user.nick} target="_blank" class="ml-2 font-bold text-red-600">
-					@{user.nick}
+				<a href={'/team/' + team.slug} target="_blank" class="ml-2 font-bold text-red-600">
+					@{team.slug}
 				</a>
-				<!-- <ExternalLink size={16} /> -->
-				<!-- </div> -->
 			</div>
 		</div>
 
 		<!-- bio section -->
-		{#if user.bio && user.bio.length > 0}
+		{#if team.description && team.description.length > 0}
 			<div class="w-full px-4">
 				<p class="">Bio:</p>
-				<p class="ml-2 text-lg text-gray-600">{user.bio}</p>
+				<p class="ml-2 text-lg text-gray-600">{team.description}</p>
 			</div>
-		{:else if isCurrentUser}
+		{:else if isCurrentOwner}
 			<div class="w-full px-4">
-				<p class="text-lg text-gray-600">Non hai ancora scritto una bio.</p>
+				<p class="text-lg text-gray-600">Non c'é una descrizione.</p>
+				<a class="btn btn-primary" href={`/team/${team.slug}/settings`}>Scrivine una</a>
 			</div>
 		{/if}
 
 		<div class="flex w-full flex-col items-center justify-between px-4">
-			<p class="mt-4 text-3xl font-bold">TEAMS:</p>
-			{#if teams.length == 0}
-				{#if isCurrentUser}
-					<p class="mt-4 text-lg font-semibold">Non fai parte di nessun team</p>
+			<p class="mt-4 text-3xl font-bold">MEMBRI:</p>
+			{#if members.length == 0}
+				{#if isCurrentOwner}
+					<p class="mt-4 text-lg font-semibold">Non hai membri nel tuo team.</p>
 					<button class="btn btn-primary mt-2">
-						<a href="/teams/new">Creane Uno</a>
+						<a href={'/team/' + team.slug + '/invite/new'}>Creane un invito</a>
 					</button>
 				{:else}
-					<p class="mt-4 text-lg font-normal text-gray-600">
-						Questo account non fa parte di nessun team
-					</p>
+					<p class="mt-4 text-lg font-normal text-gray-600">Questo team non ha membri.</p>
 				{/if}
 			{/if}
-			{#each teams as team}
-				<a href={'/team/' + team.slug} class="group my-4 w-full cursor-pointer">
-					<div class="rounded-lg bg-gray-200 p-4 transition-colors group-hover:bg-gray-300">
-						<div class="flex items-start space-x-3">
-							<img src={team.logoCropped} alt="Team Logo" class="size-16 rounded-full" />
-							<div class="flex-1">
-								<div class="justify-right flex items-center space-x-2">
-									<div class="flex flex-nowrap items-center">
-										<p class="group text-lg font-bold transition duration-300">
-											{team.name}
-											<span
-												class="mx-1 block h-0.5 max-w-0 bg-red-600 transition-all duration-500 group-hover:max-w-full"
-											></span>
-										</p>
 
-										<!-- <h3 class="text-xl font-bold group-hover:underline md:text-2xl"></h3> -->
-										{#if team.owner == user.person}
-											<Crown class="ml-1 text-yellow-600" size={16} />
-										{/if}
-									</div>
-									<span class="text-sm font-semibold text-red-600 group-hover:font-bold"
-										>@{team.slug}</span
-									>
-								</div>
-								<p class="mt-1 line-clamp-1 text-gray-700">{team.description}</p>
-							</div>
-						</div>
-					</div>
-				</a>
-			{/each}
+			<div class="w-full space-y-2">
+				{#each members as user}
+					<EntityCard
+						title={`${user.name} ${user.lastName}`}
+						slug={user.nick}
+						description={user.bio}
+						link={`/user/${user.nick}`}
+					>
+						{#snippet picture()}
+							<img src={user.avatarCropped} alt="User Avatar" class="size-16 rounded-full ring-1" />
+						{/snippet}
+						{#snippet iconSnippet()}
+							{#if user.person == team.owner}
+								<Crown class="ml-1 text-yellow-600" size={16} />
+							{/if}
+						{/snippet}
+					</EntityCard>
+				{/each}
+			</div>
+			{#if members.length === 1 && isCurrentOwner}
+				<p class="mt-4 text-lg font-semibold">Sei l'unico membro del team.</p>
+				<button class="btn btn-primary mt-2">
+					<a href={'/dash/team/' + team.slug + '/invite/new'}>Invita qualcuno</a>
+				</button>
+			{/if}
+			<div>
+				{#if isCurrentOwner}
+					<a class="btn my-4 w-full bg-gray-100" href={`/team/${team.slug}/dash`}
+						>Vai alla pagina privata del team</a
+					>
+				{/if}
+			</div>
 		</div>
 		<!-- <img src={user.avatarCropped} alt="User Avatar" class="mb-4 h-24 w-24 rounded-full" /> -->
 		<!-- 

@@ -6,7 +6,7 @@
 	import { debounce } from 'throttle-debounce';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { page } from '$app/state';
-	import { userSettingsSchema } from '../../../../lib/schemas/userSettingsSchema';
+	import { schema } from './schema';
 	import { goto, invalidateAll } from '$app/navigation';
 	import ImageCropper from '$components/imageCropper/imageCropper.svelte';
 
@@ -15,7 +15,7 @@
 
 	const { form, errors, message, constraints, enhance } = superForm(data.form, {
 		dataType: 'json',
-		validators: zod(userSettingsSchema)
+		validators: zod(schema)
 	});
 
 	$effect(() => {

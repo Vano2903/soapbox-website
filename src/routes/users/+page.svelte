@@ -87,45 +87,17 @@
 	<div class="space-y-1">
 		{#each expandedUsers as user}
 			<EntityCard
-				pictureUrl={user.avatarCropped || ''}
 				title={`${user.name} ${user.lastName}`}
 				slug={user.nick}
 				description={user.bio}
 				link={`/user/${user.nick}`}
-			/>
+			>
+				{#snippet picture()}
+					<img src={user.avatarCropped} alt="User Avatar" class="ring-1 size-16 rounded-full" />
+				{/snippet}
+			</EntityCard>
 		{/each}
 	</div>
-
-	{#each expandedUsers as user}
-		<!-- <EntityCard
-			pictureUrl={user.avatarCropped || ''}
-			title={`${user.name} ${user.lastName}`}
-			slug={user.nick}
-			description={user.bio}
-			link={`/user/${user.nick}`}
-		/> -->
-
-		<a href={'/user/' + user.nick} class="cursor-pointer">
-			<div class="flex items-center space-x-4 border-b p-4">
-				<div class="avatar">
-					<div class="w-12 rounded-full ring-1 ring-black">
-						<img src={user.avatarCropped} alt="User Avatar" />
-					</div>
-				</div>
-				<div>
-					<h3 class="text-lg font-semibold">{user.name} {user.lastName}</h3>
-					<!-- <a href={'/user/' + user.nick} class="text-blue-600 hover:underline"> -->
-					<span class="text-red-600">
-						@{user.nick}
-					</span>
-					<!-- </a> -->
-				</div>
-				<!-- <a href={'/user/' + user.nick} class="ml-2 font-bold text-red-600">
-					<ExternalLink size={16} />
-				</a> -->
-			</div>
-		</a>
-	{/each}
 
 	<br />
 	<div class="join">

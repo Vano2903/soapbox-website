@@ -1,5 +1,5 @@
 import type { UserPublicInfo } from '$tsTypes/user';
-import { redirect, type Load } from '@sveltejs/kit';
+import { type Load } from '@sveltejs/kit';
 import { env } from '$env/dynamic/public';
 import { createPocketBaseInstance } from '$lib/utils/pocketbase';
 
@@ -32,7 +32,7 @@ export const load: Load = async ({ url }) => {
 		sort: 'nick'
 	});
 
-	let expandedUsers = paginatedUsers.items.map((user: UserPublicInfo) => {
+	const expandedUsers = paginatedUsers.items.map((user: UserPublicInfo) => {
 		user.avatarCropped =
 			pb.files.getURL(user, user.avatarCropped || '') ||
 			`https://avatar.iran.liara.run/public?username=${user.nick}`;

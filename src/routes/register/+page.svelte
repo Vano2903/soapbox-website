@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { TypedPocketBase } from '$tsTypes/pocketbase.js';
 	import PocketBase, { type RecordModel } from 'pocketbase';
-	import { schema } from './schema.js';
+	import { registerSchema } from '../../lib/schemas/registerSchema.js';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { superForm } from 'sveltekit-superforms';
 	// import { render } from 'svelte/server';
@@ -9,7 +9,7 @@
 	const { data } = $props();
 
 	const { form, errors, message, constraints, enhance } = superForm(data.form, {
-		validators: zod(schema)
+		validators: zod(registerSchema)
 	});
 
 	const pb = new PocketBase(data.pbUri) as TypedPocketBase;

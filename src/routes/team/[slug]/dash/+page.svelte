@@ -1,0 +1,296 @@
+<script lang="ts">
+	import { page } from '$app/state';
+	import EntityCard from '$components/entityCard/entityCard.svelte';
+	import type { TypedPocketBase } from '$tsTypes/pocketbase.js';
+	import type { Team, TeamInvitationNonExpand } from '$tsTypes/team.js';
+	import type { UserNonExpand } from '$tsTypes/user.js';
+	import { Crown, Users } from 'lucide-svelte';
+	import PocketBase, { type RecordModel } from 'pocketbase';
+	import { onMount } from 'svelte';
+
+	interface Props {
+		data: {
+			team: Team;
+			members: UserNonExpand[];
+			error: {
+				kind: 'teams' | 'members' | 'other';
+				message: string;
+			} | null;
+			isCurrentUser: boolean;
+			isCurrentOwner: boolean;
+			isCurrentMember: boolean;
+			slug: string;
+			invites: TeamInvitationNonExpand[];
+		};
+	}
+
+	const { data } = $props();
+	const pb = new PocketBase(data.pbUri) as TypedPocketBase;
+	// const teamsCount = data.teamsCount;
+	// onMount(async () => {
+	// 	console.log('teams', teams);
+	// });
+
+	// 	console.log('subscribed to teams');
+	// 	pb.collection('teams').subscribe('*', (e) => {
+	// 		console.log('Team event:', e);
+	// 	});
+	// });
+	let user = $state(data.user);
+	let team = $state(data.team);
+	let members = $state(data.members);
+	let isCurrentOwner = $state(data.isCurrentOwner);
+	let isCurrentMember = $state(data.isCurrentMember);
+	let error = $state(data.error);
+	let invites = $state(data.invites);
+
+	let tabs = [
+		{ anchor: 'news', label: 'NOTIZIE' },
+		{ anchor: 'members', label: 'MEMBRI' }
+	];
+	if (isCurrentOwner) {
+		tabs.push({ anchor: 'invites', label: 'INVITI' });
+	}
+
+	let currentTab = $state(tabs[1].anchor); // Default to 'members'
+
+	async function leaveTeam() {
+		if (confirm('Sei sicuro di voler abbandonare il team?')) {
+			try {
+				await pb.collection('teams').update(team.id, { members: [] });
+				members = [];
+				isCurrentMember = false;
+				alert('Hai abbandonato il team con successo.');
+			} catch (err) {
+				console.error('Error leaving team:', err);
+				alert("Si è verificato un errore durante l'abbandono del team.");
+			}
+		}
+	}
+
+	function datediff(first: number, second: number): number {
+		return Math.round((second - first) / (1000 * 60 * 60 * 24));
+	}
+</script>
+
+<div class="px-6 py-2">
+	<div class=" flex h-full w-full flex-col-reverse lg:flex-row">
+		<div class="w-full lg:max-w-1/2">
+			<div>
+				<div class="h-2xl line-clamp-3 w-full">
+					{#if team.bannerCropped}
+						<img src={team.bannerCropped} alt="banner" class="h-full w-full object-fill" />
+					{:else}
+						<div class="h-48 w-full bg-blue-400"></div>
+					{/if}
+				</div>
+
+				<div class="flex w-full items-center justify-center space-x-5 pb-8">
+					<div class="mt-[-4rem] mb-4 size-24 rounded-full bg-gray-200 md:size-32 lg:mt-[-6rem]">
+						<div class="avatar">
+							<div class="size-24 rounded-full ring-1 ring-black md:size-32">
+								<img src={team.logoCropped} alt="Team Logo" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="mt-[-2rem]">
+					<h2 class="text-xl font-bold md:text-2xl lg:text-4xl">{team.name}</h2>
+					<a
+						href={'/team/' + team.slug}
+						target="_blank"
+						class="text-normal ml-2 font-semibold text-red-600 md:text-lg lg:text-2xl"
+					>
+						@{team.slug}
+					</a>
+				</div>
+
+				<div class="mt-4 w-full">
+					<p class="text-normal text-gray-600 md:text-lg">{team.description}</p>
+				</div>
+			</div>
+			<div class="divider"></div>
+			{#if isCurrentOwner}
+				<a class="btn my-4 w-full bg-gray-100" href="/team/settings">Modifica Profilo</a>
+			{/if}
+		</div>
+
+		<div class="divider lg:divider-horizontal"></div>
+
+		<div class="w-full">
+			<div role="tablist" class="tabs tabs-border flex w-full justify-center">
+				{#each tabs as tab}
+					<button
+						role="tab"
+						class="tab text-3xl transition-all"
+						class:tab-active={currentTab === tab.anchor}
+						class:text-red-600={currentTab === tab.anchor}
+						class:hover:text-red-800={currentTab === tab.anchor}
+						onclick={() => (currentTab = tab.anchor)}
+					>
+						{tab.label}
+					</button>
+				{/each}
+			</div>
+			<div>
+				<div class="mt-4 flex w-full flex-col items-start justify-between">
+					{#if currentTab === 'news'}
+						<div class="space-y-4">
+							<p class="text-3xl font-bold">NOTIZIE:</p>
+							<p class="text-lg">Non ci sono notizie al momento. francone</p>
+						</div>
+					{:else if currentTab === 'members'}
+						<div class="space-y-4">
+							<p class=" text-3xl font-bold">MEMBRI:</p>
+							{#if members.length == 0}
+								<p class="mt-4 text-lg font-semibold">Non ci sono persone in questo team</p>
+							{/if}
+
+							<div class="flex w-full justify-end">
+								<button class="btn btn-error" onclick={leaveTeam}>Abbandona Team</button>
+							</div>
+
+							<div class="w-full space-y-1">
+								{#each members as member}
+									<EntityCard
+										title={member.name + ' ' + member.lastName}
+										slug={member.nick}
+										link={'/user/' + member.nick}
+										description={member.bio}
+									>
+										{#snippet picture()}
+											<img
+												src={member.avatarCropped}
+												alt={member.name}
+												class="h-12 w-12 rounded-full"
+											/>
+										{/snippet}
+										{#snippet iconSnippet()}
+											{#if team.owner == member.person}
+												<Crown class="size-4 text-yellow-500" />
+											{/if}
+										{/snippet}
+									</EntityCard>
+								{/each}
+							</div>
+						</div>
+					{:else if currentTab === 'invites'}
+						<p class="mt-4 text-3xl font-bold">INVITI:</p>
+						<div class="flex w-full justify-end">
+							<a class="btn" href="/team/dash/invite/new">Crea un nuovo invito</a>
+						</div>
+
+						<!-- {#each invites || [] as invite}
+							<div class="my-4 w-full rounded-lg bg-gray-200 p-4">
+								<div class="flex items-start space-x-3"> -->
+						<!-- if invite uses is -1 show just the count of people that joined the invite
+										(can be derived by team.joined.length), if it's anything different than -1 calculate the max number of
+										people that can join and show it as {team.joined.length}/{invite.maxUses} with a person logo from lucide
+									
+										invites can also have an expiration date, if its set show the expiration date and maybe if possible show the remining days
+										
+										if an invite is expired/reached its max uses or has the "disabled" field set to true show it in a muted/disabled style
+
+										there is a button to update the invite,
+										the invite can be updated to change the number of uses, expiration date or delete it (it gets marked as disabled)
+
+										if its clicked it shows an accordion with the names of people that joined, for now just show a text with the content of
+										"people that joined: {team.joined.length} people"
+										-->
+
+						<!-- </div>
+							</div>
+						{/each} -->
+
+						{#if invites && invites.length > 0}
+							<div class="mt-4 space-y-4">
+								{#each invites as invite}
+									{@const joinedCount = invite.joined.length}
+									{@const maxUses = invite.uses + joinedCount}
+									{@const isDisabled =
+										invite.disabled ||
+										(invite.expiration && new Date(invite.expiration) < new Date()) ||
+										(maxUses !== -1 && joinedCount >= maxUses)}
+
+									{@const daysRemaining = invite.expiration
+										? datediff(new Date(), new Date(invite.expiration))
+										: null}
+
+									<div
+										class="collapse-arrow collapse rounded-lg bg-gray-200 {isDisabled
+											? 'opacity-60'
+											: ''}"
+									>
+										<input type="checkbox" class="peer" />
+										<div class="collapse-title flex items-center justify-between">
+											<div class="flex items-center space-x-4">
+												<div class="flex items-center">
+													<Users />
+													{#if maxUses === -1}
+														<span class="ml-2">Invito illimitato: {joinedCount} partecipanti</span>
+													{:else}
+														<span class="ml-2">{joinedCount}/{maxUses} partecipanti</span>
+													{/if}
+												</div>
+											</div>
+
+											<div class="flex items-center space-x-4">
+												{#if invite.expiration}
+													<div class="text-sm">
+														<span
+															>Scade il {new Date(invite.expiration).toLocaleDateString(
+																'it-IT'
+															)}</span
+														>
+														{#if daysRemaining && daysRemaining > 0}
+															<span class="ml-1">({daysRemaining} giorni rimanenti)</span>
+														{:else}
+															<span class="text-error ml-1">(Scaduto)</span>
+														{/if}
+													</div>
+												{/if}
+
+												{#if isDisabled}
+													<span class="badge badge-error">Non attivo</span>
+												{:else}
+													<span class="badge badge-success">Attivo</span>
+												{/if}
+											</div>
+										</div>
+
+										<div class="collapse-content">
+											<div class="mt-2 rounded-lg bg-gray-100 p-2">
+												<p>Persone che hanno usato questo invito: {joinedCount} persone</p>
+											</div>
+
+											<div class="mt-4 flex justify-end space-x-2">
+												<button
+													class="btn btn-sm btn-outline"
+													onclick={() =>
+														(window.location.href = `/team/${team.slug}/dash/invite/${invite.id}/edit`)}
+												>
+													Modifica
+												</button>
+
+												<button
+													class="btn btn-sm btn-error"
+													onclick={() => disableInvite(invite.id)}
+												>
+													Disattiva
+												</button>
+											</div>
+										</div>
+									</div>
+								{/each}
+							</div>
+						{:else}
+							<div class="py-6 text-center">
+								<p class="text-lg text-gray-600">Non hai ancora creato nessun invito.</p>
+							</div>
+						{/if}
+					{/if}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

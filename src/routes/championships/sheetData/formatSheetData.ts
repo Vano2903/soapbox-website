@@ -49,14 +49,15 @@ export function formatSheetDataFromFullJson(json: any): string {
 
 			// Check for merged cell
 			// if (merges.has(`${r},${c}`)) continue;
-			if (merges.has(`${r + dataStartRow},${c + dataStartColumn}`)) continue;
+
+			if (merges.has(`${r + (dataStartRow ?? 0)},${c + (dataStartColumn ?? 0)}`)) continue;
 
 			// this do not skip empty row
 			// const value = cell?.formattedValue ?? (cell?.userEnteredValue ? "" : null);
 			// const content = value === null ? "" : escapeHtml(value);
 
 			// if content == null -> Skip the row (empty row)
-			const value = cell?.formattedValue ?? (cell?.userEnteredValue ? null : "");
+			const value = cell?.formattedValue ?? (cell?.userEnteredValue ? null : '');
 			const content = value === null ? null : escapeHtml(value);
 			if (content === null) {
 				skipRow = true;
@@ -91,10 +92,13 @@ export function formatSheetDataFromFullJson(json: any): string {
 			// Font
 			styleParts.push(`color: ${rgbToCss(textFormat.foregroundColor ?? inherit.color)};`);
 			styleParts.push(`font-family: ${textFormat.fontFamily ?? inherit.fontFamily ?? 'inherit'};`);
-			styleParts.push(`font-size: ${Math.round((textFormat.fontSize ?? inherit.fontSize ?? 8) * 1.2)}px;`);
+			styleParts.push(
+				`font-size: ${Math.round((textFormat.fontSize ?? inherit.fontSize ?? 8) * 1.2)}px;`
+			);
 			if (textFormat.bold ?? inherit.bold) styleParts.push('font-weight: bold;');
 			if (textFormat.italic ?? inherit.italic) styleParts.push('font-style: italic;');
-			if (textFormat.strikethrough ?? inherit.strikethrough) styleParts.push('text-decoration: line-through;');
+			if (textFormat.strikethrough ?? inherit.strikethrough)
+				styleParts.push('text-decoration: line-through;');
 			if (textFormat.underline ?? inherit.underline) styleParts.push('text-decoration: underline;');
 
 			// Save for inheritance
@@ -109,7 +113,8 @@ export function formatSheetDataFromFullJson(json: any): string {
 			};
 
 			// Colspan/Rowspan for merged
-			let rowspan = 1, colspan = 1;
+			let rowspan = 1,
+				colspan = 1;
 			for (const m of json.sheets[0].merges ?? []) {
 				if (m.startRowIndex === r + dataStartRow && m.startColumnIndex === c + dataStartColumn) {
 					rowspan = (m.endRowIndex ?? r + 1) - dataStartRow - r;
@@ -126,7 +131,7 @@ export function formatSheetDataFromFullJson(json: any): string {
 
 		htmlRow.push('</tr>');
 		if (!skipRow) {
-			html.push(htmlRow.join('\n'))
+			html.push(htmlRow.join('\n'));
 		}
 	}
 
@@ -136,7 +141,7 @@ export function formatSheetDataFromFullJson(json: any): string {
 
 // Utility functions
 function rgbToCss(color?: { red?: number; green?: number; blue?: number }): string {
-	if (!color) return "inherit";
+	if (!color) return 'inherit';
 	const r = Math.round((color.red ?? 0) * 255);
 	const g = Math.round((color.green ?? 0) * 255);
 	const b = Math.round((color.blue ?? 0) * 255);
@@ -144,17 +149,19 @@ function rgbToCss(color?: { red?: number; green?: number; blue?: number }): stri
 }
 
 function borderToCss(border: any): string {
-	if (!border) return "none";
-	const style = (border.style?.includes("SOLID") ? "solid" : border.style?.toLowerCase()) ?? "solid";
-	const width = border.width ? `${border.width}px` : "1px";
+	if (!border) return 'none';
+	const style =
+		(border.style?.includes('SOLID') ? 'solid' : border.style?.toLowerCase()) ?? 'solid';
+	const width = border.width ? `${border.width}px` : '1px';
 	const color = rgbToCss(border.color);
 	return `${width} ${style} ${color}`;
 }
 
 function escapeHtml(text: string): string {
-	return text.replace(/&/g, "&amp;")
-		.replace(/</g, "&lt;")
-		.replace(/>/g, "&gt;")
+	return text
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
 		.replace(/"/g, '&quot;')
 		.replace(/'/g, '&#39;');
 }

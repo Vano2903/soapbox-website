@@ -4,7 +4,7 @@ const MEGA5 = 5000000;
 const MEGA2 = 2000000;
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 
-export const schema = z.object({
+export const teamSchema = z.object({
 	name: z
 		.string({
 			required_error: 'Il nome completo del team è obbligatorio',

@@ -1,6 +1,6 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import type { Teamexpand } from '$tsTypes/team';
+import type { TeamExpand } from '$tsTypes/team';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	const slug = params.slug;
@@ -32,7 +32,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 	}
 	return {
 		slug: params.slug,
-		team: team as Teamexpand,
+		team: team as TeamExpand,
 		title: 'Hello world!',
 		content: 'Welcome to our blog. Lorem ipsum dolor sit amet...'
 	};

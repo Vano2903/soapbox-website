@@ -1,12 +1,13 @@
 import { GenderKind, UserVisiblityKind } from '$tsTypes/user';
 import CodiceFiscale from 'codice-fiscale-js';
+import { Biohazard } from 'lucide-svelte';
 import { z } from 'zod';
 
 const MEGA5 = 5000000;
 const MEGA2 = 2000000;
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 
-export const schema = z.object({
+export const userSettingsSchema = z.object({
 	name: z.string({
 		required_error: 'Il nome è obbligatorio',
 		invalid_type_error: 'Il nome deve essere una stringa'
@@ -21,7 +22,7 @@ export const schema = z.object({
 			invalid_type_error: 'La data di nascita deve essere una data'
 		})
 		.min(new Date('1900-01-01'), {
-			message: 'La data di nascita deve essere successiva al 1900/01/01'
+			message: 'La data di nascita deve essere successiva al 01/01/1900'
 		})
 		.max(new Date(), {
 			message: 'La data di nascita non può essere futura'
@@ -56,7 +57,7 @@ export const schema = z.object({
 			message: 'Il codice fiscale inserito non è valido'
 		}
 	),
-	username: z
+	nick: z
 		.string({
 			required_error: 'Il nome utente è obbligatorio',
 			invalid_type_error: 'Il nome utente deve essere una stringa'
@@ -64,11 +65,11 @@ export const schema = z.object({
 		.min(3, {
 			message: 'Il nome utente deve avere almeno 3 caratteri'
 		})
-		.max(30, {
-			message: 'Il nome utente deve avere al massimo 30 caratteri'
+		.max(100, {
+			message: 'Il nome utente deve avere al massimo 100 caratteri'
 		})
-		.regex(/^[a-z0-9\-_]+$/, {
-			message: 'Il nome utente può contenere solo minuscole, numeri, trattini e trattini bassi'
+		.regex(/^[a-z0-9\-]+$/, {
+			message: 'Il nome utente può contenere solo minuscole, numeri e trattini'
 		}),
 	visibility: z.nativeEnum(UserVisiblityKind, {
 		errorMap: (gender, _ctx) => {
@@ -87,63 +88,73 @@ export const schema = z.object({
 					};
 			}
 		}
-	})
-	// avatarOriginal: z.optional(
-	// 	z
-	// 		.any()
-	// 		.refine((file) => file?.size <= MEGA2, 'Il file deve essere di dimensioni inferiori a 2MB')
-	// 		.refine(
-	// 			(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-	// 			'Solo formati .jpg, .jpeg, .png e .webp sono supportati'
-	// 		)
-	// ),
-	// avatarCroppedInfo: z.optional(
-	// 	z.object({
-	// 		x: z.number().min(0),
-	// 		y: z.number().min(0),
-	// 		width: z.number().min(0),
-	// 		height: z.number().min(0)
-	// 	})
-	// ),
-	// avatarCropped: z.optional(
-	// 	z
-	// 		.any()
-	// 		.refine(
-	// 			(file) => file?.size <= MEGA2,
-	// 			'Il file croppato deve essere di dimensioni inferiori a 2MB'
-	// 		)
-	// 		.refine(
-	// 			(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-	// 			'Solo formati .jpg, .jpeg, .png e .webp sono supportati'
-	// 		)
-	// ),
-	// bannerOriginal: z.optional(
-	// 	z
-	// 		.any()
-	// 		.refine((file) => file?.size <= MEGA2, 'Il file deve essere di dimensioni inferiori a 2MB')
-	// 		.refine(
-	// 			(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-	// 			'Solo formati .jpg, .jpeg, .png e .webp sono supportati'
-	// 		)
-	// ),
-	// bannerCroppedInfo: z.optional(
-	// 	z.object({
-	// 		x: z.number().min(0),
-	// 		y: z.number().min(0),
-	// 		width: z.number().min(0),
-	// 		height: z.number().min(0)
-	// 	})
-	// ),
-	// bannerCropped: z.optional(
-	// 	z
-	// 		.any()
-	// 		.refine(
-	// 			(file) => file?.size <= MEGA2,
-	// 			'Il file croppato deve essere di dimensioni inferiori a 2MB'
-	// 		)
-	// 		.refine(
-	// 			(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-	// 			'Solo formati .jpg, .jpeg, .png e .webp sono supportati'
-	// 		)
-	// )
+	}),
+	avatarOriginal: z.optional(
+		z
+			.any()
+			.refine((file) => file?.size <= MEGA2, 'Il file deve essere di dimensioni inferiori a 2MB')
+			.refine(
+				(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+				'Solo formati .jpg, .jpeg, .png e .webp sono supportati'
+			)
+	),
+	avatarCroppedInfo: z.optional(
+		z.object({
+			x: z.number().min(0),
+			y: z.number().min(0),
+			width: z.number().min(0),
+			height: z.number().min(0)
+		})
+	),
+	avatarCropped: z.optional(
+		z
+			.any()
+			.refine(
+				(file) => file?.size <= MEGA2,
+				'Il file croppato deve essere di dimensioni inferiori a 2MB'
+			)
+			.refine(
+				(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+				'Solo formati .jpg, .jpeg, .png e .webp sono supportati'
+			)
+	),
+	bannerOriginal: z.optional(
+		z
+			.any()
+			.refine((file) => file?.size <= MEGA2, 'Il file deve essere di dimensioni inferiori a 2MB')
+			.refine(
+				(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+				'Solo formati .jpg, .jpeg, .png e .webp sono supportati'
+			)
+	),
+	bannerCroppedInfo: z.optional(
+		z.object({
+			x: z.number().min(0),
+			y: z.number().min(0),
+			width: z.number().min(0),
+			height: z.number().min(0)
+		})
+	),
+	bannerCropped: z.optional(
+		z
+			.any()
+			.refine(
+				(file) => file?.size <= MEGA2,
+				'Il file croppato deve essere di dimensioni inferiori a 2MB'
+			)
+			.refine(
+				(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+				'Solo formati .jpg, .jpeg, .png e .webp sono supportati'
+			)
+	),
+	bio: z.optional(
+		z
+			.string({
+				required_error: 'La biografia è obbligatoria',
+				invalid_type_error: 'La biografia deve essere una stringa'
+			})
+			.max(500, {
+				message: 'La biografia deve avere al massimo 500 caratteri'
+			})
+	)
 });

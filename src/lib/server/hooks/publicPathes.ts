@@ -1,5 +1,4 @@
-import type { Handle } from '@sveltejs/kit';
-
+/* eslint-disable no-useless-escape */
 export const isPublicPath = (path: string): boolean => {
 	path = path.toLowerCase();
 
@@ -11,9 +10,13 @@ export const isPublicPath = (path: string): boolean => {
 		'\/forgot-password$',
 		'\/gallery$',
 		'\/championships$',
+		'\/championships\/sheetData$',
 		'\/users$',
-		'\/user\/[a-z0-9_-]+$',
-		'\/users\/[a-z0-9_-]+$'
+		'\/user\/[a-z0-9_-]+',
+		'\/users\/[a-z0-9_-]+',
+		'\/teams$',
+		'\/team\/[a-z0-9_-]+',
+		'\/teams\/[a-z0-9_-]+'
 	];
 	const publicPathsRegex = publicPaths
 		// .map((p) => p.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&'))

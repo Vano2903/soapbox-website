@@ -1,6 +1,4 @@
 import { type Handle, redirect } from '@sveltejs/kit';
-import { Roles } from '$lib/types/user';
-// import hasRole from '$lib/utils/hasRole';
 import { error } from '@sveltejs/kit';
 import { isPublicPath } from './publicPathes';
 
@@ -59,6 +57,17 @@ const authorization: Handle = async ({ event, resolve }) => {
 	if (path.startsWith('/new')) {
 		redirect(302, `/user/${user.nick}/dash/new`);
 	}
+
+	// if (path.startsWith('/current')) {
+	// 	const currentTeam = event.locals.team;
+	// 	console.log('locals in AUTHORIZATION:', event.locals);
+	// 	console.log('Current team:', currentTeam);
+	// 	if (!currentTeam) {
+	// 		redirect(302, `/user/${user.nick}/dash`);
+	// 	}
+	// 	const rest = path.replace('/current', '');
+	// 	redirect(302, `/team/${currentTeam.slug}${rest}`);
+	// }
 
 	// Role-based access control mapping for different routes
 	// const routePermissions = Object.entries({

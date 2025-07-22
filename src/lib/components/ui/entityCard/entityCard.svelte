@@ -3,7 +3,7 @@
 	import type { Snippet } from 'svelte';
 
 	interface Props {
-		pictureUrl: string;
+		picture: Snippet;
 		title: string;
 		description?: string;
 		link: string;
@@ -14,7 +14,7 @@
 	}
 
 	let {
-		pictureUrl = $bindable(),
+		picture = $bindable(),
 		title = $bindable(),
 		description = $bindable(),
 		link = $bindable(),
@@ -27,7 +27,8 @@
 <a href={link} class="group block w-full cursor-pointer">
 	<div class="rounded-lg bg-gray-200 p-4 transition-colors group-hover:bg-gray-300">
 		<div class="flex items-center space-x-3">
-			<img src={pictureUrl} alt="Team Logo" class="size-16 rounded-full ring-1" />
+			<!-- <img src={pictureUrl} alt="Team Logo" class="size-16 rounded-full ring-1" /> -->
+			{@render picture()}
 			<div class="">
 				<div
 					class="justify-right flex flex-col space-x-2"

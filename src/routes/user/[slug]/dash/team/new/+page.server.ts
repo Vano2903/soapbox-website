@@ -9,13 +9,13 @@ import {
 } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { TypedPocketBase } from '$tsTypes/pocketbase';
-import { schema } from './schema';
+import { teamSchema } from '../../../../../../lib/schemas/teamSchema';
 import DOMPurify from 'isomorphic-dompurify';
 
-const nickSchema = schema.pick({ slug: true });
+const nickSchema = teamSchema.pick({ slug: true });
 
-export const load: PageServerLoad = async ({ parent }) => {
-	const form = await superValidate(zod(schema));
+export const load: PageServerLoad = async () => {
+	const form = await superValidate(zod(teamSchema));
 
 	return { form };
 };
@@ -40,7 +40,7 @@ async function isTeamNickValid(
 export const actions = {
 	createTeam: async ({ request, locals }) => {
 		console.log('createTeam');
-		const form = await superValidate(request, zod(schema));
+		const form = await superValidate(request, zod(teamSchema));
 
 		console.log('form', form);
 		if (!form.valid) {

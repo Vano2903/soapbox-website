@@ -1,9 +1,8 @@
 import type { PageLoad } from './$types';
-import type { EventType } from '$lib/types/newRace';
-import { EventKind } from '$lib/types/newRace';
+import { EventKind, type EventInfoType } from '$lib/types/event';
 import type { OrganizationStatType } from '$lib/types/organizationStat';
 
-export const load: PageLoad = async (): Promise<{ eventInfo: EventType; organizationStats: OrganizationStatType[]; }> => {
+export const load: PageLoad = async (): Promise<{ eventInfo: EventInfoType; organizationStats: OrganizationStatType[]; }> => {
 	const eventInfo = {
 		id: '2025-7',
 		kind: EventKind.NextEventKind,
@@ -12,7 +11,7 @@ export const load: PageLoad = async (): Promise<{ eventInfo: EventType; organiza
 		title: '3° Soap BoXXico Rally',
 		totalSubscriptions: 48,
 		currentSubscriptions: 24
-	} as EventType;
+	} as EventInfoType;
 
 	const organizationStats = [
 		{ value: 982, subject: 'curve', context: 'affrontate' },

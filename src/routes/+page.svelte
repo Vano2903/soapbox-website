@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { EventKind, type EventType } from '$tsTypes/newRace.js';
+	import { EventKind, type EventInfoType } from '$tsTypes/event.js';
 	import type { OrganizationStatType } from '$tsTypes/organizationStat.js';
 	import Carousel3 from '$components/carousel/carousel3.svelte';
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
@@ -14,7 +14,7 @@
 		eventInfo,
 		organizationStats
 	}: {
-		eventInfo: EventType;
+		eventInfo: EventInfoType;
 		organizationStats: OrganizationStatType[];
 	} = data;
 

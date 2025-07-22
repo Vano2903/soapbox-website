@@ -11,19 +11,19 @@
 				{
 					layout: 'horizontal',
 					horizontal: { src: '/images/chi-siamo/soapbox.jpg', alt: 'macchine soapbox' },
-					loading: 'lazy'
+					loading: 'eager'
 				},
 				{
 					layout: 'horizontal',
 					horizontal: { src: '/images/chi-siamo/soapbox.jpg', alt: 'macchine soapbox' },
-					loading: 'lazy'
+					loading: 'eager'
 				},
 				{
 					layout: 'horizontal',
 					horizontal: { src: '/images/chi-siamo/soapbox.jpg', alt: 'macchine soapbox' },
-					loading: 'lazy'
+					loading: 'eager'
 				}
-			],
+			] as CarouselPage[],
 			activePage: 1
 		},
 		{
@@ -55,7 +55,7 @@
 					},
 					loading: 'lazy'
 				}
-			],
+			] as CarouselPage[],
 			activePage: 1
 		},
 		{
@@ -78,7 +78,7 @@
 					horizontal: { src: '/images/chi-siamo/jump.jpeg', alt: 'macchina salta tra la schiuma' },
 					loading: 'lazy'
 				}
-			],
+			] as CarouselPage[],
 			activePage: 1
 		},
 		{
@@ -110,7 +110,7 @@
 					},
 					loading: 'lazy'
 				}
-			],
+			] as CarouselPage[],
 			activePage: 1
 		}
 	];
@@ -148,9 +148,9 @@
 								>
 									<img
 										class="rounded-md"
-										loading="lazy"
-										src={page.horizontal.src}
-										alt={page.horizontal.alt}
+										loading={page.loading}
+										src={page.horizontal?.src}
+										alt={page.horizontal?.alt}
 									/>
 								</button>
 								<div
@@ -165,8 +165,8 @@
 					<img
 						loading="lazy"
 						class="rounded-sm object-cover"
-						src={section.pages[section.activePage].horizontal.src}
-						alt={section.pages[section.activePage].horizontal.alt}
+						src={section.pages[section.activePage].horizontal?.src}
+						alt={section.pages[section.activePage].horizontal?.alt}
 					/>
 					<div class="flex flex-row flex-nowrap justify-center gap-0.5 lg:hidden">
 						{#each section.pages as page, i}
@@ -179,9 +179,9 @@
 								>
 									<img
 										class="rounded-md"
-										loading="lazy"
-										src={page.horizontal.src}
-										alt={page.horizontal.alt}
+										loading={page.loading}
+										src={page.horizontal?.src}
+										alt={page.horizontal?.alt}
 									/>
 								</button>
 								<div

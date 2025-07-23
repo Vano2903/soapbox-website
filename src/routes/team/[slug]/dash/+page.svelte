@@ -52,7 +52,9 @@
 		tabs.push({ anchor: 'invites', label: 'INVITI' });
 	}
 
-	let currentTab = $state(tabs[1].anchor); // Default to 'members'
+	let defaultTab = tabs[2].anchor;
+
+	let currentTab = $state(defaultTab); // Default to 'members'
 
 	async function leaveTeam() {
 		if (confirm('Sei sicuro di voler abbandonare il team?')) {
@@ -210,7 +212,7 @@
 									{@const isDisabled =
 										invite.disabled ||
 										(invite.expiration && new Date(invite.expiration) < new Date()) ||
-										(maxUses !== -1 && joinedCount >= maxUses)}
+										(maxUses !== -1 && invite.uses <= 0)}
 
 									{@const daysRemaining = invite.expiration
 										? datediff(new Date().valueOf(), invite.expiration.valueOf())
@@ -226,7 +228,7 @@
 											<div class="flex items-center space-x-4">
 												<div class="flex items-center">
 													<Users />
-													{#if maxUses === -1}
+													{#if invite.uses === -1}
 														<span class="ml-2">Invito illimitato: {joinedCount} partecipanti</span>
 													{:else}
 														<span class="ml-2">{joinedCount}/{maxUses} partecipanti</span>

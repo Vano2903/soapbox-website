@@ -79,7 +79,7 @@
 	</label>
 
 	{#if error}
-		<div class="alert alert-error w-full md:max-w-1/2">
+		<div class="alert alert-error alert-soft m-auto my-2 w-full md:max-w-1/2">
 			<span>{error}</span>
 		</div>
 	{/if}
@@ -93,7 +93,7 @@
 				link={`/user/${user.nick}`}
 			>
 				{#snippet picture()}
-					<img src={user.avatarCropped} alt="User Avatar" class="ring-1 size-16 rounded-full" />
+					<img src={user.avatarCropped} alt="User Avatar" class="size-16 rounded-full ring-1" />
 				{/snippet}
 			</EntityCard>
 		{/each}

@@ -65,7 +65,7 @@ export interface Person {
 }
 export interface UserExpand extends UserBase {
 	isexpand: true;
-	expand: Person;
+	expand: { person: Person };
 }
 
 export interface UserNonExpand extends UserBase {

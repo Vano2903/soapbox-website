@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { TypedPocketBase } from '$tsTypes/pocketbase.js';
+	import type { TypedPocketBase } from '$types/pocketbase.js';
 	import PocketBase, { type RecordModel } from 'pocketbase';
 
 	const { data } = $props();

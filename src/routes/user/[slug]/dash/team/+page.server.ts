@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import type { TeamNonexpand } from '$tsTypes/team';
+import type { TeamNonexpand } from '$types/team';
 import type { ListResult } from 'pocketbase';
 
 export const load: PageServerLoad = async ({ locals }) => {

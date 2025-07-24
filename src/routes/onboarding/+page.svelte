@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { GenderKind } from '$tsTypes/user.js';
+	import { GenderKind } from '$types/user.js';
 	import CodiceFiscale from 'codice-fiscale-js';
 	import { untrack } from 'svelte';
 	import SuperDebug, { dateProxy, fieldProxy, fileProxy, superForm } from 'sveltekit-superforms';

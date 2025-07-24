@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { EventKind, type EventInfoType } from '$tsTypes/event';
+	import { EventKind, type EventInfoType } from '$types/event';
 
 	let {
 		eventInfo,

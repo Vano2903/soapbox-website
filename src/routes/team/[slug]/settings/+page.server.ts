@@ -9,7 +9,7 @@ import {
 	withFiles
 } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import type { TypedPocketBase } from '$tsTypes/pocketbase';
+import type { TypedPocketBase } from '$types/pocketbase';
 import { teamSchema } from '$lib/schemas/teamSchema';
 
 const slugSchema = teamSchema.pick({ slug: true });

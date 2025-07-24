@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { TypedPocketBase } from '$tsTypes/pocketbase.js';
-	import type { Team } from '$tsTypes/team.js';
-	import type { UserNonExpand } from '$tsTypes/user.js';
+	import type { TypedPocketBase } from '$types/pocketbase.js';
+	import type { Team } from '$types/team.js';
+	import type { UserNonExpand } from '$types/user.js';
 	import { Crown } from 'lucide-svelte';
 	import PocketBase, { type RecordModel } from 'pocketbase';
 	import { onMount } from 'svelte';

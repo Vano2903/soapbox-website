@@ -2,8 +2,8 @@ import type { PageLoad } from "./$types";
 
 import pocketbase from 'pocketbase';
 import { env } from '$env/dynamic/public';
-import type { TypedPocketBase } from '$tsTypes/pocketbase';
-import type { ChampionshipExpand } from '$tsTypes/championship';
+import type { TypedPocketBase } from '$types/pocketbase';
+import type { ChampionshipExpand } from '$types/championship';
 import { fail } from "@sveltejs/kit";
 
 export const load: PageLoad = async ({ data, url }) => {

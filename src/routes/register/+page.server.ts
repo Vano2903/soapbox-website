@@ -3,7 +3,7 @@ import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { registerSchema } from '$lib/schemas/registerSchema.js';
 import type { PageServerLoad } from './$types.js';
-import { Roles } from '$tsTypes/user.js';
+import { Roles } from '$types/user.js';
 
 export const load: PageServerLoad = async () => {
 	const form = await superValidate(zod(registerSchema));

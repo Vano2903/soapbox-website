@@ -8,7 +8,7 @@ import {
 	type Infer
 } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import type { TypedPocketBase } from '$tsTypes/pocketbase';
+import type { TypedPocketBase } from '$types/pocketbase';
 import { teamSchema } from '$lib/schemas/teamSchema';
 import DOMPurify from 'isomorphic-dompurify';
 

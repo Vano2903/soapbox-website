@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { TypedPocketBase } from '$tsTypes/pocketbase';
+	import type { TypedPocketBase } from '$types/pocketbase';
 	import type { ListResult } from 'pocketbase';
-	import type { Team } from '$tsTypes/team';
+	import type { Team } from '$types/team';
 	import EntityCard from '$components/entityCard/entityCard.svelte';
 
 	interface Props {

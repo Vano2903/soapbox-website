@@ -1,6 +1,5 @@
 <script lang="ts">
-	import type { EventNonExpand } from '$tsTypes/event';
-	import type { ChampionshipExpand, ChampionshipNonExpand } from '$tsTypes/championship';
+	import type { ChampionshipNonExpand } from '$types/championship';
 	import ElementSelection from '$components/elementSelection/elementSelection.svelte';
 	import { LucideCalendarCheck, LucideRadio, LucideLock } from 'lucide-svelte';
 	import { goto } from '$app/navigation';

@@ -1,11 +1,10 @@
 <script lang="ts">
-	import type { TypedPocketBase } from '$tsTypes/pocketbase.js';
+	import type { TypedPocketBase } from '$lib/types/pocketbase.js';
 	import PocketBase from 'pocketbase';
 	import { loginSchema } from '$lib/schemas/loginSchema.js';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { superForm } from 'sveltekit-superforms';
 	import { onMount } from 'svelte';
-	import { redirect } from '@sveltejs/kit';
 	import { goto } from '$app/navigation';
 
 	const { data } = $props();

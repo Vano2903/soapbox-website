@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from '../$types';
-import type { TeamInvitationNonExpand } from '$tsTypes/team';
+import type { TeamInvitationNonExpand } from '$types/team';
 
 export const load: LayoutServerLoad = async ({ parent, locals }) => {
 	const { user, pb } = locals;

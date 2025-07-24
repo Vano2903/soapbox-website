@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { TypedPocketBase } from '$tsTypes/pocketbase';
-	import type { UserNonExpand, UserPublicInfo } from '$tsTypes/user';
+	import type { TypedPocketBase } from '$types/pocketbase';
+	import type { UserNonExpand, UserPublicInfo } from '$types/user';
 	import { ExternalLink } from 'lucide-svelte';
 	import { env } from '$env/dynamic/public';
 	import { createPocketBaseInstance } from '$lib/utils/pocketbase';

@@ -86,25 +86,34 @@ func main() {
 			return e.Next()
 		}
 
-		return e.App.RunInTransaction(func(tx core.App) error {
-			person, err := tx.FindRecordById("people", authRecord.GetString("person"))
-			if err != nil {
-				return err
-			}
+		// return e.App.RunInTransaction(func(tx core.App) error {
+		person, err := e.App.FindRecordById("people", authRecord.GetString("person"))
+		if err != nil {
+			return err
+		}
+		// e.App.Logger().Info("Joining team for user", "person", person.Id, "user", e.Auth.Id)
 
-			team, err := tx.FindRecordById("teams", e.Record.GetString("team"))
-			if err != nil {
-				return err
-			}
+		team, err := e.App.FindRecordById("teams", e.Record.GetString("team"))
+		if err != nil {
+			return err
+		}
+		e.App.Logger().Info("Joining team for user", "person", person.Id, "user", e.Auth.Id, "team", team.Id)
+		e.App.Logger().Info("team data", "team", team)
 
+		if e.Record.GetInt("uses") != -1 {
+			if e.Record.GetInt("uses") == 0 {
+				return apis.NewBadRequestError("This invite has no uses left", nil)
+			}
 			e.Record.Set("uses", e.Record.GetInt("uses")-1)
-			team.Set("members+", []string{person.Id})
+		}
+		team.Set("members+", []string{person.Id})
 
-			if err := tx.Save(team); err != nil {
-				return err
-			}
-			return e.Next()
-		})
+		if err := e.App.Save(team); err != nil {
+			return err
+		}
+		e.App.Logger().Info("joined correctly", "team", team.Id)
+		return e.Next()
+		// })
 	})
 
 	if err := app.Start(); err != nil {

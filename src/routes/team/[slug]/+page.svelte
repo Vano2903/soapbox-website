@@ -109,7 +109,7 @@
 				</button>
 			{/if}
 			<div>
-				{#if isCurrentOwner}
+				{#if isCurrentMember}
 					<a class="btn my-4 w-full bg-gray-100" href={`/team/${team.slug}/dash`}
 						>Vai alla pagina privata del team</a
 					>

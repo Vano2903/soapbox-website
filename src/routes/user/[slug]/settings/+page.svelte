@@ -6,7 +6,7 @@
 	import { debounce } from 'throttle-debounce';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { page } from '$app/state';
-	import { userSettingsSchema } from '../../../../lib/schemas/userSettingsSchema';
+	import { userSettingsSchema } from '$lib/schemas/userSettingsSchema';
 	import { goto, invalidateAll } from '$app/navigation';
 	import ImageCropper from '$components/imageCropper/imageCropper.svelte';
 

@@ -1,7 +1,7 @@
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { loginSchema } from '../../lib/schemas/loginSchema.js';
+import { loginSchema } from '$lib/schemas/loginSchema.js';
 import type { PageServerLoad } from './$types.js';
 
 export const load: PageServerLoad = async () => {
@@ -11,7 +11,7 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions = {
-	login: async ({ request, locals }) => {
+	login: async ({ request, locals, url }) => {
 		const form = await superValidate(request, zod(loginSchema));
 		console.log('form', form);
 		if (!form.valid) {
@@ -26,8 +26,12 @@ export const actions = {
 			// 	return message(form, 'Login effettuato con successo!');
 			// }
 			// let user = locals.user as User;
-
-			return message(form, { type: 'success', text: 'Loggato' });
+			let redirectTo = url.searchParams.get('redirectTo') || 'me';
+			if (!redirectTo.startsWith('/')) {
+				redirectTo = `/${redirectTo}`;
+			}
+			throw redirect(302, `${redirectTo}`);
+			// return message(form, { type: 'success', text: 'Loggato' });
 		} catch (e) {
 			console.log(e);
 			return message(

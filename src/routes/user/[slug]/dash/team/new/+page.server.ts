@@ -9,7 +9,7 @@ import {
 } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { TypedPocketBase } from '$tsTypes/pocketbase';
-import { teamSchema } from '../../../../../../lib/schemas/teamSchema';
+import { teamSchema } from '$lib/schemas/teamSchema';
 import DOMPurify from 'isomorphic-dompurify';
 
 const nickSchema = teamSchema.pick({ slug: true });
@@ -27,12 +27,12 @@ async function isTeamNickValid(
 	try {
 		const query = `slug="${form.data.slug}"`;
 		console.log('searching team username:', query);
-		const data = await pb.collection('teams').getFirstListItem(query);
+		await pb.collection('teams').getFirstListItem(query);
 		setError(form, 'slug', 'Esiste già un team con questo username', {
 			overwrite: true
 		});
 		return false;
-	} catch (e) {
+	} catch {
 		return true;
 	}
 }

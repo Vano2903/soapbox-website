@@ -21,9 +21,16 @@ export const load: LayoutServerLoad = async ({ locals, params, url }) => {
 
 	const startPathname = '/team/' + params.slug;
 	const path = url.pathname;
+	const isCurrentOwner = user?.person === foundTeam.owner;
+	const isCurrentMember = foundTeam.members.includes(user?.person || '');
 
-	if (path.startsWith(startPathname + '/dash') || path.startsWith(startPathname + '/settings')) {
-		if (user?.person !== foundTeam.owner || !foundTeam.members.includes(user?.person || '')) {
+	if (path.startsWith(startPathname + '/dash')) {
+		if (!isCurrentOwner && !isCurrentMember) {
+			redirect(303, '/teams/' + params.slug);
+		}
+	}
+	if (path.startsWith(startPathname + '/settings')) {
+		if (!isCurrentOwner) {
 			redirect(303, '/teams/' + params.slug);
 		}
 	}

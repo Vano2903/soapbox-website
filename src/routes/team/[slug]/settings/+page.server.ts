@@ -14,11 +14,17 @@ import { teamSchema } from '$lib/schemas/teamSchema';
 
 const slugSchema = teamSchema.pick({ slug: true });
 
-export const load: PageServerLoad = async ({ locals }) => {
-	const { user, team } = locals;
+export const load: PageServerLoad = async ({ locals, parent }) => {
+	console.log('locals value', locals);
+
+	const { user } = locals;
 	if (!user) {
 		redirect(303, '/login');
 	}
+
+	const { team } = await parent();
+
+	locals.team = team;
 
 	const fileUrls = {
 		logoOriginal: team.logo,
@@ -57,7 +63,7 @@ async function isTeamNickValid(
 }
 
 export const actions = {
-	updateAccount: async ({ request, locals }) => {
+	updateTeam: async ({ request, locals }) => {
 		const form = await superValidate(request, zod(teamSchema));
 		console.log('form', form);
 		if (!form.valid) {
@@ -65,7 +71,14 @@ export const actions = {
 		}
 		console.log(form.data);
 
-		const { pb, user, team } = locals;
+		const { pb, user } = locals;
+		const team = locals.team;
+		if (!team) {
+			return message(form, {
+				type: 'error',
+				text: 'Team non trovato'
+			});
+		}
 		if (!user) {
 			redirect(303, '/login');
 		}

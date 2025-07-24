@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 	}
 	const { pb, user } = locals;
 	if (!user || !user.person) {
-		redirect(303, '/login?redirect=/dash/team/' + slug);
+		redirect(303, '/login?redirectTo=/dash/team/' + slug);
 	}
 	const [team, err] = await goCatch(
 		pb.collection('teams').getFirstListItem(

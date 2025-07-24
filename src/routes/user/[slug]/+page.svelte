@@ -95,7 +95,7 @@
 						link={`/team/${team.slug}`}
 					>
 						{#snippet picture()}
-							<img src={team.logoCropped} alt="Team Logo" class="ring-1 size-16 rounded-full" />
+							<img src={team.logoCropped} alt="Team Logo" class="size-16 rounded-full ring-1" />
 						{/snippet}
 						{#snippet iconSnippet()}
 							{#if team.owner == user.person}
@@ -104,6 +104,12 @@
 						{/snippet}
 					</EntityCard>
 				{/each}
+			</div>
+
+			<div>
+				{#if isCurrentUser}
+					<a class="btn my-4 w-full bg-gray-100" href="/dash">Vai alla tua pagina privata</a>
+				{/if}
 			</div>
 		</div>
 		<!-- <img src={user.avatarCropped} alt="User Avatar" class="mb-4 h-24 w-24 rounded-full" /> -->

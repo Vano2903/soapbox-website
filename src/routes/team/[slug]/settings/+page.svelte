@@ -1,49 +1,19 @@
 <script lang="ts">
-	import { GenderKind } from '$tsTypes/user.js';
-	import CodiceFiscale from 'codice-fiscale-js';
-	import { onMount, untrack } from 'svelte';
-	import SuperDebug, { dateProxy, fileProxy, superForm } from 'sveltekit-superforms';
+	import SuperDebug, { fieldProxy, fileProxy, superForm } from 'sveltekit-superforms';
 	import { debounce } from 'throttle-debounce';
 	import { zod } from 'sveltekit-superforms/adapters';
-	import { page } from '$app/state';
-	import { schema } from './schema';
-	import { goto, invalidateAll } from '$app/navigation';
+	import { teamSchema } from '$lib/schemas/teamSchema';
 	import ImageCropper from '$components/imageCropper/imageCropper.svelte';
-
 	const { data } = $props();
-	const { countryPhoneCodes, fileUrls } = data;
+	const { fileUrls } = data;
 
 	const { form, errors, message, constraints, enhance } = superForm(data.form, {
 		dataType: 'json',
-		validators: zod(schema)
+		validators: zod(teamSchema)
 	});
 
-	$effect(() => {
-		console.log('form', $form);
-		console.log('errors', $errors);
-		console.log('message', $message);
-	});
-
-	// let successMessage = $state('');
-
-	// $effect(() => {
-	// 	if (page.status === 200 && $message) {
-	// 		console.log('invalidating and reloading');
-	// 		localStorage.setItem('user-update-message', $message);
-	// 		// reload page
-	// 		invalidateAll();
-	// 		// goto('/dash/settings');
-	// 		window.location.href = '/dash/settings';
-	// 	}
-	// });
-
-	// onMount(() => {
-	// 	successMessage = localStorage.getItem('user-update-message') ?? '';
-	// 	if (successMessage) {
-	// 		successMessage += ` torna alla <a href="/dash" class="link">dashboard</a>`;
-	// 	}
-	// 	localStorage.removeItem('user-update-message');
-	// });
+	// --- username
+	const teamDomain = 'boxrally.eu/t/';
 
 	const {
 		delayed,
@@ -56,10 +26,10 @@
 			applyAction: false,
 			multipleSubmits: 'abort',
 			onSubmit({ cancel }) {
-				if (!$form.nick) cancel();
+				if (!$form.slug) cancel();
 			},
 			onUpdated({ form }) {
-				$errors.nick = form.errors.username;
+				$errors.slug = form.errors.username;
 			}
 		}
 	);
@@ -88,10 +58,10 @@
 
 	$effect(() => {
 		if (fileUrls) {
-			if (fileUrls.avatarOriginal) {
-				createFile(fileUrls.avatarOriginal, 'image/png', 'avatar.png').then((file) => {
+			if (fileUrls.logoOriginal) {
+				createFile(fileUrls.logoOriginal, 'image/png', 'avatar.png').then((file) => {
 					if (file) {
-						$avatar = file;
+						$logo = file;
 					}
 				});
 			}
@@ -102,10 +72,10 @@
 					}
 				});
 			}
-			if (fileUrls.avatarCropped) {
-				createFile(fileUrls.avatarCropped, 'image/png', 'avatar-cropped.png').then((file) => {
+			if (fileUrls.logoCropped) {
+				createFile(fileUrls.logoCropped, 'image/png', 'avatar-cropped.png').then((file) => {
 					if (file) {
-						$avatarCropped = file;
+						$logoCropped = file;
 					}
 				});
 			}
@@ -121,354 +91,113 @@
 
 	const checkUsername = debounce(200, submitCheckUsername);
 
-	let fiscalCode = $state($form.fiscalCode);
-	// let nick = $state($form.nick);
-	const proxyDate = dateProxy(form, 'birthDate', { format: 'date' });
-
-	let prefixes = $state(countryPhoneCodes);
-	let gender = $state() as GenderKind;
-
-	const avatar = fileProxy(form, 'avatarOriginal');
-	const avatarCropped = $state(fileProxy(form, 'avatarCropped'));
+	// --- images
+	// const logotest = fileProxy(form, 'logoTest');
+	const logo = fileProxy(form, 'logoOriginal');
+	const logoCropped = $state(fileProxy(form, 'logoCropped'));
 	const banner = fileProxy(form, 'bannerOriginal');
 	const bannerCropped = $state(fileProxy(form, 'bannerCropped'));
-	// const bioProxy = fieldProxy(form, 'bio');
+	const bioProxy = fieldProxy(form, 'bio');
 	let crop = $state({ x: 0, y: 0 });
 	let zoom = $state(1);
-
-	// $effect(() => {
-	// 	nick = nick.trimStart().replaceAll(' ', '-').toLowerCase();
-	// 	untrack(() => {
-	// 		$form.nick = nick;
-	// 	});
-	// });
-
-	$effect(() => {
-		$form.fiscalCode = fiscalCode;
-
-		try {
-			const cf = new CodiceFiscale(fiscalCode?.toUpperCase() || '');
-			$proxyDate = cf.birthday.toISOString().split('T')[0];
-			if (cf.gender === 'M') {
-				gender = GenderKind.Male;
-			} else {
-				gender = GenderKind.Female;
-			}
-			$form.gender = gender;
-		} catch (error) {}
-	});
-
-	const userDomain = 'boxrally.eu/u/';
+	let username = fieldProxy(form, 'slug');
 </script>
 
 <main class="mx-auto max-w-2xl px-4 py-8">
-	<h1 class="text-primary mb-8 text-3xl font-bold">Modifica il tuo profilo</h1>
-	<!-- <SuperDebug data={$form} /> -->
+	<h1 class="text-primary mb-8 text-3xl font-bold">Crea il tuo team</h1>
+	<SuperDebug data={$form} />
 	<form
 		method="POST"
-		enctype="multipart/form-data"
 		class="flex flex-col space-y-8"
+		enctype="multipart/form-data"
 		use:enhance
-		action="?/updateAccount"
+		action="?/updateTeam"
 	>
 		<!-- Contact Information Section -->
 		<div class="border-base-content space-y-6 border-b pb-8">
-			<h2 class="text-primary text-lg font-semibold">Informazioni di Contatto</h2>
-			<div class="flex flex-col gap-4 md:flex-row">
-				<fieldset class="fieldset flex-1 text-base">
-					<legend class="fieldset-legend">Nome</legend>
-					<input
-						{...$constraints.name}
-						class:input-error={$errors.name}
-						class:input-success={$form.name && 'name' in $errors && !$errors.name}
-						type="text"
-						aria-invalid={$errors.name ? 'true' : undefined}
-						bind:value={$form.name}
-						class="input w-full"
-						name="name"
-						placeholder="Mario"
-					/>
-					{#if $errors.name}
-						<p class="fieldset-label text-error">{$errors.name}</p>
-					{/if}
-				</fieldset>
-				<fieldset class="fieldset flex-1 text-base">
-					<legend class="fieldset-legend">Cognome</legend>
-					<input
-						{...$constraints.lastName}
-						class:input-error={$errors.lastName}
-						class:input-success={$form.lastName && 'lastName' in $errors && !$errors.lastName}
-						type="text"
-						aria-invalid={$errors.lastName ? 'true' : undefined}
-						bind:value={$form.lastName}
-						class="input w-full"
-						name="lastName"
-						placeholder="Rossi"
-					/>
-					{#if $errors.lastName}
-						<p class="fieldset-label text-error">{$errors.lastName}</p>
-					{/if}
-				</fieldset>
-			</div>
-
-			<div class="flex flex-col space-y-2 md:flex-row">
-				<fieldset class="fieldset flex-1 text-base">
-					<legend class="fieldset-legend">Telefono</legend>
-					<div class="flex flex-1 flex-col gap-4 md:flex-row" id="phoneNumber">
-						<select
-							class="select w-full md:max-w-1/3"
-							name="prefix"
-							id="prefix"
-							autocomplete="tel-country-code"
-							bind:value={$form.prefix}
-						>
-							{#each prefixes as prefix}
-								<option selected={prefix.default} value={prefix.dial_code}>
-									{prefix.emoji}
-									{prefix.name} ({prefix.dial_code})
-								</option>
-							{/each}
-						</select>
-						<input
-							{...$constraints.phone}
-							class:input-error={$errors.phone}
-							class:input-success={$form.phone && 'phone' in $errors && !$errors.phone}
-							type="text"
-							alt="phone"
-							name="phone"
-							autocomplete="tel-national"
-							placeholder="Numero di telefono"
-							class="input w-full"
-							bind:value={$form.phone}
-							aria-invalid={$errors.phone ? 'true' : undefined}
-						/>
-					</div>
-					{#if $errors.phone}
-						<p class="fieldset-label text-error">{$errors.phone}</p>
-					{/if}
-				</fieldset>
-			</div>
-		</div>
-
-		<!-- Personal Information Section -->
-		<div class="border-base-content space-y-6 border-b pb-8">
-			<div class="mb-4">
-				<h2 class="text-primary text-lg font-semibold">Informazioni Personali</h2>
-				<p class="text-base-content text-sm">
-					Inserisci il codice fiscale o inserisci a mano il sesso e data di nascita
-				</p>
-			</div>
-
+			<!-- <div class="flex flex-col gap-4 md:flex-row"> -->
 			<fieldset class="fieldset flex-1 text-base">
-				<legend class="fieldset-legend">Codice Fiscale</legend>
+				<legend class="fieldset-legend">Nome completo del team</legend>
 				<input
-					{...$constraints.fiscalCode}
-					class:input-error={$errors.fiscalCode}
-					class:input-success={$form.fiscalCode && 'fiscalCode' in $errors && !$errors.fiscalCode}
+					{...$constraints.name}
+					class:input-error={$errors.name}
+					class:input-success={$form.name && 'name' in $errors && !$errors.name}
 					type="text"
-					id="fiscalCode"
-					alt="fiscalCode"
-					name="fiscalCode"
-					placeholder="Codice Fiscale"
+					aria-invalid={$errors.name ? 'true' : undefined}
+					bind:value={$form.name}
 					class="input w-full"
-					bind:value={fiscalCode}
-					aria-invalid={$errors.fiscalCode ? 'true' : undefined}
+					name="name"
+					placeholder="Mario"
 				/>
-				{#if $errors.fiscalCode}
-					<p class="fieldset-label text-error">{$errors.fiscalCode}</p>
+				{#if $errors.name}
+					<p class="fieldset-label text-error">{$errors.name}</p>
 				{/if}
 			</fieldset>
-
-			<fieldset class="fieldset flex-1 flex-col text-base md:flex-row">
-				<legend class="fieldset-legend">Genere</legend>
-
-				<div class="flex items-center gap-2">
-					<input
-						type="radio"
-						class="radio"
-						alt="maschio"
-						bind:group={$form.gender}
-						name="gender"
-						id="gender-maschio"
-						value="male"
-					/>
-					<label for="gender-maschio">Maschio</label>
-				</div>
-				<div class="flex items-center gap-2">
-					<input
-						type="radio"
-						class="radio"
-						alt="femmina"
-						bind:group={$form.gender}
-						name="gender"
-						id="gender-femmina"
-						value="female"
-					/>
-					<label for="gender-femmina">Femmina</label>
-				</div>
-
-				<div class="flex items-center gap-2">
-					<input
-						type="radio"
-						class="radio"
-						alt="altro"
-						bind:group={$form.gender}
-						name="gender"
-						id="gender-altro"
-						value="other"
-					/>
-					<label for="gender-altro">Altro</label>
-				</div>
-
-				<div class="flex items-center gap-2">
-					<input
-						type="radio"
-						alt="preferisco non dichiarare"
-						class="radio"
-						bind:group={$form.gender}
-						name="gender"
-						id="gender-not-disclosed"
-						value="not-disclosed"
-					/>
-					<label for="gender-not-disclosed">Preferisco non Dichiarare</label>
-				</div>
-
-				{#if $errors.gender}
-					<p class="fieldset-label text-error">{$errors.gender}</p>
-				{/if}
-			</fieldset>
+			<!-- </div> -->
 
 			<fieldset class="fieldset flex-1 text-base">
-				<legend class="fieldset-legend">Data di Nascita</legend>
-				<input
-					{...$constraints.birthDate}
-					class:input-error={$errors.birthDate}
-					class:input-success={$form.birthDate && 'birthDate' in $errors && !$errors.birthDate}
-					readonly={!!$form.fiscalCode}
-					min={$constraints.birthDate?.min?.toString().slice(0, 10)}
-					id="birthDate"
-					name="birthDate"
-					type="date"
-					autocomplete="bday"
-					class="input w-full"
-					class:disabled-input={$form.fiscalCode}
-					bind:value={$proxyDate}
-					aria-invalid={$errors.birthDate ? 'true' : undefined}
-				/>
-				{#if $errors.birthDate}
-					<p class="fieldset-label text-error">{$errors.birthDate}</p>
-				{/if}
-			</fieldset>
-		</div>
-
-		<!-- Social Information Section -->
-		<div class="space-y-6">
-			<h2 class="text-primary text-lg font-semibold">Informazioni Sociali</h2>
-
-			<fieldset class="fieldset flex-1 text-base">
-				<legend class="fieldset-legend">Username</legend>
+				<legend class="fieldset-legend">Username per il team</legend>
 
 				<label
 					class="input w-full"
-					class:input-error={$errors.nick}
-					class:input-success={$form.nick && 'nick' in $errors && !$errors.nick && !$delayed}
+					class:input-error={$errors.slug}
+					class:input-success={$form.slug && 'slug' in $errors && !$errors.slug && !$delayed}
 				>
-					<!-- class:input-success={$form.nick && 'nick' in $errors} -->
-					<span class="label">{userDomain}</span>
+					<!-- class:input-success={$form.slug && 'slug' in $errors} -->
+					<span class="label">{teamDomain}</span>
 					<input
-						{...$constraints.nick}
+						{...$constraints.slug}
 						autocomplete="username"
 						type="text"
 						form="check"
-						name="nick"
-						id="nick"
+						name="slug"
+						id="slug"
 						bind:value={
-							() => $form.nick,
-							(n) => ($form.nick = n.trimStart().replaceAll(' ', '-').toLowerCase())
+							() => $username,
+							(n) => {
+								$username = n.trimStart().replaceAll(' ', '-').toLowerCase();
+							}
 						}
-						aria-invalid={$errors.nick ? 'true' : undefined}
+						aria-invalid={$errors.slug ? 'true' : undefined}
 						placeholder="mario-rossi"
 						oninput={checkUsername}
 					/>
-					<!-- class:input-error={$errors.nick}
-						class:input-success={$form.nick && 'nick' in $errors} -->
 				</label>
 
-				<input type="hidden" name="nick" value={$form.nick} />
+				<input type="hidden" name="slug" value={$form.slug} />
 				<p class="text-base-content mb-2 text-xs/5">
-					Il nickname sará usato per creare il tuo URL personalizzato con la quale potrai
-					condividere il profilo.
+					L'username sará usato per creare una pagina pubblica per il tuo team.
+					<br />
+					Non usare spazi o caratteri speciali, solo lettere, numeri e trattini.
+					<br />
+					Ad esempio il team con username <strong>asd-team</strong> avrà come pagina
+					<span class="font-bold italic">{`https://${teamDomain}asd-team`}</span>
 				</p>
 
 				{#if $delayed}
-					<span class="loading loading-spinner loading-sm"></span>
-				{:else if $errors.nick}
-					<!-- ❌ -->
-					<!-- <p class="fieldset-label text-error">Nick errors:</p> -->
+					<div>
+						<span>verifica disponibilità</span>
+						<span class="loading loading-spinner loading-sm"></span>
+					</div>
+				{:else if $errors.slug}
 					<ul class="fieldset-label text-error flex-col items-start">
-						{#each $errors.nick as error}
+						{#each $errors.slug as error}
 							<li>
 								{error}
 							</li>
 						{/each}
 					</ul>
-					<!-- {:else if $form.nick && 'nick' in $errors}
-					✅ -->
-				{/if}
-
-				<!-- rounded-lg border border-gray-300 px-4 py-2 focus:border-red-600 focus:ring-2 focus:ring-red-600" -->
-				<!-- {#if $errors.nick}
-				{/if} -->
-			</fieldset>
-
-			<fieldset class="fieldset flex-1 flex-col text-base md:flex-row">
-				<legend class="fieldset-legend">Visibilità dell'account</legend>
-				<p class="text-base-content mb-2 text-xs/5">
-					Se il tuo account è pubblico chiunque potrà vedere le informazioni del tuo profilo e le
-					tue statistiche da pilota. <br />
-					Se selezioni privato invece il tuo profilo sarà visibile solo a te e ad eventuali membri del
-					tuo team.
-				</p>
-
-				<div class="flex items-center gap-2">
-					<input
-						type="radio"
-						class="radio"
-						alt="pubblico"
-						bind:group={$form.visibility}
-						name="visibility"
-						id="visibility-public"
-						value="public"
-					/>
-					<label for="visibility-public">Pubblico</label>
-				</div>
-				<div class="flex items-center gap-2">
-					<input
-						type="radio"
-						class="radio"
-						alt="privato"
-						bind:group={$form.visibility}
-						name="visibility"
-						id="visibility-private"
-						value="private"
-					/>
-					<label for="visibility-private">Privato</label>
-				</div>
-
-				{#if $errors.visibility}
-					<p class="fieldset-label text-error">{$errors.visibility}</p>
 				{/if}
 			</fieldset>
 
 			<ImageCropper
-				name="avatarOriginal"
-				bind:value={$avatar}
-				confirmed={!!$avatarCropped}
-				label="Carica una foto profilo"
+				name="logoOriginal"
+				bind:value={$logo}
+				label="Carica un logo per il tuo team"
 				constraints={{ required: false }}
-				errors={$errors.avatarOriginal}
-				bind:cropped={$avatarCropped}
-				bind:pixels={$form.avatarCroppedInfo}
+				errors={$errors.logoOriginal}
+				bind:cropped={$logoCropped}
+				bind:pixels={$form.logoCroppedInfo}
 				{crop}
 				{zoom}
 				shape="round"
@@ -477,8 +206,7 @@
 			<ImageCropper
 				name="banner"
 				bind:value={$banner}
-				confirmed={!!$bannerCropped}
-				label="Carica un immagine di sfondo (banner) per la tua pagina"
+				label="Carica un immagine di sfondo (banner) per la pagina del tuo team"
 				constraints={{ required: false }}
 				errors={$errors.bannerOriginal}
 				bind:cropped={$bannerCropped}
@@ -487,39 +215,43 @@
 				{zoom}
 				shape="rect"
 			/>
-
-			<fieldset class="fieldset flex-1 text-base">
-				<legend class="fieldset-legend">Bio</legend>
-				<textarea
-					class:input-error={$errors.bio}
-					class:input-success={$form.bio && 'bio' in $errors && !$errors.bio}
-					name="bio"
-					id="bio"
-					rows="3"
-					bind:value={$form.bio}
-					placeholder="Scrivi qualcosa su di te..."
-					class="textarea w-full"
-				></textarea>
-				{#if $errors.bio}
-					<p class="fieldset-label text-error">{$errors.bio}</p>
-				{/if}
-			</fieldset>
-
-			<!-- Submit Button -->
-			<button disabled={$delayed} type="submit" class="btn btn-primary w-full">
-				<!-- class="mt-8 w-full rounded-lg bg-red-600 py-3 font-medium text-white transition-colors hover:bg-red-700 focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:outline-none" -->
-				Aggiorna il tuo account
-			</button>
-			{#if $message}
-				<div
-					class="alert"
-					class:alert-success={$message.type === 'success'}
-					class:alert-error={$message.type === 'error'}
-				>
-					{@html $message.text}
-				</div>
-			{/if}
 		</div>
+
+		<!-- Personal Information Section -->
+		<fieldset class="fieldset flex-1 text-base">
+			<legend class="fieldset-legend">Descrizione del team</legend>
+			<textarea
+				{...$constraints.bio}
+				class:textarea-error={$errors.bio}
+				class:textarea-success={$form.bio && 'bio' in $errors && !$errors.bio}
+				aria-invalid={$errors.bio ? 'true' : undefined}
+				bind:value={$bioProxy}
+				class="textarea h-24 w-full"
+				placeholder="Bio"
+				name="bio"
+				id="bio"
+			></textarea>
+
+			{#if $errors.bio}
+				<p class="fieldset-label text-error">{$errors.bio}</p>
+			{/if}
+		</fieldset>
+
+		<!-- Submit Button -->
+		<button disabled={$delayed} type="submit" class="btn btn-primary w-full">
+			<!-- class="mt-8 w-full rounded-lg bg-red-600 py-3 font-medium text-white transition-colors hover:bg-red-700 focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:outline-none" -->
+			Aggiorna il team
+		</button>
+
+		{#if $message}
+			<div
+				class="alert"
+				class:alert-success={$message.type === 'success'}
+				class:alert-error={$message.type === 'error'}
+			>
+				{@html $message.text}
+			</div>
+		{/if}
 	</form>
 
 	<form id="check" method="POST" action="?/checkUsername" use:submitEnhance></form>

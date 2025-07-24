@@ -3,6 +3,16 @@ x-public_pb_instance_env: &public_pb_instance_env PUBLIC_PB_INSTANCE=${PUBLIC_PB
 services:
   pb:
     build: './pocketbase'
+    container_name: 'bruum-pb-dev'
+    restart: 'unless-stopped'
+    volumes:
+      - './pocketdb:/app/pb_data'
+    ports:
+      - '8080:8080'
+
+  pb-prod:
+    image: 'ghcr.io/vano2903/soapbox-website-pb:latest'
+    # build: './pocketbase'
     container_name: 'bruum-pb-prod'
     restart: 'unless-stopped'
     labels:

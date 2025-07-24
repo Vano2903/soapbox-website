@@ -2,7 +2,7 @@
 	import SuperDebug, { fieldProxy, fileProxy, superForm } from 'sveltekit-superforms';
 	import { debounce } from 'throttle-debounce';
 	import { zod } from 'sveltekit-superforms/adapters';
-	import { teamSchema } from '../../../../../../lib/schemas/teamSchema';
+	import { teamSchema } from '$lib/schemas/teamSchema';
 	import ImageCropper from '$components/imageCropper/imageCropper.svelte';
 	const { data } = $props();
 

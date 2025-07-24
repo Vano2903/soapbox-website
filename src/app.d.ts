@@ -1,6 +1,7 @@
 import type { TypedPocketBase } from '$lib/types/pocketbase';
 import type { User } from '$lib/types/user';
-import type { ListResult } from 'pocketbase';
+import type { Team } from '$tsTypes/team';
+// import type { ListResult } from 'pocketbase';
 
 declare global {
 	async function goCatch<T, E extends new (message?: string) => Error>(

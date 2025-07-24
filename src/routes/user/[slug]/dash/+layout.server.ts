@@ -1,5 +1,5 @@
-import { error, fail, redirect, type Load, type ServerLoad } from '@sveltejs/kit';
-import type { LayoutServerLoad } from './$types';
+// import { error, fail, redirect, type Load, type ServerLoad } from '@sveltejs/kit';
+// import type { LayoutServerLoad } from './$types';
 
 // export const load: LayoutServerLoad = async ({ locals }) => {
 // 	const { user, pb } = locals;

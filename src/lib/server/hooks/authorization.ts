@@ -17,12 +17,23 @@ const authorization: Handle = async ({ event, resolve }) => {
 
 	// Redirect unauthenticated users to the login page
 	if (!user) {
-		redirect(302, '/login?redirect=' + encodeURIComponent(path));
+		let message = 'Devi essere autenticato per accedere a questa pagina';
+		if (event.url.searchParams.has('message')) {
+			message = event.url.searchParams.get('message') || message;
+		}
+		redirect(
+			302,
+			`/login?message=${message}&redirectTo=${encodeURIComponent(path + event.url.search)}`
+		);
 	}
 
 	if (!user.verified) {
 		if (!path.startsWith('/verify')) {
-			redirect(302, '/verify');
+			let message = 'Devi prima verificare il tuo account per poter accedere a questa pagina';
+			if (event.url.searchParams.has('message')) {
+				message = event.url.searchParams.get('message') || message;
+			}
+			redirect(302, `/verify?message=${encodeURIComponent(message)}`);
 		} else {
 			return await resolve(event);
 		}
@@ -30,7 +41,11 @@ const authorization: Handle = async ({ event, resolve }) => {
 
 	if (!user.completed) {
 		if (!path.startsWith('/onboarding')) {
-			redirect(302, '/onboarding');
+			let message = 'Devi prima completare la registrazione per poter accedere a questa pagina';
+			if (event.url.searchParams.has('message')) {
+				message = event.url.searchParams.get('message') || message;
+			}
+			redirect(302, `/onboarding?message=${encodeURIComponent(message)}`);
 		}
 		return await resolve(event);
 	}

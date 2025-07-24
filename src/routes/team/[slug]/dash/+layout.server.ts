@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from '../$types';
-import type { TeamInvitationExpand, TeamInvitationNonExpand } from '$tsTypes/team';
+import type { TeamInvitationNonExpand } from '$tsTypes/team';
 
 export const load: LayoutServerLoad = async ({ parent, locals }) => {
 	const { user, pb } = locals;
@@ -8,7 +8,8 @@ export const load: LayoutServerLoad = async ({ parent, locals }) => {
 	const { isCurrentOwner, team } = await parent();
 
 	if (!user) {
-		redirect(303, '/login');
+		const message = 'Devi essere autenticato prima di poter accedere al team';
+		redirect(303, `/login?message=${message}&redirectTo=/team/${team.slug}/dash`);
 	}
 
 	if (!isCurrentOwner) {
@@ -19,6 +20,8 @@ export const load: LayoutServerLoad = async ({ parent, locals }) => {
 		filter: `team="${team.id}"`,
 		sort: '-created'
 	})) as TeamInvitationNonExpand[];
+
+	console.log('Invites:', invites);
 
 	return {
 		invites

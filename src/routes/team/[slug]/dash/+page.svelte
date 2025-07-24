@@ -10,6 +10,8 @@
 
 	interface Props {
 		data: {
+			user: UserNonExpand;
+			pbUri: string;
 			team: Team;
 			members: UserNonExpand[];
 			error: {
@@ -20,11 +22,11 @@
 			isCurrentOwner: boolean;
 			isCurrentMember: boolean;
 			slug: string;
-			invites: TeamInvitationNonExpand[];
+			invites?: TeamInvitationNonExpand[];
 		};
 	}
 
-	const { data } = $props();
+	const { data }: Props = $props();
 	const pb = new PocketBase(data.pbUri) as TypedPocketBase;
 	// const teamsCount = data.teamsCount;
 	// onMount(async () => {
@@ -52,7 +54,7 @@
 		tabs.push({ anchor: 'invites', label: 'INVITI' });
 	}
 
-	let defaultTab = tabs[2].anchor;
+	let defaultTab = tabs[1].anchor;
 
 	let currentTab = $state(defaultTab); // Default to 'members'
 
@@ -182,28 +184,6 @@
 							<a class="btn" href="/team/dash/invite/new">Crea un nuovo invito</a>
 						</div>
 
-						<!-- {#each invites || [] as invite}
-							<div class="my-4 w-full rounded-lg bg-gray-200 p-4">
-								<div class="flex items-start space-x-3"> -->
-						<!-- if invite uses is -1 show just the count of people that joined the invite
-										(can be derived by team.joined.length), if it's anything different than -1 calculate the max number of
-										people that can join and show it as {team.joined.length}/{invite.maxUses} with a person logo from lucide
-									
-										invites can also have an expiration date, if its set show the expiration date and maybe if possible show the remining days
-										
-										if an invite is expired/reached its max uses or has the "disabled" field set to true show it in a muted/disabled style
-
-										there is a button to update the invite,
-										the invite can be updated to change the number of uses, expiration date or delete it (it gets marked as disabled)
-
-										if its clicked it shows an accordion with the names of people that joined, for now just show a text with the content of
-										"people that joined: {team.joined.length} people"
-										-->
-
-						<!-- </div>
-							</div>
-						{/each} -->
-
 						{#if invites && invites.length > 0}
 							<div class="mt-4 space-y-4">
 								{#each invites as invite}
@@ -212,8 +192,7 @@
 									{@const isDisabled =
 										invite.disabled ||
 										(invite.expiration && new Date(invite.expiration) < new Date()) ||
-										(maxUses !== -1 && invite.uses <= 0)}
-
+										(invite.uses !== -1 && invite.uses <= 0)}
 									{@const daysRemaining = invite.expiration
 										? datediff(new Date().valueOf(), invite.expiration.valueOf())
 										: null}

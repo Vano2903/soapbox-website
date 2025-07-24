@@ -41,6 +41,7 @@ export interface TeamExpand extends TeamBase {
 export type Team = TeamExpand | TeamNonexpand;
 
 interface TeamInvitationBase {
+	id: string; // unique identifier for the invitation
 	code: string; // unique code for the invitation
 
 	team: string | Team;

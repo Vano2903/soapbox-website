@@ -15,7 +15,7 @@ export const load: ServerLoad = async ({ locals, params, url }) => {
 
 	if (err || !foundUser) {
 		console.error('User not found:', err);
-		throw redirect(303, '/users?error=user-not-found&slug=' + params.slug);
+		throw redirect(303, '/users?error=not-found&slug=' + params.slug);
 	}
 
 	const startPathname = '/user/' + params.slug;

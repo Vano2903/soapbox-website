@@ -21,7 +21,7 @@
 		value: string;
 		current: boolean;
 		disabled: boolean;
-		icon?: typeof IconType;
+		icon?: typeof IconType | null;
 	};
 
 	interface Props {

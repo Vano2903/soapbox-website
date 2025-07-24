@@ -1,5 +1,5 @@
-import type { TeamNonexpand } from '$tsTypes/team';
-import type { UserPublicInfo } from '$tsTypes/user';
+import type { TeamNonexpand } from '$lib/types/team';
+import type { UserPublicInfo } from '$lib/types/user';
 import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import emblaCarouselSvelte from 'embla-carousel-svelte';
 	import Autoplay from 'embla-carousel-autoplay';
-	import { defaultCarouselPage, type CarouselPage } from '$tsTypes/carouselPage';
+	import { defaultCarouselPage, type CarouselPage } from '$lib/types/carouselPage';
 	import type { EmblaCarouselType } from 'embla-carousel';
 
 	let options = { loop: true };

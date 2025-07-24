@@ -3,7 +3,7 @@ import { error } from '@sveltejs/kit';
 
 import type { PageLoad } from './$types';
 import pocketbase from 'pocketbase';
-import type { TypedPocketBase } from '$tsTypes/pocketbase';
+import type { TypedPocketBase } from '$lib/types/pocketbase';
 
 export const load: PageLoad = async ({ data }) => {
 	const pb = new pocketbase(env.PUBLIC_PB_INSTANCE) as TypedPocketBase;

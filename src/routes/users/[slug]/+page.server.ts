@@ -1,4 +1,4 @@
-import type { UserPublicInfo } from '$tsTypes/user';
+import type { UserPublicInfo } from '$lib/types/user';
 import { redirect, type ServerLoad } from '@sveltejs/kit';
 
 export const load: ServerLoad = async ({ locals, params, url }) => {

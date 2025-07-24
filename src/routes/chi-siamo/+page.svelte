@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Carousel3 from '$components/carousel/carousel3.svelte';
-	import type { CarouselPage } from '$tsTypes/carouselPage.js';
+	import type { CarouselPage } from '$lib/types/carouselPage.js';
 
 	const sections = [
 		{

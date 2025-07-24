@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { EventKind, type EventInfoType } from '$tsTypes/event.js';
-	import type { OrganizationStatType } from '$tsTypes/organizationStat.js';
+	import { EventKind, type EventInfoType } from '$lib/types/event.js';
+	import type { OrganizationStatType } from '$lib/types/organizationStat.js';
 	import Carousel3 from '$components/carousel/carousel3.svelte';
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
 	import { fade } from 'svelte/transition';
 	import { Eye, Hammer, MapPinned, Trophy, Heart, VolumeX, Volume2 } from 'lucide-svelte';
 	import { onMount } from 'svelte';
-	import type { SponsorSlider } from '$tsTypes/SponsorSlider.js';
-	import type { CarouselPage } from '$tsTypes/carouselPage.js';
+	import type { SponsorSlider } from '$lib/types/SponsorSlider.js';
+	import type { CarouselPage } from '$lib/types/carouselPage.js';
 
 	const { data } = $props();
 	const {

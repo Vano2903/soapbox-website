@@ -1,6 +1,6 @@
 import type { TypedPocketBase } from '$lib/types/pocketbase';
 import type { User } from '$lib/types/user';
-import type { Team } from '$tsTypes/team';
+import type { Team } from '$lib/types/team';
 // import type { ListResult } from 'pocketbase';
 
 declare global {
@@ -31,4 +31,4 @@ declare global {
 	}
 }
 
-export {};
+export { };

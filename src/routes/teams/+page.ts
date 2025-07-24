@@ -1,7 +1,7 @@
 import { type Load } from '@sveltejs/kit';
 import { env } from '$env/dynamic/public';
 import { createPocketBaseInstance } from '$lib/utils/pocketbase';
-import type { Team } from '$tsTypes/team';
+import type { Team } from '$lib/types/team';
 
 export const load: Load = async ({ url }) => {
 	console.log('Loading team with slug:', url);

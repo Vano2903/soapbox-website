@@ -1,10 +1,10 @@
-import { GenderKind, UserVisiblityKind } from '$tsTypes/user';
+import { GenderKind, UserVisiblityKind } from '$lib/types/user';
 import CodiceFiscale from 'codice-fiscale-js';
 import { z } from 'zod';
 
-const MEGA5 = 5000000;
-const MEGA2 = 2000000;
-const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+// const MEGA5 = 5000000;
+// const MEGA2 = 2000000;
+// const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 
 export const onboardingSchema = z.object({
 	name: z.string({

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { User } from '$tsTypes/user';
+	import type { User } from '$lib/types/user';
 
 	let { user }: { user: User } = $props();
 	let isDropdownOpen = $state(false);

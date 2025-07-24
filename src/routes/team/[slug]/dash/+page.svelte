@@ -139,12 +139,12 @@
 			<div>
 				<div class="mt-4 flex w-full flex-col items-start justify-between">
 					{#if currentTab === 'news'}
-						<div class="space-y-4">
+						<div class="w-full space-y-4">
 							<p class="text-3xl font-bold">NOTIZIE:</p>
 							<p class="text-lg">Non ci sono notizie al momento. francone</p>
 						</div>
 					{:else if currentTab === 'members'}
-						<div class="space-y-4">
+						<div class="w-full space-y-4">
 							<p class=" text-3xl font-bold">MEMBRI:</p>
 							{#if members.length == 0}
 								<p class="mt-4 text-lg font-semibold">Non ci sono persone in questo team</p>
@@ -179,7 +179,7 @@
 							</div>
 						</div>
 					{:else if currentTab === 'invites'}
-						<p class="mt-4 text-3xl font-bold">INVITI:</p>
+						<p class="mt-4 w-full text-3xl font-bold">INVITI:</p>
 						<div class="flex w-full justify-end">
 							<a class="btn" href="/team/dash/invite/new">Crea un nuovo invito</a>
 						</div>

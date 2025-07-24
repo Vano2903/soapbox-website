@@ -63,7 +63,7 @@ async function isTeamNickValid(
 }
 
 export const actions = {
-	updateAccount: async ({ request, locals, parent }) => {
+	updateTeam: async ({ request, locals }) => {
 		const form = await superValidate(request, zod(teamSchema));
 		console.log('form', form);
 		if (!form.valid) {
@@ -72,14 +72,15 @@ export const actions = {
 		console.log(form.data);
 
 		const { pb, user } = locals;
-		let foundTeam = locals.team;
+		const team = locals.team;
+		if (!team) {
+			return message(form, {
+				type: 'error',
+				text: 'Team non trovato'
+			});
+		}
 		if (!user) {
 			redirect(303, '/login');
-		}
-		if (!foundTeam) {
-			const { team } = await parent();
-			locals.team = team;
-			foundTeam = team;
 		}
 
 		const isTeamNickAvailable = await isTeamNickValid(form, pb);

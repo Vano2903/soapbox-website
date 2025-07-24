@@ -2,9 +2,10 @@
 	import SuperDebug, { fieldProxy, fileProxy, superForm } from 'sveltekit-superforms';
 	import { debounce } from 'throttle-debounce';
 	import { zod } from 'sveltekit-superforms/adapters';
-	import {teamSchema} from '$lib/schemas/teamSchema';
+	import { teamSchema } from '$lib/schemas/teamSchema';
 	import ImageCropper from '$components/imageCropper/imageCropper.svelte';
 	const { data } = $props();
+	const { fileUrls } = data;
 
 	const { form, errors, message, constraints, enhance } = superForm(data.form, {
 		dataType: 'json',
@@ -33,6 +34,61 @@
 		}
 	);
 
+	async function createFile(
+		url: string,
+		format: string,
+		name: string
+	): Promise<FileList | undefined> {
+		try {
+			const files = new DataTransfer();
+
+			let response = await fetch(url);
+			let data = await response.blob();
+			let metadata = {
+				type: format
+			};
+			files.items.add(new File([data], name, metadata));
+			return files.files;
+		} catch (e) {
+			console.error('Error creating file from URL:', e);
+			return undefined;
+		}
+		// ... do something with the file or return it
+	}
+
+	$effect(() => {
+		if (fileUrls) {
+			if (fileUrls.logoOriginal) {
+				createFile(fileUrls.logoOriginal, 'image/png', 'avatar.png').then((file) => {
+					if (file) {
+						$logo = file;
+					}
+				});
+			}
+			if (fileUrls.bannerOriginal) {
+				createFile(fileUrls.bannerOriginal, 'image/png', 'banner.png').then((file) => {
+					if (file) {
+						$banner = file;
+					}
+				});
+			}
+			if (fileUrls.logoCropped) {
+				createFile(fileUrls.logoCropped, 'image/png', 'avatar-cropped.png').then((file) => {
+					if (file) {
+						$logoCropped = file;
+					}
+				});
+			}
+			if (fileUrls.bannerCropped) {
+				createFile(fileUrls.bannerCropped, 'image/png', 'banner-cropped.png').then((file) => {
+					if (file) {
+						$bannerCropped = file;
+					}
+				});
+			}
+		}
+	});
+
 	const checkUsername = debounce(200, submitCheckUsername);
 
 	// --- images
@@ -55,7 +111,7 @@
 		class="flex flex-col space-y-8"
 		enctype="multipart/form-data"
 		use:enhance
-		action="?/createTeam"
+		action="?/updateTeam"
 	>
 		<!-- Contact Information Section -->
 		<div class="border-base-content space-y-6 border-b pb-8">
@@ -184,7 +240,7 @@
 		<!-- Submit Button -->
 		<button disabled={$delayed} type="submit" class="btn btn-primary w-full">
 			<!-- class="mt-8 w-full rounded-lg bg-red-600 py-3 font-medium text-white transition-colors hover:bg-red-700 focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:outline-none" -->
-			Crea il tuo team
+			Aggiorna il team
 		</button>
 
 		{#if $message}

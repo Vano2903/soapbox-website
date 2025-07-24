@@ -5,6 +5,8 @@
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { superForm } from 'sveltekit-superforms';
 	import { onMount } from 'svelte';
+	import { redirect } from '@sveltejs/kit';
+	import { goto } from '$app/navigation';
 
 	const { data } = $props();
 
@@ -61,24 +63,31 @@
 		console.log('message', $message);
 	});
 
-	// let redirectLocation = $derived(() => {
-	// 	const urlParams = new URLSearchParams(window.location.search);
-	// 	return urlParams.get('redirect') || '/dash';
-	// });
-
 	let redirectLocation = $state('/me');
+	let redirectMessage = $state('');
 
 	onMount(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		const redirect = urlParams.get('redirect');
+		const redirect = urlParams.get('redirectTo');
 		if (redirect) {
-			redirectLocation = redirect;
+			if (redirect.startsWith('/')) {
+				redirectLocation = redirect;
+			} else {
+				redirectLocation = `/${redirect}`;
+			}
 		} else {
 			redirectLocation = '/me';
 		}
+
+		const messageParam = urlParams.get('message');
+		if (messageParam) {
+			redirectMessage = decodeURIComponent(messageParam);
+		} else {
+			redirectMessage = '';
+		}
 	});
 
-	async function singInWithGoogle() {
+	async function signInWithGoogle() {
 		console.log('Sign in with Google');
 		try {
 			const user = await pb.collection('users').authWithOAuth2({
@@ -87,7 +96,7 @@
 					visibility: 'public',
 					roles: ['user'],
 					settings: {
-						theme: 'system',
+						theme: 'light',
 						units: 'metric'
 					}
 				}
@@ -99,17 +108,29 @@
 					secure: true
 					// sameSite: 'strict'
 				});
-
-				document.location.href = redirectLocation;
+				console.log('going to', redirectLocation);
+				// document.location.href = redirectLocation;
+				// redirect(302, redirectLocation);
+				redirectToLocation();
 			}
 		} catch (err) {
 			console.error(err);
 			return;
 		}
 	}
+
+	function redirectToLocation() {
+		console.log('Redirecting to', redirectLocation);
+		goto(redirectLocation);
+	}
 </script>
 
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+	{#if redirectMessage}
+		<div class="alert alert-error alert-soft sm:mx-auto sm:w-full sm:max-w-sm">
+			<p class="text-content">{redirectMessage}</p>
+		</div>
+	{/if}
 	<div class="sm:mx-auto sm:w-full sm:max-w-sm">
 		<h2 class="text-content text-center text-2xl/9 font-bold tracking-tight lg:mt-6">
 			Accedi al tuo account
@@ -183,8 +204,6 @@
 					<div class="alert alert-error alert-soft mt-4">
 						{@html $message.text}
 					</div>
-				{:else}
-					{(window.location.href = '/dash')}
 				{/if}
 			{/if}
 		{/if}
@@ -196,7 +215,7 @@
 		{#if data.authMethods?.oauth2.enabled && data.authMethods?.oauth2.providers.length > 0}
 			<div class="mt-6 flex w-full justify-center">
 				<button
-					onclick={singInWithGoogle}
+					onclick={signInWithGoogle}
 					aria-label="Login with Google"
 					type="button"
 					class="btn focus-visible:outline-primary bg-white text-black transition hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2"

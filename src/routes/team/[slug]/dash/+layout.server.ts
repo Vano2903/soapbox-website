@@ -8,7 +8,8 @@ export const load: LayoutServerLoad = async ({ parent, locals }) => {
 	const { isCurrentOwner, team } = await parent();
 
 	if (!user) {
-		redirect(303, '/login');
+		const message = 'Devi essere autenticato prima di poter accedere al team';
+		redirect(303, `/login?message=${message}&redirectTo=/team/${team.slug}/dash`);
 	}
 
 	if (!isCurrentOwner) {

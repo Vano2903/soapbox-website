@@ -60,7 +60,7 @@
 </script>
 
 <div class="mx-4 space-y-2">
-	<label class="input">
+	<!-- <label class="input">
 		<svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 			<g
 				stroke-linejoin="round"
@@ -76,7 +76,7 @@
 		<input type="search" class="grow" placeholder="Search" />
 		<kbd class="kbd kbd-sm">⌘</kbd>
 		<kbd class="kbd kbd-sm">K</kbd>
-	</label>
+	</label> -->
 
 	{#if error}
 		<div class="alert alert-error alert-soft m-auto my-2 w-full md:max-w-1/2">

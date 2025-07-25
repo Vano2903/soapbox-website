@@ -54,7 +54,7 @@
 		tabs.push({ anchor: 'invites', label: 'INVITI' });
 	}
 
-	let defaultTab = tabs[2].anchor;
+	let defaultTab = tabs[1].anchor;
 
 	let currentTab = $state(defaultTab); // Default to 'members'
 

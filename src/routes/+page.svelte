@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { EventKind, type EventInfoType } from '$lib/types/event.js';
+	import { OldEventKind, type EventInfoType } from '$lib/types/event.js';
 	import type { OrganizationStatType } from '$lib/types/organizationStat.js';
 	import Carousel3 from '$components/carousel/carousel3.svelte';
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
@@ -284,7 +284,7 @@
 			</p>
 			<div class="flex flex-row justify-center sm:justify-evenly">
 				<div class="mr-5 flex max-w-1/3 flex-col justify-center sm:mr-0">
-					{#if eventInfo.kind === EventKind.NextEventKind}
+					{#if eventInfo.kind === OldEventKind.NextEventKind}
 						<p class="pb-4 text-right text-base/5">
 							<span class="xs:hidden">Le iscrizioni all'evento sono aperte!</span>
 							<span class="xs:block hidden">Sono aperte le iscrizioni per il prossimo evento!</span>
@@ -295,7 +295,7 @@
 								Compila la tua partecipazione prima che esauriscano i posti disponibili.
 							</span>
 						</p>
-					{:else if eventInfo.kind === EventKind.HighlightKind}
+					{:else if eventInfo.kind === OldEventKind.HighlightKind}
 						<p class="pb-4 text-right text-base/5">
 							<span class="xs:hidden">Le iscrizioni sono ancora chiuse</span>
 							<span class="xs:block hidden"
@@ -312,7 +312,7 @@
 					{/if}
 					<div class="flex flex-row justify-end">
 						<button class="btn btn-error text-foreground max-w-70">
-							{#if eventInfo.kind === EventKind.NextEventKind}Iscriviti{:else if eventInfo.kind === EventKind.HighlightKind}Guarda{/if}
+							{#if eventInfo.kind === OldEventKind.NextEventKind}Iscriviti{:else if eventInfo.kind === OldEventKind.HighlightKind}Guarda{/if}
 						</button>
 					</div>
 				</div>

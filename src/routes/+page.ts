@@ -1,11 +1,11 @@
 import type { PageLoad } from './$types';
-import { EventKind, type EventInfoType } from '$lib/types/event';
+import { OldEventKind, type EventInfoType } from '$lib/types/event';
 import type { OrganizationStatType } from '$lib/types/organizationStat';
 
 export const load: PageLoad = async (): Promise<{ eventInfo: EventInfoType; organizationStats: OrganizationStatType[]; }> => {
 	const eventInfo = {
 		id: '2025-7',
-		kind: EventKind.NextEventKind,
+		kind: OldEventKind.NextEventKind,
 		date: new Date(2025, 7, 27, 14, 30),
 		header: 'Campionato 2025',
 		title: '3° Soap BoXXico Rally',

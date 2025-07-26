@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { EventKind, type EventInfoType } from '$lib/types/event';
+	import { OldEventKind, type EventInfoType } from '$lib/types/event';
 
 	let {
 		eventInfo,
@@ -14,10 +14,10 @@
 	<div class="rect">
 		<div>
 			<span class=" h-12 flex-wrap items-end pb-1 text-base/6 text-red-600 xl:pb-2">
-				{#if eventInfo.kind === EventKind.NextEventKind}
+				{#if eventInfo.kind === OldEventKind.NextEventKind}
 					<span class="text-4xl font-bold lg:text-5xl xl:text-6xl">Prossimo</span>
 					<span class="text-4xl font-bold lg:text-5xl xl:text-6xl">Evento</span>
-				{:else if eventInfo.kind === EventKind.HighlightKind}
+				{:else if eventInfo.kind === OldEventKind.HighlightKind}
 					<span class="text-4xl font-bold lg:text-5xl xl:text-6xl">Momenti</span>
 					<span class="text-4xl font-bold lg:text-5xl xl:text-6xl">Speciali</span>
 				{/if}
@@ -47,7 +47,7 @@
 		</div>
 
 		<button class="btn btn-error text-foreground max-w-70 xl:text-lg"
-			>{#if eventInfo.kind === EventKind.NextEventKind}Iscriviti{:else if eventInfo.kind === EventKind.HighlightKind}Guarda{/if}</button
+			>{#if eventInfo.kind === OldEventKind.NextEventKind}Iscriviti{:else if eventInfo.kind === OldEventKind.HighlightKind}Guarda{/if}</button
 		>
 
 		<!-- class="w-32 cursor-pointer rounded bg-red-600 px-4 py-2 font-bold text-white hover:bg-red-800" -->

@@ -1,4 +1,4 @@
-import type { EventId, EventNonExpand } from './event'
+import type { EventId, Event } from './event'
 
 export type ChampionshipId = string;
 
@@ -16,7 +16,7 @@ export interface ChampionshipBase {
 
 export interface ChampionshipExpand extends ChampionshipBase {
 	isExpand: true;
-	expand: { events: EventNonExpand[] };
+	expand: { events: Event[] };
 }
 
 export interface ChampionshipNonExpand extends ChampionshipBase {

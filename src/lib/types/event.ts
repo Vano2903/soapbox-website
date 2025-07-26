@@ -2,18 +2,17 @@ import type { StageId, Stage } from './stage'
 import type { LocationId, Location } from './location'
 
 export enum EventKind {
-	NextEventKind = 'NextEventKind',
-	HighlightKind = 'HighlightKind'
+	Rally = 'rally'
 }
 
 export type EventId = string;
-
 export interface EventBase {
 	id: EventId;
 	name: string;
 	shortName: string;
 	kind: EventKind;
-	date: Date;
+	startDate: Date;
+	endDate: Date;
 	stages: StageId[];
 	location: LocationId;
 	numSubscriptions: number;
@@ -42,9 +41,14 @@ export type Event = EventNonExpand | EventExpand;
 // Below are the data structures used "statically" on other pages, retained to prevent errors from occurring throughout the site.
 // With the database integration on those pages, these data structures must be removed.
 
+export enum OldEventKind {
+	NextEventKind = 'NextEventKind',
+	HighlightKind = 'HighlightKind'
+}
+
 export type EventInfoType = {
 	id: string;
-	kind: EventKind;
+	kind: OldEventKind;
 	date: Date;
 	header: string;
 	title: string;

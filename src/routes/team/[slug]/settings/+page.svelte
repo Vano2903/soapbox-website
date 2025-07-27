@@ -6,6 +6,7 @@
 	import ImageCropper from '$components/imageCropper/imageCropper.svelte';
 	const { data } = $props();
 	const { fileUrls } = data;
+	import { env } from '$env/dynamic/public';
 
 	const { form, errors, message, constraints, enhance } = superForm(data.form, {
 		dataType: 'json',
@@ -13,7 +14,7 @@
 	});
 
 	// --- username
-	const teamDomain = 'boxrally.eu/t/';
+	const teamDomain = env.PUBLIC_BASE_URL + '/team/';
 
 	const {
 		delayed,
@@ -59,7 +60,7 @@
 	$effect(() => {
 		if (fileUrls) {
 			if (fileUrls.logoOriginal) {
-				createFile(fileUrls.logoOriginal, 'image/png', 'avatar.png').then((file) => {
+				createFile(fileUrls.logoOriginal, 'image/png', 'logo.png').then((file) => {
 					if (file) {
 						$logo = file;
 					}
@@ -73,7 +74,7 @@
 				});
 			}
 			if (fileUrls.logoCropped) {
-				createFile(fileUrls.logoCropped, 'image/png', 'avatar-cropped.png').then((file) => {
+				createFile(fileUrls.logoCropped, 'image/png', 'logo-cropped.png').then((file) => {
 					if (file) {
 						$logoCropped = file;
 					}
@@ -97,14 +98,16 @@
 	const logoCropped = $state(fileProxy(form, 'logoCropped'));
 	const banner = fileProxy(form, 'bannerOriginal');
 	const bannerCropped = $state(fileProxy(form, 'bannerCropped'));
-	const bioProxy = fieldProxy(form, 'bio');
+
 	let crop = $state({ x: 0, y: 0 });
 	let zoom = $state(1);
+
 	let username = fieldProxy(form, 'slug');
+	const bioProxy = fieldProxy(form, 'bio');
 </script>
 
 <main class="mx-auto max-w-2xl px-4 py-8">
-	<h1 class="text-primary mb-8 text-3xl font-bold">Crea il tuo team</h1>
+	<h1 class="text-primary mb-8 text-3xl font-bold">Informazioni del team</h1>
 	<SuperDebug data={$form} />
 	<form
 		method="POST"
@@ -171,7 +174,7 @@
 					Non usare spazi o caratteri speciali, solo lettere, numeri e trattini.
 					<br />
 					Ad esempio il team con username <strong>asd-team</strong> avrà come pagina
-					<span class="font-bold italic">{`https://${teamDomain}asd-team`}</span>
+					<span class="font-bold italic">{`${teamDomain}asd-team`}</span>
 				</p>
 
 				{#if $delayed}
@@ -193,6 +196,7 @@
 			<ImageCropper
 				name="logoOriginal"
 				bind:value={$logo}
+				confirmed={!!$logoCropped}
 				label="Carica un logo per il tuo team"
 				constraints={{ required: false }}
 				errors={$errors.logoOriginal}
@@ -206,6 +210,7 @@
 			<ImageCropper
 				name="banner"
 				bind:value={$banner}
+				confirmed={!!$bannerCropped}
 				label="Carica un immagine di sfondo (banner) per la pagina del tuo team"
 				constraints={{ required: false }}
 				errors={$errors.bannerOriginal}

@@ -58,10 +58,10 @@
 		</div>
 
 		<!-- bio section -->
-		{#if team.description && team.description.length > 0}
+		{#if team.bio && team.bio.length > 0}
 			<div class="w-full px-4">
 				<p class="">Bio:</p>
-				<p class="ml-2 text-lg text-gray-600">{team.description}</p>
+				<p class="ml-2 text-lg text-gray-600">{team.bio}</p>
 			</div>
 		{:else if isCurrentOwner}
 			<div class="w-full px-4">

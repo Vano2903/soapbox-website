@@ -118,7 +118,7 @@
 												>@{team.slug}</span
 											>
 										</div>
-										<p class="mt-1 line-clamp-1 text-gray-700">{team.description}</p>
+										<p class="mt-1 line-clamp-1 text-gray-700">{team.bio}</p>
 									</div>
 								</div>
 							</div>

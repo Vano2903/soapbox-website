@@ -9,6 +9,7 @@
 	import { userSettingsSchema } from '$lib/schemas/userSettingsSchema';
 	import { goto, invalidateAll } from '$app/navigation';
 	import ImageCropper from '$components/imageCropper/imageCropper.svelte';
+	import { env } from '$env/dynamic/public';
 
 	const { data } = $props();
 	const { countryPhoneCodes, fileUrls } = data;
@@ -158,7 +159,8 @@
 		} catch (error) {}
 	});
 
-	const userDomain = 'boxrally.eu/u/';
+	// const userDomain = 'boxrally.eu/u/';
+	const userDomain = env.PUBLIC_BASE_URL + '/user/';
 </script>
 
 <main class="mx-auto max-w-2xl px-4 py-8">

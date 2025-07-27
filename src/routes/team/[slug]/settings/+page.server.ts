@@ -11,13 +11,14 @@ import {
 import { zod } from 'sveltekit-superforms/adapters';
 import type { TypedPocketBase } from '$lib/types/pocketbase';
 import { teamSchema } from '$lib/schemas/teamSchema';
+import type { TeamNonexpand } from '$types/team';
 
 const slugSchema = teamSchema.pick({ slug: true });
 
 export const load: PageServerLoad = async ({ locals, parent }) => {
 	console.log('locals value', locals);
 
-	const { user } = locals;
+	const { user, pb } = locals;
 	if (!user) {
 		redirect(303, '/login');
 	}
@@ -26,6 +27,10 @@ export const load: PageServerLoad = async ({ locals, parent }) => {
 
 	locals.team = team;
 
+	team.logo = pb.files.getURL(team, team.logo || '') || '';
+	team.logoCropped = team.logoCropped || '';
+	team.banner = pb.files.getURL(team, team.banner || '') || '';
+	team.bannerCropped = pb.files.getURL(team, team.bannerCropped || '') || '';
 	const fileUrls = {
 		logoOriginal: team.logo,
 		logoCropped: team.logoCropped,
@@ -47,10 +52,11 @@ export const load: PageServerLoad = async ({ locals, parent }) => {
 
 async function isTeamNickValid(
 	form: SuperValidated<Infer<typeof slugSchema>>,
-	pb: TypedPocketBase
+	pb: TypedPocketBase,
+	teamId: string
 ): Promise<boolean> {
 	try {
-		const query = `slug="${form.data.slug}"`;
+		const query = `id!="${teamId}" &&slug="${form.data.slug}"`;
 		console.log('searching team username:', query);
 		await pb.collection('teams').getFirstListItem(query);
 		setError(form, 'slug', 'Esiste già un team con questo username', {
@@ -63,7 +69,7 @@ async function isTeamNickValid(
 }
 
 export const actions = {
-	updateTeam: async ({ request, locals }) => {
+	updateTeam: async ({ request, locals, params }) => {
 		const form = await superValidate(request, zod(teamSchema));
 		console.log('form', form);
 		if (!form.valid) {
@@ -71,27 +77,40 @@ export const actions = {
 		}
 		console.log(form.data);
 
-		const { pb, user } = locals;
-		const team = locals.team;
-		if (!team) {
+		const teamCode = params.slug;
+		if (!teamCode) {
 			return message(form, {
 				type: 'error',
 				text: 'Team non trovato'
 			});
 		}
+
+		const { pb, user } = locals;
 		if (!user) {
 			redirect(303, '/login');
 		}
 
-		const isTeamNickAvailable = await isTeamNickValid(form, pb);
+		const [team, err] = (await goCatch(
+			pb.collection('teams').getFirstListItem(`slug="${teamCode}"`)
+		)) as [TeamNonexpand, undefined] | [undefined, Error];
+		if (err || !team) {
+			console.error('Error seraching team:', err);
+			return message(form, {
+				type: 'error',
+				text: 'Team non trovato'
+			});
+		}
+		locals.team = team;
+
+		const isTeamNickAvailable = await isTeamNickValid(form, pb, team.id);
 		console.log('isTeamNickAvailable', isTeamNickAvailable);
 		if (!form.valid || !isTeamNickAvailable) return fail(400, withFiles({ form }));
 
 		try {
-			locals.team = await pb.collection('teams').update(team.id, {
+			const updatedTeam = await pb.collection('teams').update(team.id, {
 				name: form.data.name,
 				slug: form.data.slug,
-				description: form.data.bio || '',
+				bio: form.data.bio || '',
 
 				banner: form.data.bannerOriginal,
 				bannerCropped: form.data.bannerCropped,
@@ -101,9 +120,10 @@ export const actions = {
 				logoCropped: form.data.logoCropped,
 				logoCrop: form.data.logoCroppedInfo
 			});
+			locals.team = updatedTeam;
 			return message(form, {
 				type: 'success',
-				text: `Team aggiornato con successo torna alla<a href="/team/dash" class="link">dashboard</a>`
+				text: `Team aggiornato con successo torna alla<a href="/team/${updatedTeam.slug}/dash" class="link">dashboard</a>`
 			});
 		} catch (e) {
 			console.log(e);
@@ -117,13 +137,37 @@ export const actions = {
 		}
 	},
 
-	checkUsername: async ({ request, locals }) => {
+	checkUsername: async ({ request, params, locals }) => {
 		const form = await superValidate(request, zod(slugSchema));
 		const { pb, user } = locals;
 		if (!user) {
 			redirect(303, '/login');
 		}
-		const isNickAvailable = await isTeamNickValid(form, pb);
+
+		const teamCode = params.slug;
+		if (!teamCode) {
+			return message(form, {
+				type: 'error',
+				text: 'Team non trovato'
+			});
+		}
+
+		const team = locals.team as TeamNonexpand;
+		if (!team) {
+			const [team, err] = (await goCatch(
+				pb.collection('teams').getFirstListItem(`slug="${teamCode}"`)
+			)) as [TeamNonexpand, undefined] | [undefined, Error];
+			if (err || !team) {
+				console.error('Error seraching team:', err);
+				return message(form, {
+					type: 'error',
+					text: 'Team non trovato'
+				});
+			}
+			locals.team = team;
+		}
+
+		const isNickAvailable = await isTeamNickValid(form, pb, team.id);
 
 		if (!form.valid || !isNickAvailable) return fail(400, { form });
 

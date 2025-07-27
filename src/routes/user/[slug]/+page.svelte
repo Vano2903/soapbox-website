@@ -91,7 +91,7 @@
 					<EntityCard
 						title={team.name}
 						slug={team.slug}
-						description={team.description}
+						description={team.bio}
 						link={`/team/${team.slug}`}
 					>
 						{#snippet picture()}

@@ -4,7 +4,7 @@ interface TeamBase {
 	id: string;
 	slug: string;
 	name: string;
-	description: string;
+	bio: string;
 	number: number;
 	created: Date;
 	updated: Date;

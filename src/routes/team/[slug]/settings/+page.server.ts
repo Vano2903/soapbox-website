@@ -152,8 +152,8 @@ export const actions = {
 			});
 		}
 
-		const team = locals.team as TeamNonexpand;
-		if (!team) {
+		let localTeam = locals.team as TeamNonexpand;
+		if (!localTeam) {
 			const [team, err] = (await goCatch(
 				pb.collection('teams').getFirstListItem(`slug="${teamCode}"`)
 			)) as [TeamNonexpand, undefined] | [undefined, Error];
@@ -164,10 +164,10 @@ export const actions = {
 					text: 'Team non trovato'
 				});
 			}
-			locals.team = team;
+			localTeam = team;
 		}
-
-		const isNickAvailable = await isTeamNickValid(form, pb, team.id);
+		locals.team = localTeam;
+		const isNickAvailable = await isTeamNickValid(form, pb, localTeam.id);
 
 		if (!form.valid || !isNickAvailable) return fail(400, { form });
 

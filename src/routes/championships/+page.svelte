@@ -40,6 +40,7 @@
 		'Finale'
 	];
 	let selectedCategory = $state('SoapBox');
+	
 	let selectedLeaderboard = $state('Manche 1');
 
 	// variables and functions to manage the content of leaderboard sheet, retrieved by a controlled polling on the Google Sheets API

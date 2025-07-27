@@ -27,7 +27,7 @@ export const userSettingsSchema = z.object({
 			message: 'La data di nascita non può essere futura'
 		}),
 	gender: z.nativeEnum(GenderKind, {
-		errorMap: (gender, _ctx) => {
+		errorMap: (gender) => {
 			switch (gender.code) {
 				case 'invalid_type':
 					return { message: 'Il sesso è richiesto, scegliere tra uno dei seguenti' };
@@ -67,11 +67,11 @@ export const userSettingsSchema = z.object({
 		.max(100, {
 			message: 'Il nome utente deve avere al massimo 100 caratteri'
 		})
-		.regex(/^[a-z0-9\-]+$/, {
+		.regex(/^[a-z0-9-]+$/, {
 			message: 'Il nome utente può contenere solo minuscole, numeri e trattini'
 		}),
 	visibility: z.nativeEnum(UserVisiblityKind, {
-		errorMap: (gender, _ctx) => {
+		errorMap: (gender) => {
 			switch (gender.code) {
 				case 'invalid_type':
 					return {

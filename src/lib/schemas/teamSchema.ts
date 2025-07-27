@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const MEGA5 = 5000000;
+// const MEGA5 = 5000000;
 const MEGA2 = 2000000;
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 
@@ -121,7 +121,7 @@ export const teamSchema = z.object({
 		})
 		.min(3, "L'username deve avere almeno 3 caratteri")
 		.max(40, "L'username deve avere al massimo 40 caratteri")
-		.regex(/^[a-z0-9\-]+$/, "L'username può contenere solo minuscole, numeri e trattini"),
+		.regex(/^[a-z0-9-]+$/, "L'username può contenere solo minuscole, numeri e trattini"),
 	logoOriginal: z.optional(
 		z
 			.any()

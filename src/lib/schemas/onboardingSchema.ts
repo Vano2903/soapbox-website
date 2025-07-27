@@ -27,7 +27,7 @@ export const onboardingSchema = z.object({
 			message: 'La data di nascita non può essere futura'
 		}),
 	gender: z.nativeEnum(GenderKind, {
-		errorMap: (gender, _ctx) => {
+		errorMap: (gender) => {
 			switch (gender.code) {
 				case 'invalid_type':
 					return { message: 'Il sesso è richiesto, scegliere tra uno dei seguenti' };
@@ -71,7 +71,7 @@ export const onboardingSchema = z.object({
 			message: 'Il nome utente può contenere solo minuscole, numeri, trattini e trattini bassi'
 		}),
 	visibility: z.nativeEnum(UserVisiblityKind, {
-		errorMap: (gender, _ctx) => {
+		errorMap: (gender) => {
 			switch (gender.code) {
 				case 'invalid_type':
 					return {

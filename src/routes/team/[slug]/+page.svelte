@@ -105,7 +105,7 @@
 			{#if members.length === 1 && isCurrentOwner}
 				<p class="mt-4 text-lg font-semibold">Sei l'unico membro del team.</p>
 				<button class="btn btn-primary mt-2">
-					<a href={'/dash/team/' + team.slug + '/invite/new'}>Invita qualcuno</a>
+					<a href={'/team/' + team.slug + '/dash'}>Invita qualcuno</a>
 				</button>
 			{/if}
 			<div>

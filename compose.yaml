@@ -1,4 +1,4 @@
-x-public_pb_instance_env: &public_pb_instance_env PUBLIC_PB_INSTANCE=${PUBLIC_PB_INSTANCE:-https://pb.bruum.cargoway.cloud}
+# x-public_pb_instance_env: &public_pb_instance_env PUBLIC_PB_INSTANCE=${PUBLIC_PB_INSTANCE:-https://pb.bruum.cargoway.cloud}
 
 services:
   pb:
@@ -61,7 +61,9 @@ services:
     depends_on:
       - pb
     environment:
-      - *public_pb_instance_env
+      # - *public_pb_instance_env
+      - PUBLIC_PB_INSTANCE=${PUBLIC_PB_INSTANCE:-https://pb.bruum.cargoway.cloud}
+      - PUBLIC_BASE_URL=${PUBLIC_BASE_URL:-https://bruum.cargoway.cloud}
       - GSHEETS_APIKEY=${GSHEETS_APIKEY}
       - GSHEETS_CLIENTID=${GSHEETS_CLIENTID}
     networks:

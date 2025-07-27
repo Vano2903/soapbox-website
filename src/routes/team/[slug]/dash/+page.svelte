@@ -30,16 +30,7 @@
 
 	const { data }: Props = $props();
 	const pb = new PocketBase(data.pbUri) as TypedPocketBase;
-	// const teamsCount = data.teamsCount;
-	// onMount(async () => {
-	// 	console.log('teams', teams);
-	// });
 
-	// 	console.log('subscribed to teams');
-	// 	pb.collection('teams').subscribe('*', (e) => {
-	// 		console.log('Team event:', e);
-	// 	});
-	// });
 	let user = $state(data.user);
 	let team = $state(data.team);
 	let members = $state(data.members);
@@ -59,20 +50,6 @@
 	let defaultTab = tabs[1].anchor;
 
 	let currentTab = $state(defaultTab); // Default to 'members'
-
-	async function leaveTeam() {
-		if (confirm('Sei sicuro di voler abbandonare il team?')) {
-			try {
-				await pb.collection('teams').update(team.id, { members: [] });
-				members = [];
-				isCurrentMember = false;
-				alert('Hai abbandonato il team con successo.');
-			} catch (err) {
-				console.error('Error leaving team:', err);
-				alert("Si è verificato un errore durante l'abbandono del team.");
-			}
-		}
-	}
 
 	function datediff(date1: Date, date2: Date): number {
 		console.log('Calculating date difference:', date1, date2);
@@ -258,18 +235,6 @@
 		}
 		userToKick = user;
 		(document.getElementById('kick_user_modal') as HTMLDialogElement)?.showModal();
-		// if (confirm('Sei sicuro di voler rimuovere questo membro dal team?')) {
-		// 	try {
-		// 		await pb
-		// 			.collection('teams')
-		// 			.update(team.id, { members: pb.collection('users').getId(userId) });
-		// 		members = members.filter((m) => m.id !== userId);
-		// 		alert('Membro rimosso con successo.');
-		// 	} catch (err) {
-		// 		console.error('Error kicking user:', err);
-		// 		alert('Si è verificato un errore durante la rimozione del membro.');
-		// 	}
-		// }
 	}
 
 	function resetKickUserModal() {
@@ -287,6 +252,26 @@
 		} catch (err) {
 			console.error('Error kicking user:', err);
 			kickUserError = "Si è verificato un errore durante l'espulsione del membro.";
+		}
+	}
+
+	function leaveTeamModal() {
+		if (isCurrentOwner) {
+			alert(
+				'Non puoi abbandonare il team in quanto sei il capo, promuovi un altro membro a capo per poter abbandonare il team.'
+			);
+			return;
+		}
+		(document.getElementById('leave_team_modal') as HTMLDialogElement)?.showModal();
+	}
+
+	async function leaveTeam() {
+		try {
+			await pb.collection('teams').update(team.id, { 'members-': user.person });
+			members = members.filter((m) => m.id !== user.id);
+			(document.getElementById('leave_team_modal') as HTMLDialogElement)?.close();
+		} catch (err) {
+			console.error('Error leaving team:', err);
 		}
 	}
 </script>
@@ -364,18 +349,35 @@
 								<p class="mt-4 text-lg font-semibold">Non ci sono persone in questo team</p>
 							{/if}
 
-							<div class="flex w-full justify-end">
+							<!-- TODO: LEAVE TEAM -->
+							<!-- <div class="flex w-full justify-end">
 								<div
 									class="overflow-clip"
 									class:tooltip={isCurrentOwner}
 									class:tooltip-left={isCurrentOwner}
 									data-tip="Non puoi abbandonare il team in quanto sei il capo, promuovi un altro membro a capo per poter abbandonare il team."
 								>
-									<button class="btn btn-error" onclick={leaveTeam} disabled={isCurrentOwner}
+									<button class="btn btn-error" onclick={leaveTeamModal} disabled={isCurrentOwner}
 										>Abbandona Team</button
 									>
 								</div>
 							</div>
+
+							<dialog id="leave_team_modal" class="modal modal-bottom sm:modal-middle">
+								<div class="modal-box">
+									<h3 class="text-lg font-bold">Sei sicuro di voler abbandonare il team?</h3>
+									<p class="py-4">Non potrai più accedere alle risorse del team.</p>
+									<div class="modal-action">
+										<form method="dialog">
+											<button class="btn">Annulla</button>
+										</form>
+										<button class="btn btn-error" onclick={leaveTeam}>Abbandona Team</button>
+									</div>
+								</div>
+								<form method="dialog" class="modal-backdrop">
+									<button>close</button>
+								</form>
+							</dialog> -->
 
 							<dialog
 								oncancel={resetKickUserModal}
@@ -441,7 +443,7 @@
 											{/if}
 										{/snippet}
 										{#snippet actionButtons()}
-											{#if team.owner !== member.person}
+											{#if isCurrentOwner && team.owner !== member.person}
 												<button
 													class="btn btn-sm btn-outline btn-error"
 													onclick={() => askUserToKickModal(member.id)}

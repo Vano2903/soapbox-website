@@ -2,11 +2,13 @@
 	import { page } from '$app/state';
 	import EntityCard from '$components/entityCard/entityCard.svelte';
 	import type { TypedPocketBase } from '$lib/types/pocketbase.js';
-	import type { Team, TeamInvitationNonExpand } from '$lib/types/team.js';
+	import type { Team, TeamInvitationNonExpand, TeamNonexpand } from '$lib/types/team.js';
 	import type { UserNonExpand } from '$lib/types/user.js';
-	import { Crown, Users } from 'lucide-svelte';
+	import { Crown, Users, UserX } from 'lucide-svelte';
 	import PocketBase, { ClientResponseError, type RecordModel } from 'pocketbase';
 	import { onMount } from 'svelte';
+	import { env } from '$env/dynamic/public';
+	import ClipboardButton from '$components/clipboardButton/clipboardButton.svelte';
 
 	interface Props {
 		data: {
@@ -72,35 +74,109 @@
 		}
 	}
 
-	function datediff(first: number, second: number): number {
-		return Math.round((second - first) / (1000 * 60 * 60 * 24));
+	function datediff(date1: Date, date2: Date): number {
+		console.log('Calculating date difference:', date1, date2);
+		const diffTime = Math.abs(date2 - date1);
+		const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+		return diffDays;
 	}
 
 	let newInviteModal = $state(false);
-	let inviteCode = $state<string>('');
+	let newInviteCode = $state<string>('');
+	let newInviteMaxUses = $state<number | null>(null);
+	let newInviteExpirationDate = $state<Date | null>(null);
+	let newInviteDisabled = $state<boolean>(false);
 	// let baseUrl = `${window.location.origin}/team/${team.slug}/dash/invite/`;
-	let baseUrl = 'localhost:5173/join/';
+	let baseUrl = env.PUBLIC_BASE_URL + '/join/';
 
 	let inviteError = $state<string | null>(null);
 
+	let modifyingInvite = $state(false);
 	let creatingInvite = $state(false);
+
+	function resetModal() {
+		console.log('Resetting invite modal state');
+		newInviteCode = '';
+		newInviteMaxUses = null;
+		newInviteExpirationDate = null;
+		newInviteDisabled = false;
+		inviteError = null;
+		modifyingInvite = false;
+		creatingInvite = false;
+	}
+
+	function showModalToModifyInvite(inviteCode: string) {
+		modifyingInvite = true;
+		inviteCode = inviteCode;
+		let invite = invites?.find((i) => i.code === inviteCode);
+		if (!invite) {
+			console.error('Invite not found:', inviteCode);
+			return;
+		}
+		newInviteCode = invite.code;
+		newInviteMaxUses = invite.uses !== -1 ? invite.uses : null; // Use -1 for unlimited
+		newInviteExpirationDate = invite.expiration ? new Date(invite.expiration) : null;
+		newInviteDisabled = invite.disabled;
+
+		(document.getElementById('invite_modal') as HTMLDialogElement)?.showModal();
+	}
+
+	async function updateInvite() {
+		try {
+			creatingInvite = true;
+			let invite = invites?.find((i) => i.code === newInviteCode);
+			if (!invite) {
+				console.error('Invite not found:', newInviteCode);
+				return;
+			}
+			try {
+				console.log('updaing, checking the invite code uses:', newInviteMaxUses);
+				let updatedInvite = (await pb.collection('teamInvitations').update(invite.id, {
+					code: newInviteCode,
+					uses: newInviteMaxUses !== null ? newInviteMaxUses + 1 : -1, // Use -1 for unlimited
+					expiration: newInviteExpirationDate ? newInviteExpirationDate.toISOString() : null,
+					disabled: newInviteDisabled
+				})) as TeamInvitationNonExpand;
+
+				// Update the invite in the local state
+				invites = invites?.map((i) => (i.id === updatedInvite.id ? updatedInvite : i));
+
+				inviteError = null;
+				(document.getElementById('invite_modal') as HTMLDialogElement)?.close();
+			} catch (err) {
+				console.error("Errore durante la modifica dell'invito:", err);
+				inviteError = "Si è verificato un errore durante la modifica dell'invito.";
+			}
+		} catch (err) {
+			console.error("Errore durante la modifica dell'invito:", err);
+			inviteError = "Si è verificato un errore durante la modifica dell'invito.";
+			return;
+		} finally {
+			creatingInvite = false;
+			modifyingInvite = false;
+			resetModal();
+		}
+	}
+
 	async function createInvite() {
 		try {
 			creatingInvite = true;
 			const pb = new PocketBase(data.pbUri) as TypedPocketBase;
 
-			console.log('Creating invite with code:', inviteCode);
-			if (!inviteCode || inviteCode.length < 3 || inviteCode.length > 16) {
-				inviteError = 'Il codice invito deve essere tra 3 e 16 caratteri.';
-				creatingInvite = false;
-				return;
+			console.log('Creating invite with code:', newInviteCode);
+			if (newInviteCode !== '') {
+				if (newInviteCode.length < 3 || newInviteCode.length > 16) {
+					inviteError = 'Il codice invito deve essere tra 3 e 16 caratteri.';
+					return;
+				}
 			}
 
 			let existingInvite;
 			try {
 				existingInvite = await pb
 					.collection('teamInvitations')
-					.getFirstListItem(`code="${inviteCode}"`);
+					.getFirstListItem(`code="${newInviteCode}"`);
 			} catch (err) {
 				if (err instanceof ClientResponseError && err.status === 404) {
 					existingInvite = null; // No existing invite found
@@ -110,97 +186,81 @@
 			}
 			if (existingInvite) {
 				inviteError = 'Un invito con questo codice esiste già.';
-				creatingInvite = false;
 				return;
 			}
-			console.log('Invite code is valid:', inviteCode);
+			console.log('Invite code is valid:', newInviteCode);
 
-			let uses = -1;
-			const maxUsesInput = document.getElementById('max-uses') as HTMLInputElement;
-			if (maxUsesInput && maxUsesInput.value) {
-				uses = parseInt(maxUsesInput.value, 10);
-				if (isNaN(uses) || uses < 1) {
-					inviteError = 'Il numero di utilizzi deve essere un numero positivo.';
-					creatingInvite = false;
+			if (newInviteMaxUses !== null && newInviteMaxUses !== undefined) {
+				if (newInviteMaxUses < 1) {
+					inviteError = 'Il numero di utilizzi deve essere almeno 1, lascia vuoto per illimitato.';
 					return;
 				}
+			} else {
+				newInviteMaxUses = -1; // Default to unlimited uses
 			}
 
-			const expirationInput = document.getElementById('invite-expiration') as HTMLInputElement;
-			let expiration: Date | null = null;
-			if (expirationInput && expirationInput.value) {
-				expiration = new Date(expirationInput.value);
-				if (isNaN(expiration.getTime())) {
+			if (newInviteExpirationDate) {
+				// expiration = new Date(newInviteExpirationDate);
+				if (isNaN(newInviteExpirationDate.getTime())) {
 					inviteError = 'La data di scadenza non è valida.';
-					creatingInvite = false;
 					return;
 				}
-				if (expiration < new Date()) {
+				if (newInviteExpirationDate < new Date()) {
 					inviteError = 'La data di scadenza non può essere nel passato.';
-					creatingInvite = false;
 					return;
 				}
-			}
-
-			let disabled = false;
-			const disabledCheckbox = document.querySelector('.toggle-error') as HTMLInputElement;
-			if (disabledCheckbox && disabledCheckbox.checked) {
-				disabled = true;
 			}
 
 			console.log('Invite settings:', {
-				code: inviteCode,
-				uses,
-				expiration,
-				disabled
+				code: newInviteCode,
+				newInviteMaxUses,
+				newInviteExpirationDate,
+				newInviteDisabled
 			});
 			try {
-				const invite = await pb.collection('teamInvitations').create({
-					code: inviteCode,
+				const invite = (await pb.collection('teamInvitations').create({
+					code: newInviteCode,
 					team: team.id,
-					uses: uses, // Set the number of uses or leave it as -1 for unlimited
-					expiration: expiration ? expiration.toISOString() : null, // Set expiration date if needed
-					disabled: disabled // Set to true if you want to disable the invite
-				});
+					uses: newInviteMaxUses, // Set the number of uses or leave it as -1 for unlimited
+					expiration: newInviteExpirationDate ? newInviteExpirationDate.toISOString() : null, // Set expiration date if needed
+					disabled: newInviteDisabled // Set to true if you want to disable the invite
+				})) as TeamInvitationNonExpand;
+				if (!invites) {
+					invites = [];
+				}
+				invites.unshift(invite);
 			} catch (err) {
 				console.error("Errore durante la creazione dell'invito:", err);
 				inviteError = "Si è verificato un errore durante la creazione dell'invito.";
-				creatingInvite = false;
 				return;
 			}
-			creatingInvite = false;
 			inviteError = null;
 			(document.getElementById('invite_modal') as HTMLDialogElement)?.close();
 		} catch (err) {
 			console.error("Errore durante la creazione dell'invito:", err);
 			inviteError = "Si è verificato un errore durante la creazione dell'invito.";
-			creatingInvite = false;
 			return;
+		} finally {
+			creatingInvite = false;
+			resetModal();
 		}
 	}
 
-	function copyInviteLink(inviteCode: string) {
-		const link = `${baseUrl}${inviteCode}`;
-		navigator.clipboard
-			.writeText(link)
-			.then(() => {
-				alert('Link copiato negli appunti!');
-			})
-			.catch((err) => {
-				console.error('Errore durante la copia:', err);
-				alert('Errore durante la copia del link');
-			});
-	}
+	const baseInviteUrl = env.PUBLIC_BASE_URL + '/join/';
 
-	function toggleInviteDisabled(inviteCode: string, isDisabled: boolean) {
-		alert(`disabled ${isDisabled}`);
-		// Here you can add the actual API call to update the invite
-		// Example:
-		// await pb.collection('teamInvitations').update(inviteId, { disabled: isDisabled });
-	}
-
-	async function disableInvite(inviteCode: string) {
-		// Keep your existing disableInvite function or rename it to deleteInvite
+	async function kickUser(userId: string) {
+		if (confirm('Sei sicuro di voler rimuovere questo membro dal team?')) {
+			try {
+				await pb
+					.collection('teams')
+					.update(team.id, { members: pb.collection('users').getId(userId) });
+				members = members.filter((m) => m.id !== userId);
+				alert('Membro rimosso con successo.');
+			} catch (err) {
+				console.error('Error kicking user:', err);
+				alert('Si è verificato un errore durante la rimozione del membro.');
+			}
+		}
 	}
 </script>
 
@@ -237,7 +297,7 @@
 				</div>
 
 				<div class="mt-4 w-full">
-					<p class="text-normal text-gray-600 md:text-lg">{team.description}</p>
+					<p class="text-normal text-gray-600 md:text-lg">{team.bio}</p>
 				</div>
 			</div>
 			<div class="divider"></div>
@@ -249,11 +309,11 @@
 		<div class="divider lg:divider-horizontal"></div>
 
 		<div class="w-full">
-			<div role="tablist" class="tabs tabs-border flex w-full justify-center">
+			<div role="tablist" class="tabs tabs-md lg:tabs tabs-border flex w-full justify-center">
 				{#each tabs as tab}
 					<button
 						role="tab"
-						class="tab text-3xl transition-all"
+						class="tab text-2xl transition-all lg:text-3xl"
 						class:tab-active={currentTab === tab.anchor}
 						class:text-red-600={currentTab === tab.anchor}
 						class:hover:text-red-800={currentTab === tab.anchor}
@@ -278,10 +338,154 @@
 							{/if}
 
 							<div class="flex w-full justify-end">
-								<button class="btn btn-error" onclick={leaveTeam}>Abbandona Team</button>
+								<div
+									class="overflow-clip"
+									class:tooltip={isCurrentOwner}
+									class:tooltip-left={isCurrentOwner}
+									data-tip="Non puoi abbandonare il team in quanto sei il capo, promuovi un altro membro a capo per poter abbandonare il team."
+								>
+									<button class="btn btn-error" onclick={leaveTeam} disabled={isCurrentOwner}
+										>Abbandona Team</button
+									>
+								</div>
 							</div>
 
-							<div class="w-full space-y-1">
+							<dialog id="kick_user_modal" class="modal modal-bottom sm:modal-middle">
+								<div class="modal-box">
+									<!-- <form method="dialog">
+									<button class="btn btn-sm btn-circle btn-ghost absolute top-2 right-2">✕</button>
+								</form> -->
+									<h3 class="text-lg font-bold">Crea Nuovo Invito</h3>
+									<p class="py-4">Configura le impostazioni per il nuovo invito al team.</p>
+
+									<!-- Your invite form content here -->
+									<div class="form-control space-y-2">
+										<!-- <label class="input w-full">
+										<span class="label">{baseUrl}</span>
+										<input type="text" placeholder="codice-invito" />
+									</label> -->
+
+										<fieldset class="fieldset">
+											<legend class="fieldset-legend">Codice Invito</legend>
+											<label class="input validator w-full">
+												<span class="label">{baseUrl}</span>
+												<!-- <input type="text" placeholder="codice-invito" /> -->
+												<input
+													min="3"
+													max="16"
+													type="text"
+													class=""
+													placeholder="codice-invito"
+													disabled={creatingInvite || modifyingInvite}
+													bind:value={newInviteCode}
+												/>
+											</label>
+											<p class="label">
+												Questo é un codice univoco che permetterá l'accesso al team.<br />
+												Se non lo inserisci, verrá generato un codice casuale.
+											</p>
+										</fieldset>
+
+										<!-- <div tabindex="0" class="collapse-plus bg-base-100 border-base-300 collapse border">
+									<div class="collapse-title font-semibold">How do I create an account?</div>
+									<div class="collapse-content text-sm">
+										Click the "Sign Up" button in the top right corner and follow the registration
+										process.
+									</div>
+								</div> -->
+
+										<div class="bg-base-100 border-base-300 collapse-plus collapse mt-4 border">
+											<input type="checkbox" />
+											<div class="collapse-title">Impostazioni Avanzate</div>
+											<div class="collapse-content text-sm">
+												<fieldset class="fieldset">
+													<legend class="fieldset-legend">Numero di Utilizzi</legend>
+													<input
+														bind:value={newInviteMaxUses}
+														id="max-uses"
+														type="number"
+														class="input input-bordered w-full"
+													/>
+													<p class="label">
+														Quante persone potranno utilizzare questo invito.<br /> lascia vuoto per
+														creare un invito con utilizzi illimitati
+													</p>
+												</fieldset>
+
+												<fieldset class="fieldset">
+													<legend class="fieldset-legend">Data di Scadenza</legend>
+													<input
+														id="invite-expiration"
+														type="date"
+														bind:value={newInviteExpirationDate}
+														class="input input-bordered w-full"
+													/>
+													<p class="label">
+														Durata dell'invito<br />
+														Se non viene specificata, l'invito non avrá scadenza.
+													</p>
+												</fieldset>
+
+												<fieldset class="fieldset">
+													<legend class="fieldset-legend">Disabilitato</legend>
+													<label class="label">
+														<input
+															type="checkbox"
+															bind:checked={newInviteDisabled}
+															class="toggle toggle-error"
+														/>
+														Disabilita questo invito
+													</label>
+													<p class="label text-wrap">
+														Altre persone non potranno accedere al team quando l'invito è
+														disabilitato. Puoi riabilitarlo in seguito.
+													</p>
+												</fieldset>
+											</div>
+										</div>
+									</div>
+									{#if inviteError}
+										<p class="text-error mt-2">{inviteError}</p>
+									{/if}
+									<div class="modal-action">
+										<form method="dialog">
+											<button class="btn">Annulla</button>
+										</form>
+
+										{#if modifyingInvite}
+											<button
+												class="btn btn-warning"
+												onclick={updateInvite}
+												disabled={creatingInvite}
+											>
+												{#if creatingInvite}
+													<span class="loading loading-spinner loading-sm"></span>
+												{/if}
+												Modifica Invito
+											</button>
+										{:else}
+											<button
+												class="btn btn-primary"
+												onclick={createInvite}
+												disabled={creatingInvite}
+											>
+												{#if creatingInvite}
+													<span class="loading loading-spinner loading-sm"></span>
+												{/if}
+												Crea Invito
+											</button>
+										{/if}
+									</div>
+
+									<!-- <button class="btn btn-primary" onclick={createInvite}>Crea Invito</button> -->
+								</div>
+								<!-- This form closes the modal when clicked outside -->
+								<form method="dialog" class="modal-backdrop">
+									<button>close</button>
+								</form>
+							</dialog>
+
+							<div class="w-full space-y-2">
 								{#each members as member}
 									<EntityCard
 										title={member.name + ' ' + member.lastName}
@@ -293,12 +497,28 @@
 											<img
 												src={member.avatarCropped}
 												alt={member.name}
-												class="h-12 w-12 rounded-full"
+												class="h-12 w-12 rounded-full ring-1"
 											/>
 										{/snippet}
 										{#snippet iconSnippet()}
 											{#if team.owner == member.person}
 												<Crown class="size-4 text-yellow-500" />
+											{/if}
+										{/snippet}
+										{#snippet actionButtons()}
+											{#if team.owner !== member.person}
+												<button
+													class="btn btn-sm btn-outline btn-error"
+													onclick={() => kickUser(member.id)}
+												>
+													<UserX class="size-4" />
+												</button>
+												<!-- <button
+													class="btn btn-sm btn-outline btn-warning"
+													onclick={() => promoteUser(member.id)}
+												>
+													<Crown class="size-4" />
+												</button> -->
 											{/if}
 										{/snippet}
 									</EntityCard>
@@ -318,7 +538,12 @@
 							</button>
 						</div>
 
-						<dialog id="invite_modal" class="modal modal-bottom sm:modal-middle">
+						<dialog
+							id="invite_modal"
+							onclose={resetModal}
+							oncancel={resetModal}
+							class="modal modal-bottom sm:modal-middle"
+						>
 							<div class="modal-box">
 								<!-- <form method="dialog">
 									<button class="btn btn-sm btn-circle btn-ghost absolute top-2 right-2">✕</button>
@@ -344,7 +569,8 @@
 												type="text"
 												class=""
 												placeholder="codice-invito"
-												bind:value={inviteCode}
+												disabled={creatingInvite || modifyingInvite}
+												bind:value={newInviteCode}
 											/>
 										</label>
 										<p class="label">
@@ -367,24 +593,40 @@
 										<div class="collapse-content text-sm">
 											<fieldset class="fieldset">
 												<legend class="fieldset-legend">Numero di Utilizzi</legend>
-												<input id="max-uses" type="number" class="input input-bordered w-full" />
-												<p class="label">Quante persone potranno utilizzare questo invito.</p>
+												<input
+													bind:value={newInviteMaxUses}
+													id="max-uses"
+													type="number"
+													class="input input-bordered w-full"
+												/>
+												<p class="label">
+													Quante persone potranno utilizzare questo invito.<br /> lascia vuoto per creare
+													un invito con utilizzi illimitati
+												</p>
 											</fieldset>
 
 											<fieldset class="fieldset">
 												<legend class="fieldset-legend">Data di Scadenza</legend>
 												<input
 													id="invite-expiration"
-													type="datetime-local"
+													type="date"
+													bind:value={newInviteExpirationDate}
 													class="input input-bordered w-full"
 												/>
-												<p class="label">Durata dell'invito</p>
+												<p class="label">
+													Durata dell'invito<br />
+													Se non viene specificata, l'invito non avrá scadenza.
+												</p>
 											</fieldset>
 
 											<fieldset class="fieldset">
 												<legend class="fieldset-legend">Disabilitato</legend>
 												<label class="label">
-													<input type="checkbox" class="toggle toggle-error" />
+													<input
+														type="checkbox"
+														bind:checked={newInviteDisabled}
+														class="toggle toggle-error"
+													/>
 													Disabilita questo invito
 												</label>
 												<p class="label text-wrap">
@@ -402,12 +644,30 @@
 									<form method="dialog">
 										<button class="btn">Annulla</button>
 									</form>
-									<button class="btn btn-primary" onclick={createInvite} disabled={creatingInvite}>
-										{#if creatingInvite}
-											<span class="loading loading-spinner loading-sm"></span>
-										{/if}
-										Crea Invito
-									</button>
+
+									{#if modifyingInvite}
+										<button
+											class="btn btn-warning"
+											onclick={updateInvite}
+											disabled={creatingInvite}
+										>
+											{#if creatingInvite}
+												<span class="loading loading-spinner loading-sm"></span>
+											{/if}
+											Modifica Invito
+										</button>
+									{:else}
+										<button
+											class="btn btn-primary"
+											onclick={createInvite}
+											disabled={creatingInvite}
+										>
+											{#if creatingInvite}
+												<span class="loading loading-spinner loading-sm"></span>
+											{/if}
+											Crea Invito
+										</button>
+									{/if}
 								</div>
 
 								<!-- <button class="btn btn-primary" onclick={createInvite}>Crea Invito</button> -->
@@ -419,7 +679,7 @@
 						</dialog>
 
 						{#if invites && invites.length > 0}
-							<div class="mt-4 w-full space-y-4">
+							<div class="mt-4 w-full space-y-2">
 								{#each invites as invite}
 									{@const joinedCount = invite.joined.length}
 									{@const maxUses = invite.uses + joinedCount}
@@ -428,11 +688,10 @@
 										(invite.expiration && new Date(invite.expiration) < new Date()) ||
 										(invite.uses !== -1 && invite.uses <= 0)}
 									{@const daysRemaining = invite.expiration
-										? datediff(new Date().valueOf(), invite.expiration.valueOf())
+										? datediff(new Date(), new Date(invite.expiration))
 										: null}
-
 									<div
-										class="collapse-arrow w collapse rounded-lg bg-gray-200 {isDisabled
+										class="collapse-arrow collapse rounded-lg bg-gray-200 {isDisabled
 											? 'opacity-60'
 											: ''}"
 									>
@@ -441,17 +700,20 @@
 											<div class="flex items-center space-x-4">
 												<div class="flex items-center">
 													<Users />
-													<span class="ml-2 font-mono text-lg font-bold">{invite.code}</span>
+													<span class="text-mdmd:text-lg ml-2 font-mono font-bold"
+														>{invite.code}</span
+													>
 												</div>
 											</div>
 
 											<div class="flex items-center space-x-4">
-												<button
-													class="btn btn-sm btn-outline"
+												<!-- <button
+													class="btn btn-sm btn-outline z-10"
 													onclick={() => copyInviteLink(invite.code)}
 												>
 													Copia Link
-												</button>
+												</button> -->
+												<ClipboardButton class="z-10" content={baseInviteUrl + invite.code} />
 
 												{#if isDisabled}
 													<span class="badge badge-error">Non attivo</span>
@@ -510,36 +772,34 @@
 																type="checkbox"
 																class="toggle toggle-error"
 																checked={invite.disabled}
-																onchange={(e) =>
-																	toggleInviteDisabled(invite.code, e.target.checked)}
+																disabled
 															/>
 														</label>
 													</div>
 
 													<!-- People who joined -->
-													<div class="mt-4">
+													<!-- <div class="mt-4">
 														<p class="text-sm">
 															Persone che hanno usato questo invito: {joinedCount} persone
 														</p>
-													</div>
+													</div> -->
 												</div>
 
 												<!-- Action Buttons -->
 												<div class="flex justify-end space-x-2">
 													<button
 														class="btn btn-sm btn-outline"
-														onclick={() =>
-															(window.location.href = `/team/${team.slug}/dash/invite/${invite.code}/edit`)}
+														onclick={() => showModalToModifyInvite(invite.code)}
 													>
 														Modifica
 													</button>
 
-													<button
+													<!-- <button
 														class="btn btn-sm btn-error"
 														onclick={() => disableInvite(invite.code)}
 													>
 														Elimina
-													</button>
+													</button> -->
 												</div>
 											</div>
 										</div>

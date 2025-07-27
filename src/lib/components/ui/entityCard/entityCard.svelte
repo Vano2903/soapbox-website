@@ -7,8 +7,8 @@
 		title: string;
 		description?: string;
 		link: string;
-		// icon?: Element;
 		iconSnippet?: Snippet;
+		actionButtons?: Snippet; // New optional action buttons
 		disabled?: boolean;
 		slug: string;
 	}
@@ -19,51 +19,57 @@
 		description = $bindable(),
 		link = $bindable(),
 		iconSnippet = $bindable(),
+		actionButtons = $bindable(), // New optional prop
 		disabled = $bindable(),
 		slug = $bindable()
 	}: Props = $props();
 </script>
 
-<a href={link} class="group block w-full cursor-pointer">
+<div class="group block w-full">
 	<div class="rounded-lg bg-gray-200 p-4 transition-colors group-hover:bg-gray-300">
 		<div class="flex items-center space-x-3">
-			<!-- <img src={pictureUrl} alt="Team Logo" class="size-16 rounded-full ring-1" /> -->
-			{@render picture()}
-			<div class="">
-				<div
-					class="justify-right flex flex-col space-x-2"
-					class:md:flex-col={!description}
-					class:md:flex-row={!!description}
-					class:md:items-start={!description}
-					class:md:items-center={!!description}
-					class:md:text-center={!description}
-				>
-					<div class="flex flex-nowrap items-center">
-						<div class="w-full">
-							<p class="group truncate text-lg font-bold transition duration-300">
-								{title}
-								<span
-									class="mx-1 block h-0.5 max-w-0 bg-red-600 transition-all duration-500 group-hover:max-w-full"
-								></span>
-							</p>
+			<!-- Left side: clickable content -->
+			<a href={link} class="flex min-w-0 flex-1 cursor-pointer items-center space-x-3">
+				{@render picture()}
+				<div class="min-w-0 flex-1">
+					<div class="min-w-0">
+						<div class="flex min-w-0 items-center space-x-2">
+							<div class="min-w-0 flex-1">
+								<div class="flex items-center space-x-2">
+									<p class="truncate text-lg font-bold transition duration-300">
+										{title}
+										<span
+											class="block h-0.5 max-w-0 bg-red-600 transition-all duration-500 group-hover:max-w-full"
+										></span>
+									</p>
+									{#if iconSnippet}
+										<div class="flex-shrink-0">
+											{@render iconSnippet()}
+										</div>
+									{/if}
+								</div>
+							</div>
 						</div>
 
-						{@render iconSnippet?.()}
-					</div>
-					<!-- <div class="min-w-0">
-						<p class="block max-w-full min-w-0 truncate font-semibold text-red-600"> -->
-					<div class="flex w-full flex-1">
 						<div class="min-w-0">
-							<!-- Added flex-1 to take available space -->
-							<p class="max-w-full min-w-0 truncate font-semibold text-red-600">
-								<!-- Removed redundant classes, added w-full -->
+							<p class="truncate font-semibold text-red-600">
 								@{slug}
 							</p>
 						</div>
 					</div>
+
+					{#if description}
+						<p class="mt-1 line-clamp-1 text-sm text-gray-700">{description}</p>
+					{/if}
 				</div>
-				<p class="mt-1 hidden text-sm text-gray-700 md:line-clamp-1">{description}</p>
-			</div>
+			</a>
+
+			<!-- Right side: action buttons (optional) -->
+			{#if actionButtons}
+				<div class="flex flex-shrink-0 items-center space-x-1">
+					{@render actionButtons()}
+				</div>
+			{/if}
 		</div>
 	</div>
-</a>
+</div>

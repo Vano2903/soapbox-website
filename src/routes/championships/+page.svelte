@@ -29,10 +29,10 @@
 	// variables to handle the user choice of wich leaderboard show (if any)
 	const categories = ['SoapBox', 'Pinocchio', 'Trike', 'Altro'];
 	const leaderboards = [
-		'Creatività',
+		// 'Creatività',
 		// 'Tecnica',
 		// 'Pubblico',
-		'Originalità',
+		// 'Originalità',
 		// 'Manche 0',
 		'Manche 1',
 		'Manche 2',

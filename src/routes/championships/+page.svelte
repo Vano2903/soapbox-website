@@ -21,7 +21,7 @@
 
 	// destructures the data received from the PageLoad and prepares it to be derived (reactive to changes in value)
 	const { data } = $props();
-	const championshipsList = $derived(data.championshipsList);
+	const championshipsListDerived = $derived(data.championshipsList);
 	const foundChampionshipDerived = $derived(data.foundChampionship);
 	const foundEventDerived = $derived(data.foundEvent);
 	const warningsDerived = $derived(data.warnings);
@@ -39,16 +39,22 @@
 		'Velocità',
 		'Finale'
 	];
-	let category = $state('SoapBox');
-	let leaderboard = $state('Manche 1');
+	let selectedCategory = $state('SoapBox');
+	let selectedLeaderboard = $state('Manche 1');
 
 	// variables and functions to manage the content of leaderboard sheet, retrieved by a controlled polling on the Google Sheets API
 	let sheetHTML = $state();
 	async function updateSheet() {
-		console.log('Updating sheet for category:', category, 'and leaderboard:', leaderboard);
+		console.log(
+			new Date().toLocaleTimeString('it-IT', { hour12: false }),
+			'Updating sheet for category:',
+			selectedCategory,
+			'and leaderboard:',
+			selectedLeaderboard
+		);
 		try {
 			let response = await fetch(
-				`/championships/sheetData?category=${category}&leaderboard=${leaderboard}`
+				`/championships/sheetData?category=${selectedCategory}&leaderboard=${selectedLeaderboard}`
 			);
 			sheetHTML = await response.text();
 		} catch (err) {
@@ -66,10 +72,26 @@
 	let stopPollingUpdateSheet: (() => void) | undefined;
 	$effect(() => {
 		if (foundEventDerived?.onAir) {
-			console.log('foundEventDerived (', foundEventDerived.name, ') is LIVE now!');
-			stopPollingUpdateSheet = startPollingUpdateSheet();
+			console.log(
+				new Date().toLocaleTimeString('it-IT', { hour12: false }),
+				'foundEventDerived (',
+				foundEventDerived.name,
+				') is LIVE now!'
+			);
+			if (!stopPollingUpdateSheet) {
+				console.log(
+					new Date().toLocaleTimeString('it-IT', { hour12: false }),
+					'starting new polling update sheet...'
+				);
+				stopPollingUpdateSheet = startPollingUpdateSheet();
+			}
 		} else {
-			console.log('foundEventDerived (', foundEventDerived?.name, ') is NOT LIVE now!');
+			console.log(
+				new Date().toLocaleTimeString('it-IT', { hour12: false }),
+				'foundEventDerived (',
+				foundEventDerived?.name,
+				') is NOT LIVE now!'
+			);
 			sheetHTML = '';
 			if (stopPollingUpdateSheet) {
 				stopPollingUpdateSheet();
@@ -79,7 +101,10 @@
 
 	// Functions to handle the selection of championship and event, causing a navigation to the new URL with hydration and updated props
 	function selectionYear(year: string) {
-		console.log('new year selection = {' + year + '}');
+		console.log(
+			new Date().toLocaleTimeString('it-IT', { hour12: false }),
+			'new year selection = {' + year + '}'
+		);
 		const url = new URL(window.location.href);
 		url.searchParams.set('championship', year);
 		goto(url.toString(), {
@@ -90,7 +115,10 @@
 		});
 	}
 	function selectionEvent(event: string) {
-		console.log('new event selection = {' + event + '}');
+		console.log(
+			new Date().toLocaleTimeString('it-IT', { hour12: false }),
+			'new event selection = {' + event + '}'
+		);
 		const url = new URL(window.location.href);
 		url.searchParams.set('event', event);
 		goto(url.toString(), {
@@ -104,11 +132,15 @@
 	// Function to transform the championship list into a format suitable for ElementSelection (with extra empty boundaries for cool UI effects)
 	function transformToElementList(championshipList: ChampionshipNonExpand[]) {
 		let elementsList = championshipList.map((v) => {
+			const isOngoing = v.ongoing;
+			const isLive = foundChampionshipDerived.expand.events.some((e) => e.onAir === true);
+
 			return {
 				value: v.name,
 				current: v.name === foundChampionshipDerived.name,
 				disabled: false,
-				icon: v.ongoing ? (foundEventDerived?.onAir ? LucideRadio : null) : LucideCalendarCheck
+				icon: isOngoing && isLive ? LucideRadio : isOngoing ? null : LucideCalendarCheck,
+				iconProps: isOngoing && isLive ? { color: '#e7000b' } : {}
 			};
 		});
 		for (let i = 0; i < Math.min(championshipsListOffset, 3); i++) {
@@ -116,10 +148,18 @@
 				value: (Number(championshipList.at(-1)?.name) + (i + 1)).toString(),
 				current: false,
 				disabled: true,
-				icon: LucideLock
+				icon: LucideLock,
+				iconProps: {}
 			});
 		}
 		return elementsList;
+	}
+
+	function testIcons() {
+		const showIcon = foundChampionshipDerived.expand.events.some((v) => {
+			return v.onAir === true;
+		});
+		console.log('testIcons', showIcon);
 	}
 </script>
 
@@ -133,7 +173,7 @@
 		<div class="my-5 flex justify-center">
 			<ElementSelection
 				offset={championshipsListOffset}
-				elements={transformToElementList(championshipsList)}
+				elements={transformToElementList(championshipsListDerived)}
 				handleSelection={selectionYear}
 				keysInteraction={true}
 			/>
@@ -159,9 +199,29 @@
 
 	<div class="space-y-16">
 		{#if foundEventDerived?.onAir}
-			<section class="flex flex-col items-center">
-				<h1 class="mb-4 text-2xl font-bold">Live Leaderboard</h1>
-				<div class="w-95/100 max-w-full overflow-x-auto md:w-8/10">
+			<section class="flex flex-col items-center gap-2">
+				<h1 class="text-3xl font-bold">Classifica Live:</h1>
+				<div class="flex flex-row items-center justify-center gap-4">
+					<select
+						bind:value={selectedCategory}
+						onchange={updateSheet}
+						class="rounded-xl bg-neutral-100 px-1.5 py-0.5"
+					>
+						{#each categories as cat}
+							<option value={cat}>{cat}</option>
+						{/each}
+					</select>
+					<select
+						bind:value={selectedLeaderboard}
+						onchange={updateSheet}
+						class="rounded-xl bg-neutral-100 px-1.5 py-0.5"
+					>
+						{#each leaderboards as board}
+							<option value={board}>{board}</option>
+						{/each}
+					</select>
+				</div>
+				<div class="mt-4 w-95/100 max-w-full overflow-x-auto md:w-8/10">
 					{@html sheetHTML}
 				</div>
 			</section>

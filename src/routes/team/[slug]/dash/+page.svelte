@@ -248,18 +248,45 @@
 
 	const baseInviteUrl = env.PUBLIC_BASE_URL + '/join/';
 
-	async function kickUser(userId: string) {
-		if (confirm('Sei sicuro di voler rimuovere questo membro dal team?')) {
-			try {
-				await pb
-					.collection('teams')
-					.update(team.id, { members: pb.collection('users').getId(userId) });
-				members = members.filter((m) => m.id !== userId);
-				alert('Membro rimosso con successo.');
-			} catch (err) {
-				console.error('Error kicking user:', err);
-				alert('Si è verificato un errore durante la rimozione del membro.');
-			}
+	let userToKick: UserNonExpand = $state({} as UserNonExpand);
+	let kickUserError: string | null = $state(null);
+	function askUserToKickModal(userId: string) {
+		const user = members.find((m) => m.id === userId);
+		if (!user) {
+			console.error('User not found:', userId);
+			return;
+		}
+		userToKick = user;
+		(document.getElementById('kick_user_modal') as HTMLDialogElement)?.showModal();
+		// if (confirm('Sei sicuro di voler rimuovere questo membro dal team?')) {
+		// 	try {
+		// 		await pb
+		// 			.collection('teams')
+		// 			.update(team.id, { members: pb.collection('users').getId(userId) });
+		// 		members = members.filter((m) => m.id !== userId);
+		// 		alert('Membro rimosso con successo.');
+		// 	} catch (err) {
+		// 		console.error('Error kicking user:', err);
+		// 		alert('Si è verificato un errore durante la rimozione del membro.');
+		// 	}
+		// }
+	}
+
+	function resetKickUserModal() {
+		userToKick = {} as UserNonExpand;
+		kickUserError = null;
+		(document.getElementById('kick_user_modal') as HTMLDialogElement)?.close();
+	}
+
+	async function kickUser(user: UserNonExpand) {
+		try {
+			await pb.collection('teams').update(team.id, { 'members-': user.person });
+			members = members.filter((m) => m.id !== user.id);
+			(document.getElementById('kick_user_modal') as HTMLDialogElement)?.close();
+			resetKickUserModal();
+		} catch (err) {
+			console.error('Error kicking user:', err);
+			kickUserError = "Si è verificato un errore durante l'espulsione del membro.";
 		}
 	}
 </script>
@@ -350,139 +377,47 @@
 								</div>
 							</div>
 
-							<dialog id="kick_user_modal" class="modal modal-bottom sm:modal-middle">
+							<dialog
+								oncancel={resetKickUserModal}
+								onclose={resetKickUserModal}
+								id="kick_user_modal"
+								class="modal modal-bottom sm:modal-middle"
+							>
 								<div class="modal-box">
 									<!-- <form method="dialog">
 									<button class="btn btn-sm btn-circle btn-ghost absolute top-2 right-2">✕</button>
 								</form> -->
-									<h3 class="text-lg font-bold">Crea Nuovo Invito</h3>
-									<p class="py-4">Configura le impostazioni per il nuovo invito al team.</p>
+									<h3 class="text-lg font-bold">Sei sicuro di voler espellere questo membro?</h3>
+									<p class="py-4">
+										Quest'azione non può essere annullata, sei sicuro di voler procedere?
+									</p>
 
-									<!-- Your invite form content here -->
-									<div class="form-control space-y-2">
-										<!-- <label class="input w-full">
-										<span class="label">{baseUrl}</span>
-										<input type="text" placeholder="codice-invito" />
-									</label> -->
-
-										<fieldset class="fieldset">
-											<legend class="fieldset-legend">Codice Invito</legend>
-											<label class="input validator w-full">
-												<span class="label">{baseUrl}</span>
-												<!-- <input type="text" placeholder="codice-invito" /> -->
-												<input
-													min="3"
-													max="16"
-													type="text"
-													class=""
-													placeholder="codice-invito"
-													disabled={creatingInvite || modifyingInvite}
-													bind:value={newInviteCode}
-												/>
-											</label>
-											<p class="label">
-												Questo é un codice univoco che permetterá l'accesso al team.<br />
-												Se non lo inserisci, verrá generato un codice casuale.
-											</p>
-										</fieldset>
-
-										<!-- <div tabindex="0" class="collapse-plus bg-base-100 border-base-300 collapse border">
-									<div class="collapse-title font-semibold">How do I create an account?</div>
-									<div class="collapse-content text-sm">
-										Click the "Sign Up" button in the top right corner and follow the registration
-										process.
-									</div>
-								</div> -->
-
-										<div class="bg-base-100 border-base-300 collapse-plus collapse mt-4 border">
-											<input type="checkbox" />
-											<div class="collapse-title">Impostazioni Avanzate</div>
-											<div class="collapse-content text-sm">
-												<fieldset class="fieldset">
-													<legend class="fieldset-legend">Numero di Utilizzi</legend>
-													<input
-														bind:value={newInviteMaxUses}
-														id="max-uses"
-														type="number"
-														class="input input-bordered w-full"
-													/>
-													<p class="label">
-														Quante persone potranno utilizzare questo invito.<br /> lascia vuoto per
-														creare un invito con utilizzi illimitati
-													</p>
-												</fieldset>
-
-												<fieldset class="fieldset">
-													<legend class="fieldset-legend">Data di Scadenza</legend>
-													<input
-														id="invite-expiration"
-														type="date"
-														bind:value={newInviteExpirationDate}
-														class="input input-bordered w-full"
-													/>
-													<p class="label">
-														Durata dell'invito<br />
-														Se non viene specificata, l'invito non avrá scadenza.
-													</p>
-												</fieldset>
-
-												<fieldset class="fieldset">
-													<legend class="fieldset-legend">Disabilitato</legend>
-													<label class="label">
-														<input
-															type="checkbox"
-															bind:checked={newInviteDisabled}
-															class="toggle toggle-error"
-														/>
-														Disabilita questo invito
-													</label>
-													<p class="label text-wrap">
-														Altre persone non potranno accedere al team quando l'invito è
-														disabilitato. Puoi riabilitarlo in seguito.
-													</p>
-												</fieldset>
-											</div>
-										</div>
-									</div>
-									{#if inviteError}
-										<p class="text-error mt-2">{inviteError}</p>
+									{#if kickUserError}
+										<p class="text-error">{kickUserError}</p>
 									{/if}
+
+									<!-- show who is being kicked by showing the profile pic and the full name with the user nick -->
+									<div class="flex items-center space-x-4">
+										<!-- {#snippet picture()} -->
+										<img
+											src={userToKick.avatarCropped}
+											alt={userToKick.name}
+											class="h-12 w-12 rounded-full ring-1"
+										/>
+										<!-- {/snippet} -->
+										<p class="text-lg font-semibold">{userToKick.name} {userToKick.lastName}</p>
+									</div>
+									<!-- <p class="py-4">Stai per espellere: {userToKick.name} {userToKick.lastName}</p> -->
+
 									<div class="modal-action">
 										<form method="dialog">
 											<button class="btn">Annulla</button>
 										</form>
-
-										{#if modifyingInvite}
-											<button
-												class="btn btn-warning"
-												onclick={updateInvite}
-												disabled={creatingInvite}
-											>
-												{#if creatingInvite}
-													<span class="loading loading-spinner loading-sm"></span>
-												{/if}
-												Modifica Invito
-											</button>
-										{:else}
-											<button
-												class="btn btn-primary"
-												onclick={createInvite}
-												disabled={creatingInvite}
-											>
-												{#if creatingInvite}
-													<span class="loading loading-spinner loading-sm"></span>
-												{/if}
-												Crea Invito
-											</button>
-										{/if}
+										<button class="btn btn-error" onclick={() => kickUser(userToKick)}
+											>Espelli Membro</button
+										>
 									</div>
-
-									<!-- <button class="btn btn-primary" onclick={createInvite}>Crea Invito</button> -->
 								</div>
-								<!-- This form closes the modal when clicked outside -->
-								<form method="dialog" class="modal-backdrop">
-									<button>close</button>
-								</form>
 							</dialog>
 
 							<div class="w-full space-y-2">
@@ -509,7 +444,7 @@
 											{#if team.owner !== member.person}
 												<button
 													class="btn btn-sm btn-outline btn-error"
-													onclick={() => kickUser(member.id)}
+													onclick={() => askUserToKickModal(member.id)}
 												>
 													<UserX class="size-4" />
 												</button>

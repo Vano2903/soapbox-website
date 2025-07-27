@@ -22,6 +22,7 @@
 		current: boolean;
 		disabled: boolean;
 		icon?: typeof IconType | null;
+		iconProps?: Record<string, any>;
 	};
 
 	interface Props {
@@ -167,7 +168,7 @@
 			<div class=" flex justify-center {elem.icon ? 'flex flex-col items-center' : ''}">
 				<span>{elem.value}</span>
 				{#if elem.icon}
-					<elem.icon class="h-4 w-4 pt-2 sm:h-6 sm:w-6" />
+					<elem.icon class="h-4 w-4 pt-2 sm:h-6 sm:w-6" {...elem.iconProps} />
 				{/if}
 			</div>
 		</button>
@@ -195,7 +196,10 @@
 		<div class="flex justify-center {elementsToShow.current.icon ? 'flex-col items-center' : ''}">
 			<span class="underline">{elementsToShow.current.value}</span>
 			{#if elementsToShow.current.icon}
-				<elementsToShow.current.icon class="h-4 w-4 pt-2 sm:h-6 sm:w-6" />
+				<elementsToShow.current.icon
+					class="h-4 w-4 pt-2 sm:h-6 sm:w-6"
+					{...elementsToShow.current.iconProps}
+				/>
 			{/if}
 		</div>
 	</button>
@@ -224,7 +228,7 @@
 			<div class="flex justify-center {elem.icon ? 'flex flex-col items-center' : ''}">
 				<span>{elem.value}</span>
 				{#if elem.icon}
-					<elem.icon class="h-4 w-4 pt-2 sm:h-6 sm:w-6" />
+					<elem.icon class="h-4 w-4 pt-2 sm:h-6 sm:w-6" {...elem.iconProps} />
 				{/if}
 			</div>
 		</button>

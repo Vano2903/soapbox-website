@@ -21,7 +21,6 @@ export const isPublicPath = (path: string): boolean => {
 	const publicPathsRegex = publicPaths
 		// .map((p) => p.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&'))
 		.join('|');
-	console.log('Public paths regex:', publicPathsRegex);
 	const re = new RegExp(publicPathsRegex, 'i');
 	return re.test(path);
 	// if (re.test(path)) {

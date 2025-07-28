@@ -8,7 +8,7 @@ export async function fetchSheetData(RANGE: string) {
 		throw new Error('Google Sheets API key is not set');
 	}
 	const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}?ranges=${RANGE}&includeGridData=true&key=${API_KEY}`;
-	console.log('[DEBUG] Fetch url: ', url);
+	// console.log('[DEBUG] Fetch url: ', url);
 
 	const res = await fetch(url);
 	const json = await res.json();

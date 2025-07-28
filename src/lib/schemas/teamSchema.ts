@@ -11,12 +11,13 @@ export const teamSchema = z.object({
 			invalid_type_error: 'Il nome completo del team deve essere una stringa'
 		})
 		.max(60, 'Il nome del team deve avere al massimo 60 caratteri'),
-	bio: z
-		.string({
+	bio: z.optional(
+		z.string({
 			required_error: 'La descrizione del team è obbligatoria',
 			invalid_type_error: 'La descrizione del team deve essere una stringa'
 		})
-		.max(1000, 'La descrizione del team deve avere al massimo 1000 caratteri'),
+		.max(1000, 'La descrizione del team deve avere al massimo 1000 caratteri')
+	),
 	// sponsors: z.optional(
 	// 	z.array(
 	// 		z

@@ -78,7 +78,7 @@
 				{#if isCurrentUser}
 					<p class="mt-4 text-lg font-semibold">Non fai parte di nessun team</p>
 					<button class="btn btn-primary mt-2">
-						<a href="/teams/new">Creane Uno</a>
+						<a href="/dash/team/new">Creane Uno</a>
 					</button>
 				{:else}
 					<p class="mt-4 text-lg font-normal text-gray-600">

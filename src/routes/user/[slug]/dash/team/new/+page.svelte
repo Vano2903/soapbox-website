@@ -16,10 +16,10 @@
 
 	const {
 		delayed,
-		submit: submitCheckUsername,
+		submit: submitCheckSlug,
 		enhance: submitEnhance
 	} = superForm(
-		{ username: '' },
+		{ slug: '' },
 		{
 			invalidateAll: false,
 			applyAction: false,
@@ -28,12 +28,12 @@
 				if (!$form.slug) cancel();
 			},
 			onUpdated({ form }) {
-				$errors.slug = form.errors.username;
+				$errors.slug = form.errors.slug;
 			}
 		}
 	);
 
-	const checkUsername = debounce(200, submitCheckUsername);
+	const checkSlug = debounce(200, submitCheckSlug);
 
 	// --- images
 	// const logotest = fileProxy(form, 'logoTest');
@@ -44,12 +44,12 @@
 	const bioProxy = fieldProxy(form, 'bio');
 	let crop = $state({ x: 0, y: 0 });
 	let zoom = $state(1);
-	let username = fieldProxy(form, 'slug');
+	let slug = fieldProxy(form, 'slug');
 </script>
 
 <main class="mx-auto max-w-2xl px-4 py-8">
 	<h1 class="text-primary mb-8 text-3xl font-bold">Crea il tuo team</h1>
-	<!-- <SuperDebug data={$form} /> -->
+	<SuperDebug data={$form} />
 	<form
 		method="POST"
 		class="flex flex-col space-y-8"
@@ -97,14 +97,14 @@
 						name="slug"
 						id="slug"
 						bind:value={
-							() => $username,
+							() => $slug,
 							(n) => {
-								$username = n.trimStart().replaceAll(' ', '-').toLowerCase();
+								$slug = n.trimStart().replaceAll(' ', '-').toLowerCase();
 							}
 						}
 						aria-invalid={$errors.slug ? 'true' : undefined}
 						placeholder="mario-rossi"
-						oninput={checkUsername}
+						oninput={checkSlug}
 					/>
 				</label>
 

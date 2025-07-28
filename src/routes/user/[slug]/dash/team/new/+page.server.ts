@@ -69,19 +69,19 @@ export const actions = {
 				slug: form.data.slug,
 				description: DOMPurify.sanitize(form.data.bio || ''),
 
-				banner: form.data.bannerOriginal,
-				bannerCropped: form.data.bannerCropped,
-				bannerCrop: form.data.bannerCroppedInfo,
+				banner: form.data.bannerOriginal ?? null,
+				bannerCropped: form.data.bannerCropped ?? null,
+				bannerCrop: form.data.bannerCroppedInfo ?? null,
 
-				logo: form.data.logoOriginal,
-				logoCropped: form.data.logoCropped,
-				logoCrop: form.data.logoCroppedInfo
+				logo: form.data.logoOriginal ?? null,
+				logoCropped: form.data.logoCropped ?? null,
+				logoCrop: form.data.logoCroppedInfo ?? null
 			});
 
 			console.log('createdTeam', createdTeam);
 			return message(form, {
 				type: 'success',
-				text: `Team creato con successo, vai alla sua pagina per invitare altri partecipanti ed iscriverti alle gare: <a href="/dash/team/${createdTeam.slug}">${createdTeam.name}</a>`
+				text: `Team creato con successo, vai alla sua pagina per invitare altri partecipanti ed iscriverti alle gare: <a href="/team/${createdTeam.slug}/dash">${createdTeam.name}</a>`
 			});
 		} catch (e) {
 			console.log(e);

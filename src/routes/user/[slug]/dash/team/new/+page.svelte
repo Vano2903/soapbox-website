@@ -49,7 +49,7 @@
 
 <main class="mx-auto max-w-2xl px-4 py-8">
 	<h1 class="text-primary mb-8 text-3xl font-bold">Crea il tuo team</h1>
-	<SuperDebug data={$form} />
+	<!-- <SuperDebug data={$form} /> -->
 	<form
 		method="POST"
 		class="flex flex-col space-y-8"

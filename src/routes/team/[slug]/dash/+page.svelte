@@ -312,8 +312,8 @@
 					<p class="text-normal text-gray-600 md:text-lg">{team.bio}</p>
 				</div>
 			</div>
-			<div class="divider"></div>
 			{#if isCurrentOwner}
+				<div class="divider"></div>
 				<a class="btn my-4 w-full bg-gray-100" href="./settings">Modifica Profilo</a>
 			{/if}
 		</div>

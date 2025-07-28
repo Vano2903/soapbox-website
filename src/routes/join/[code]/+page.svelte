@@ -5,7 +5,7 @@
 
 	let { data }: { data: PageData } = $props();
 
-	const { invite, isAlreadyMember, team } = data;
+	const { invite, isAlreadyMember, team, user } = data;
 
 	let isJoining = $state(false);
 
@@ -98,7 +98,7 @@
 
 				<!-- Go to Team Button -->
 				<a
-					href="/dash/teams/{team?.slug || team?.id}"
+					href={`/team/${team?.slug}/dash`}
 					class="flex w-full justify-center rounded-md border border-transparent bg-green-600 px-4 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:outline-none"
 				>
 					Vai al pannello di controllo di {team?.name || 'Team'}

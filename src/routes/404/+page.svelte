@@ -20,6 +20,9 @@
 			goto('/');
 		}, 500);
 	}
+
+	const { data } = $props();
+	let { user } = data;
 </script>
 
 <svelte:head>
@@ -132,13 +135,23 @@
 				</button>
 
 				<div class="flex flex-col justify-center gap-4 sm:flex-row">
-					<a
-						href="/dash"
-						class="inline-flex items-center space-x-2 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-3 font-semibold text-white shadow-md transition-all duration-200 hover:scale-105 hover:from-blue-600 hover:to-blue-700"
-					>
-						<span>🏁</span>
-						<span>Go to Dashboard</span>
-					</a>
+					{#if user}
+						<a
+							href={`/user/${user.nick}/dash`}
+							class="inline-flex items-center space-x-2 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-3 font-semibold text-white shadow-md transition-all duration-200 hover:scale-105 hover:from-blue-600 hover:to-blue-700"
+						>
+							<span>🏁</span>
+							<span>Go to Dashboard</span>
+						</a>
+					{:else}
+						<a
+							href="/"
+							class="inline-flex items-center space-x-2 rounded-full bg-gradient-to-r from-gray-500 to-gray-600 px-6 py-3 font-semibold text-white shadow-md transition-all duration-200 hover:scale-105 hover:from-gray-600 hover:to-gray-700"
+						>
+							<span>🏠</span>
+							<span>Return Home</span>
+						</a>
+					{/if}
 
 					<button
 						onclick={() => window.history.back()}

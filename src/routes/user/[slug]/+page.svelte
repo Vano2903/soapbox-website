@@ -77,9 +77,9 @@
 			{#if teams.length == 0}
 				{#if isCurrentUser}
 					<p class="mt-4 text-lg font-semibold">Non fai parte di nessun team</p>
-					<button class="btn btn-primary mt-2">
-						<a href="/dash/team/new">Creane Uno</a>
-					</button>
+					<a class="btn btn-primary mt-2 max-w-32" href={`/user/${user.nick}/dash/team/new`}
+						>Creane Uno</a
+					>
 				{:else}
 					<p class="mt-4 text-lg font-normal text-gray-600">
 						Questo account non fa parte di nessun team
@@ -108,7 +108,9 @@
 
 			<div>
 				{#if isCurrentUser}
-					<a class="btn my-4 w-full bg-gray-100" href="/dash">Vai alla tua pagina privata</a>
+					<a class="btn my-4 w-full bg-gray-100" href={`/user/${user.nick}/dash`}
+						>Vai alla tua pagina privata</a
+					>
 				{/if}
 			</div>
 		</div>

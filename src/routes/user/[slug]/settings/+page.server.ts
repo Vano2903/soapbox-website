@@ -141,7 +141,7 @@ export const actions = {
 
 			return message(form, {
 				type: 'success',
-				text: `Profilo aggiornato con successo torna alla<a href="/dash" class="link">dashboard</a>`
+				text: `Profilo aggiornato con successo torna alla<a href="/user/${locals.user?.nick}/dash" class="link">dashboard</a>`
 			});
 		} catch (e) {
 			console.log(e);

@@ -125,9 +125,12 @@
 						</a>
 					{/each}
 				</div>
-				<button class="btn btn-primary just mt-2 flex flex-nowrap items-center">
-					<a href="/dash/team/new">Creane Uno</a>
-				</button>
+				<!-- <button class="btn btn-primary just mt-2 flex flex-nowrap items-center"> -->
+				<a
+					class="max-w-32 btn btn-primary just mt-2 flex flex-nowrap items-center"
+					href={`/user/${user.nick}/dash/team/new`}>Creane Uno</a
+				>
+				<!-- </button> -->
 			</div>
 
 			<!-- {#if teamsCount == 1}

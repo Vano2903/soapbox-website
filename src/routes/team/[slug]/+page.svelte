@@ -75,9 +75,10 @@
 			{#if members.length == 0}
 				{#if isCurrentOwner}
 					<p class="mt-4 text-lg font-semibold">Non hai membri nel tuo team.</p>
-					<button class="btn btn-primary mt-2">
-						<a href={'/team/' + team.slug + '/invite/new'}>Creane un invito</a>
-					</button>
+					<a
+						class="btn btn-primary mt-2 max-w-32"
+						href={'/team/' + team.slug + '/dash?tab=invite-new'}>Creane un invito</a
+					>
 				{:else}
 					<p class="mt-4 text-lg font-normal text-gray-600">Questo team non ha membri.</p>
 				{/if}
@@ -104,9 +105,9 @@
 			</div>
 			{#if members.length === 1 && isCurrentOwner}
 				<p class="mt-4 text-lg font-semibold">Sei l'unico membro del team.</p>
-				<button class="btn btn-primary mt-2">
-					<a href={'/team/' + team.slug + '/dash'}>Invita qualcuno</a>
-				</button>
+				<a class="btn btn-primary mt-2 max-w-32" href={'/team/' + team.slug + '/dash?tab=invite'}
+					>Invita qualcuno</a
+				>
 			{/if}
 			<div>
 				{#if isCurrentMember}

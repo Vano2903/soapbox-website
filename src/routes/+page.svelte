@@ -4,7 +4,17 @@
 	import Carousel3 from '$components/carousel/carousel3.svelte';
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
 	import { fade } from 'svelte/transition';
-	import { Eye, Hammer, MapPinned, Trophy, Heart, VolumeX, Volume2 } from 'lucide-svelte';
+	import {
+		Eye,
+		Hammer,
+		MapPinned,
+		Trophy,
+		Heart,
+		VolumeX,
+		Volume2,
+		ChevronLeft,
+		ChevronRight
+	} from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import type { SponsorSlider } from '$lib/types/SponsorSlider.js';
 	import type { CarouselPage } from '$lib/types/carouselPage.js';
@@ -153,9 +163,41 @@
 	let mainRow: HTMLDivElement;
 	let secondaryRow: HTMLDivElement;
 
-	onMount(() => {
-		let observer: ResizeObserver;
+	let timelineContainer: HTMLElement;
+	let scrollAtStart = $state(true);
+	let scrollAtEnd = $state(false);
+	let fadeLeftDiv: HTMLElement;
+	let fadeRightDiv: HTMLElement;
 
+	function scrollTimeline(direction: 'left' | 'right') {
+		const scrollAmount = 300; // Adjust for desired scroll distance
+		if (!timelineContainer) return;
+
+		timelineContainer.scrollBy({
+			left: direction === 'left' ? -scrollAmount : scrollAmount,
+			behavior: 'smooth'
+		});
+
+		// requestAnimationFrame(() => {
+		// 	setTimeout(updateScrollButtons, 100);
+		// });
+		requestAnimationFrame(updateScrollButtons);
+	}
+
+	function updateScrollButtons() {
+		if (!timelineContainer) return;
+
+		const scrollLeft = timelineContainer.scrollLeft;
+		const scrollWidth = timelineContainer.scrollWidth;
+		const clientWidth = timelineContainer.clientWidth;
+
+		scrollAtStart = scrollLeft <= 0;
+		scrollAtEnd = scrollLeft + clientWidth >= scrollWidth - 1;
+	}
+
+	onMount(() => {
+		// --- Sponsor Slider Management ---
+		let sponsorSliderObserver: ResizeObserver;
 		function resizeArrayToMin(base: string[], minLength: number): string[] {
 			if (base.length === 0) return [];
 			let result: string[] = [];
@@ -165,7 +207,6 @@
 			// console.log('result = [' + result.length + '] = ' + result);
 			return result;
 		}
-
 		function calculateSizes() {
 			console.log('ricalculating Sizes @' + Date.now());
 			// Get all logos in first row
@@ -207,7 +248,6 @@
 			// 		sizedMainSponsors
 			// );
 		}
-
 		function startScroll(
 			sponsorSlider: SponsorSlider,
 			row: HTMLElement,
@@ -233,18 +273,17 @@
 
 			requestAnimationFrame(step);
 		}
-
 		requestAnimationFrame(() => {
 			calculateSizes();
 
 			// Observe size changes in logo boxes
-			observer = new ResizeObserver(() => {
+			sponsorSliderObserver = new ResizeObserver(() => {
 				calculateSizes();
 			});
 
 			// Observe first row only (since all logos are same size)
 			const logo = mainRow.querySelector('.logo') as HTMLElement;
-			if (logo) observer.observe(logo);
+			if (logo) sponsorSliderObserver.observe(logo);
 
 			const first = sizedMainSponsors.length > 0 ? 0 : null;
 			const second = sizedSecondarySponsors.length > 1 ? 1 : null;
@@ -259,8 +298,127 @@
 			}
 		});
 
-		return () => observer?.disconnect();
+		// --- Timeline Fading Management ---
+		let timelineContainerObserver: ResizeObserver;
+		function checkTimelineOverflow() {
+			if (!timelineContainer) return;
+
+			const isOverflowing = timelineContainer.scrollWidth > timelineContainer.clientWidth;
+			fadeLeftDiv.classList.toggle('opacity-0', !isOverflowing);
+			fadeLeftDiv.classList.toggle('opacity-100', isOverflowing);
+			fadeRightDiv.classList.toggle('opacity-0', !isOverflowing);
+			fadeRightDiv.classList.toggle('opacity-100', isOverflowing);
+		}
+		function startManagingTimelineOverflow() {
+			checkTimelineOverflow();
+
+			timelineContainerObserver = new ResizeObserver(() => {
+				checkTimelineOverflow();
+			});
+			if (timelineContainer) timelineContainerObserver.observe(timelineContainer);
+		}
+		startManagingTimelineOverflow();
+
+		// --- Timeline Scrolling Management ---
+		function manageScrollButtons() {
+			updateScrollButtons();
+			timelineContainer?.addEventListener('scroll', updateScrollButtons);
+		}
+		manageScrollButtons();
+
+		// cleanup the observers on component unmount
+		return () => {
+			sponsorSliderObserver?.disconnect();
+			timelineContainerObserver?.disconnect();
+			timelineContainer?.removeEventListener('scroll', updateScrollButtons);
+		};
 	});
+
+	const timelineItems: {
+		year: string;
+		content: string;
+		active: boolean;
+		preActive: boolean;
+		postActive: boolean;
+	}[] = [
+		{
+			year: '1955',
+			content: 'Prima gara sulle Mura di Città Alta',
+			active: true,
+			preActive: false,
+			postActive: true
+		},
+		{
+			year: '1978',
+			content: 'Primi rally nelle valli della provincia',
+			active: true,
+			preActive: true,
+			postActive: true
+		},
+		{
+			year: '1997',
+			content: 'Nascita del Regolamento Tecnico',
+			active: true,
+			preActive: true,
+			postActive: true
+		},
+		{
+			year: '2003',
+			content: 'Primo Campionato Ufficiale',
+			active: true,
+			preActive: true,
+			postActive: true
+		},
+		{
+			year: '2009',
+			content: 'Edizione "Corriamo per vincere la SLA"',
+			active: true,
+			preActive: true,
+			postActive: true
+		},
+		{
+			year: '2011',
+			content: 'Espansione del campionato nella Bergamasca',
+			active: true,
+			preActive: true,
+			postActive: true
+		},
+		{
+			year: '2014',
+			content: 'Primo rally nel Trentino Alto Adige',
+			active: true,
+			preActive: true,
+			postActive: true
+		},
+		{
+			year: '2016',
+			content: 'Campionato da oltre 10 eventi',
+			active: true,
+			preActive: true,
+			postActive: true
+		},
+		{
+			year: '2024',
+			content: 'Introduzione del Campionato Drift Trike',
+			active: true,
+			preActive: true,
+			postActive: true
+		},
+		{
+			year: '2025',
+			content: 'Premolo ospita il primo rally notturno',
+			active: true,
+			preActive: true,
+			postActive: true
+		},
+		{
+			year: '2026',
+			content: 'Espansione del campionato in Lombardia',
+			active: false,
+			preActive: false,
+			postActive: false
+		}
+	];
 </script>
 
 <main class="gap-2 pb-10">
@@ -277,16 +435,16 @@
 	</div>
 	<div>
 		<!-- Aspettando l'Evento -->
-		<hr class="mx-4 my-3 h-1 w-auto rounded-sm border-0 bg-red-600 md:hidden lg:mt-0" />
-		<div class="mx-4 mb-4 px-2 md:hidden">
+		<div class="md:hidden">
+			<hr class="mx-4 mt-2 mb-6 h-1 w-auto rounded-sm border-0 bg-red-600 md:hidden lg:mt-0" />
 			<p class="pb-4 text-center text-5xl font-bold">
-				Aspettando l'<span class="text-red-600">EVENTO</span>!
+				Aspettando l’<span class="text-red-600">EVENTO</span>!
 			</p>
-			<div class="flex flex-row justify-center sm:justify-evenly">
-				<div class="mr-5 flex max-w-1/3 flex-col justify-center sm:mr-0">
+			<div class="flex flex-row justify-center gap-4 sm:gap-8">
+				<div class="flex max-w-1/3 flex-col justify-center">
 					{#if eventInfo.kind === OldEventKind.NextEventKind}
 						<p class="pb-4 text-right text-base/5">
-							<span class="xs:hidden">Le iscrizioni all'evento sono aperte!</span>
+							<span class="xs:hidden">Le iscrizioni all’evento sono aperte!</span>
 							<span class="xs:block hidden">Sono aperte le iscrizioni per il prossimo evento!</span>
 						</p>
 						<p class="pb-4 text-right text-base/5">
@@ -327,14 +485,14 @@
 		</div>
 
 		<!-- Noi siamo BoxRally -->
-		<hr class="mx-4 my-3 h-1 w-auto rounded-sm border-0 bg-red-600 lg:mt-0" />
-		<div>
+		<div class="mt-12 md:mt-0">
+			<hr class="mx-4 mt-2 mb-6 h-1 w-auto rounded-sm border-0 bg-red-600 lg:mt-0" />
 			<p class="pb-4 text-center text-5xl font-bold">
 				Noi siamo <span class="text-red-600">BOXRALLY</span>!
 			</p>
 
 			<!-- Organization statistics -->
-			<section class="mb-4 px-4 py-2 text-center">
+			<section class="my-12 px-4 py-10 text-center">
 				<h2 class="text-xl font-bold">Non solo corse:</h2>
 				<p class="py-1 text-lg leading-relaxed">
 					Boxrally è il gioco serio di chi crea, sogna e corre insieme.<br />
@@ -364,11 +522,11 @@
 			</section>
 
 			<!-- Tabulated walkthrough -->
-			<section class="bg-neutral-50 px-4 py-2 pb-8">
+			<section class="my-12 bg-neutral-100 px-4 py-10">
 				<div class="flex flex-row flex-wrap justify-evenly">
 					{#each tabs as tab}
 						<button
-							class="flex flex-col items-center gap-2 p-2 text-left transition-all duration-200 hover:text-red-600"
+							class="flex cursor-pointer flex-col items-center gap-2 p-2 text-left transition-all duration-200 hover:text-red-600"
 							onclick={() => (activeTab = tab.label)}
 						>
 							<div class="flex flex-row items-center">
@@ -424,8 +582,10 @@
 
 			<!-- This video is just a template while we record and produce the real thing! -->
 			<!-- Please don't sue us for any copyright claims. -->
+			<!-- Original Video Credits: Colin McRea Rally 2.0 @ Codemasters - Music by Jonathan Colling | Found on: Youtube @ TheCarArchives -->
 			<!-- Captivating video -->
-			<section class="relative my-8 h-[60vh]">
+
+			<section class="relative my-12 h-[55vh] bg-black lg:h-[70vh] 2xl:h-[85vh]">
 				<video
 					id="highlight-video"
 					autoplay
@@ -446,7 +606,7 @@
 				</div>
 				<button
 					onclick={toggleMute}
-					class="absolute right-4 bottom-4 z-10 rounded-full bg-white/80 px-3 py-1 text-sm font-semibold text-black backdrop-blur hover:bg-white"
+					class="absolute right-4 bottom-4 z-10 cursor-pointer rounded-full bg-white/80 px-3 py-1 text-sm font-semibold text-black backdrop-blur hover:bg-white"
 				>
 					{#if isHighlightMuted}
 						<VolumeX />
@@ -457,18 +617,18 @@
 			</section>
 
 			<!-- Sponsor slider -->
-			<section class="relative my-16 px-4">
+			<section class="relative my-12 px-4 py-10">
 				<h3 class="mb-2 text-center text-2xl font-bold text-gray-800 md:text-3xl">
 					Il supporto che crede in noi, spinge le nostre vetture
 				</h3>
-				<p class="mx-auto mb-8 max-w-3xl text-center text-base text-gray-600 md:text-lg">
+				<p class="mx-auto max-w-3xl text-center text-base text-gray-600 md:text-lg">
 					Ogni gesto di supporto ha un peso enorme nella nostra discesa. Non contano solo le mani
 					che spingono il carretto, ma anche quelle che mettono linfa vitale nel progetto. La grande
 					famiglia che siamo sarebbe incompleta senza i nostri sponsor, sono la forza invisibile che
 					abbraccia la nostra passione e rende possibile l’impossibile.
 				</p>
 
-				<div class="relative m-auto bg-white py-12 lg:w-5/6">
+				<div class="relative m-auto pt-8 lg:w-5/6">
 					<div class="relative">
 						<div
 							class="pointer-events-none absolute top-0 left-0 z-10 h-full w-32 bg-gradient-to-r from-white to-transparent"
@@ -481,7 +641,7 @@
 							<div class="flex gap-6 py-1 will-change-transform" bind:this={mainRow}>
 								{#each [...mainSponsorsSlider.sizedSponsors, ...mainSponsorsSlider.sizedSponsors] as logo}
 									<div
-										class="logo xs:h-24 xs:w-40 flex h-20 w-32 flex-none items-center justify-center rounded-xl bg-white shadow md:h-28 md:w-48"
+										class="logo xs:h-24 xs:w-40 flex h-20 w-32 flex-none items-center justify-center rounded-xl shadow md:h-28 md:w-48"
 									>
 										<img
 											src={`/images/sponsor/${logo}`}
@@ -498,7 +658,7 @@
 							<div class="flex gap-6 py-1 will-change-transform" bind:this={secondaryRow}>
 								{#each [...secondarySponsorsSlider.sizedSponsors, ...secondarySponsorsSlider.sizedSponsors] as logo}
 									<div
-										class="logo xs:h-24 xs:w-40 flex h-20 w-32 flex-none items-center justify-center rounded-xl bg-white shadow md:h-28 md:w-48"
+										class="logo xs:h-24 xs:w-40 flex h-20 w-32 flex-none items-center justify-center rounded-xl shadow md:h-28 md:w-48"
 									>
 										<img
 											src={`/images/sponsor/${logo}`}
@@ -514,8 +674,111 @@
 				</div>
 			</section>
 
+			<!-- History timeline -->
+			<section class="my-12 bg-neutral-100 px-4 py-10">
+				<h2 class="mb-6 text-center text-3xl font-bold">La nostra storia, curva dopo curva</h2>
+				<p class="mx-auto mb-12 max-w-2xl text-center text-gray-700">
+					Dall’idea goliardica alla discesa sulle Mura di Bergamo, fino ai circuiti nei paesi della
+					Bergamasca: ecco come BoxRally è cresciuto con noi, anno dopo anno.
+				</p>
+
+				<div class="relative">
+					<div class="relative m-auto flex w-full flex-row justify-center lg:w-4/5">
+						<div
+							class="fade-left pointer-events-none absolute top-0 left-0 z-10 h-full w-32 bg-gradient-to-r from-neutral-100 to-transparent transition-opacity duration-300"
+							bind:this={fadeLeftDiv}
+						></div>
+						<div
+							class="fade-right pointer-events-none absolute top-0 right-0 z-10 h-full w-32 bg-gradient-to-l from-neutral-100 to-transparent transition-opacity duration-300"
+							bind:this={fadeRightDiv}
+						></div>
+						<div class="scrollbar-hide overflow-x-auto" bind:this={timelineContainer}>
+							<ul class="timeline">
+								<li class="invisible">
+									<div class="timeline-start w-16"></div>
+									<div class="timeline-middle"></div>
+									<div class="timeline-end w-16"></div>
+								</li>
+								{#each timelineItems as item, index}
+									<li>
+										<hr
+											class="{item.preActive ? 'bg-primary' : 'bg-neutral-300'} {index === 0
+												? 'hidden'
+												: ''}"
+										/>
+										<div
+											class="{index % 2 === 0
+												? 'timeline-start'
+												: 'timeline-end'} text-xl font-bold"
+										>
+											{item.year}
+										</div>
+										<div class="timeline-middle">
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												viewBox="0 0 20 20"
+												fill="currentColor"
+												class="{item.active ? 'text-primary' : 'text-neutral-300'} h-5 w-5"
+											>
+												<path
+													fill-rule="evenodd"
+													d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 {item.active
+														? '00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z'
+														: ''}"
+													clip-rule="evenodd"
+												/>
+											</svg>
+										</div>
+										<div class={index % 2 === 0 ? 'timeline-end' : 'timeline-start'}>
+											<p class="w-32 text-center text-sm text-neutral-600">
+												{item.content}
+											</p>
+										</div>
+										<hr
+											class={index === timelineItems.length - 1
+												? '!border-0 !border-t-4 !border-dashed !border-neutral-300 !bg-transparent'
+												: item.postActive
+													? 'bg-primary'
+													: 'bg-neutral-300'}
+										/>
+									</li>
+								{/each}
+								<li class="invisible">
+									<div class="timeline-start w-16"></div>
+									<div class="timeline-middle"></div>
+									<div class="timeline-end w-16"></div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<button
+						class="group absolute top-1/2 left-15 z-20 -translate-y-1/2 cursor-pointer p-2 transition disabled:cursor-not-allowed disabled:opacity-50"
+						onclick={() => scrollTimeline('left')}
+						disabled={scrollAtStart}
+						aria-label="Scroll left"
+					>
+						<ChevronLeft
+							class="group-hover:stroke-primary h-full w-full stroke-neutral-600 stroke-3 group-disabled:stroke-neutral-400"
+							size="36"
+						/>
+					</button>
+					<button
+						class="group absolute top-1/2 right-15 z-20 -translate-y-1/2 cursor-pointer p-2 transition disabled:cursor-not-allowed disabled:opacity-50"
+						onclick={() => scrollTimeline('right')}
+						disabled={scrollAtEnd}
+						aria-label="Scroll right"
+					>
+						<!-- The icon inside -->
+						<ChevronRight
+							class="group-hover:stroke-primary h-full w-full stroke-neutral-600 stroke-3 group-disabled:stroke-neutral-400"
+							size="36"
+						/>
+					</button>
+				</div>
+			</section>
+
 			<!-- Quoted comments -->
-			<section class="my-12 px-4">
+			<section class="my-12 px-4 py-10">
 				<h3 class="pb-6 text-center text-3xl font-bold">Per noi ogni voce conta:</h3>
 				<p class="mx-auto mb-8 max-w-3xl text-center text-base text-gray-600 md:text-lg">
 					Fin dalle nostre origini, ascoltiamo tutti: dai piloti, agli organizzatori fino agli
@@ -523,58 +786,58 @@
 					amiamo.
 				</p>
 				<div class="m-auto grid max-w-5/6 gap-6 md:max-w-full md:grid-cols-3 lg:max-w-4/5">
-					<div class="flex flex-col justify-between rounded-lg bg-neutral-50 p-4 shadow-md">
+					<div class="flex flex-col justify-between rounded-lg bg-neutral-100 p-4 shadow-md">
 						<p class="text-sm italic">
 							"Questa gara è stata fantastica, ci siamo superati sia come impegno di squadra, sia
 							come fiducia tra fratelli."
 						</p>
 						<p class="mt-4 text-right">
-							— Team:<br /><span class="text-red-600">Noter de Desensà</span>
+							— Team<br /><span class="text-red-600">Noter de Desensà</span>
 						</p>
 					</div>
-					<div class="flex flex-col justify-between rounded-lg bg-neutral-50 p-4 shadow-md">
+					<div class="flex flex-col justify-between rounded-lg bg-neutral-100 p-4 shadow-md">
 						<p class="text-sm italic">
 							"Ci abbiamo messo 4 mesi per costruire la macchinina, ma è stato un periodo di veri
 							ricordi e risate."
 						</p>
 						<p class="mt-4 text-right">
-							— Team:<br /><span class="text-red-600">I Vichinghi</span>
+							— Team<br /><span class="text-red-600">I Vichinghi</span>
 						</p>
 					</div>
-					<div class="flex flex-col justify-between rounded-lg bg-neutral-50 p-4 shadow-md">
+					<div class="flex flex-col justify-between rounded-lg bg-neutral-100 p-4 shadow-md">
 						<p class="text-sm italic">
 							"Fare lo speaker è un delirio continuo: nomi, tempi, applausi... ma quando vedo gli
 							occhi brillare sotto i caschi, so che sto raccontando qualcosa di magico."
 						</p>
 						<p class="mt-4 text-right">
-							— Spreaker:<br /><span class="text-red-600">Cocchi Simone</span>
+							— Spreaker<br /><span class="text-red-600">Cocchi Simone</span>
 						</p>
 					</div>
-					<div class="flex flex-col justify-between rounded-lg bg-neutral-50 p-4 shadow-md">
+					<div class="flex flex-col justify-between rounded-lg bg-neutral-100 p-4 shadow-md">
 						<p class="text-sm italic">
 							"Organizzare questa gara è come costruire una macchina a mano ogni anno: la fatica è
 							tanta, ma quando la vedi correre... non puoi fare altro che sorridere."
 						</p>
 						<p class="mt-4 text-right">
-							— Organizzatore:<br /><span class="text-red-600">Ferrari Mauro</span>
+							— Organizzatore<br /><span class="text-red-600">Ferrari Mauro</span>
 						</p>
 					</div>
-					<div class="flex flex-col justify-between rounded-lg bg-neutral-50 p-4 shadow-md">
+					<div class="flex flex-col justify-between rounded-lg bg-neutral-100 p-4 shadow-md">
 						<p class="text-sm italic">
 							"Lo scatto migliore? Quell’attimo di follia e gioia, col casco ancora storto e il
 							sorriso già stampato in faccia. È lì che c’è tutta la verità dell’evento."
 						</p>
 						<p class="mt-4 text-right">
-							— Fotografa:<br /><span class="text-red-600">Nadia Pezzoli</span>
+							— Fotografa<br /><span class="text-red-600">Nadia Pezzoli</span>
 						</p>
 					</div>
-					<div class="flex flex-col justify-between rounded-lg bg-neutral-50 p-4 shadow-md">
+					<div class="flex flex-col justify-between rounded-lg bg-neutral-100 p-4 shadow-md">
 						<p class="text-sm italic">
 							"Talvolta credo che si potrebbe rendere tutto un po' più pazzo. Mio papà non la pensa
 							così, forse dovrei cambiare compagno di squadra ahah."
 						</p>
 						<p class="mt-4 text-right">
-							— Team:<br /><span class="text-red-600">Banda Bassotti 1907</span>
+							— Team<br /><span class="text-red-600">Banda Bassotti 1907</span>
 						</p>
 					</div>
 				</div>
@@ -609,5 +872,13 @@
 	main {
 		display: flex;
 		flex-direction: column;
+	}
+
+	.scrollbar-hide::-webkit-scrollbar {
+		display: none;
+	}
+	.scrollbar-hide {
+		scrollbar-width: none; /* Firefox */
+		-ms-overflow-style: none; /* IE/Edge */
 	}
 </style>

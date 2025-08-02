@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Carousel3 from '$components/carousel/carousel3.svelte';
-	import type { CarouselPage } from '$lib/types/carouselPage.js';
+	import type { CarouselPageType } from '$lib/types/carouselPage.js';
 
 	const sections = [
 		{
@@ -23,7 +23,7 @@
 					horizontal: { src: '/images/chi-siamo/soapbox.jpg', alt: 'macchine soapbox' },
 					loading: 'eager'
 				}
-			] as CarouselPage[],
+			] as CarouselPageType[],
 			activePage: 1
 		},
 		{
@@ -55,7 +55,7 @@
 					},
 					loading: 'lazy'
 				}
-			] as CarouselPage[],
+			] as CarouselPageType[],
 			activePage: 1
 		},
 		{
@@ -78,7 +78,7 @@
 					horizontal: { src: '/images/chi-siamo/jump.jpeg', alt: 'macchina salta tra la schiuma' },
 					loading: 'lazy'
 				}
-			] as CarouselPage[],
+			] as CarouselPageType[],
 			activePage: 1
 		},
 		{
@@ -110,7 +110,7 @@
 					},
 					loading: 'lazy'
 				}
-			] as CarouselPage[],
+			] as CarouselPageType[],
 			activePage: 1
 		}
 	];
@@ -194,7 +194,7 @@
 				</div>
 				<div class="block md:hidden">
 					<Carousel3
-						pages={section.pages as CarouselPage[]}
+						pages={section.pages as CarouselPageType[]}
 						withControls={true}
 						startingPage={section.activePage}
 					/>

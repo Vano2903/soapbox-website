@@ -1,4 +1,4 @@
-export type CarouselPage = {
+export type CarouselPageType = {
 	layout: 'horizontal' | 'vertical' | 'both';
 	breakpoint?: string;
 	horizontal?: { src: string; alt: string };

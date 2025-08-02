@@ -198,13 +198,13 @@
 			{#each sections as section}
 				{#if section.active}
 					<div class="flex flex-col">
-						<span class="text-base font-bold text-gray-500 uppercase md:text-xl lg:text-2xl"
+						<span class="text-base font-bold text-gray-400 uppercase md:text-xl lg:text-2xl"
 							>{section.name}</span
 						>
 						<span class="flex flex-col pl-2 text-sm md:text-base">
 							{#each section.links as link}
 								{#if link.active}
-									<a href={link.href} class="text-gray-500 hover:text-red-600">{link.name}</a>
+									<a href={link.href} class="text-gray-400 hover:text-red-600">{link.name}</a>
 								{/if}
 							{/each}
 						</span>
@@ -213,7 +213,7 @@
 			{/each}
 		</div>
 	</div>
-	<div class="flex w-full items-center justify-center py-2 pt-4 text-center text-gray-700">
+	<div class="flex w-full items-center justify-center py-2 pt-4 text-center text-gray-500">
 		<span class="inner-container">
 			Copyright &copy {new Date().getFullYear()} all rights reserved | Made with love by
 			<a target="_blank" class="underline hover:text-red-600" href="https://github.com/vano2903"

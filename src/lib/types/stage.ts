@@ -2,19 +2,22 @@ import type { EventId, Event } from './event'
 import type { TrackId, Track } from './tracks';
 
 export enum StageKind {
+	Sealing = 'sealing',
 	Exhibition = 'exhibition',
-	Race = 'race'
+	Stage = 'stage',
+	SpecialStage = 'special stage'
 }
 
 export type StageId = string;
 export interface StageBase {
 	id: StageId;
 	name: string;
-	description: string;
+	description?: string;
 	kind: StageKind;
-	startTime: Date;
-	trackId: TrackId;
-	event: EventId;
+	startTime?: Date;
+	onAir: boolean;
+	trackId?: TrackId;
+	event?: EventId;
 	created: Date;
 	updated: Date;
 }

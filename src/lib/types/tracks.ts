@@ -3,11 +3,11 @@ import type { StageId, Stage } from "./stage";
 export type TrackId = string;
 
 export interface SurfaceInfo {
-	dirt: number;
-	gravel: number;
-	pebble: number;
-	concrete: number;
-	asphalt: number;
+	dirt?: number;
+	gravel?: number;
+	pebble?: number;
+	concrete?: number;
+	asphalt?: number;
 }
 
 export interface TrackBase {
@@ -19,8 +19,10 @@ export interface TrackBase {
 	startingAltitude: number;
 	arrivalAltitude: number;
 	differenceAltitude: number;
-	surface: SurfaceInfo;
-	stages: StageId[];
+	rightTurns: number;
+	leftTurns: number;
+	surface?: SurfaceInfo;
+	stages?: StageId[];
 	created: Date;
 	updated: Date;
 }

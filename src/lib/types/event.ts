@@ -1,5 +1,6 @@
 import type { StageId, Stage } from './stage'
 import type { LocationId, Location } from './location'
+import type { ResultId, Result } from './results'
 
 export enum EventKind {
 	Rally = 'rally'
@@ -12,13 +13,14 @@ export interface EventBase {
 	shortName: string;
 	kind: EventKind;
 	startDate: Date;
-	endDate: Date;
-	stages: StageId[];
+	endDate?: Date;
+	stages?: StageId[];
 	location: LocationId;
 	numSubscriptions: number;
 	maxSubscriptions: number | null;
 	subscriptionsOpen: boolean;
 	onAir: boolean;
+	results: ResultId[];
 	created: Date;
 	updated: Date;
 }
@@ -28,6 +30,7 @@ export interface EventExpand extends EventBase {
 	expand: {
 		stages: Stage[];
 		location: Location;
+		results: Result[];
 	}
 }
 

@@ -6,24 +6,32 @@
 	import { fade } from 'svelte/transition';
 	import { VolumeX, Volume2, ChevronLeft, ChevronRight, Link } from 'lucide-svelte';
 	import { onMount } from 'svelte';
-	import type { SponsorSlider } from '$lib/types/SponsorSlider.js';
+	import type { SponsorLogos, SponsorSlider } from '$lib/types/SponsorSlider.js';
 	import type { CarouselPageType } from '$lib/types/carouselPage.js';
 	import type { TabsPageType } from '$types/tabsPage.js';
+	import type { TimelineType } from '$types/timeline.js';
 
 	const { data } = $props();
 	const {
 		eventInfo,
 		organizationStats,
 		carouselImages,
-		tabs
+		tabs,
+		sponsorLogos,
+		timeline
 	}: {
 		eventInfo: EventInfoType;
 		organizationStats: OrganizationStatType[];
 		carouselImages: CarouselPageType[];
 		tabs: TabsPageType;
+		sponsorLogos: SponsorLogos;
+		timeline: TimelineType;
 	} = data;
+
+	// --- Tabulated walkthroug Management ---
 	let activeTab = $state('Guarda');
 
+	// --- Highlight video Management ---
 	let isHighlightMuted = $state(true);
 	function toggleMute() {
 		const video = document.getElementById('highlight-video') as HTMLVideoElement | null;
@@ -36,32 +44,31 @@
 		}
 	}
 
-	const mainSponsors = ['fassi.svg', 'pedretti.png', 'italianoptic.png', 'cargoway.png'];
-	const secondarySponsors = ['soapbox.jpg', 'ipaas-favicon.png', 'cargoway-rejected.jpg'];
-	let sizedMainSponsors = $state(mainSponsors);
-	let sizedSecondarySponsors = $state(secondarySponsors);
+	// --- Sponsor slider Management ---
+	let sizedMainSponsors = $state(sponsorLogos.main);
+	let sizedSecondarySponsors = $state(sponsorLogos.secondary);
 	let mainRow: HTMLDivElement;
 	let secondaryRow: HTMLDivElement;
 
 	let mainSponsorsSlider: SponsorSlider = $state({
-		sponsors: mainSponsors,
-		sizedSponsors: mainSponsors,
+		sponsors: sponsorLogos.main,
+		sizedSponsors: sponsorLogos.main,
 		speed: 100,
 		loopWidth: 0
 	});
 	let secondarySponsorsSlider: SponsorSlider = $state({
-		sponsors: secondarySponsors,
-		sizedSponsors: secondarySponsors,
+		sponsors: sponsorLogos.secondary,
+		sizedSponsors: sponsorLogos.secondary,
 		speed: 100,
 		loopWidth: 0
 	});
 
+	// --- History timeline Management ---
 	let timelineContainer: HTMLElement;
 	let scrollAtStart = $state(true);
 	let scrollAtEnd = $state(false);
 	let fadeLeftDiv: HTMLElement;
 	let fadeRightDiv: HTMLElement;
-
 	function scrollTimeline(direction: 'left' | 'right') {
 		const scrollAmount = 300; // Adjust for desired scroll distance
 		if (!timelineContainer) return;
@@ -76,7 +83,6 @@
 		// });
 		requestAnimationFrame(updateScrollButtons);
 	}
-
 	function updateScrollButtons() {
 		if (!timelineContainer) return;
 
@@ -191,7 +197,7 @@
 			}
 		});
 
-		// --- Timeline Fading Management ---
+		// --- Timeline Management ---
 		let timelineContainerObserver: ResizeObserver;
 		function checkTimelineOverflow() {
 			if (!timelineContainer) return;
@@ -210,13 +216,11 @@
 			});
 			if (timelineContainer) timelineContainerObserver.observe(timelineContainer);
 		}
-		startManagingTimelineOverflow();
-
-		// --- Timeline Scrolling Management ---
 		function manageScrollButtons() {
 			updateScrollButtons();
 			timelineContainer?.addEventListener('scroll', updateScrollButtons);
 		}
+		startManagingTimelineOverflow();
 		manageScrollButtons();
 
 		// cleanup the observers on component unmount
@@ -226,92 +230,6 @@
 			timelineContainer?.removeEventListener('scroll', updateScrollButtons);
 		};
 	});
-
-	const timelineItems: {
-		year: string;
-		content: string;
-		active: boolean;
-		preActive: boolean;
-		postActive: boolean;
-	}[] = [
-		{
-			year: '1955',
-			content: 'Prima gara sulle Mura di Città Alta',
-			active: true,
-			preActive: false,
-			postActive: true
-		},
-		{
-			year: '1978',
-			content: 'Primi rally nelle valli della provincia',
-			active: true,
-			preActive: true,
-			postActive: true
-		},
-		{
-			year: '1997',
-			content: 'Nascita del Regolamento Tecnico',
-			active: true,
-			preActive: true,
-			postActive: true
-		},
-		{
-			year: '2003',
-			content: 'Primo Campionato Ufficiale',
-			active: true,
-			preActive: true,
-			postActive: true
-		},
-		{
-			year: '2009',
-			content: 'Edizione "Corriamo per vincere la SLA"',
-			active: true,
-			preActive: true,
-			postActive: true
-		},
-		{
-			year: '2011',
-			content: 'Espansione del campionato nella Bergamasca',
-			active: true,
-			preActive: true,
-			postActive: true
-		},
-		{
-			year: '2014',
-			content: 'Primo rally nel Trentino Alto Adige',
-			active: true,
-			preActive: true,
-			postActive: true
-		},
-		{
-			year: '2016',
-			content: 'Campionato da oltre 10 eventi',
-			active: true,
-			preActive: true,
-			postActive: true
-		},
-		{
-			year: '2024',
-			content: 'Introduzione del Campionato Drift Trike',
-			active: true,
-			preActive: true,
-			postActive: true
-		},
-		{
-			year: '2025',
-			content: 'Premolo ospita il primo rally notturno',
-			active: true,
-			preActive: true,
-			postActive: true
-		},
-		{
-			year: '2026',
-			content: 'Espansione del campionato in Lombardia',
-			active: false,
-			preActive: false,
-			postActive: false
-		}
-	];
 </script>
 
 <main>
@@ -480,7 +398,7 @@
 			<!-- This video is just a template while we record and produce the real thing! -->
 			<!-- Please don't sue us for any copyright claims. -->
 			<!-- Original Video Credits: Colin McRea Rally 2.0 @ Codemasters - Music by Jonathan Colling | Found on: Youtube @ TheCarArchives -->
-			<!-- Captivating video -->
+			<!-- Highlight video -->
 
 			<section class="relative my-12 h-[55vh] bg-black lg:h-[70vh] 2xl:h-[85vh]">
 				<video
@@ -595,17 +513,26 @@
 						></div>
 						<div class="scrollbar-hide overflow-x-auto" bind:this={timelineContainer}>
 							<ul class="timeline">
-								<li class="invisible">
-									<div class="timeline-start w-16"></div>
-									<div class="timeline-middle"></div>
-									<div class="timeline-end w-16"></div>
+								<li>
+									<div class="timeline-start invisible w-16"></div>
+									<div class="timeline-middle invisible"></div>
+									<div class="timeline-end invisible w-16"></div>
+									<hr
+										class={timeline.prefix && timeline.prefix.length === 2
+											? `!border-${timeline.prefix.style} !border-0 !border-t-4 !border-${timeline.prefix.color} !bg-transparent`
+											: 'invisible'}
+									/>
 								</li>
-								{#each timelineItems as item, index}
+								{#each timeline.items as item, index}
 									<li>
 										<hr
-											class="{item.preActive ? 'bg-primary' : 'bg-neutral-300'} {index === 0
-												? 'hidden'
-												: ''}"
+											class=" {index === 0
+												? timeline.prefix
+													? `!border-${timeline.prefix.style} !border-0 !border-t-4 !border-${timeline.prefix.color} !bg-transparent`
+													: 'hidden'
+												: item.preActive
+													? 'bg-primary'
+													: 'bg-neutral-300'}"
 										/>
 										<div
 											class="{index % 2 === 0
@@ -636,18 +563,25 @@
 											</p>
 										</div>
 										<hr
-											class={index === timelineItems.length - 1
-												? '!border-0 !border-t-4 !border-dashed !border-neutral-300 !bg-transparent'
+											class=" {index === timeline.items.length - 1
+												? timeline.postfix
+													? `!border-${timeline.postfix.style} !border-0 !border-t-4 !border-${timeline.postfix.color} !bg-transparent`
+													: 'hidden'
 												: item.postActive
 													? 'bg-primary'
-													: 'bg-neutral-300'}
+													: 'bg-neutral-300'}"
 										/>
 									</li>
 								{/each}
-								<li class="invisible">
-									<div class="timeline-start w-16"></div>
-									<div class="timeline-middle"></div>
-									<div class="timeline-end w-16"></div>
+								<li>
+									<hr
+										class={timeline.postfix && timeline.postfix.length === 2
+											? `!border-${timeline.postfix.style} !border-0 !border-t-4 !border-${timeline.postfix.color} !bg-transparent`
+											: 'invisible'}
+									/>
+									<div class="timeline-start invisible w-16"></div>
+									<div class="timeline-middle invisible"></div>
+									<div class="timeline-end invisible w-16"></div>
 								</li>
 							</ul>
 						</div>

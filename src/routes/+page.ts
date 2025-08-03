@@ -10,8 +10,10 @@ import {
 	Trophy,
 	Heart
 } from 'lucide-svelte';
+import type { SponsorLogos } from '$types/SponsorSlider';
+import type { TimelineType } from '$types/timeline';
 
-export const load: PageLoad = async (): Promise<{ eventInfo: EventInfoType; organizationStats: OrganizationStatType[]; carouselImages: CarouselPageType[]; tabs: TabsPageType }> => {
+export const load: PageLoad = async (): Promise<{ eventInfo: EventInfoType; organizationStats: OrganizationStatType[]; carouselImages: CarouselPageType[]; tabs: TabsPageType, sponsorLogos: SponsorLogos, timeline: TimelineType }> => {
 	const eventInfo = {
 		id: '2025-7',
 		kind: OldEventKind.NextEventKind,
@@ -126,5 +128,106 @@ export const load: PageLoad = async (): Promise<{ eventInfo: EventInfoType; orga
 		}
 	}
 
-	return { eventInfo, organizationStats, carouselImages, tabs }
+	const sponsorLogos: SponsorLogos = {
+		main: [
+			'fassi.svg',
+			'pedretti.png',
+			'italianoptic.png',
+			'cargoway.png'
+		],
+		secondary: [
+			'soapbox.jpg',
+			'ipaas-favicon.png',
+			'cargoway-rejected.jpg'
+		]
+	};
+
+	const timeline: TimelineType = {
+		items: [
+			{
+				year: '1955',
+				content: 'Prima gara sulle Mura di Città Alta',
+				active: true,
+				preActive: false,
+				postActive: true
+			},
+			{
+				year: '1978',
+				content: 'Primi rally nelle valli della provincia',
+				active: true,
+				preActive: true,
+				postActive: true
+			},
+			{
+				year: '1997',
+				content: 'Nascita del Regolamento Tecnico',
+				active: true,
+				preActive: true,
+				postActive: true
+			},
+			{
+				year: '2003',
+				content: 'Primo Campionato Ufficiale',
+				active: true,
+				preActive: true,
+				postActive: true
+			},
+			{
+				year: '2009',
+				content: 'Edizione "Corriamo per vincere la SLA"',
+				active: true,
+				preActive: true,
+				postActive: true
+			},
+			{
+				year: '2011',
+				content: 'Espansione del campionato nella Bergamasca',
+				active: true,
+				preActive: true,
+				postActive: true
+			},
+			{
+				year: '2014',
+				content: 'Primo rally nel Trentino Alto Adige',
+				active: true,
+				preActive: true,
+				postActive: true
+			},
+			{
+				year: '2016',
+				content: 'Campionato da oltre 10 eventi',
+				active: true,
+				preActive: true,
+				postActive: true
+			},
+			{
+				year: '2024',
+				content: 'Introduzione del Campionato Drift Trike',
+				active: true,
+				preActive: true,
+				postActive: true
+			},
+			{
+				year: '2025',
+				content: 'Premolo ospita il primo rally notturno',
+				active: true,
+				preActive: true,
+				postActive: true
+			},
+			{
+				year: '2026',
+				content: 'Espansione del campionato in Lombardia',
+				active: false,
+				preActive: false,
+				postActive: false
+			}
+		],
+		postfix: {
+			style: 'dashed',
+			color: 'neutral-300',
+			length: 2
+		}
+	};
+
+	return { eventInfo, organizationStats, carouselImages, tabs, sponsorLogos, timeline }
 };

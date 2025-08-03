@@ -4,9 +4,9 @@
 	import Carousel3 from '$components/carousel/carousel3.svelte';
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
 	import { fade } from 'svelte/transition';
-	import { VolumeX, Volume2, ChevronLeft, ChevronRight } from 'lucide-svelte';
+	import { VolumeX, Volume2, ChevronLeft, ChevronRight, Link } from 'lucide-svelte';
 	import { onMount } from 'svelte';
-	import type { SponsorContainer, SponsorSlider } from '$lib/types/SponsorSlider.js';
+	import type { SponsorSlider } from '$lib/types/SponsorSlider.js';
 	import type { CarouselPageType } from '$lib/types/carouselPage.js';
 	import type { TabsPageType } from '$types/tabsPage.js';
 
@@ -314,7 +314,7 @@
 	];
 </script>
 
-<main class="gap-2 pb-10">
+<main>
 	<div class="carousel">
 		<!-- <Carousel /> -->
 		<Carousel3 pages={carouselImages} />
@@ -330,9 +330,9 @@
 		<!-- Aspettando l'Evento -->
 		<div class="md:hidden">
 			<hr class="mx-4 mt-2 mb-6 h-1 w-auto rounded-sm border-0 bg-red-600 md:hidden lg:mt-0" />
-			<p class="pb-4 text-center text-5xl font-bold">
+			<h1 class="pb-4 text-center text-5xl font-bold">
 				Aspettando l’<span class="text-red-600">EVENTO</span>!
-			</p>
+			</h1>
 			<div class="flex flex-row justify-center gap-4 sm:gap-8">
 				<div class="flex max-w-1/3 flex-col justify-center">
 					{#if eventInfo.kind === OldEventKind.NextEventKind}
@@ -380,14 +380,14 @@
 		<!-- Noi siamo BoxRally -->
 		<div class="mt-12 md:mt-0">
 			<hr class="mx-4 mt-2 mb-6 h-1 w-auto rounded-sm border-0 bg-red-600 lg:mt-0" />
-			<p class="pb-4 text-center text-5xl font-bold">
+			<h1 class="pb-4 text-center text-5xl font-bold">
 				Noi siamo <span class="text-red-600">BOXRALLY</span>!
-			</p>
+			</h1>
 
 			<!-- Organization statistics -->
-			<section class="my-12 px-4 py-10 text-center">
-				<h2 class="text-xl font-bold">Non solo corse:</h2>
-				<p class="py-1 text-lg leading-relaxed">
+			<section class="mb-12 px-4 py-10 text-center">
+				<h2 class="mb-2 text-center text-3xl font-bold md:text-4xl">Non solo corse:</h2>
+				<p class="mx-auto mb-6 text-center text-base md:text-lg lg:max-w-3/4">
 					Boxrally è il gioco serio di chi crea, sogna e corre insieme.<br />
 					Le nostre piste? Le strade vere. I nostri piloti? Amici, artigiani, sognatori.<br />
 					Costruiamo meraviglie di legno e sfrecciamo giù per le montagne con orgoglio.
@@ -407,7 +407,7 @@
 					{/each}
 				</div>
 
-				<p class="py-1 text-lg leading-relaxed">
+				<p class="mx-auto mb-6 text-center text-base md:text-lg lg:max-w-3/4">
 					Ogni anno ci impegniamo per offrire più spettacolo, più sicurezza, più passione.<br />
 					Cresciamo ad ogni gara aggiungendo nuove tappe al calendario, ma il cuore resta lo stesso:
 					la nostra squadra che corre unita e non si ferma mai.
@@ -439,7 +439,7 @@
 						</button>
 					{/each}
 				</div>
-				<div class="mt-6 text-lg text-gray-700">
+				<div class="mt-6 text-lg">
 					<div transition:fade class="flex flex-col items-center justify-evenly px-4 sm:flex-row">
 						<p
 							class="max-w-5/9 pb-4 text-center text-sm leading-relaxed sm:pr-4 sm:pb-0 sm:text-right md:text-base lg:text-lg"
@@ -464,10 +464,14 @@
 					</div>
 				</div>
 				<div class="mt-6 flex justify-center">
-					<a href="/chi-siamo" class="group text-lg font-bold transition duration-300">
-						Conoscici Meglio
+					<a href="/chi-siamo" class="group px-2 pt-1 text-lg font-bold transition duration-300">
+						<span class="flex flex-row items-center"
+							><ChevronRight
+								class="group-hover:stroke-primary transition duration-300 group-hover:rotate-360"
+							/>Conoscici Meglio</span
+						>
 						<span
-							class="mx-1 block h-0.75 max-w-0 bg-red-600 transition-all duration-500 group-hover:max-w-full"
+							class="block h-0.75 max-w-0 rounded-sm bg-red-600 transition-all duration-500 group-hover:max-w-full"
 						></span>
 					</a>
 				</div>
@@ -511,17 +515,17 @@
 
 			<!-- Sponsor slider -->
 			<section class="relative my-12 px-4 py-10">
-				<h3 class="mb-2 text-center text-2xl font-bold text-gray-800 md:text-3xl">
-					Il supporto che crede in noi, spinge le nostre vetture
-				</h3>
-				<p class="mx-auto max-w-3xl text-center text-base text-gray-600 md:text-lg">
+				<h2 class="mb-6 text-center text-3xl font-bold md:text-4xl">
+					Il supporto che spinge le nostre vetture
+				</h2>
+				<p class="mx-auto mb-6 text-center text-base md:text-lg lg:max-w-3/4">
 					Ogni gesto di supporto ha un peso enorme nella nostra discesa. Non contano solo le mani
 					che spingono il carretto, ma anche quelle che mettono linfa vitale nel progetto. La grande
 					famiglia che siamo sarebbe incompleta senza i nostri sponsor, sono la forza invisibile che
 					abbraccia la nostra passione e rende possibile l’impossibile.
 				</p>
 
-				<div class="relative m-auto pt-8 lg:w-5/6">
+				<div class="relative m-auto lg:w-5/6">
 					<div class="relative">
 						<div
 							class="pointer-events-none absolute top-0 left-0 z-10 h-full w-32 bg-gradient-to-r from-white to-transparent"
@@ -569,10 +573,14 @@
 
 			<!-- History timeline -->
 			<section class="my-12 bg-neutral-100 px-4 py-10">
-				<h2 class="mb-6 text-center text-3xl font-bold">La nostra storia, curva dopo curva</h2>
-				<p class="mx-auto mb-12 max-w-2xl text-center text-gray-700">
-					Dall’idea goliardica alla discesa sulle Mura di Bergamo, fino ai circuiti nei paesi della
-					Bergamasca: ecco come BoxRally è cresciuto con noi, anno dopo anno.
+				<h2 class="mb-6 text-center text-3xl font-bold md:text-4xl">
+					La nostra storia di passione
+				</h2>
+				<p class="mx-auto mb-6 text-center text-base md:text-lg lg:max-w-3/4">
+					La nostra storia è il rally più grande mai fatto: un insieme di tappe che vanno dalle
+					prime discese spensierate alla nascita di un vero e proprio gruppo. Questo è il viaggio di
+					un’idea che ha unito creatività, velocità e passione per un’evoluzione fatta di sfide,
+					nuovi territori e obiettivi sempre più ambiziosi.
 				</p>
 
 				<div class="relative">
@@ -672,8 +680,8 @@
 
 			<!-- Quoted comments -->
 			<section class="my-12 px-4 py-10">
-				<h3 class="pb-6 text-center text-3xl font-bold">Per noi ogni voce conta:</h3>
-				<p class="mx-auto mb-8 max-w-3xl text-center text-base text-gray-600 md:text-lg">
+				<h2 class="mb-6 text-center text-3xl font-bold md:text-4xl">Noi ascoltiamo ogni voce</h2>
+				<p class="mx-auto mb-6 text-center text-base md:text-lg lg:max-w-3/4">
 					Fin dalle nostre origini, ascoltiamo tutti: dai piloti, agli organizzatori fino agli
 					spettatori, tutti uniti da storie di emozione e impegno condiviso, per una passione che
 					amiamo.

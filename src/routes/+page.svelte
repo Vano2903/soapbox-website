@@ -4,126 +4,25 @@
 	import Carousel3 from '$components/carousel/carousel3.svelte';
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
 	import { fade } from 'svelte/transition';
-	import {
-		Eye,
-		Hammer,
-		MapPinned,
-		Trophy,
-		Heart,
-		VolumeX,
-		Volume2,
-		ChevronLeft,
-		ChevronRight
-	} from 'lucide-svelte';
+	import { VolumeX, Volume2, ChevronLeft, ChevronRight } from 'lucide-svelte';
 	import { onMount } from 'svelte';
-	import type { SponsorSlider } from '$lib/types/SponsorSlider.js';
-	import type { CarouselPage } from '$lib/types/carouselPage.js';
+	import type { SponsorContainer, SponsorSlider } from '$lib/types/SponsorSlider.js';
+	import type { CarouselPageType } from '$lib/types/carouselPage.js';
+	import type { TabsPageType } from '$types/tabsPage.js';
 
 	const { data } = $props();
 	const {
 		eventInfo,
-		organizationStats
+		organizationStats,
+		carouselImages,
+		tabs
 	}: {
 		eventInfo: EventInfoType;
 		organizationStats: OrganizationStatType[];
+		carouselImages: CarouselPageType[];
+		tabs: TabsPageType;
 	} = data;
-
-	let carouselImages: CarouselPage[] = [
-		{
-			layout: 'both',
-			breakpoint: 'md',
-			horizontal: { src: 'images/carousel/1.jpeg', alt: 'Car 1' },
-			vertical: { src: 'images/carousel/1.jpeg', alt: 'Car 1' },
-			loading: 'eager'
-		},
-		{
-			layout: 'both',
-			breakpoint: 'md',
-			horizontal: { src: 'images/carousel/2.jpeg', alt: 'Car 2' },
-			vertical: { src: 'images/carousel/2.jpeg', alt: 'Car 2' },
-			loading: 'lazy'
-		},
-		{
-			layout: 'both',
-			breakpoint: 'md',
-			horizontal: { src: 'images/carousel/3.jpeg', alt: 'Car 3' },
-			vertical: { src: 'images/carousel/3.jpeg', alt: 'Car 3' },
-			loading: 'lazy'
-		},
-		{
-			layout: 'both',
-			breakpoint: 'md',
-			horizontal: { src: 'images/carousel/4.jpeg', alt: 'Car 4' },
-			vertical: { src: 'images/carousel/4.jpeg', alt: 'Car 4' },
-			loading: 'lazy'
-		},
-		{
-			layout: 'both',
-			breakpoint: 'md',
-			horizontal: { src: 'images/carousel/5.jpeg', alt: 'Car 5' },
-			vertical: { src: 'images/carousel/5.jpeg', alt: 'Car 5' },
-			loading: 'lazy'
-		},
-		{
-			layout: 'both',
-			breakpoint: 'md',
-			horizontal: { src: 'images/carousel/6.jpeg', alt: 'Car 6' },
-			vertical: { src: 'images/carousel/6.jpeg', alt: 'Car 6' },
-			loading: 'lazy'
-		},
-		{
-			layout: 'both',
-			breakpoint: 'md',
-			horizontal: { src: 'images/carousel/7.jpeg', alt: 'Car 7' },
-			vertical: { src: 'images/carousel/7.jpeg', alt: 'Car 7' },
-			loading: 'lazy'
-		},
-		{
-			layout: 'both',
-			breakpoint: 'md',
-			horizontal: { src: 'images/carousel/8.jpeg', alt: 'Car 8' },
-			vertical: { src: 'images/carousel/8.jpeg', alt: 'Car 8' },
-			loading: 'lazy'
-		},
-		{
-			layout: 'both',
-			breakpoint: 'md',
-			horizontal: { src: 'images/carousel/9.jpeg', alt: 'Car 9' },
-			vertical: { src: 'images/carousel/9.jpeg', alt: 'Car 9' },
-			loading: 'lazy'
-		}
-	];
-
 	let activeTab = $state('Guarda');
-	const tabs = [
-		{ label: 'Guarda', icon: Eye },
-		{ label: 'Crea', icon: Hammer },
-		{ label: 'Corri', icon: MapPinned },
-		{ label: 'Vinci', icon: Trophy },
-		{ label: 'Ama', icon: Heart }
-	];
-	const tabContents: Record<string, { text: string; image: string }> = {
-		Guarda: {
-			text: 'Ogni curva è uno spettacolo, ogni discesa un tuffo al cuore. I nostri bolidi di legno scendono tra l’entusiasmo del pubblico: bambini che sognano, anziani che ricordano, sconosciuti che applaudono. BoxRally è un rito collettivo, una festa di paese che vibra di adrenalina e sorrisi.',
-			image: '/images/chi-siamo/jump.jpeg'
-		},
-		Crea: {
-			text: 'Bastano legno, bulloni e un pizzico di follia. Costruire il proprio mezzo è più che un gesto tecnico: è l’inizio di un’avventura. Ogni squadra è un’officina di sogni, dove l’arte prende forma tra mani sporche e idee brillanti. L’iscrizione? Semplice. Il risultato? Indimenticabile.',
-			image: '/images/chi-siamo/jump.jpeg'
-		},
-		Corri: {
-			text: 'Non ci basta scendere, ci mettiamo il cuore. Le nostre piste sono vere strade di montagna, dure e magnifiche. Le curve non perdonano, il legno canta e i freni urlano. Ma ci si lancia insieme, con l’anima in gola e lo sguardo fisso all’orizzonte. Qui si corre davvero.',
-			image: '/images/chi-siamo/jump.jpeg'
-		},
-		Vinci: {
-			text: 'Vincere non è solo un trofeo, è arrivare in fondo con gli amici che ti aspettano al traguardo. È rompere qualcosa e ricostruirla insieme. È condividere una risata, una foto, un abbraccio. Il premio è esserci stati, è aver lasciato una traccia su quell’asfalto vissuto.',
-			image: '/images/chi-siamo/jump.jpeg'
-		},
-		Ama: {
-			text: 'BoxRally è cura quotidiana, amore per un gioco serio fatto di sfide, dettagli e persone. È l’adrenalina che non svanisce, l’attesa per la prossima tappa, l’orgoglio di essere parte di qualcosa che pulsa. Non siamo solo appassionati: siamo legati da un’energia che non si spegne mai.',
-			image: '/images/chi-siamo/jump.jpeg'
-		}
-	};
 
 	let isHighlightMuted = $state(true);
 	function toggleMute() {
@@ -141,12 +40,8 @@
 	const secondarySponsors = ['soapbox.jpg', 'ipaas-favicon.png', 'cargoway-rejected.jpg'];
 	let sizedMainSponsors = $state(mainSponsors);
 	let sizedSecondarySponsors = $state(secondarySponsors);
-
-	const speed = 100;
-	const speedMainSponsors = 100;
-	const speedSecondarySponsors = 100;
-	let loopWidthMainSponsors = 0;
-	let loopWidthSecondarySponsors = 0;
+	let mainRow: HTMLDivElement;
+	let secondaryRow: HTMLDivElement;
 
 	let mainSponsorsSlider: SponsorSlider = $state({
 		sponsors: mainSponsors,
@@ -160,8 +55,6 @@
 		speed: 100,
 		loopWidth: 0
 	});
-	let mainRow: HTMLDivElement;
-	let secondaryRow: HTMLDivElement;
 
 	let timelineContainer: HTMLElement;
 	let scrollAtStart = $state(true);
@@ -524,7 +417,7 @@
 			<!-- Tabulated walkthrough -->
 			<section class="my-12 bg-neutral-100 px-4 py-10">
 				<div class="flex flex-row flex-wrap justify-evenly">
-					{#each tabs as tab}
+					{#each tabs.headers as tab}
 						<button
 							class="flex cursor-pointer flex-col items-center gap-2 p-2 text-left transition-all duration-200 hover:text-red-600"
 							onclick={() => (activeTab = tab.label)}
@@ -551,7 +444,7 @@
 						<p
 							class="max-w-5/9 pb-4 text-center text-sm leading-relaxed sm:pr-4 sm:pb-0 sm:text-right md:text-base lg:text-lg"
 						>
-							{tabContents[activeTab].text}
+							{tabs.contents[activeTab].text}
 						</p>
 						<div class="relative flex max-w-4/9 min-w-[300px] justify-center bg-red-600 p-0.75">
 							<div
@@ -564,7 +457,7 @@
 							<img
 								loading="lazy"
 								class="border-4 border-white object-cover"
-								src={tabContents[activeTab].image}
+								src={tabs.contents[activeTab].image}
 								alt="macchina salta tra la schiuma"
 							/>
 						</div>

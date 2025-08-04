@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { TypedPocketBase } from '$lib/types/pocketbase.js';
+	import type { TypedPocketBase } from '$types/pocketbase/pocketbase.js';
 	import PocketBase from 'pocketbase';
 	import { loginSchema } from '$lib/schemas/loginSchema.js';
 	import { zod } from 'sveltekit-superforms/adapters';

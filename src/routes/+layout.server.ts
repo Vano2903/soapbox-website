@@ -1,5 +1,5 @@
 import type { LayoutServerLoad } from './$types';
-import type { User } from '$lib/types/user';
+import type { User } from '$types/pocketbase/user';
 import { env } from '$env/dynamic/public';
 
 export const load: LayoutServerLoad = async ({ request, locals }) => {

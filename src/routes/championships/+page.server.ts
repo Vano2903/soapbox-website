@@ -2,8 +2,8 @@ import type { PageServerLoad } from './$types';
 
 import pocketbase from 'pocketbase';
 import { env } from '$env/dynamic/public';
-import type { TypedPocketBase } from '$lib/types/pocketbase';
-import type { ChampionshipNonExpand } from '$lib/types/championship';
+import type { TypedPocketBase } from '$types/pocketbase/pocketbase';
+import type { ChampionshipNonExpand } from '$types/pocketbase/championship';
 import { fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async () => {

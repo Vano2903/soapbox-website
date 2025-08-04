@@ -1,4 +1,4 @@
-import type { UserPublicInfo } from '$lib/types/user';
+import type { UserPublicInfo } from '$types/pocketbase/user';
 import { redirect, type ServerLoad } from '@sveltejs/kit';
 
 export const load: ServerLoad = async ({ locals, params, url }) => {

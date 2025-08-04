@@ -9,9 +9,9 @@ import {
 	withFiles
 } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import type { TypedPocketBase } from '$lib/types/pocketbase';
+import type { TypedPocketBase } from '$types/pocketbase/pocketbase';
 import { teamSchema } from '$lib/schemas/teamSchema';
-import type { TeamNonexpand } from '$types/team';
+import type { TeamNonexpand } from '$types/pocketbase/team';
 
 const slugSchema = teamSchema.pick({ slug: true });
 

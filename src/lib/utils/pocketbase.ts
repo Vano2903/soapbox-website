@@ -1,5 +1,5 @@
 import PocketBase from 'pocketbase';
-import type { TypedPocketBase } from '$lib/types/pocketbase';
+import type { TypedPocketBase } from '$types/pocketbase/pocketbase';
 
 export const createPocketBaseInstance = (instanceUrl: string): TypedPocketBase => {
 	if (!instanceUrl) {

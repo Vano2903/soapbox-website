@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { GenderKind } from '$lib/types/user.js';
+	import { GenderKind } from '$types/pocketbase/user.js';
 	import CodiceFiscale from 'codice-fiscale-js';
 	import { onMount, untrack } from 'svelte';
 	import SuperDebug, { dateProxy, fileProxy, superForm } from 'sveltekit-superforms';

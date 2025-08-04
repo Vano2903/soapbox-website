@@ -1,7 +1,7 @@
 <script lang="ts">
 	import EntityCard from '$components/entityCard/entityCard.svelte';
-	import type { Team } from '$lib/types/team';
-	import type { UserNonExpand } from '$lib/types/user';
+	import type { Team } from '$types/pocketbase/team';
+	import type { UserNonExpand } from '$types/pocketbase/user';
 	import { Crown, ExternalLink } from 'lucide-svelte';
 	interface Props {
 		data: {

@@ -1,5 +1,5 @@
 import PocketBase, { type RecordService } from 'pocketbase';
-import type { User, UserPublicInfo } from '$lib/types/user';
+import type { User, UserPublicInfo } from '$types/pocketbase/user';
 import type { Team, TeamInvitation } from './team';
 import type { Championship } from './championship';
 import type { Event } from './event';

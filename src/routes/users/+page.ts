@@ -1,4 +1,4 @@
-import type { UserPublicInfo } from '$lib/types/user';
+import type { UserPublicInfo } from '$types/pocketbase/user';
 import { type Load } from '@sveltejs/kit';
 import { env } from '$env/dynamic/public';
 import { createPocketBaseInstance } from '$lib/utils/pocketbase';

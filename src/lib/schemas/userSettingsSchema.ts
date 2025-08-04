@@ -1,4 +1,4 @@
-import { GenderKind, UserVisiblityKind } from '$lib/types/user';
+import { GenderKind, UserVisiblityKind } from '$types/pocketbase/user';
 import CodiceFiscale from 'codice-fiscale-js';
 import { z } from 'zod';
 

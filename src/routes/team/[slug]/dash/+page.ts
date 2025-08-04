@@ -1,5 +1,5 @@
 import type { LayoutServerLoad } from '../$types';
-import type { TeamInvitationNonExpand } from '$lib/types/team';
+import type { TeamInvitationNonExpand } from '$types/pocketbase/team';
 import { createPocketBaseInstance } from '$lib/utils/pocketbase';
 import { env } from '$env/dynamic/public';
 

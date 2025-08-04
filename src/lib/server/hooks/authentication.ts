@@ -1,5 +1,5 @@
 import { type Handle } from '@sveltejs/kit';
-import type { User } from '$lib/types/user';
+import type { User } from '$types/pocketbase/user';
 
 function createRandomString(length: number = 8): string {
 	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

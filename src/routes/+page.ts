@@ -1,5 +1,5 @@
 import type { PageLoad } from './$types';
-import { OldEventKind, type EventInfoType } from '$lib/types/event';
+import { OldEventKind, type EventInfoType } from '$types/pocketbase/event';
 import type { OrganizationStatType } from '$lib/types/organizationStat';
 import type { CarouselPageType } from '$lib/types/carouselPage';
 import type { TabsPageType } from '$types/tabsPage';

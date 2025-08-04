@@ -8,8 +8,8 @@ import {
 	type Infer
 } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { type User } from '$lib/types/user';
-import type { TypedPocketBase } from '$lib/types/pocketbase';
+import { type User } from '$types/pocketbase/user';
+import type { TypedPocketBase } from '$types/pocketbase/pocketbase';
 import { onboardingSchema } from '$lib/schemas/onboardingSchema';
 
 const usernameSchema = onboardingSchema.pick({ username: true });

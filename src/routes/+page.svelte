@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { OldEventKind, type EventInfoType } from '$lib/types/event.js';
-	import type { OrganizationStatType } from '$lib/types/organizationStat.js';
+	import { OldEventKind, type EventInfoType } from '$types/pocketbase/event.js';
+	import type { OrganizationStatType } from '$types/organizationStat.js';
 	import Carousel3 from '$components/carousel/carousel3.svelte';
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
 	import { fade } from 'svelte/transition';
 	import { VolumeX, Volume2, ChevronLeft, ChevronRight, Link } from 'lucide-svelte';
 	import { onMount } from 'svelte';
-	import type { SponsorLogos, SponsorSlider } from '$lib/types/SponsorSlider.js';
-	import type { CarouselPageType } from '$lib/types/carouselPage.js';
+	import type { SponsorLogos, SponsorSlider } from '$types/SponsorSlider.js';
+	import type { CarouselPageType } from '$types/carouselPage.js';
 	import type { TabsPageType } from '$types/tabsPage.js';
 	import type { TimelineType } from '$types/timeline.js';
 

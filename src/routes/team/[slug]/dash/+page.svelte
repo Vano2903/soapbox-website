@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import EntityCard from '$components/entityCard/entityCard.svelte';
-	import type { TypedPocketBase } from '$lib/types/pocketbase.js';
-	import type { Team, TeamInvitationNonExpand, TeamNonexpand } from '$lib/types/team.js';
-	import type { UserNonExpand } from '$lib/types/user.js';
+	import type { TypedPocketBase } from '$types/pocketbase/pocketbase.js';
+	import type { Team, TeamInvitationNonExpand, TeamNonexpand } from '$types/pocketbase/team.js';
+	import type { UserNonExpand } from '$types/pocketbase/user.js';
 	import { Crown, Users, UserX } from 'lucide-svelte';
 	import PocketBase, { ClientResponseError, type RecordModel } from 'pocketbase';
 	import { onMount } from 'svelte';

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { OldEventKind, type EventInfoType } from '$lib/types/event';
+	import { OldEventKind, type EventInfoType } from '$types/pocketbase/event';
 
 	let {
 		eventInfo,

@@ -5,6 +5,7 @@ import { env } from '$env/dynamic/public';
 import type { TypedPocketBase } from '$types/pocketbase/pocketbase';
 import type { ChampionshipExpand } from '$types/pocketbase/championship';
 import { fail } from "@sveltejs/kit";
+import type { Result } from "$types/pocketbase/results";
 
 export const load: PageLoad = async ({ data, url }) => {
 	console.log('Loading championships:\n > data = ', data, '\n > url = ', url);
@@ -39,10 +40,54 @@ export const load: PageLoad = async ({ data, url }) => {
 	const researchEventIndex = requestedEventIndex;
 	const foundEvent = foundChampionship.expand.events.at(researchEventIndex);
 
+	let responseEventResults: Result[] | undefined;
+	if (foundEvent && foundEvent.results.length > 0) {
+		try {
+			const expandedEvent = await pb.collection('events').getFirstListItem(`id="${foundEvent.id}"`, { expand: 'results' });
+			responseEventResults = expandedEvent.expand?.results;
+		} catch (err) {
+			console.error('Event not found: ', err);
+			throw fail(500)
+		}
+	}
+
+	let eventResults;
+	// let eventResults: {
+	// 	publicUrl: string;
+	// 	result: Result;
+	// }[] = [];
+
+	if (responseEventResults) {
+		eventResults = responseEventResults.map((result) => {
+			return {
+				publicUrl: pb.files.getURL(result, result.leaderboard),
+				data: {
+					...result,
+					formattedCreated: new Date(result.created).toLocaleDateString('it-IT', {
+						year: 'numeric',
+						month: '2-digit',
+						day: '2-digit',
+						hour: '2-digit',
+						minute: '2-digit'
+					}),
+					formattedUpdated: new Date(result.updated).toLocaleDateString('it-IT', {
+						year: 'numeric',
+						month: '2-digit',
+						day: '2-digit',
+						hour: '2-digit',
+						minute: '2-digit'
+					}),
+				}
+			};
+		});
+	}
+
 	// console.log('[+page.ts] >> championshipsList = ', championshipsList);
 	// console.log('[+page.ts] >> foundChampionship = ', foundChampionship);
 	// console.log('[+page.ts] >> foundEvent = ', foundEvent);
 	// console.log('[+page.ts] >> warnings = ', warnings);
 
-	return { championshipsList, foundChampionship, foundEvent, warnings }
+	console.log('>>>> EventResults: ', eventResults);
+
+	return { championshipsList, foundChampionship, foundEvent, eventResults, warnings }
 };

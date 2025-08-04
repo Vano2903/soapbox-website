@@ -3,6 +3,7 @@ import type { EventId, Event } from "./event";
 export type ResultId = string;
 export interface ResultBase {
 	id: ResultId;
+	shortName: string;
 	name: string;
 	leaderboard: string;
 	event?: EventId[];

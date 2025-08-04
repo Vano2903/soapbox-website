@@ -24,6 +24,7 @@
 	const championshipsListDerived = $derived(data.championshipsList);
 	const foundChampionshipDerived = $derived(data.foundChampionship);
 	const foundEventDerived = $derived(data.foundEvent);
+	const eventResultsDerived = $derived(data.eventResults);
 	const warningsDerived = $derived(data.warnings);
 
 	// variables to handle the user choice of wich leaderboard show (if any)
@@ -273,24 +274,24 @@
 				</div>
 			</section>
 		{/if}
-		{#if !foundEventDerived?.onAir && eventResults}
+		{#if !foundEventDerived?.onAir && eventResultsDerived}
 			<section class="flex flex-col items-center gap-2">
 				<h1 class="text-3xl font-bold">Classifiche Evento:</h1>
 				<div class="flex w-full flex-col gap-2 md:w-8/10">
-					{#each eventResults as result}
+					{#each eventResultsDerived as result}
 						<div
 							class="xs:m-auto xs:w-8/10 flex flex-col justify-center rounded-md bg-neutral-50 p-2 shadow-sm md:w-6/10"
 						>
 							<div class="flex flex-row content-start justify-between">
-								<span class="font-semibold">{result.name}:</span>
+								<span class="font-semibold">{result.data.shortName}:</span>
 								<span class="line-clamp-2 justify-self-end text-right text-xs text-neutral-400"
-									>{result.date}</span
+									>{result.data.formattedUpdated}</span
 								>
 							</div>
 							<a
 								class="mt-1 ml-3 text-sm text-gray-600 hover:text-red-600"
 								target="_blank"
-								href={'results/' + result.path}
+								href={result.publicUrl}
 							>
 								<div class="flex items-center gap-1">
 									<img
@@ -298,12 +299,12 @@
 										alt="PDF Icon"
 										class="mr-1 shrink-0"
 									/>
-									<span class="xs:text-sm line-clamp-2 text-xs underline">{result.path}</span>
+									<span class="xs:text-sm line-clamp-2 text-xs underline">{result.data.name}</span>
 								</div>
 							</a>
 						</div>
 					{/each}
-					{#if championshipResult}
+					<!-- {#if championshipResult}
 						<hr class="my-2" />
 						<div
 							class="xs:m-auto xs:w-8/10 flex flex-col justify-center rounded-md bg-neutral-200 p-2 shadow-sm md:w-6/10"
@@ -331,7 +332,7 @@
 								</div>
 							</a>
 						</div>
-					{/if}
+					{/if} -->
 				</div>
 			</section>
 		{/if}

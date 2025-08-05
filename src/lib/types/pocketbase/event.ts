@@ -43,6 +43,21 @@ export type Event = EventNonExpand | EventExpand;
 
 // Below are the data structures used "statically" on other pages, retained to prevent errors from occurring throughout the site.
 // With the database integration on those pages, these data structures must be removed.
+// In the meanwhile, a function toEventDataType is provided to convert the Event type to the EventDataType type, if possible.
+
+export function toEventInfoType(event: Event | undefined): EventInfoType {
+	return {
+		id: event?.id ?? '',
+		kind: OldEventKind.NextEventKind,
+		date: new Date(event?.startDate ?? ''),
+		header: `Campionato ${new Date(event?.startDate ?? '').getFullYear()}`,
+		title: event?.name ?? 'Evento sconosciuto',
+		totalSubscriptions: event?.maxSubscriptions ?? 100,
+		currentSubscriptions: event?.numSubscriptions ?? 0,
+		isSubscriptionOpen: event?.subscriptionsOpen ?? false,
+		isSubscribed: false // This field is not used in the current context
+	};
+}
 
 export enum OldEventKind {
 	NextEventKind = 'NextEventKind',

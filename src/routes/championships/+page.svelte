@@ -1,8 +1,10 @@
 <script lang="ts">
 	import type { ChampionshipNonExpand } from '$types/pocketbase/championship.js';
 	import ElementSelection from '$components/elementSelection/elementSelection.svelte';
-	import { LucideCalendarCheck, LucideRadio, LucideLock } from 'lucide-svelte';
+	import { LucideCalendarCheck, LucideRadio, LucideLock, ExternalLink } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
+	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
+	import { toEventInfoType } from '$types/pocketbase/event';
 
 	// const {
 	// 	championshipsList,
@@ -212,9 +214,12 @@
 </script>
 
 <main class="px-5 pb-16 lg:px-15">
-	<header class="flex flex-col items-center space-y-2 pt-14 pb-10">
+	<header class="flex flex-col items-center space-y-2 pt-14 pb-10 text-center">
 		<span class="text-5xl font-bold"> Campionati </span>
-		<p class="text-gray-500">Lorem ipsum dolor sit amet</p>
+		<p class="max-w-4/5 text-base text-gray-500">
+			Ogni tappa, ogni sfida, ogni discesa: qui trovi la storia dei nostri campionati. Scopri eventi
+			passati, vivi le classifiche in diretta o prepara la prossima corsa.
+		</p>
 	</header>
 
 	<div class="flex flex-col">
@@ -227,7 +232,7 @@
 			/>
 		</div>
 
-		<div class="flex flex-row justify-center gap-4">
+		<div class="flex flex-row flex-wrap justify-center gap-4">
 			{#each foundChampionshipDerived.expand.events as event}
 				<button
 					class="hover:underline {foundEventDerived?.id === event.id ? 'text-red-600' : ''}"
@@ -273,37 +278,70 @@
 					{@html sheetHTML}
 				</div>
 			</section>
-		{/if}
-		{#if !foundEventDerived?.onAir && eventResultsDerived}
+		{:else if new Date(foundEventDerived?.startDate ?? '').valueOf() > new Date().valueOf()}
+			<section class="flex flex-col items-center gap-2">
+				<h1 class="text-3xl font-bold">Informazioni Evento:</h1>
+				<div class="flex w-full flex-col gap-2 sm:w-2/3 lg:w-1/2 2xl:w-1/3">
+					<div class="flex flex-col justify-center">
+						<div class="box-border rounded-xl bg-neutral-100 p-2">
+							<div class="inner fullborder p-1 lg:p-4">
+								<EventInfoBox
+									eventInfo={toEventInfoType(foundEventDerived)}
+									locatedOnCarousel={false}
+								/>
+								{#if foundEventDerived?.subscriptionsOpen}
+									<div class="my-2 flex flex-row justify-center lg:my-0 lg:mt-4">
+										<a href="./#" class="btn btn-error text-foreground max-w-70"> Iscriviti </a>
+									</div>
+								{:else}
+									<div class="my-2 flex flex-row justify-center lg:my-0 lg:mt-4">
+										<span>Le iscrizioni al momento non sono aperte.</span>
+									</div>
+								{/if}
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		{:else}
 			<section class="flex flex-col items-center gap-2">
 				<h1 class="text-3xl font-bold">Classifiche Evento:</h1>
 				<div class="flex w-full flex-col gap-2 md:w-8/10">
-					{#each eventResultsDerived as result}
-						<div
-							class="xs:m-auto xs:w-8/10 flex flex-col justify-center rounded-md bg-neutral-50 p-2 shadow-sm md:w-6/10"
-						>
-							<div class="flex flex-row content-start justify-between">
-								<span class="font-semibold">{result.data.shortName}:</span>
-								<span class="line-clamp-2 justify-self-end text-right text-xs text-neutral-400"
-									>{result.data.formattedUpdated}</span
-								>
-							</div>
-							<a
-								class="mt-1 ml-3 text-sm text-gray-600 hover:text-red-600"
-								target="_blank"
-								href={result.publicUrl}
+					{#if eventResultsDerived && eventResultsDerived.length > 0}
+						{#each eventResultsDerived as result}
+							<div
+								class="xs:m-auto xs:w-9/10 flex flex-col justify-center rounded-md bg-neutral-50 p-2 shadow-md transition duration-300 hover:scale-105 hover:bg-neutral-200 lg:w-7/10 hover:lg:scale-110"
 							>
-								<div class="flex items-center gap-1">
-									<img
-										src="https://www.boxrally.eu/boxrally/images/pdf_icon.gif"
-										alt="PDF Icon"
-										class="mr-1 shrink-0"
-									/>
-									<span class="xs:text-sm line-clamp-2 text-xs underline">{result.data.name}</span>
+								<div class="flex flex-row content-start justify-between">
+									<span class="text-lg font-semibold">{result.data.shortName}:</span>
+									<span class="line-clamp-2 justify-self-end text-right text-xs text-neutral-400"
+										>{result.data.formattedUpdated}</span
+									>
 								</div>
-							</a>
+								<div class="mt-1 ml-3 flex items-center gap-1">
+									<a class="peer cursor-pointer" target="_blank" href={result.publicUrl}>
+										<img src="/images/icons/pdf.gif" alt="PDF Icon" class="mr-1 shrink-0" />
+									</a>
+									<a
+										class="text-sm text-gray-600 peer-hover:text-red-600 hover:text-red-600"
+										target="_blank"
+										href={result.publicUrl}
+									>
+										<span class="xs:text-sm line-clamp-2 text-xs underline">{result.data.name}</span
+										>
+									</a>
+								</div>
+							</div>
+						{/each}
+					{:else}
+						<div
+							class="xs:m-auto xs:w-9/10 flex flex-col justify-center rounded-md bg-neutral-50 px-4 py-8 shadow-md lg:w-7/10"
+						>
+							<p class="text-center">
+								Per questo evento non sono ancora state pubblicate classifiche.
+							</p>
 						</div>
-					{/each}
+					{/if}
 					<!-- {#if championshipResult}
 						<hr class="my-2" />
 						<div
@@ -343,5 +381,19 @@
 	button,
 	a {
 		cursor: pointer;
+	}
+
+	.inner {
+		border-radius: 0.5rem 0 0 0;
+		border-top: 4px solid red;
+		border-left: 4px solid red;
+		box-sizing: border-box;
+		height: 100%;
+		width: 100%;
+	}
+
+	.inner.fullborder {
+		border-radius: 0.5rem;
+		border: 2px solid red;
 	}
 </style>

@@ -16,7 +16,7 @@ export const load: PageLoad = async ({ data, url }) => {
 
 	// retrieve the selected championship or, if nullish, the last ongoingChampionship available
 	const pb = new pocketbase(env.PUBLIC_PB_INSTANCE) as TypedPocketBase;
-	const requestedChampionshipIndex = championshipsList.findIndex((v: { name: string | null; }) => { return (v.name === url.searchParams.get('championship')) });
+	const requestedChampionshipIndex = championshipsList.findIndex((c: { name: string | null; }) => { return (c.name === url.searchParams.get('championship')) });
 
 	if (requestedChampionshipIndex === -1 && url.searchParams.get('championship')) {
 		warnings.push(`Il campionato "${url.searchParams.get('championship')}" non è stato trovato.`);
@@ -32,10 +32,16 @@ export const load: PageLoad = async ({ data, url }) => {
 		throw fail(500)
 	}
 
-	// retrieve the selected event or, if nullish, the last event available for the requested championship.
-	const requestedEventIndex = foundChampionship.expand.events.findIndex((v) => { return (v.shortName === url.searchParams.get('event')) });
-	if (requestedEventIndex === -1 && url.searchParams.get('event')) {
-		warnings.push(`L'evento "${url.searchParams.get('event')}" non esiste per il campionato "${url.searchParams.get('championship')}".`);
+	// retrieve the selected event or, if nullish, the first event that hasn't yet passed for the requested championship.
+	let requestedEventIndex = foundChampionship.expand.events.findIndex((e) => { return (e.shortName === url.searchParams.get('event')) });
+	if (requestedEventIndex === -1) {
+		if (url.searchParams.get('event')) {
+			warnings.push(`L'evento "${url.searchParams.get('event')}" non esiste per il campionato "${url.searchParams.get('championship')}".`);
+		}
+		requestedEventIndex = foundChampionship.expand.events.findIndex((e) => {
+			return (new Date().valueOf() < new Date(e.startDate).valueOf());
+		});
+
 	}
 	const researchEventIndex = requestedEventIndex;
 	const foundEvent = foundChampionship.expand.events.at(researchEventIndex);
@@ -52,11 +58,6 @@ export const load: PageLoad = async ({ data, url }) => {
 	}
 
 	let eventResults;
-	// let eventResults: {
-	// 	publicUrl: string;
-	// 	result: Result;
-	// }[] = [];
-
 	if (responseEventResults) {
 		eventResults = responseEventResults.map((result) => {
 			return {
@@ -81,13 +82,6 @@ export const load: PageLoad = async ({ data, url }) => {
 			};
 		});
 	}
-
-	// console.log('[+page.ts] >> championshipsList = ', championshipsList);
-	// console.log('[+page.ts] >> foundChampionship = ', foundChampionship);
-	// console.log('[+page.ts] >> foundEvent = ', foundEvent);
-	// console.log('[+page.ts] >> warnings = ', warnings);
-
-	console.log('>>>> EventResults: ', eventResults);
 
 	return { championshipsList, foundChampionship, foundEvent, eventResults, warnings }
 };

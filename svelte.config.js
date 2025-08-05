@@ -15,9 +15,7 @@ const config = {
 		alias: {
 			$components: './src/lib/components/ui',
 			$types: './src/lib/types',
-			'@/*': './path/to/lib/*',
-
-			$testJson: './static/public/json-test'
+			'@/*': './path/to/lib/*'
 		}
 	}
 };

@@ -158,59 +158,6 @@
 		}
 		return elementsList;
 	}
-
-	let eventResults = [
-		{
-			name: 'Giuria Creativa',
-			path: '2025/02-Bergamo/creatività.pdf',
-			date: '26/03/2025 18:53'
-		},
-		{
-			name: 'Giuria Tecnica',
-			path: '2025/02-Bergamo/tecnica.pdf',
-			date: '26/03/2025 18:54'
-		},
-		{
-			name: 'Voti del Pubblico',
-			path: '2025/02-Bergamo/pubblico.pdf',
-			date: '27/03/2025 18:00'
-		},
-		{
-			name: 'Originalità',
-			path: '2025/02-Bergamo/originalità.pdf',
-			date: '26/03/2025 18:01'
-		},
-		{
-			name: 'Stage 1',
-			path: '2025/02-Bergamo/stage-1.pdf',
-			date: '27/03/2025 15:20'
-		},
-		{
-			name: 'Stage 2',
-			path: '2025/02-Bergamo/stage-2.pdf',
-			date: '27/03/2025 17:43'
-		},
-		{
-			name: 'Velocità',
-			path: '2025/02-Bergamo/velocità.pdf',
-			date: '27/03/2025 17:44'
-		},
-		{
-			name: 'Special Stage',
-			path: '2025/02-Bergamo/stage-special.pdf',
-			date: '27/03/2025 18:37'
-		},
-		{
-			name: 'Finale',
-			path: '2025/02-Bergamo/finale.pdf',
-			date: '27/03/2025 18:42'
-		}
-	];
-	let championshipResult = {
-		name: 'Campionato 2025',
-		path: '2025/campionato.pdf',
-		date: '27/03/2025 19:00'
-	};
 </script>
 
 <main class="px-5 pb-16 lg:px-15">
@@ -342,6 +289,12 @@
 							</p>
 						</div>
 					{/if}
+					<!--
+						This feature is temporarily disabled. The system should be reinstated by requesting championship results information from the database.
+						However, given the current database structure, the ability to choose whether the result is of the "stage/event/championship" type should be added, and the frontend should separate them accordingly.
+						This feature is not currently strictly* needed, so we are postponing it.
+						*: Because it's possible to publish the ranking as the result of event 'E' with filename "championship updated to race 'E'".
+					-->
 					<!-- {#if championshipResult}
 						<hr class="my-2" />
 						<div

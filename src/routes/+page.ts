@@ -1,5 +1,5 @@
 import type { PageLoad } from './$types';
-import { OldEventKind, type EventInfoType } from '$types/pocketbase/event';
+import type { ChampionshipExpand } from '$types/pocketbase/championship';
 import type { OrganizationStatType } from '$types/organizationStat';
 import type { CarouselPageType } from '$types/carouselPage';
 import type { TabsPageType } from '$types/tabsPage';
@@ -13,16 +13,8 @@ import {
 import type { SponsorLogos } from '$types/SponsorSlider';
 import type { TimelineType } from '$types/timeline';
 
-export const load: PageLoad = async (): Promise<{ eventInfo: EventInfoType; organizationStats: OrganizationStatType[]; carouselImages: CarouselPageType[]; tabs: TabsPageType, sponsorLogos: SponsorLogos, timeline: TimelineType }> => {
-	const eventInfo = {
-		id: '2025-7',
-		kind: OldEventKind.NextEventKind,
-		date: new Date(2025, 7, 27, 14, 30),
-		header: 'Campionato 2025',
-		title: '3° Soap BoXXico Rally',
-		totalSubscriptions: 48,
-		currentSubscriptions: 24
-	} as EventInfoType;
+export const load: PageLoad = async ({ data }): Promise<{ currentChampionship: ChampionshipExpand; nextEventIndex: number; organizationStats: OrganizationStatType[]; carouselImages: CarouselPageType[]; tabs: TabsPageType, sponsorLogos: SponsorLogos, timeline: TimelineType }> => {
+	const { currentChampionship, nextEventIndex } = data;
 
 	const organizationStats = [
 		{ value: 982, subject: 'curve', context: 'affrontate' },
@@ -229,5 +221,5 @@ export const load: PageLoad = async (): Promise<{ eventInfo: EventInfoType; orga
 		}
 	};
 
-	return { eventInfo, organizationStats, carouselImages, tabs, sponsorLogos, timeline }
+	return { currentChampionship, nextEventIndex, organizationStats, carouselImages, tabs, sponsorLogos, timeline }
 };

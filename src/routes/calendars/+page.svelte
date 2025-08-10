@@ -28,13 +28,12 @@
 			invalidateAll: true
 		});
 	}
-
-	function enrollEvent(event: string) {
+	function enrollRedirect(year: string, event: string) {
 		console.log(
 			new Date().toLocaleTimeString('it-IT', { hour12: false }),
-			'new event selection = {' + event + '}'
+			'redirect to enroll selection = {' + year + ' | ' + event + '}'
 		);
-		const params = new URLSearchParams(`event=${event}`);
+		const params = new URLSearchParams(`year=${year}&event=${event}`);
 		goto(`/enroll?${params.toString()}`);
 	}
 
@@ -150,7 +149,8 @@
 								</div>
 								<div class="mt-2 md:mt-8">
 									<button
-										onclick={() => enrollEvent(`${event.shortName}`)}
+										onclick={() =>
+											enrollRedirect(`${foundChampionshipDerived.name}`, `${event.shortName}`)}
 										class="btn btn-error text-foreground max-w-5/12 text-xs md:text-lg"
 									>
 										Iscriviti

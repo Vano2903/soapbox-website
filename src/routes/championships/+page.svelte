@@ -132,6 +132,14 @@
 			invalidateAll: true
 		});
 	}
+	function enrollRedirect(year: string, event: string) {
+		console.log(
+			new Date().toLocaleTimeString('it-IT', { hour12: false }),
+			'redirect to enroll selection = {' + year + ' | ' + event + '}'
+		);
+		const params = new URLSearchParams(`year=${year}&event=${event}`);
+		goto(`/enroll?${params.toString()}`);
+	}
 
 	// Function to transform the championship list into a format suitable for ElementSelection (with extra empty boundaries for cool UI effects)
 	function transformToElementList(championshipList: ChampionshipNonExpand[]) {
@@ -238,7 +246,16 @@
 								/>
 								{#if foundEventDerived?.subscriptionsOpen}
 									<div class="my-2 flex flex-row justify-center lg:my-0 lg:mt-4">
-										<a href="./#" class="btn btn-error text-foreground max-w-70"> Iscriviti </a>
+										<button
+											class="btn btn-error text-foreground max-w-70"
+											onclick={() =>
+												enrollRedirect(
+													`${foundChampionshipDerived.name}`,
+													`${foundEventDerived.shortName}`
+												)}
+										>
+											Iscriviti
+										</button>
 									</div>
 								{:else}
 									<div class="my-2 flex flex-row justify-center lg:my-0 lg:mt-4">

@@ -264,9 +264,26 @@
 		>
 			<div class="inner p-2 lg:p-4">
 				<EventInfoBox
-					eventInfo={toEventInfoType(currentChampionship.expand.events.at(nextEventIndex))}
+					championshipInfo={currentChampionship}
+					eventInfo={currentChampionship.expand.events.at(nextEventIndex) as EventNonExpand}
 					locatedOnCarousel={true}
 				/>
+				<button
+					class="btn btn-error text-foreground max-w-70"
+					onclick={currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen
+						? () =>
+								enrollRedirect(
+									`${currentChampionship.name}`,
+									`${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`
+								)
+						: () =>
+								resultsRedirect(
+									`${currentChampionship.name}`,
+									`${currentChampionship.expand.events.at(nextEventIndex === -1 ? -1 : nextEventIndex - 1)?.shortName}`
+								)}
+				>
+					{#if currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen}Iscriviti{:else}Guarda{/if}
+				</button>
 			</div>
 		</aside>
 	</div>
@@ -328,7 +345,8 @@
 					<div class="box-border rounded-xl bg-neutral-100 p-2">
 						<div class="inner fullborder p-1 lg:p-4">
 							<EventInfoBox
-								eventInfo={toEventInfoType(currentChampionship.expand.events.at(nextEventIndex))}
+								championshipInfo={currentChampionship}
+								eventInfo={currentChampionship.expand.events.at(nextEventIndex) as EventNonExpand}
 								locatedOnCarousel={false}
 							/>
 						</div>

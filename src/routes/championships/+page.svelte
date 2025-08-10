@@ -4,7 +4,7 @@
 	import { LucideCalendarCheck, LucideRadio, LucideLock, ExternalLink } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
-	import { toEventInfoType } from '$types/pocketbase/event';
+	import { toEventInfoType, type EventNonExpand } from '$types/pocketbase/event';
 
 	// const {
 	// 	championshipsList,
@@ -241,7 +241,8 @@
 						<div class="box-border rounded-xl bg-neutral-100 p-2">
 							<div class="inner fullborder p-1 lg:p-4">
 								<EventInfoBox
-									eventInfo={toEventInfoType(foundEventDerived)}
+									championshipInfo={foundChampionshipDerived}
+									eventInfo={foundEventDerived as EventNonExpand}
 									locatedOnCarousel={false}
 								/>
 								{#if foundEventDerived?.subscriptionsOpen}

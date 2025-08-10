@@ -1,11 +1,15 @@
 <script lang="ts">
-	import { OldEventKind, type EventInfoType } from '$types/pocketbase/event';
+	import type { ChampionshipExpand } from '$types/pocketbase/championship';
+	import { OldEventKind, type EventInfoType, type EventNonExpand } from '$types/pocketbase/event';
+	import type { EventInfoType2 } from '$types/waitingEventInfo';
 
 	let {
+		championshipInfo,
 		eventInfo,
 		locatedOnCarousel
 	}: {
-		eventInfo: EventInfoType;
+		championshipInfo: ChampionshipExpand;
+		eventInfo: EventNonExpand;
 		locatedOnCarousel: boolean;
 	} = $props();
 </script>
@@ -14,10 +18,10 @@
 	<div class="rect">
 		<div>
 			<span class=" h-12 flex-wrap items-end pb-1 text-base/6 text-red-600 xl:pb-2">
-				{#if eventInfo.kind === OldEventKind.NextEventKind}
+				{#if eventInfo.subscriptionsOpen}
 					<span class="text-4xl font-bold lg:text-5xl xl:text-6xl">Prossimo</span>
 					<span class="text-4xl font-bold lg:text-5xl xl:text-6xl">Evento</span>
-				{:else if eventInfo.kind === OldEventKind.HighlightKind}
+				{:else}
 					<span class="text-4xl font-bold lg:text-5xl xl:text-6xl">Momenti</span>
 					<span class="text-4xl font-bold lg:text-5xl xl:text-6xl">Speciali</span>
 				{/if}
@@ -27,28 +31,38 @@
 		</div>
 
 		<div>
-			<p class="text-gray-600 xl:text-lg">{eventInfo.header}</p>
+			<p class="text-gray-600 xl:text-lg">Campionato {championshipInfo.name}</p>
 			<p class="pb-2 text-2xl lg:pb-4 xl:pb-6 xl:text-3xl">
-				{eventInfo.title}
+				{eventInfo.name}
 			</p>
-			<p class="text-gray-700 xl:text-lg">Data: {eventInfo.date.toLocaleDateString()}</p>
-			<p class="pb-4 text-gray-700 tabular-nums xl:pb-6 xl:text-lg">
-				Ora: {eventInfo.date.getHours() < 10
-					? '0' + eventInfo.date.getHours()
-					: eventInfo.date.getHours()}:{eventInfo.date.getMinutes() < 10
-					? '0' + eventInfo.date.getMinutes()
-					: eventInfo.date.getMinutes()}
+			<p class="text-gray-700 xl:text-lg">
+				Data: {new Date(eventInfo.startDate).toLocaleDateString()}
 			</p>
-			<p class="pb-6 text-gray-700 tabular-nums xl:pb-8 xl:text-lg">
-				Iscrizioni: <span class="stacked-fractions">
-					{eventInfo.currentSubscriptions}/{eventInfo.totalSubscriptions}</span
-				>
+			<p class="pb-6 text-gray-700 tabular-nums xl:pb-6 xl:text-lg">
+				Ora: {new Date(eventInfo.startDate).getHours() < 10
+					? '0' + new Date(eventInfo.startDate).getHours()
+					: new Date(eventInfo.startDate).getHours()}:{new Date(eventInfo.startDate).getMinutes() <
+				10
+					? '0' + new Date(eventInfo.startDate).getMinutes()
+					: new Date(eventInfo.startDate).getMinutes()}
+			</p>
+			<p class="pb-2 text-gray-700 tabular-nums xl:pb-8 xl:text-lg">
+				<span>
+					{eventInfo.numSubscriptions}
+					{#if eventInfo.maxSubscriptions}
+						/{eventInfo.maxSubscriptions}
+					{/if}
+					iscrizioni
+				</span>
 			</p>
 		</div>
 
-		<button class="btn btn-error text-foreground max-w-70 xl:text-lg"
-			>{#if eventInfo.kind === OldEventKind.NextEventKind}Iscriviti{:else if eventInfo.kind === OldEventKind.HighlightKind}Guarda{/if}</button
-		>
+		<!-- <button class="btn btn-error text-foreground max-w-70 xl:text-lg"
+			onclick={
+				eventInfo.subscriptionsOpen ? () => {openSubscriptionFunction} : () => {closedSubscriptionFunction}
+			}
+			>{#if eventInfo.subscriptionsOpen}Iscriviti{:else}Guarda{/if}</button
+		> -->
 
 		<!-- class="w-32 cursor-pointer rounded bg-red-600 px-4 py-2 font-bold text-white hover:bg-red-800" -->
 	</div>
@@ -57,22 +71,27 @@
 		<hr class="mx-auto mt-2 mb-8 h-0.75 w-1/3 max-w-70 rounded-sm border-0 bg-red-600" />
 
 		<div>
-			<p class="text-gray-600">{eventInfo.header}</p>
+			<p class="text-gray-600">Campionato {championshipInfo.name}</p>
 			<p class="pb-4 text-2xl">
-				{eventInfo.title}
+				{eventInfo.name}
 			</p>
-			<p class="text-gray-700">Data: {eventInfo.date.toLocaleDateString()}</p>
-			<p class="pb-4 text-gray-700 tabular-nums">
-				Ora: {eventInfo.date.getHours() < 10
-					? '0' + eventInfo.date.getHours()
-					: eventInfo.date.getHours()}:{eventInfo.date.getMinutes() < 10
-					? '0' + eventInfo.date.getMinutes()
-					: eventInfo.date.getMinutes()}
+			<p class="text-gray-700">Data: {new Date(eventInfo.startDate).toLocaleDateString()}</p>
+			<p class="pb-6 text-gray-700 tabular-nums">
+				Ora: {new Date(eventInfo.startDate).getHours() < 10
+					? '0' + new Date(eventInfo.startDate).getHours()
+					: new Date(eventInfo.startDate).getHours()}:{new Date(eventInfo.startDate).getMinutes() <
+				10
+					? '0' + new Date(eventInfo.startDate).getMinutes()
+					: new Date(eventInfo.startDate).getMinutes()}
 			</p>
-			<p class="text-gray-700 tabular-nums">
-				Iscrizioni: <span class="stacked-fractions">
-					{eventInfo.currentSubscriptions}/{eventInfo.totalSubscriptions}</span
-				>
+			<p class="pb-2 text-gray-700 tabular-nums xl:pb-8 xl:text-lg">
+				<span>
+					{eventInfo.numSubscriptions}
+					{#if eventInfo.maxSubscriptions}
+						/{eventInfo.maxSubscriptions}
+					{/if}
+					iscrizioni
+				</span>
 			</p>
 		</div>
 

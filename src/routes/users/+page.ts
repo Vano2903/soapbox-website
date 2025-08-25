@@ -3,7 +3,7 @@ import { type Load } from '@sveltejs/kit';
 import { env } from '$env/dynamic/public';
 import { createPocketBaseInstance } from '$lib/utils/pocketbase';
 
-export const load: Load = async ({ url }) => {
+export const load: Load = async ({ url, fetch }) => {
 	console.log('Loading user with slug:', url);
 
 	let error: string | null = null;
@@ -29,7 +29,8 @@ export const load: Load = async ({ url }) => {
 	}
 
 	const paginatedUsers = await pb.collection('publicUserInfo').getList(1, 10, {
-		sort: 'nick'
+		sort: 'nick',
+		fetch: fetch
 	});
 
 	const expandedUsers = paginatedUsers.items.map((user: UserPublicInfo) => {

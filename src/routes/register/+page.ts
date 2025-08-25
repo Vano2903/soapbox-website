@@ -5,11 +5,11 @@ import type { PageLoad } from './$types';
 import pocketbase from 'pocketbase';
 import type { TypedPocketBase } from '$types/pocketbase/pocketbase';
 
-export const load: PageLoad = async ({ data }) => {
+export const load: PageLoad = async ({ data, fetch }) => {
 	const pb = new pocketbase(env.PUBLIC_PB_INSTANCE) as TypedPocketBase;
 
 	try {
-		const authList = await pb.collection('users').listAuthMethods();
+		const authList = await pb.collection('users').listAuthMethods({ fetch: fetch });
 		return {
 			...data,
 			authMethods: authList

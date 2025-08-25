@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { ChampionshipExpand } from '$types/pocketbase/championship';
 	import { OldEventKind, type EventInfoType, type EventNonExpand } from '$types/pocketbase/event';
-	import type { EventInfoType2 } from '$types/waitingEventInfo';
+	// import type { EventInfoType2 } from '$types/waitingEventInfo';
 
 	let {
 		championshipInfo,

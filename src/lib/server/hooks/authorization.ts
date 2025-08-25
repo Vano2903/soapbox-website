@@ -40,6 +40,9 @@ const authorization: Handle = async ({ event, resolve }) => {
 		}
 	} else {
 		if (path.startsWith('/verify')) {
+			if (!user.completed) {
+				redirect(302, `/onboarding`);
+			}
 			redirect(302, `/user/${user.nick}/`);
 		}
 	}

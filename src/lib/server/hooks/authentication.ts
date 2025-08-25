@@ -1,5 +1,5 @@
 import { type Handle } from '@sveltejs/kit';
-import type { User } from '$types/pocketbase/user';
+import { GenderKind, type User } from '$types/pocketbase/user';
 
 function createRandomString(length: number = 8): string {
 	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -8,6 +8,26 @@ function createRandomString(length: number = 8): string {
 		result += chars.charAt(Math.floor(Math.random() * chars.length));
 	}
 	return result;
+}
+
+function createAvatarUrl(name: string, lastname: string = '', gender?: GenderKind): string {
+	const baseUrl = 'https://avatar.iran.liara.run/public';
+	// const initials = `${name.charAt(0).toUpperCase()}${lastname.charAt(0).toUpperCase()}`;
+	console.log('createAvatarUrl', name, lastname, gender);
+	let avatarUrl = '';
+	if (gender) {
+		if (gender == GenderKind.Male) {
+			avatarUrl = `${baseUrl}/boy`;
+		} else if (gender == GenderKind.Female) {
+			avatarUrl = `${baseUrl}/girl`;
+		}
+	}
+	if (name == '' && lastname == '') {
+		avatarUrl = `${baseUrl}/username="user+${createRandomString(6)}"`;
+	} else if (!avatarUrl) {
+		avatarUrl = `${baseUrl}/username="${name}+${lastname ? ` +${lastname}` : ''}"`;
+	}
+	return avatarUrl;
 }
 
 // Authentication middleware for handling user sessions
@@ -24,6 +44,10 @@ const authentication: Handle = async ({ event, resolve }) => {
 		if (error) {
 			console.log('ERROR CLEAR', error);
 			pb.authStore.clear();
+			event.cookies.set('pb_auth', '', {
+				expires: new Date(0),
+				path: '/'
+			});
 			event.locals.user = undefined;
 			return await resolve(event);
 		}
@@ -34,7 +58,11 @@ const authentication: Handle = async ({ event, resolve }) => {
 		if (pb.authStore.record) {
 			event.locals.user.avatarCropped =
 				pb.files.getURL(pb.authStore.record, pb.authStore.record.avatarCropped) ??
-				`https://avatar.iran.liara.run/public?username=${pb.authStore.record.name ?? createRandomString(8)}`;
+				createAvatarUrl(
+					event.locals.user.name,
+					event.locals.user.lastName,
+					event.locals.user.gender
+				);
 			event.locals.user.created = new Date(event.locals.user.created);
 			event.locals.user.updated = new Date(event.locals.user.updated);
 		}

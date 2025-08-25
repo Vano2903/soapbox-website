@@ -1,13 +1,13 @@
 <script lang="ts">
-	import type { User } from '$lib/types/user';
+	import type { User } from '$lib/types/pocketbase/user';
 
 	let { user }: { user: User } = $props();
 	let isDropdownOpen = $state(false);
 	const handleDropdownClick = () => {
-		console.log('Dropdown click handled.');
+		// console.log('Dropdown click handled.');
 		if (!user) window.location.href = '/login';
 		isDropdownOpen = !isDropdownOpen;
-		console.log('Updated isDropdownOpen = ', isDropdownOpen);
+		// console.log('Updated isDropdownOpen = ', isDropdownOpen);
 	};
 
 	const handleDropdownFocusLoss = ({
@@ -32,7 +32,9 @@
 	<div class="avatar">
 		<div class="ring-offset-primary w-10 rounded-full ring-2 ring-white ring-offset-2">
 			<img
-				src={user ? user.avatarCropped : '/images/navbar/profile.svg'}
+				src={user
+					? user.avatarCropped || '/images/navbar/profile.svg'
+					: '/images/navbar/profile.svg'}
 				alt={user ? 'User icon' : 'Login icon'}
 			/>
 		</div>
@@ -54,16 +56,26 @@
 			aria-hidden={!isDropdownOpen}
 		>
 			<div class="join join-vertical">
-				<li><a class="btn join-item btn-soft" href={'/user/' + user.nick}>Profilo</a></li>
-				<li>
-					<a class="btn join-item btn-soft" href={'/user/' + user.nick + '/dash'}>Dashboard</a>
-				</li>
-				<br />
-				<li>
-					<a class="btn join-item btn-soft" href={'/user/' + user.nick + '/settings'}
-						>Impostazioni</a
-					>
-				</li>
+				{#if !user.verified}
+					<li>
+						<a class="btn join-item btn-warning" href="/verify">Verifica il tuo account</a>
+					</li>
+				{:else if !user.completed}
+					<li>
+						<a class="btn join-item btn-warning" href="/onboarding">Completa il tuo profilo</a>
+					</li>
+				{:else}
+					<li><a class="btn join-item btn-soft" href={'/user/' + user.nick}>Profilo</a></li>
+					<li>
+						<a class="btn join-item btn-soft" href={'/user/' + user.nick + '/dash'}>Dashboard</a>
+					</li>
+					<br />
+					<li>
+						<a class="btn join-item btn-soft" href={'/user/' + user.nick + '/settings'}
+							>Impostazioni</a
+						>
+					</li>
+				{/if}
 			</div>
 
 			<div class="divider"></div>

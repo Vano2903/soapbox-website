@@ -4,6 +4,7 @@
 	import { registerSchema } from '$lib/schemas/registerSchema.js';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { superForm } from 'sveltekit-superforms';
+	import { goto } from '$app/navigation';
 	// import { render } from 'svelte/server';
 
 	const { data } = $props();
@@ -150,6 +151,9 @@
 					class:alert-success={$message.type === 'success'}
 					class:alert-error={$message.type === 'error'}
 				>
+					{#if $message.type === 'success'}
+						{goto('/verify')}
+					{/if}
 					{@html $message.text}
 				</div>
 			{/if}

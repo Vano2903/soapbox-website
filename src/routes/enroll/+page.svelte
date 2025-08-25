@@ -1,6 +1,13 @@
 <script lang="ts">
-	const url = new URL(window.location.href);
-	console.log(url);
+	import { onMount } from 'svelte';
+
+	let event = $state('');
+
+	onMount(() => {
+		const url = new URL(window.location.href);
+		console.log(url);
+		event = url.searchParams.get('event') || 'Evento non specificato';
+	});
 </script>
 
 <main>
@@ -10,7 +17,9 @@
 				class="mx-auto mt-2 mb-1.5 h-0.75 w-2/3 max-w-70 rounded-sm border-0 bg-red-600 md:mt-4"
 			/>
 			<h2 class="text-2xl font-bold">
-				{url.searchParams.get('event')}
+				{event}
+				<!-- {url.searchParams.get('event')} -->
+				<!-- {url.searchParams.get('event') || 'Evento non specificato'} -->
 			</h2>
 			<p>
 				La pagina non esiste realmente, volevo solo verificare se la redirect funzionasse

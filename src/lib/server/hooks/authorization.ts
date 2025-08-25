@@ -5,6 +5,7 @@ import { isPublicPath } from './publicPathes';
 // Authorization middleware for route access control
 const authorization: Handle = async ({ event, resolve }) => {
 	const user = event.locals.user;
+	console.log('User in AUTHORIZATION:', user);
 	const path = event.url.pathname.toLowerCase();
 
 	if (isPublicPath(path)) {
@@ -37,6 +38,10 @@ const authorization: Handle = async ({ event, resolve }) => {
 		} else {
 			return await resolve(event);
 		}
+	} else {
+		if (path.startsWith('/verify')) {
+			redirect(302, `/user/${user.nick}/`);
+		}
 	}
 
 	if (!user.completed) {
@@ -48,6 +53,10 @@ const authorization: Handle = async ({ event, resolve }) => {
 			redirect(302, `/onboarding?message=${encodeURIComponent(message)}`);
 		}
 		return await resolve(event);
+	} else {
+		if (path.startsWith('/onboarding')) {
+			redirect(302, `/user/${user.nick}/`);
+		}
 	}
 
 	// Redirect authenticated users to the dashboard if they have completed the onboarding process

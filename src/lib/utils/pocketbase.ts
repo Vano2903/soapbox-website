@@ -6,7 +6,7 @@ export const createPocketBaseInstance = (instanceUrl: string): TypedPocketBase =
 		throw new Error('Pocketbase instance not found');
 	}
 	const pb = new PocketBase(instanceUrl) as TypedPocketBase;
-	console.log('Creating PocketBase instance:', instanceUrl);
+	// console.log('Creating PocketBase instance:', instanceUrl);
 	// pb.autoCancellation(false);
 	// pb.health.check({}).catch((err) => {
 	// 	console.error('Pocketbase instance is not reachable:', err);

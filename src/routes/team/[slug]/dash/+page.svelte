@@ -60,6 +60,7 @@
 	}
 
 	let newInviteModal = $state(false);
+	let isAdvancedSettingShowing = $state(false);
 	let newInviteCode = $state<string>('');
 	let newInviteMaxUses = $state<number | null>(null);
 	let newInviteExpirationDate = $state<Date | null>(null);
@@ -81,6 +82,7 @@
 		inviteError = null;
 		modifyingInvite = false;
 		creatingInvite = false;
+		isAdvancedSettingShowing = false;
 	}
 
 	function showModalToModifyInvite(inviteCode: string) {
@@ -132,8 +134,8 @@
 		} finally {
 			creatingInvite = false;
 			modifyingInvite = false;
-			resetModal();
 		}
+		resetModal();
 	}
 
 	async function createInvite() {
@@ -219,8 +221,8 @@
 			return;
 		} finally {
 			creatingInvite = false;
-			resetModal();
 		}
+		resetModal();
 	}
 
 	const baseInviteUrl = env.PUBLIC_BASE_URL + '/join/';
@@ -525,7 +527,7 @@
 								</div> -->
 
 									<div class="bg-base-100 border-base-300 collapse-plus collapse mt-4 border">
-										<input type="checkbox" />
+										<input type="checkbox" bind:checked={isAdvancedSettingShowing} />
 										<div class="collapse-title">Impostazioni Avanzate</div>
 										<div class="collapse-content text-sm">
 											<fieldset class="fieldset">
@@ -548,6 +550,7 @@
 													id="invite-expiration"
 													type="date"
 													bind:value={newInviteExpirationDate}
+													min={new Date().toISOString().split('T')[0]}
 													class="input input-bordered w-full"
 												/>
 												<p class="label">

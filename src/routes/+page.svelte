@@ -39,7 +39,7 @@
 			new Date().toLocaleTimeString('it-IT', { hour12: false }),
 			'redirect to enroll selection = {' + year + ' | ' + event + '}'
 		);
-		const params = new URLSearchParams(`year=${year}&event=${event}`);
+		const params = new URLSearchParams(`championship=${year}&event=${event}`);
 		goto(`/enroll?${params.toString()}`);
 	}
 	function resultsRedirect(year: string, event: string) {
@@ -47,7 +47,7 @@
 			new Date().toLocaleTimeString('it-IT', { hour12: false }),
 			'redirect to enroll selection = {' + year + ' | ' + event + '}'
 		);
-		const params = new URLSearchParams(`year=${year}&event=${event}`);
+		const params = new URLSearchParams(`championship=${year}&event=${event}`);
 		goto(`/championships?${params.toString()}`);
 	}
 

@@ -1,40 +1,250 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	// import type { PageData } from './$types';
+	import Map from './../../lib/components/ui/map/map.svelte';
+	import { superForm } from 'sveltekit-superforms';
+	import { zod } from 'sveltekit-superforms/adapters';
+	import { enrollSchema } from '$lib/schemas/enrollSchema';
 
-	//let data: PageData;
-
+	// retrieve the data from the props
 	const { data } = $props();
 	const foundChampionshipDerived = $derived(data.foundChampionship);
 	const foundEventDerived = $derived(data.foundEvent);
+	const teams = $derived(data.userTeams);
+	const isAlreadyEnrolled = $derived(data.isAlreadyEnrolled);
+
+	// Setup the form
+	const { form, errors, message, constraints, enhance } = superForm(data.form, {
+		dataType: 'json',
+		validators: zod(enrollSchema)
+	});
+
+	let selectedTeam = $derived(
+		teams.find((team) => {
+			return team.id === $form.teamId;
+		})
+	);
+	let teamMembers = $derived(selectedTeam?.expand?.members || []);
+	let minDrivers = $derived($form.category === 'SoapBox' ? 2 : 1);
+	let maxDrivers = $derived($form.category === 'SoapBox' ? 4 : 2);
+	let driversWarning = $derived(
+		$form.drivers &&
+			(($form.category === 'SoapBox' && $form.drivers.length > 4) ||
+				($form.category === 'Drift Trike' && $form.drivers.length > 2))
+	);
+
+	$effect(() => {
+		$form.teamAlias = selectedTeam?.name ?? '';
+	});
+
+	// const {
+	// 	delayed,
+	// 	submit: submitCheckConfirm,
+	// 	enhance: submitEnhance
+	// } = superForm({
+	// 	invalidateAll: false,
+	// 	applyAction: false,
+	// 	multipleSubmits: 'abort',
+	// 	onSubmit({ cancel }) {
+	// 		if (!$form.confirm) cancel();
+	// 	},
+	// 	onUpdated({ form }) {
+	// 		$errors.confirm = form.errors.confirm;
+	// 	}
+	// });
 </script>
 
-<main>
-	<div class="m-auto mt-10 w-1/2 rounded-md bg-neutral-100 p-4 shadow-md">
-		<div class="flex flex-col gap-4 text-center text-base">
-			<hr
-				class="mx-auto mt-2 mb-1.5 h-0.75 w-2/3 max-w-70 rounded-sm border-0 bg-red-600 md:mt-4"
-			/>
-			<h2 class="text-2xl font-bold">
-				{foundEventDerived?.name}
-			</h2>
-			<p>
-				La pagina non esiste realmente, volevo solo verificare se la redirect funzionasse
-				correttamente.
-			</p>
-			<div class="mt-4 flex flex-row flex-wrap justify-center gap-6 text-gray-600 underline">
-				<a href="/calendars" class="hover:text-red-600">Torna al Calendario</a>
-				<a href="/championships" class="hover:text-red-600">Torna al Campionato</a>
-			</div>
-			<hr
-				class="mx-auto mt-2 mb-1.5 h-0.75 w-2/3 max-w-70 rounded-sm border-0 bg-red-600 md:mt-4"
-			/>
+<main class="mx-auto max-w-2xl px-4 py-8">
+	<h1 class="text-primary mb-8 text-3xl font-bold">
+		Iscrivi un team a {foundEventDerived?.name}
+	</h1>
+
+	{#if isAlreadyEnrolled}
+		<div role="alert" class="alert alert-success alert-soft">
+			<p>Il team è già iscritto a questo evento.</p>
 		</div>
-	</div>
+	{:else}
+		<form method="POST" class="flex flex-col space-y-8" use:enhance action="?/enroll">
+			<input type="hidden" name="eventId" value={$form.eventId} />
+
+			<!-- Team Selection -->
+			{#if teams.length > 1}
+				<fieldset class="fieldset flex-1 text-base">
+					<legend class="fieldset-legend">Seleziona il team da iscrivere</legend>
+					<select
+						bind:value={$form.teamId}
+						class="select w-full"
+						class:select-error={$errors.teamId}
+						aria-invalid={$errors.teamId ? 'true' : undefined}
+						name="teamId"
+					>
+						<option value="" disabled selected>Seleziona un team</option>
+						{#each teams as team}
+							<option value={team.id}>{team.name} ({team.slug})</option>
+						{/each}
+					</select>
+					{#if $errors.teamId}
+						<p class="fieldset-label text-error alert-soft">{$errors.teamId}</p>
+					{/if}
+				</fieldset>
+			{:else}
+				<fieldset class="fieldset flex-1 text-base">
+					<legend class="fieldset-legend">Il team selezionato è</legend>
+					<input type="text" disabled value="{teams[0]?.name} ({teams[0]?.slug})" />
+					<input type="hidden" name="teamId" value={teams[0]?.id} />
+				</fieldset>
+			{/if}
+
+			<hr class="w-4/5" />
+
+			<!-- Category Selection -->
+			<fieldset class="fieldset flex-1 text-base">
+				<legend class="fieldset-legend">Seleziona la categoria</legend>
+				<div class="flex gap-4">
+					<label class="label cursor-pointer gap-2">
+						<input
+							type="radio"
+							name="category"
+							value="SoapBox"
+							bind:group={$form.category}
+							class="radio"
+							class:radio-error={$errors.category}
+						/>
+						<span class="label-text">SoapBox</span>
+					</label>
+					<label class="label cursor-pointer gap-2">
+						<input
+							type="radio"
+							name="category"
+							value="Drift Trike"
+							bind:group={$form.category}
+							class="radio"
+							class:radio-error={$errors.category}
+						/>
+						<span class="label-text">Drift Trike</span>
+					</label>
+				</div>
+				{#if $errors.category}
+					<p class="fieldset-label text-error">{$errors.category}</p>
+				{/if}
+			</fieldset>
+
+			<!-- Participants Selection (only shown when team and category are selected) -->
+			{#if $form.teamId && $form.category}
+				<fieldset class="fieldset flex-1 text-base">
+					<legend class="fieldset-legend">
+						Seleziona i partecipanti ({minDrivers} minimo)
+					</legend>
+					{#if teamMembers.length > 0}
+						<div class="flex flex-col gap-2">
+							{#each teamMembers as member}
+								<label class="label cursor-pointer justify-start gap-2">
+									<input
+										type="checkbox"
+										name="drivers"
+										value={member.id}
+										bind:group={$form.drivers}
+										class="checkbox"
+										class:checkbox-error={$errors.drivers}
+									/>
+									<span class="label-text">
+										{member.name}
+										{member.lastName}
+									</span>
+								</label>
+							{/each}
+						</div>
+					{:else}
+						<p class="text-warning alert-soft">Nessun membro del team selezionabile</p>
+					{/if}
+
+					{#if $errors.drivers}
+						<p class="fieldset-label text-error alert-soft">
+							{$errors.drivers._errors?.join(', ')}
+						</p>
+					{/if}
+
+					{#if driversWarning}
+						<p class="fieldset-label text-warning alert-soft">
+							Attenzione: per la categoria {$form.category} si consigliano al massimo {maxDrivers}
+							partecipanti
+						</p>
+					{/if}
+				</fieldset>
+			{/if}
+
+			<!-- Team Alias -->
+			<fieldset class="fieldset flex-1 text-base">
+				<legend class="fieldset-legend">Nome del team per questa gara</legend>
+				<input
+					{...$constraints.teamAlias}
+					bind:value={$form.teamAlias}
+					class="input w-full"
+					class:input-error={$errors.teamAlias}
+					aria-invalid={$errors.teamAlias ? 'true' : undefined}
+					type="text"
+					name="teamAlias"
+					placeholder="Nome del team per la gara"
+				/>
+				{#if $errors.teamAlias}
+					<p class="fieldset-label text-error alert-soft">{$errors.teamAlias}</p>
+				{/if}
+			</fieldset>
+
+			<!-- Terms Acceptance -->
+			<fieldset class="fieldset flex-1 text-base">
+				<div class="flex gap-2">
+					<input
+						type="checkbox"
+						bind:checked={$form.confirmTerms}
+						class="checkbox"
+						class:checkbox-error={$errors.confirmTerms}
+						aria-invalid={$errors.confirmTerms ? 'true' : undefined}
+						name="confirmTerms"
+						id="confirmTerms"
+					/>
+					<label for="confirmTerms" class="label-text cursor-pointer">
+						Accetto i termini e condizioni e il trattamento dei dati personali
+					</label>
+				</div>
+				{#if $errors.confirmTerms}
+					<p class="fieldset-label text-error alert-soft">{$errors.confirmTerms}</p>
+				{/if}
+			</fieldset>
+
+			<!-- Submit Button -->
+			<button
+				type="submit"
+				class="btn btn-primary w-full"
+				disabled={!$form.teamId ||
+					!$form.category ||
+					!($form.drivers?.length >= minDrivers) ||
+					!$form.confirmTerms}
+			>
+				Iscrivi il team
+			</button>
+
+			<!-- Success/Error Messages -->
+			{#if $message}
+				<div
+					class="alert alert-soft"
+					class:alert-success={$message.type === 'success'}
+					class:alert-error={$message.type === 'error'}
+				>
+					{$message.text}
+				</div>
+			{/if}
+		</form>
+	{/if}
 </main>
 
 <style>
-	a {
-		cursor: pointer;
+	.disabled-input {
+		border-color: var(--color-base-200);
+		background-color: var(--color-base-200);
+		color: var(--color-base-content/40);
+		&::placeholder {
+			color: var(--color-base-content/20);
+		}
+		cursor: not-allowed;
+		box-shadow: none;
 	}
 </style>

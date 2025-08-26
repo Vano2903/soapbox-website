@@ -19,7 +19,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 		})
 	);
 	console.log('teams in layout server dash/:', res);
-	locals.teamsCount = res?.totalItems ?? 0;
 
 	if (err || !res) {
 		console.error('Error fetching teams:', err);

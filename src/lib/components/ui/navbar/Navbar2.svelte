@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Menu } from 'lucide-svelte';
 	import UserButton from './UserButton.svelte';
+	import { on } from 'svelte/events';
 
 	let isMenuOpen = $state(false);
 	const handleMenuClick = () => {
@@ -23,9 +24,25 @@
 	const latestGalleryYear = 2003;
 
 	const links = [
-		{ name: 'Chi siamo', href: '/chi-siamo' },
-		{ name: 'Campionati', href: '/championships' },
-		{ name: 'Galleria', href: `/gallery?year=${latestGalleryYear}` }
+		{ name: 'Home', href: '/', onSmall: true, onMedium: false, dropdown: null },
+		{ name: 'Chi siamo', href: '/chi-siamo', onSmall: true, onMedium: true, dropdown: null },
+		{
+			name: 'Campionati',
+			href: null,
+			onSmall: true,
+			onMedium: true,
+			dropdown: [
+				{ name: 'Calendario', href: '/calendars', onSmall: true, onMedium: true },
+				{ name: 'Classifiche', href: '/championships', onSmall: true, onMedium: true }
+			]
+		},
+		{
+			name: 'Galleria',
+			href: `/gallery?year=${latestGalleryYear}`,
+			onSmall: true,
+			onMedium: true,
+			dropdown: null
+		}
 	];
 
 	const { user } = $props();
@@ -78,9 +95,21 @@
 				class:hidden={!isMenuOpen}
 				aria-hidden={!isMenuOpen}
 			>
-				<div class="join join-vertical">
+				<div class="join join-vertical flex">
 					{#each links as link}
-						<li><a class="btn join-item btn-soft" href={link.href}>{link.name}</a></li>
+						{#if link.onSmall}
+							<li>
+								{#if link.dropdown}
+									{#each link.dropdown as dropLink}
+										<a class="btn join-item btn-soft" href={dropLink.href}>
+											{dropLink.name}
+										</a>
+									{/each}
+								{:else}
+									<a class="btn join-item btn-soft" href={link.href}>{link.name}</a>
+								{/if}
+							</li>
+						{/if}
 					{/each}
 				</div>
 			</ul>
@@ -90,7 +119,28 @@
 		</div>
 		<div class="hidden space-x-4 py-2 md:flex">
 			{#each links as link}
-				<a class="btn btn-primary border-0 text-2xl font-bold" href={link.href}>{link.name}</a>
+				{#if link.onMedium}
+					{#if link.dropdown}
+						<div class="dropdown dropdown-hover">
+							<div role="button" class="btn btn-primary border-0 text-2xl font-bold text-nowrap">
+								{link.name}
+							</div>
+							<ul class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+								{#each link.dropdown as dropLink}
+									<li>
+										<a class="btn border-0" href={dropLink.href}>
+											{dropLink.name}
+										</a>
+									</li>
+								{/each}
+							</ul>
+						</div>
+					{:else}
+						<a class="btn btn-primary border-0 text-2xl font-bold text-nowrap" href={link.href}
+							>{link.name}</a
+						>
+					{/if}
+				{/if}
 			{/each}
 		</div>
 		<UserButton {user} />

@@ -124,12 +124,12 @@
 				<!-- Invite Details -->
 				<div class="rounded-md border border-blue-200 bg-blue-50 p-4">
 					<div class="space-y-1 text-sm text-blue-700">
-						{#if invite.uses === -1}
-							<p>• Utilizzi illimitati</p>
-						{:else}
+						{#if invite.uses !== -1}
 							<p>• {invite.uses - invite.joined.length} utilizzi rimanenti</p>
 						{/if}
-						<p>• Scade: {new Date(invite.expiration).toLocaleDateString()}</p>
+						{#if invite.expiration}
+							<p>• Scade: {new Date(invite.expiration).toLocaleDateString()}</p>
+						{/if}
 						{#if invite.joined.length > 0}
 							<p>• {invite.joined.length} persone hanno già aderito</p>
 						{/if}

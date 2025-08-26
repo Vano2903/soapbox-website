@@ -19,21 +19,23 @@ export const actions = {
 		}
 
 		const pb = locals.pb;
-
+		let redirectTo = '/me';
 		try {
-			await pb.collection('users').authWithPassword(form.data.email, form.data.password);
+			const user = await pb
+				.collection('users')
+				.authWithPassword(form.data.email, form.data.password);
 			// if (!user) {
 			// 	return message(form, 'Login effettuato con successo!');
 			// }
 			// let user = locals.user as User;
-			let redirectTo = url.searchParams.get('redirectTo') || 'me';
+			locals.user = user.record;
+			redirectTo = url.searchParams.get('redirectTo') || 'me';
 			if (!redirectTo.startsWith('/')) {
 				redirectTo = `/${redirectTo}`;
 			}
-			throw redirect(302, `${redirectTo}`);
 			// return message(form, { type: 'success', text: 'Loggato' });
 		} catch (e) {
-			console.log(e);
+			console.log('errore durante il login:', e);
 			return message(
 				form,
 				{
@@ -45,5 +47,6 @@ export const actions = {
 				}
 			);
 		}
+		redirect(302, `${redirectTo}`);
 	}
 };

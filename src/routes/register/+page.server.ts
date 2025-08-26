@@ -4,7 +4,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { registerSchema } from '$lib/schemas/registerSchema.js';
 import type { PageServerLoad } from './$types.js';
 import { Roles, UserVisiblityKind } from '$types/pocketbase/user.js';
-import { object } from 'zod';
+// import { object } from 'zod';
 
 export const load: PageServerLoad = async () => {
 	const form = await superValidate(zod(registerSchema));

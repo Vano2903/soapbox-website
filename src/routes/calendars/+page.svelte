@@ -28,14 +28,14 @@
 			invalidateAll: true
 		});
 	}
-	function enrollRedirect(year: string, event: string) {
-		console.log(
-			new Date().toLocaleTimeString('it-IT', { hour12: false }),
-			'redirect to enroll selection = {' + year + ' | ' + event + '}'
-		);
-		const params = new URLSearchParams(`championship=${year}&event=${event}`);
-		goto(`/enroll?${params.toString()}`);
-	}
+	// function enrollRedirect(year: string, event: string) {
+	// 	console.log(
+	// 		new Date().toLocaleTimeString('it-IT', { hour12: false }),
+	// 		'redirect to enroll selection = {' + year + ' | ' + event + '}'
+	// 	);
+	// 	const params = new URLSearchParams(`year=${year}&event=${event}`);
+	// 	goto(`/enroll?${params.toString()}`);
+	// }
 
 	// Function to transform the championship list into a format suitable for ElementSelection (with extra empty boundaries for cool UI effects)
 	function transformToElementList(championshipList: ChampionshipNonExpand[]) {
@@ -148,13 +148,20 @@
 									</div>
 								</div>
 								<div class="mt-2 md:mt-8">
-									<button
-										onclick={() =>
-											enrollRedirect(`${foundChampionshipDerived.name}`, `${event.shortName}`)}
-										class="btn btn-error text-foreground max-w-5/12 text-xs md:text-lg"
-									>
-										Iscriviti
-									</button>
+									{#if event.subscriptionsOpen && (event.maxSubscriptions === 0 || event.numSubscriptions < (event.maxSubscriptions || 0)) && (!event.startDate || new Date(event.startDate).valueOf() >= new Date().valueOf())}
+										<a
+											href={`/enroll?${new URLSearchParams(`year=${foundChampionshipDerived.name}&event=${event.shortName}`).toString()}`}
+											class="btn btn-error text-foreground max-w-5/12 text-xs md:text-lg"
+										>
+											Iscriviti
+										</a>
+									{:else}
+										<button
+											class="btn btn-disabled flex-nowrap text-xs text-nowrap text-gray-600 md:text-lg"
+										>
+											Iscrizioni Chiuse
+										</button>
+									{/if}
 									<p class="mt-2 text-xs text-gray-500 md:text-base">
 										{event.numSubscriptions}{(event.maxSubscriptions ?? 0) > 0
 											? `/${event.maxSubscriptions}`

@@ -1,8 +1,8 @@
-import type { UserPublicInfo } from '$types/pocketbase/user';
+// import type { UserPublicInfo } from '$types/pocketbase/user';
 import { redirect, type ServerLoad } from '@sveltejs/kit';
 
-export const load: ServerLoad = async ({ locals, params, url }) => {
-	const { user, pb } = locals;
+export const load: ServerLoad = async ({ params }) => {
+	// const { user, pb } = locals;
 
 	if (!params.slug) {
 		redirect(303, '/users');

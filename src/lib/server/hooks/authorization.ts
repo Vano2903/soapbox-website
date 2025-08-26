@@ -5,7 +5,6 @@ import { isPublicPath } from './publicPathes';
 // Authorization middleware for route access control
 const authorization: Handle = async ({ event, resolve }) => {
 	const user = event.locals.user;
-	console.log('User in AUTHORIZATION:', user);
 	const path = event.url.pathname.toLowerCase();
 
 	if (isPublicPath(path)) {
@@ -40,6 +39,9 @@ const authorization: Handle = async ({ event, resolve }) => {
 		}
 	} else {
 		if (path.startsWith('/verify')) {
+			if (!user.completed) {
+				redirect(302, `/onboarding`);
+			}
 			redirect(302, `/user/${user.nick}/`);
 		}
 	}

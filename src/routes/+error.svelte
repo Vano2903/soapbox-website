@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import { page } from '$app/state';
 
 	let raceCarPosition = $state(0);
 	let isAnimating = $state(false);
@@ -26,7 +27,7 @@
 </script>
 
 <svelte:head>
-	<title>404 - Off Track! | Brum</title>
+	<title>{page.status} - Off Track! | Brum</title>
 	<meta
 		name="description"
 		content="Looks like you've gone off the racing track! Let's get you back on course."
@@ -86,9 +87,15 @@
 			<!-- 404 Display -->
 			<div class="space-y-4">
 				<h1 class="text-8xl font-bold tracking-wider text-gray-800 drop-shadow-lg">
-					<span class="text-red-500">4</span><span class="text-yellow-500">0</span><span
-						class="text-blue-500">4</span
-					>
+					<!-- {#each page.status.toString() as char, i}
+						<span
+							class="inline-block transform transition-transform duration-300 hover:scale-125 hover:text-red-600"
+							style="transition-delay: {i * 100}ms">{char}</span
+						>
+					{/each} -->
+					<span class="text-red-500">{page.status.toString()[0]}</span>
+					<span class="text-yellow-500">{page.status.toString()[1]}</span>
+					<span class="text-blue-500">{page.status.toString()[2]}</span>
 				</h1>
 				<div class="text-2xl font-semibold text-gray-700">WHOOPS! YOU'VE GONE OFF TRACK!</div>
 			</div>

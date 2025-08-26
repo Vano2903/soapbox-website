@@ -1,7 +1,7 @@
 <script lang="ts">
 	import emblaCarouselSvelte from 'embla-carousel-svelte';
 	import Autoplay from 'embla-carousel-autoplay';
-	import { defaultCarouselPage, type CarouselPage } from '$lib/types/carouselPage';
+	import { defaultCarouselPage, type CarouselPageType } from '$lib/types/carouselPage';
 	import type { EmblaCarouselType } from 'embla-carousel';
 
 	let options = { loop: true };
@@ -25,7 +25,7 @@
 		withControls = false,
 		startingPage = 0
 	}: {
-		pages: CarouselPage[];
+		pages: CarouselPageType[];
 		withControls?: boolean;
 		startingPage?: number;
 	} = $props();

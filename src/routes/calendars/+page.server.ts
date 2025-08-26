@@ -1,20 +1,15 @@
 import type { PageServerLoad } from './$types';
-
-import pocketbase from 'pocketbase';
-import { env } from '$env/dynamic/public';
-import type { TypedPocketBase } from '$types/pocketbase/pocketbase';
-import type { ChampionshipNonExpand } from '$types/pocketbase/championship';
 import { fail } from '@sveltejs/kit';
+import { getChampionshipsList } from '$lib/utils/pocketbase';
 
-export const load: PageServerLoad = async () => {
-	const pb = new pocketbase(env.PUBLIC_PB_INSTANCE) as TypedPocketBase;
+export const load: PageServerLoad = async ({ locals }) => {
+	const pb = locals.pb;
+	const [championshipsList, lastOngoingChampionshipIndex, err] = await getChampionshipsList(pb);
 
-	const [championshipsList, err] = (await goCatch(pb.collection('championships').getFullList({ sort: '+startDate' }))) as [ChampionshipNonExpand[], undefined] | [undefined, Error];
 	if (err || !championshipsList || championshipsList.length === 0) {
 		console.error('Error fetching championships: ', err);
-		throw fail(500)
+		throw fail(500);
 	}
-	const lastOngoingChampionshipIndex = championshipsList.findLastIndex((v) => { return v.ongoing })
 
-	return { championshipsList, lastOngoingChampionshipIndex }
-}
+	return { championshipsList, lastOngoingChampionshipIndex };
+};

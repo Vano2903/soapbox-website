@@ -44,7 +44,6 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
 	countryPhoneCodes[currentDefault].default = false;
 	countryPhoneCodes[newCurrent].default = true;
 	user.phone = user.phone.split('-')[1];
-	console.log('user in load', user);
 	user.avatar = pb.files.getURL(user, user.avatar || '') || '';
 	user.avatarCropped = user.avatarCropped || '';
 	user.banner = pb.files.getURL(user, user.banner || '') || '';

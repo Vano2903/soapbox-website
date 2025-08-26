@@ -5,7 +5,6 @@ import { isPublicPath } from './publicPathes';
 // Authorization middleware for route access control
 const authorization: Handle = async ({ event, resolve }) => {
 	const user = event.locals.user;
-	console.log('User in AUTHORIZATION:', user);
 	const path = event.url.pathname.toLowerCase();
 
 	if (isPublicPath(path)) {

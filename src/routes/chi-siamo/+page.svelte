@@ -16,15 +16,15 @@
 				{
 					layout: 'horizontal',
 					horizontal: { src: '/images/chi-siamo/soapbox.jpg', alt: 'macchine soapbox' },
-					loading: 'eager'
+					loading: 'lazy'
 				},
 				{
 					layout: 'horizontal',
 					horizontal: { src: '/images/chi-siamo/soapbox.jpg', alt: 'macchine soapbox' },
-					loading: 'eager'
+					loading: 'lazy'
 				}
 			] as CarouselPageType[],
-			activePage: 1
+			activePage: 0
 		},
 		{
 			title: 'La corsa che ci unisce',
@@ -56,7 +56,7 @@
 					loading: 'lazy'
 				}
 			] as CarouselPageType[],
-			activePage: 1
+			activePage: 0
 		},
 		{
 			title: 'Lo spettacolo continua',
@@ -79,7 +79,7 @@
 					loading: 'lazy'
 				}
 			] as CarouselPageType[],
-			activePage: 1
+			activePage: 0
 		},
 		{
 			title: 'Una squadra con un sogno',
@@ -111,7 +111,7 @@
 					loading: 'lazy'
 				}
 			] as CarouselPageType[],
-			activePage: 1
+			activePage: 0
 		}
 	];
 </script>

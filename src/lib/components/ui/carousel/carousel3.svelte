@@ -74,12 +74,12 @@
 	{#if withControls}
 		<div
 			class="absolute bottom-4 left-1/2 flex -translate-x-1/2 flex-row items-center justify-center gap-2"
+			use:emblaCarouselSvelte
 		>
 			{#each pages as _, index}
 				<button
 					class="h-4 w-4 rounded-full transition-colors duration-300
 						{activePage === index ? `bg-red-600` : `bg-white hover:bg-neutral-400`}"
-					use:emblaCarouselSvelte
 					onclick={() => handleControl(index)}
 					aria-label="Slide {index}"
 				></button>

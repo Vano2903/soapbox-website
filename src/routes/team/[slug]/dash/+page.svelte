@@ -63,7 +63,7 @@
 	let isAdvancedSettingShowing = $state(false);
 	let newInviteCode = $state<string>('');
 	let newInviteMaxUses = $state<number | null>(null);
-	let newInviteExpirationDate = $state<Date | null>(null);
+	let newInviteExpirationDate = $state<string | null>(null);
 	let newInviteDisabled = $state<boolean>(false);
 	// let baseUrl = `${window.location.origin}/team/${team.slug}/dash/invite/`;
 	let baseUrl = env.PUBLIC_BASE_URL + '/join/';
@@ -95,7 +95,9 @@
 		}
 		newInviteCode = invite.code;
 		newInviteMaxUses = invite.uses !== -1 ? invite.uses : null; // Use -1 for unlimited
-		newInviteExpirationDate = invite.expiration ? new Date(invite.expiration) : null;
+		newInviteExpirationDate = invite.expiration
+			? new Date(invite.expiration).toISOString().split('T')[0]
+			: null;
 		newInviteDisabled = invite.disabled;
 
 		(document.getElementById('invite_modal') as HTMLDialogElement)?.showModal();
@@ -110,11 +112,12 @@
 				return;
 			}
 			try {
-				console.log('updaing, checking the invite code uses:', newInviteMaxUses);
 				let updatedInvite = (await pb.collection('teamInvitations').update(invite.id, {
 					code: newInviteCode,
 					uses: newInviteMaxUses !== null ? newInviteMaxUses + 1 : -1, // Use -1 for unlimited
-					expiration: newInviteExpirationDate ? newInviteExpirationDate.toISOString() : null,
+					expiration: newInviteExpirationDate
+						? new Date(newInviteExpirationDate).toISOString()
+						: null,
 					disabled: newInviteDisabled
 				})) as TeamInvitationNonExpand;
 
@@ -628,7 +631,7 @@
 										(invite.expiration && new Date(invite.expiration) < new Date()) ||
 										(invite.uses !== -1 && invite.uses <= 0)}
 									{@const daysRemaining = invite.expiration
-										? datediff(new Date(), new Date(invite.expiration))
+										? datediff(new Date(), new Date(invite.expiration)) + 1
 										: null}
 									<div
 										class="collapse-arrow collapse rounded-lg bg-gray-200 {isDisabled
@@ -689,8 +692,9 @@
 															</div>
 															{#if invite.expiration}
 																<p class="text-sm">
-																	{new Date(invite.expiration).toLocaleDateString('it-IT')}
-																	{#if daysRemaining && daysRemaining > 0}
+																	<!-- {new Date(invite.expiration).toLocaleDateString('it-IT')} -->
+																	{console.log('days remaining:', daysRemaining)}
+																	{#if daysRemaining !== null && daysRemaining > 0 && new Date(invite.expiration) >= new Date()}
 																		<span class="text-success"
 																			>({daysRemaining} giorni rimanenti)</span
 																		>

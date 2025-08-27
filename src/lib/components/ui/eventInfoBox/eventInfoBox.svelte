@@ -48,11 +48,13 @@
 			</p>
 			<p class="pb-2 text-gray-700 tabular-nums xl:pb-8 xl:text-lg">
 				<span>
-					{eventInfo.numSubscriptions}
-					{#if eventInfo.maxSubscriptions}
-						/{eventInfo.maxSubscriptions}
+					{#if eventInfo.subscriptionsOpen}
+						{eventInfo.numSubscriptions}{(eventInfo.maxSubscriptions ?? 0) > 0
+							? `/${eventInfo.maxSubscriptions}`
+							: ''} iscrizioni
+					{:else}
+						Iscrizioni chiuse
 					{/if}
-					iscrizioni
 				</span>
 			</p>
 		</div>
@@ -86,11 +88,13 @@
 			</p>
 			<p class="pb-2 text-gray-700 tabular-nums xl:pb-8 xl:text-lg">
 				<span>
-					{eventInfo.numSubscriptions}
-					{#if eventInfo.maxSubscriptions}
-						/{eventInfo.maxSubscriptions}
+					{#if eventInfo.subscriptionsOpen}
+						{eventInfo.numSubscriptions}{(eventInfo.maxSubscriptions ?? 0) > 0
+							? `/${eventInfo.maxSubscriptions}`
+							: ''} iscrizioni
+					{:else}
+						Iscrizioni chiuse
 					{/if}
-					iscrizioni
 				</span>
 			</p>
 		</div>

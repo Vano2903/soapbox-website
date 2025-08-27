@@ -159,13 +159,17 @@
 										<button
 											class="btn btn-disabled flex-nowrap text-xs text-nowrap text-gray-600 md:text-lg"
 										>
-											Iscrizioni Chiuse
+											Iscriviti
 										</button>
 									{/if}
 									<p class="mt-2 text-xs text-gray-500 md:text-base">
-										{event.numSubscriptions}{(event.maxSubscriptions ?? 0) > 0
-											? `/${event.maxSubscriptions}`
-											: ''} iscrizioni
+										{#if event.subscriptionsOpen}
+											{event.numSubscriptions}{(event.maxSubscriptions ?? 0) > 0
+												? `/${event.maxSubscriptions}`
+												: ''} iscrizioni
+										{:else}
+											Iscrizioni chiuse
+										{/if}
 									</p>
 								</div>
 							</div>

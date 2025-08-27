@@ -268,7 +268,20 @@
 					eventInfo={currentChampionship.expand.events.at(nextEventIndex) as EventNonExpand}
 					locatedOnCarousel={true}
 				/>
-				<button
+				<!-- foundEventDerived?.subscriptionsOpen && (foundEventDerived.maxSubscriptions === 0 || foundEventDerived.numSubscriptions < (foundEventDerived.maxSubscriptions ?? 0)) && (!foundEventDerived.startDate || new Date(foundEventDerived.startDate).valueOf() >= new Date().valueOf()) -->
+				{#if currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen && (currentChampionship.expand.events.at(nextEventIndex)?.maxSubscriptions === 0 || (currentChampionship.expand.events.at(nextEventIndex)?.numSubscriptions ?? 0) < (currentChampionship.expand.events.at(nextEventIndex)?.maxSubscriptions ?? 0)) && (!currentChampionship.expand.events.at(nextEventIndex)?.startDate || new Date(currentChampionship.expand.events.at(nextEventIndex)?.startDate ?? new Date()).valueOf() >= new Date().valueOf())}
+					<a
+						class="btn btn-error text-foreground max-w-70"
+						href={`/enroll?${new URLSearchParams(`championship=${currentChampionship.name}&event=${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`).toString()}`}
+					>
+						Iscriviti
+					</a>
+				{:else}
+					<button class="btn btn-disabled flex-nowrap text-nowrap text-gray-600">
+						Iscriviti
+					</button>
+				{/if}
+				<!-- <button
 					class="btn btn-error text-foreground max-w-70"
 					onclick={currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen
 						? () =>
@@ -283,7 +296,7 @@
 								)}
 				>
 					{#if currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen}Iscriviti{:else}Guarda{/if}
-				</button>
+				</button> -->
 			</div>
 		</aside>
 	</div>

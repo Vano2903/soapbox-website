@@ -150,7 +150,7 @@
 								<div class="mt-2 md:mt-8">
 									{#if event.subscriptionsOpen && (event.maxSubscriptions === 0 || event.numSubscriptions < (event.maxSubscriptions || 0)) && (!event.startDate || new Date(event.startDate).valueOf() >= new Date().valueOf())}
 										<a
-											href={`/enroll?${new URLSearchParams(`year=${foundChampionshipDerived.name}&event=${event.shortName}`).toString()}`}
+											href={`/enroll?${new URLSearchParams(`championship=${foundChampionshipDerived.name}&event=${event.shortName}`).toString()}`}
 											class="btn btn-error text-foreground max-w-5/12 text-xs md:text-lg"
 										>
 											Iscriviti

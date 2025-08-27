@@ -228,7 +228,7 @@
 		resetModal();
 	}
 
-	const baseInviteUrl = env.PUBLIC_BASE_URL + '/join/';
+	const baseInviteUrl = `https://${env.PUBLIC_BASE_URL}/join/`;
 
 	let userToKick: UserNonExpand = $state({} as UserNonExpand);
 	let kickUserError: string | null = $state(null);
@@ -656,7 +656,7 @@
 												>
 													Copia Link
 												</button> -->
-												<ClipboardButton class="z-10" content={baseInviteUrl + invite.code} />
+												<ClipboardButton class="z-10" content={`${baseInviteUrl}${invite.code}`} />
 
 												{#if isDisabled}
 													<span class="badge badge-error">Non attivo</span>

@@ -41,7 +41,7 @@ export const load: PageLoad = async ({ data }): Promise<{ currentChampionship: C
 			layout: 'both',
 			breakpoint: 'md',
 			horizontal: { src: 'images/carousel/3.jpeg', alt: 'Car 3' },
-			vertical: { src: 'images/carousel/3.jpeg', alt: 'Car 3' },
+			vertical: { src: 'images/carousel/3 - Vert.jpeg', alt: 'Car 3' },
 			loading: 'lazy'
 		},
 		{

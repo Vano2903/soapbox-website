@@ -233,7 +233,7 @@
 					{@html sheetHTML}
 				</div>
 			</section>
-		{:else if new Date(foundEventDerived?.startDate ?? '').valueOf() > new Date().valueOf()}
+		{:else if new Date(foundEventDerived?.endDate ?? foundEventDerived?.startDate ?? '').valueOf() > new Date().valueOf()}
 			<section class="flex flex-col items-center gap-2">
 				<h1 class="text-3xl font-bold">Informazioni Evento:</h1>
 				<div class="flex w-full flex-col gap-2 sm:w-2/3 lg:w-1/2 2xl:w-1/3">

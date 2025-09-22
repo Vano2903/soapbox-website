@@ -79,19 +79,19 @@
 		{@render logohome()}
 	</div>
 	<div class="ml-2 flex w-full items-center justify-between">
-		<div
+		<!-- <div
 			class="dropdown dropdown-start block space-x-4 py-2 md:hidden"
 			onfocusout={handleMenuFocusLoss}
 		>
 			<button
-				onclick={handleMenuClick}
+				onclick={() => (isMenuOpen = !isMenuOpen)}
 				class="m-0 border-none bg-transparent p-0 focus:outline-none"
 				aria-label="Menu"
 			>
 				<Menu color="white" />
 			</button>
 			<ul
-				class="dropdown-content menu bg-base-100 rounded-box mt-2 w-52 border-2 p-2 shadow"
+				class="dropdown-content menu bg-base-100 rounded-box z-1 mt-2 w-52 border-2 p-2 shadow"
 				class:hidden={!isMenuOpen}
 				aria-hidden={!isMenuOpen}
 			>
@@ -113,7 +113,33 @@
 					{/each}
 				</div>
 			</ul>
-		</div>
+		</div> -->
+		<details
+			class="dropdown space-x-4 py-2 md:hidden"
+			onfocusout={handleMenuFocusLoss}
+			ontoggle={() => handleMenuClick()}
+		>
+			<summary class="btn b-0 m-0 border-none bg-transparent p-0 shadow-none focus:outline-none"
+				><Menu color="white" /></summary
+			>
+			<ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow">
+				{#each links as link}
+					{#if link.onSmall}
+						<li>
+							{#if link.dropdown}
+								{#each link.dropdown as dropLink}
+									<a class="btn join-item btn-soft" href={dropLink.href}>
+										{dropLink.name}
+									</a>
+								{/each}
+							{:else}
+								<a class="btn join-item btn-soft" href={link.href}>{link.name}</a>
+							{/if}
+						</li>
+					{/if}
+				{/each}
+			</ul>
+		</details>
 		<div class="block md:hidden">
 			{@render logohome()}
 		</div>

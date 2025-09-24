@@ -115,6 +115,57 @@ func main() {
 		// })
 	})
 
+	app.OnRecordCreateRequest("eventParticipations").BindFunc(func(e *core.RecordRequestEvent) error {
+		authRecord := e.Auth
+		if authRecord == nil {
+			return apis.NewUnauthorizedError("Must be authenticated to participate in an event", nil)
+		}
+
+		event, err := e.App.FindRecordById("events", e.Record.GetString("event"))
+		if err != nil {
+			return err
+		}
+		e.App.Logger().Info("Creating event participation", "event", event.Id, "team", e.Record.GetString("team"))
+
+		if !event.GetBool("subscriptionsOpen") {
+			return apis.NewBadRequestError("Event subscriptions are closed", nil)
+		}
+		if event.GetInt("maxSubscriptions") != 0 && (event.GetInt("numSubscriptions")+1 >= event.GetInt("maxSubscriptions")) {
+			return apis.NewBadRequestError("Event is full", nil)
+		}
+
+		event.Set("numSubscriptions", event.GetInt("numSubscriptions")+1)
+		if err := app.Save(event); err != nil {
+			return err
+		}
+
+		return e.Next()
+	})
+
+	app.OnRecordDeleteRequest("eventParticipations").BindFunc(func(e *core.RecordRequestEvent) error {
+		authRecord := e.Auth
+		if authRecord == nil {
+			return apis.NewUnauthorizedError("Must be authenticated to participate in an event", nil)
+		}
+
+		event, err := e.App.FindRecordById("events", e.Record.GetString("event"))
+		if err != nil {
+			return err
+		}
+		e.App.Logger().Info("Deleting event participation", "event", event.Id, "team", e.Record.GetString("team"))
+
+		if !event.GetBool("subscriptionsOpen") {
+			return apis.NewBadRequestError("Event subscriptions are closed", nil)
+		}
+
+		event.Set("numSubscriptions", event.GetInt("numSubscriptions")-1)
+		if err := app.Save(event); err != nil {
+			return err
+		}
+
+		return e.Next()
+	})
+
 	if err := app.Start(); err != nil {
 		log.Fatal(err)
 	}

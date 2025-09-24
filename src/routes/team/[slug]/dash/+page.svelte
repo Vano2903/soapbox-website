@@ -13,7 +13,7 @@
 	interface Props {
 		data: {
 			user: UserNonExpand;
-			pbUri: string;
+			pb: TypedPocketBase;
 			team: Team;
 			members: UserNonExpand[];
 			error: {
@@ -29,8 +29,8 @@
 	}
 
 	const { data }: Props = $props();
-	const pb = new PocketBase(data.pbUri) as TypedPocketBase;
-
+	// const pb = new PocketBase(data.pbUri) as TypedPocketBase;
+	const pb = data.pb;
 	let user = $state(data.user);
 	let team = $state(data.team);
 	let members = $state(data.members);

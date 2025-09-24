@@ -31,5 +31,6 @@ RUN apk update && \
 WORKDIR /app
 COPY --from=builder /app/pb ./pb
 EXPOSE 8080
+LABEL org.opencontainers.image.source=https://github.com/vano2903/soapbox-website
 
 ENTRYPOINT ["/app/pb", "serve", "--http=0.0.0.0:8080", "--dev"]

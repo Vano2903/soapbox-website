@@ -32,10 +32,11 @@ export const load: Load = async ({ url }) => {
 		sort: 'slug'
 	});
 
+	const baseUrl = 'https://avatar.iran.liara.run/username';
+
 	const expandedTeams = paginatedTeams.items.map((team: Team) => {
 		team.logoCropped =
-			pb.files.getURL(team, team.logoCropped || '') ||
-			`https://avatar.iran.liara.run/public?username=${team.slug}`;
+			pb.files.getURL(team, team.logoCropped || '') || `${baseUrl}?username=${team.slug}`;
 		team.bannerCropped = pb.files.getURL(team, team.bannerCropped || '') || undefined;
 		return team;
 	});

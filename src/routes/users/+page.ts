@@ -33,10 +33,11 @@ export const load: Load = async ({ url, fetch }) => {
 		fetch: fetch
 	});
 
+	const baseUrl = 'https://avatar.iran.liara.run/username';
+
 	const expandedUsers = paginatedUsers.items.map((user: UserPublicInfo) => {
 		user.avatarCropped =
-			pb.files.getURL(user, user.avatarCropped || '') ||
-			`https://avatar.iran.liara.run/public?username=${user.nick}`;
+			pb.files.getURL(user, user.avatarCropped || '') || `${baseUrl}?username=${user.nick}`;
 		user.bannerCropped = pb.files.getURL(user, user.bannerCropped || '') || undefined;
 		return user;
 	});

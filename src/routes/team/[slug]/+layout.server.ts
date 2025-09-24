@@ -36,9 +36,11 @@ export const load: LayoutServerLoad = async ({ locals, params, url }) => {
 	}
 
 	console.log('Found user:', foundTeam);
+	const baseUrl = 'https://avatar.iran.liara.run/username';
+
 	foundTeam.logoCropped =
 		pb.files.getURL(foundTeam, foundTeam.logoCropped || '') ||
-		`https://avatar.iran.liara.run/public?username=${foundTeam.slug}`;
+		`${baseUrl}?username=${foundTeam.slug}`;
 
 	foundTeam.bannerCropped = pb.files.getURL(foundTeam, foundTeam.bannerCropped || '') || undefined;
 
@@ -67,8 +69,7 @@ export const load: LayoutServerLoad = async ({ locals, params, url }) => {
 
 	const membersWithAvatars = members.map((member) => {
 		member.avatarCropped =
-			pb.files.getURL(member, member.avatarCropped || '') ||
-			`https://avatar.iran.liara.run/public?username=${member.nick}`;
+			pb.files.getURL(member, member.avatarCropped || '') || `${baseUrl}?username=${member.nick}`;
 		member.bannerCropped = pb.files.getURL(member, member.bannerCropped || '') || undefined;
 		return member;
 	});

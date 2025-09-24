@@ -127,11 +127,13 @@ func main() {
 		}
 		e.App.Logger().Info("Creating event participation", "event", event.Id, "team", e.Record.GetString("team"))
 
-		if !event.GetBool("subscriptionsOpen") {
-			return apis.NewBadRequestError("Event subscriptions are closed", nil)
-		}
-		if event.GetInt("maxSubscriptions") != 0 && (event.GetInt("numSubscriptions")+1 >= event.GetInt("maxSubscriptions")) {
-			return apis.NewBadRequestError("Event is full", nil)
+		if !e.Auth.IsSuperuser() {
+			if !event.GetBool("subscriptionsOpen") {
+				return apis.NewBadRequestError("Event subscriptions are closed", nil)
+			}
+			if event.GetInt("maxSubscriptions") != 0 && (event.GetInt("numSubscriptions")+1 >= event.GetInt("maxSubscriptions")) {
+				return apis.NewBadRequestError("Event is full", nil)
+			}
 		}
 
 		event.Set("numSubscriptions", event.GetInt("numSubscriptions")+1)
@@ -154,8 +156,15 @@ func main() {
 		}
 		e.App.Logger().Info("Deleting event participation", "event", event.Id, "team", e.Record.GetString("team"))
 
-		if !event.GetBool("subscriptionsOpen") {
-			return apis.NewBadRequestError("Event subscriptions are closed", nil)
+		if !e.Auth.IsSuperuser() {
+			if !event.GetBool("subscriptionsOpen") {
+				return apis.NewBadRequestError("Event subscriptions are closed", nil)
+			}
+		}
+
+		if e.Auth.IsSuperuser() && event.GetInt("numSubscriptions") <= 0 {
+			e.App.Logger().Debug("numSubscriptions is already 0, not decrementing")
+			return e.Next()
 		}
 
 		event.Set("numSubscriptions", event.GetInt("numSubscriptions")-1)

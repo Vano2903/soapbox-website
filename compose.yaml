@@ -6,7 +6,7 @@ services:
     container_name: 'bruum-pb-dev'
     restart: 'unless-stopped'
     volumes:
-      - './pocketdb:/app/pb_data'
+      - './pocketdb-dev:/app/pb_data'
     ports:
       - '8080:8080'
 

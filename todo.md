@@ -5,26 +5,26 @@
   - [x] registrazione password
   - [x] onboarding
     - [x] username, nome, cognome, codice fiscale | (sesso, data di nascita), telefono
-  - [ ] homepage
-    - [ ]
+  - [x] homepage
+    - [ ] aggiornamento contenuti (testi/immagini/video) con quelli ufficiali
 
 - [x] signin eml/psw
 - [x] signup eml/psw
 - [x] email verification
 - [x] onboarding (formono)
-- [ ] user page
+- [x] user page
 
   - [x] dash page
     - [x] logout
     - [x] edit (onboarding (formono))
-  - [ ] team page [as leader]
+  - [x] team page [as leader]
     - [x] creare un team
     - [ ] modificare un team (info + crud partecipanti)
     - [ ] via tag
-    - [ ] dati personali (onboarding (formono))
-  - [ ] calendar next race page (define location)
-    - [ ] iscrizione next race
-    - [ ] visualizzazione info di tutte le future gare
+    - [x] dati personali (onboarding (formono))
+  - [x] calendar next race page (define location)
+    - [x] iscrizione next race
+    - [x] visualizzazione info di tutte le future gare
 
 - [ ] color theme selection:
 
@@ -39,7 +39,7 @@
   - [ ] prevent default on arrow selections, unless a table is selected
   - [ ] search for available next/prev element and ignore disabled elements, if there are no more elements after or previously disable/hide the selection arrow for that direction
 
-- [ ] champions ship page
-  - [ ] read the data from the url onmount
+- [x] champions ship page
+  - [x] read the data from the url onmount
   - [ ] daisy ui color scheme
   - [ ] pointer cursor on large screen on "classifica rallies"

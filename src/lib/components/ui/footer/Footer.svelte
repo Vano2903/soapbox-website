@@ -58,7 +58,7 @@
 		},
 		{
 			active: false,
-			network: 'facebook',
+			network: 'twitter',
 			fgColor: socialColors.foreground,
 			bgColor: socialColors.background,
 			alt: 'Profilo Twitter',
@@ -98,9 +98,17 @@
 			active: true,
 			links: [
 				{ herf: '/site-map', name: 'mappa del sito', active: false },
-				{ herf: '/privacy-policy', name: 'informativa privacy', active: false },
-				{ href: '/terms-and-conditions', name: 'termini e condizioni', active: false },
-				{ href: '/statuto', name: 'statuto', active: true }
+				{
+					href: '/static/documents/privacy-policy.pdf',
+					name: 'informativa privacy',
+					active: false
+				},
+				{
+					href: '/static/documents/terms-and-conditions.pdf',
+					name: 'termini e condizioni',
+					active: false
+				},
+				{ href: '/static/documents/statute-of-association.pdf', name: 'statuto', active: true }
 			]
 		},
 		{

@@ -764,7 +764,7 @@
 	}
 
 	.inner {
-		border-radius: 0.5rem 0 0 0;
+		border-radius: 0.5rem 0 0 0.25rem;
 		border-top: 4px solid red;
 		border-left: 4px solid red;
 		box-sizing: border-box;

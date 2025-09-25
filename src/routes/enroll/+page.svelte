@@ -53,8 +53,8 @@
 </script>
 
 <main class="mx-auto max-w-2xl px-4 py-8">
-	<h1 class="text-primary mb-8 text-3xl font-bold">
-		Iscrivi un team a {foundEventDerived?.name}
+	<h1 class="text-primary xs:text-3xl mb-8 text-center text-xl font-bold">
+		Iscrivi un team all'evento:<br /><span class="text-black">{foundEventDerived?.name}</span>
 	</h1>
 
 	{#if isAlreadyEnrolled}
@@ -93,45 +93,46 @@
 				</fieldset>
 			{/if}
 
-			<hr class="w-4/5" />
+			<hr class="mx-auto w-4/5" />
 
-			<!-- Category Selection -->
-			<fieldset class="fieldset flex-1 text-base">
-				<legend class="fieldset-legend">Seleziona la categoria</legend>
-				<div class="flex gap-4">
-					<label class="label cursor-pointer gap-2">
-						<input
-							type="radio"
-							name="category"
-							value="SoapBox"
-							bind:group={$form.category}
-							class="radio"
-							class:radio-error={$errors.category}
-						/>
-						<span class="label-text">SoapBox</span>
-					</label>
-					<label class="label cursor-pointer gap-2">
-						<input
-							type="radio"
-							name="category"
-							value="Drift Trike"
-							bind:group={$form.category}
-							class="radio"
-							class:radio-error={$errors.category}
-						/>
-						<span class="label-text">Drift Trike</span>
-					</label>
-				</div>
-				{#if $errors.category}
-					<p class="fieldset-label text-error">{$errors.category}</p>
-				{/if}
-			</fieldset>
+			{#if $form.teamId}
+				<!-- Category Selection -->
+				<fieldset class="fieldset flex-1 text-base">
+					<legend class="fieldset-legend">Seleziona la categoria</legend>
+					<div class="flex gap-4">
+						<label class="label cursor-pointer gap-2">
+							<input
+								type="radio"
+								name="category"
+								value="SoapBox"
+								bind:group={$form.category}
+								class="radio"
+								class:radio-error={$errors.category}
+							/>
+							<span class="label-text">SoapBox</span>
+						</label>
+						<label class="label cursor-pointer gap-2">
+							<input
+								type="radio"
+								name="category"
+								value="Drift Trike"
+								bind:group={$form.category}
+								class="radio"
+								class:radio-error={$errors.category}
+							/>
+							<span class="label-text">Drift Trike</span>
+						</label>
+					</div>
+					{#if $errors.category}
+						<p class="fieldset-label text-error">{$errors.category}</p>
+					{/if}
+				</fieldset>
 
-			<!-- Participants Selection (only shown when team and category are selected) -->
-			{#if $form.teamId && $form.category}
+				<!-- Participants Selection -->
 				<fieldset class="fieldset flex-1 text-base">
 					<legend class="fieldset-legend">
-						Seleziona i partecipanti ({minDrivers} minimo)
+						Seleziona i partecipanti <span class="text-sm text-gray-600">({minDrivers} minimo)</span
+						>
 					</legend>
 					{#if teamMembers.length > 0}
 						<div class="flex flex-col gap-2">
@@ -169,58 +170,66 @@
 						</p>
 					{/if}
 				</fieldset>
-			{/if}
 
-			<!-- Team Alias -->
-			<fieldset class="fieldset flex-1 text-base">
-				<legend class="fieldset-legend">Nome del team per questa gara</legend>
-				<input
-					{...$constraints.teamAlias}
-					bind:value={$form.teamAlias}
-					class="input w-full"
-					class:input-error={$errors.teamAlias}
-					aria-invalid={$errors.teamAlias ? 'true' : undefined}
-					type="text"
-					name="teamAlias"
-					placeholder="Nome del team per la gara"
-				/>
-				{#if $errors.teamAlias}
-					<p class="fieldset-label text-error alert-soft">{$errors.teamAlias}</p>
-				{/if}
-			</fieldset>
-
-			<!-- Terms Acceptance -->
-			<fieldset class="fieldset flex-1 text-base">
-				<div class="flex gap-2">
+				<!-- Team Alias -->
+				<fieldset class="fieldset flex-1 text-base">
+					<legend class="fieldset-legend">Nome del team per questa gara</legend>
 					<input
-						type="checkbox"
-						bind:checked={$form.confirmTerms}
-						class="checkbox"
-						class:checkbox-error={$errors.confirmTerms}
-						aria-invalid={$errors.confirmTerms ? 'true' : undefined}
-						name="confirmTerms"
-						id="confirmTerms"
+						{...$constraints.teamAlias}
+						bind:value={$form.teamAlias}
+						class="input w-full"
+						class:input-error={$errors.teamAlias}
+						aria-invalid={$errors.teamAlias ? 'true' : undefined}
+						type="text"
+						name="teamAlias"
+						placeholder="Nome del team per la gara"
 					/>
-					<label for="confirmTerms" class="label-text cursor-pointer">
-						Accetto i termini e condizioni e il trattamento dei dati personali
-					</label>
-				</div>
-				{#if $errors.confirmTerms}
-					<p class="fieldset-label text-error alert-soft">{$errors.confirmTerms}</p>
-				{/if}
-			</fieldset>
+					{#if $errors.teamAlias}
+						<p class="fieldset-label text-error alert-soft">{$errors.teamAlias}</p>
+					{/if}
+				</fieldset>
 
-			<!-- Submit Button -->
-			<button
-				type="submit"
-				class="btn btn-primary w-full"
-				disabled={!$form.teamId ||
-					!$form.category ||
-					!($form.drivers?.length >= minDrivers) ||
-					!$form.confirmTerms}
-			>
-				Iscrivi il team
-			</button>
+				<!-- Terms Acceptance -->
+				<fieldset class="fieldset flex-1 text-base">
+					<div class="flex gap-2">
+						<input
+							type="checkbox"
+							bind:checked={$form.confirmTerms}
+							class="checkbox"
+							class:checkbox-error={$errors.confirmTerms}
+							aria-invalid={$errors.confirmTerms ? 'true' : undefined}
+							name="confirmTerms"
+							id="confirmTerms"
+						/>
+						<label for="confirmTerms" class="label-text cursor-pointer">
+							Ho letto e accetto <a
+								class="text-gray-600 underline hover:text-red-600"
+								href="/static/documents/waiver-of-liability.pdf"
+								>la liberatoria per la partecipazione</a
+							> all'evento
+						</label>
+					</div>
+					{#if $errors.confirmTerms}
+						<p class="fieldset-label text-error alert-soft">{$errors.confirmTerms}</p>
+					{/if}
+					<p class="text-xs text-gray-600 italic">
+						In caso di partecipanti minorenni, la liberatoria deve essere letta e confermata dal
+						genitore/tutore legale.
+					</p>
+				</fieldset>
+
+				<!-- Submit Button -->
+				<button
+					type="submit"
+					class="btn btn-primary w-full"
+					disabled={!$form.teamId ||
+						!$form.category ||
+						!($form.drivers?.length >= minDrivers) ||
+						!$form.confirmTerms}
+				>
+					Iscrivi il team
+				</button>
+			{/if}
 
 			<!-- Success/Error Messages -->
 			{#if $message}
@@ -237,6 +246,10 @@
 </main>
 
 <style>
+	a {
+		transition: color 0.25s ease;
+		cursor: pointer;
+	}
 	.disabled-input {
 		border-color: var(--color-base-200);
 		background-color: var(--color-base-200);

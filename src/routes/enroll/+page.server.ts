@@ -33,11 +33,11 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 		throw redirect(303, '/login');
 	}
 
-	// obtain teams where the owner is the user
+	// obtain teams where the user is a member
 	console.log("getting user's teams", user.person);
 	const [userTeams, err] = await goCatch(
 		pb.collection('teams').getFullList({
-			filter: `owner.id = "${user.person}"`,
+			filter: `members.id ?= "${user.person}"`,
 			expand: 'members'
 		})
 	);

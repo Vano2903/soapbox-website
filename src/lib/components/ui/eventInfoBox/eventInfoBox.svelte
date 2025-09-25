@@ -19,10 +19,10 @@
 		<div>
 			<span class=" h-12 flex-wrap items-end pb-1 text-base/6 text-red-600 xl:pb-2">
 				{#if eventInfo.subscriptionsOpen}
-					<span class="text-4xl font-bold lg:text-5xl xl:text-6xl">Prossimo</span>
+					<span class="text-4xl font-bold lg:text-5xl xl:text-6xl">Prossimo</span><br />
 					<span class="text-4xl font-bold lg:text-5xl xl:text-6xl">Evento</span>
 				{:else}
-					<span class="text-4xl font-bold lg:text-5xl xl:text-6xl">Momenti</span>
+					<span class="text-4xl font-bold lg:text-5xl xl:text-6xl">Momenti</span><br />
 					<span class="text-4xl font-bold lg:text-5xl xl:text-6xl">Speciali</span>
 				{/if}
 			</span>
@@ -31,7 +31,10 @@
 		</div>
 
 		<div>
-			<p class="text-gray-600 xl:text-lg">Campionato {championshipInfo.name}</p>
+			<p class="pb-2 text-sm text-gray-600 lg:text-base xl:text-lg">
+				Campionato {championshipInfo.name}
+			</p>
+			<p class="lg:text-lg xl:text-xl">Mura di Bergamo —</p>
 			<p class="pb-2 text-2xl lg:pb-4 xl:pb-6 xl:text-3xl">
 				{eventInfo.name}
 			</p>
@@ -46,7 +49,7 @@
 					? '0' + new Date(eventInfo.startDate).getMinutes()
 					: new Date(eventInfo.startDate).getMinutes()}
 			</p>
-			<p class="pb-2 text-gray-700 tabular-nums xl:pb-8 xl:text-lg">
+			<p class="pb-2 text-gray-700 tabular-nums xl:text-lg">
 				<span>
 					{#if eventInfo.subscriptionsOpen}
 						{eventInfo.numSubscriptions}{(eventInfo.maxSubscriptions ?? 0) > 0
@@ -74,6 +77,7 @@
 
 		<div>
 			<p class="text-gray-600">Campionato {championshipInfo.name}</p>
+			<p class="text-lg md:text-xl">— {eventInfo.shortName} —</p>
 			<p class="pb-4 text-2xl">
 				{eventInfo.name}
 			</p>

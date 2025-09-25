@@ -132,7 +132,7 @@
 								class="mx-auto mt-1.5 mb-2 h-0.75 w-2/3 max-w-70 rounded-sm border-0 bg-red-600 md:mb-4"
 							/>
 							<div>
-								<p class="hidden text-xl text-gray-600 md:block">— {event.shortName} —</p>
+								<p class="text-base text-gray-600 md:text-xl">— {event.shortName} —</p>
 								<h3 class="text-xl font-bold md:px-5 md:text-3xl">{event.name}</h3>
 								<div class="mt-2 text-sm text-gray-500 md:mt-4 md:text-base">
 									<div class="block md:hidden">

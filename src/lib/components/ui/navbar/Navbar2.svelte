@@ -25,15 +25,26 @@
 
 	const links = [
 		{ name: 'Home', href: '/', onSmall: true, onMedium: false, dropdown: null },
-		{ name: 'Chi siamo', href: '/chi-siamo', onSmall: true, onMedium: true, dropdown: null },
+		{
+			name: 'Chi siamo',
+			href: null,
+			onSmall: true,
+			onMedium: true,
+			dropdown: [
+				{ name: 'Origini', href: '/who-is', onSmall: true, onMedium: true },
+				{ name: 'Utenti', href: '/users', onSmall: true, onMedium: true },
+				{ name: 'Team', href: '/teams', onSmall: true, onMedium: true }
+			]
+		},
 		{
 			name: 'Campionati',
 			href: null,
 			onSmall: true,
 			onMedium: true,
 			dropdown: [
+				{ name: 'Bacheca', href: '/bulletin-board', onSmall: true, onMedium: true },
 				{ name: 'Calendario', href: '/calendars', onSmall: true, onMedium: true },
-				{ name: 'Classifiche', href: '/championships', onSmall: true, onMedium: true }
+				{ name: 'Classifiche', href: '/leaderboards', onSmall: true, onMedium: true }
 			]
 		},
 		{

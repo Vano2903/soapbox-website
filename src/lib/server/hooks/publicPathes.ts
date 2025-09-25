@@ -4,14 +4,15 @@ export const isPublicPath = (path: string): boolean => {
 
 	const publicPaths = [
 		'^\/$',
-		'^\/chi-siamo$',
+		'^\/who-is$',
 		'^\/login$',
 		'^\/register$',
 		'^\/forgot-password$',
 		'^\/gallery$',
-		'^\/championships$',
-		'^\/championships\/sheetData$',
+		'^\/bulletin-boards$',
 		'^\/calendars$',
+		'^\/leaderboards$',
+		'^\/leaderboards\/sheetData$',
 		'^\/users$',
 		'^\/user\/[a-z0-9_-]+',
 		'^\/users\/[a-z0-9_-]+',

@@ -1,10 +1,23 @@
 import type { EventId, Event } from "./event";
 
+export enum LeaderboardType {
+	Stage = 'Stage',
+	Event = 'Event',
+	Championship = 'Championship'
+}
+
+export enum CategoryType {
+	SoapBox = 'SoapBox',
+	DriftTrike = 'DriftTrike',
+}
+
 export type ResultId = string;
 export interface ResultBase {
 	id: ResultId;
 	shortName: string;
 	name: string;
+	leaderboardType: LeaderboardType;
+	categoryType: CategoryType;
 	leaderboard: string;
 	event?: EventId[];
 	created: Date;

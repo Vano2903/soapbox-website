@@ -1,10 +1,17 @@
 <script lang="ts">
 	import type { ChampionshipNonExpand } from '$types/pocketbase/championship.js';
 	import ElementSelection from '$components/elementSelection/elementSelection.svelte';
-	import { LucideCalendarCheck, LucideRadio, LucideLock, ExternalLink } from 'lucide-svelte';
+	import {
+		LucideCalendarCheck,
+		LucideRadio,
+		LucideLock,
+		ExternalLink,
+		Filter
+	} from 'lucide-svelte';
 	import { goto } from '$app/navigation';
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
-	import { toEventInfoType, type EventNonExpand } from '$types/pocketbase/event';
+	import type { EventNonExpand } from '$types/pocketbase/event';
+	import { LeaderboardType } from '$types/pocketbase/results';
 
 	// const {
 	// 	championshipsList,
@@ -28,6 +35,21 @@
 	const foundEventDerived = $derived(data.foundEvent);
 	const eventResultsDerived = $derived(data.eventResults);
 	const warningsDerived = $derived(data.warnings);
+
+	// split results by metadata
+	const stageAndEventResultsDerived = $derived(
+		eventResultsDerived?.filter((result) => {
+			return (
+				result.data.leaderboardType == LeaderboardType.Stage ||
+				result.data.leaderboardType == LeaderboardType.Event
+			);
+		})
+	);
+	const championshipResultsDerived = $derived(
+		eventResultsDerived?.filter((result) => {
+			return result.data.leaderboardType == LeaderboardType.Championship;
+		})
+	);
 
 	// variables to handle the user choice of wich leaderboard show (if any)
 	const categories = ['SoapBox', 'Pinocchio', 'Trike', 'Altro'];
@@ -299,31 +321,65 @@
 				<h1 class="text-3xl font-bold">Classifiche Evento:</h1>
 				<div class="flex w-full flex-col gap-2 md:w-8/10">
 					{#if eventResultsDerived && eventResultsDerived.length > 0}
-						{#each eventResultsDerived as result}
-							<div
-								class="xs:m-auto xs:w-9/10 flex flex-col justify-center rounded-md bg-neutral-50 p-2 shadow-md transition duration-300 hover:scale-105 hover:bg-neutral-200 lg:w-7/10 hover:lg:scale-110"
-							>
-								<div class="flex flex-row content-start justify-between">
-									<span class="text-lg font-semibold">{result.data.shortName}:</span>
-									<span class="line-clamp-2 justify-self-end text-right text-xs text-neutral-400"
-										>{result.data.formattedUpdated}</span
-									>
-								</div>
-								<div class="mt-1 ml-3 flex items-center gap-1">
-									<a class="peer cursor-pointer" target="_blank" href={result.publicUrl}>
-										<img src="/images/icons/pdf.gif" alt="PDF Icon" class="mr-1 shrink-0" />
-									</a>
-									<a
-										class="text-sm text-gray-600 peer-hover:text-red-600 hover:text-red-600"
-										target="_blank"
-										href={result.publicUrl}
-									>
-										<span class="xs:text-sm line-clamp-2 text-xs underline">{result.data.name}</span
+						{#if stageAndEventResultsDerived && stageAndEventResultsDerived.length > 0}
+							{#each stageAndEventResultsDerived as result}
+								<div
+									class="xs:m-auto xs:w-9/10 flex flex-col justify-center rounded-md bg-neutral-50 p-2 shadow-md transition duration-300 hover:scale-105 hover:bg-neutral-200 lg:w-7/10 hover:lg:scale-110"
+								>
+									<div class="flex flex-row content-start justify-between">
+										<span class="text-lg font-semibold">{result.data.shortName}:</span>
+										<span class="line-clamp-2 justify-self-end text-right text-xs text-neutral-400"
+											>{result.data.formattedUpdated}</span
 										>
-									</a>
+									</div>
+									<div class="mt-1 ml-3 flex items-center gap-1">
+										<a class="peer cursor-pointer" target="_blank" href={result.publicUrl}>
+											<img src="/images/icons/pdf.gif" alt="PDF Icon" class="mr-1 shrink-0" />
+										</a>
+										<a
+											class="text-sm text-gray-600 peer-hover:text-red-600 hover:text-red-600"
+											target="_blank"
+											href={result.publicUrl}
+										>
+											<span class="xs:text-sm line-clamp-2 text-xs underline"
+												>{result.data.name}</span
+											>
+										</a>
+									</div>
 								</div>
-							</div>
-						{/each}
+							{/each}
+						{/if}
+						{#if stageAndEventResultsDerived && stageAndEventResultsDerived.length > 0 && championshipResultsDerived && championshipResultsDerived.length > 0}
+							<hr class="my-2" />
+						{/if}
+						{#if championshipResultsDerived && championshipResultsDerived.length > 0}
+							{#each championshipResultsDerived as result}
+								<div
+									class="xs:m-auto xs:w-9/10 flex flex-col justify-center rounded-md bg-neutral-50 p-2 shadow-md transition duration-300 hover:scale-105 hover:bg-neutral-200 lg:w-7/10 hover:lg:scale-110"
+								>
+									<div class="flex flex-row content-start justify-between">
+										<span class="text-lg font-semibold">{result.data.shortName}:</span>
+										<span class="line-clamp-2 justify-self-end text-right text-xs text-neutral-400"
+											>{result.data.formattedUpdated}</span
+										>
+									</div>
+									<div class="mt-1 ml-3 flex items-center gap-1">
+										<a class="peer cursor-pointer" target="_blank" href={result.publicUrl}>
+											<img src="/images/icons/pdf.gif" alt="PDF Icon" class="mr-1 shrink-0" />
+										</a>
+										<a
+											class="text-sm text-gray-600 peer-hover:text-red-600 hover:text-red-600"
+											target="_blank"
+											href={result.publicUrl}
+										>
+											<span class="xs:text-sm line-clamp-2 text-xs underline"
+												>{result.data.name}</span
+											>
+										</a>
+									</div>
+								</div>
+							{/each}
+						{/if}
 					{:else}
 						<div
 							class="xs:m-auto xs:w-9/10 flex flex-col justify-center rounded-md bg-neutral-50 px-4 py-8 shadow-md lg:w-7/10"
@@ -334,7 +390,7 @@
 						</div>
 					{/if}
 					<!--
-						This feature is temporarily disabled. The system should be reinstated by requesting championship results information from the database.
+						This feature is temporarily disabled. The system should be reinstated by requesting championship results information from the databuase.
 						However, given the current database structure, the ability to choose whether the result is of the "stage/event/championship" type should be added, and the frontend should separate them accordingly.
 						This feature is not currently strictly* needed, so we are postponing it.
 						*: Because it's possible to publish the ranking as the result of event 'E' with filename "championship updated to race 'E'".

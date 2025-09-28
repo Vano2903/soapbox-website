@@ -80,7 +80,7 @@
 		);
 		try {
 			let response = await fetch(
-				`/championships/sheetData?category=${selectedCategory}&leaderboard=${selectedLeaderboard}`
+				`/leaderboards/sheetData?category=${selectedCategory}&leaderboard=${selectedLeaderboard}`
 			);
 			sheetHTML = await response.text();
 		} catch (err) {

@@ -31,7 +31,7 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
 
 		const isAlreadyMember = !!teams.find((team) => team.id === invite.team);
 
-		return { invite, isAlreadyMember, team };
+		return { invite, isAlreadyMember, team, code };
 	} catch (error) {
 		console.error('Error fetching invitation:', error);
 		redirect(303, '/404');

@@ -5,7 +5,7 @@
 
 	let { data }: { data: PageData } = $props();
 
-	const { invite, isAlreadyMember, team, user } = data;
+	const { invite, isAlreadyMember, team, user, code } = data;
 
 	let isJoining = $state(false);
 
@@ -62,7 +62,7 @@
 					<div class="flex justify-center space-x-6 text-sm text-gray-500">
 						<div class="text-center">
 							<div class="font-semibold text-gray-900">{team.members?.length || 0}</div>
-							<div>Membri</div>
+							<div>{team.members?.length === 1 ? 'Membro' : 'Membri'}</div>
 						</div>
 						{#if team.expand?.owner}
 							<div class="text-center">
@@ -122,19 +122,21 @@
 				</div>
 			{:else}
 				<!-- Invite Details -->
-				<div class="rounded-md border border-blue-200 bg-blue-50 p-4">
-					<div class="space-y-1 text-sm text-blue-700">
-						{#if invite.uses !== -1}
-							<p>• {invite.uses - invite.joined.length} utilizzi rimanenti</p>
-						{/if}
-						{#if invite.expiration}
-							<p>• Scade: {new Date(invite.expiration).toLocaleDateString()}</p>
-						{/if}
-						{#if invite.joined.length > 0}
-							<p>• {invite.joined.length} persone hanno già aderito</p>
-						{/if}
+				{#if invite.uses !== -1 || invite.expiration || invite.joined.length > 0}
+					<div class="rounded-md border border-blue-200 bg-blue-50 p-4">
+						<div class="space-y-1 text-sm text-blue-700">
+							{#if invite.uses !== -1}
+								<p>• {invite.uses - invite.joined.length} utilizzi rimanenti</p>
+							{/if}
+							{#if invite.expiration}
+								<p>• Scade: {new Date(invite.expiration).toLocaleDateString()}</p>
+							{/if}
+							{#if invite.joined.length > 0}
+								<p>• {invite.joined.length} persone hanno già aderito</p>
+							{/if}
+						</div>
 					</div>
-				</div>
+				{/if}
 
 				<!-- Join Button -->
 				<form
@@ -154,7 +156,7 @@
 					<button
 						type="submit"
 						disabled={isJoining}
-						class="flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+						class=" flex w-full cursor-pointer justify-center rounded-md border border-transparent bg-blue-600 px-4 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
 					>
 						{#if isJoining}
 							<svg
@@ -188,7 +190,7 @@
 			<!-- Footer Links -->
 			<div class="space-y-2 text-center text-sm text-gray-500">
 				<p>Non vuoi unirti? Puoi chiudere questa pagina.</p>
-				<a href="/login" class="text-blue-600 hover:text-blue-500">
+				<a href={`/login?redirectTo=/join/${code}`} class="text-blue-600 hover:text-blue-500">
 					Fai login con un altro account
 				</a>
 			</div>

@@ -2,6 +2,7 @@ import type { TeamNonexpand } from '$types/pocketbase/team';
 import type { UserPublicInfo } from '$types/pocketbase/user';
 import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
+import { createAvatarUrl } from '$lib/utils/avatar';
 
 export const load: LayoutServerLoad = async ({ locals, params, url }) => {
 	const { user, pb } = locals;
@@ -36,11 +37,10 @@ export const load: LayoutServerLoad = async ({ locals, params, url }) => {
 	}
 
 	console.log('Found user:', foundTeam);
-	const baseUrl = 'https://avatar.iran.liara.run/username';
 
 	foundTeam.logoCropped =
-		pb.files.getURL(foundTeam, foundTeam.logoCropped || '') ||
-		`${baseUrl}?username=${foundTeam.slug}`;
+		pb.files.getURL(foundTeam, foundTeam.logoCropped || '', { thumb: '128x0' }) ||
+		createAvatarUrl(foundTeam.slug, 'medium');
 
 	foundTeam.bannerCropped = pb.files.getURL(foundTeam, foundTeam.bannerCropped || '') || undefined;
 
@@ -69,7 +69,8 @@ export const load: LayoutServerLoad = async ({ locals, params, url }) => {
 
 	const membersWithAvatars = members.map((member) => {
 		member.avatarCropped =
-			pb.files.getURL(member, member.avatarCropped || '') || `${baseUrl}?username=${member.nick}`;
+			pb.files.getURL(member, member.avatarCropped || '', { thumb: '64x0' }) ||
+			createAvatarUrl(member.nick, 'small');
 		member.bannerCropped = pb.files.getURL(member, member.bannerCropped || '') || undefined;
 		return member;
 	});

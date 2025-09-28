@@ -2,6 +2,7 @@ import type { UserPublicInfo } from '$types/pocketbase/user';
 import { type Load } from '@sveltejs/kit';
 import { env } from '$env/dynamic/public';
 import { createPocketBaseInstance } from '$lib/utils/pocketbase';
+import { createAvatarUrl } from '$lib/utils/avatar';
 
 export const load: Load = async ({ url, fetch }) => {
 	console.log('Loading user with slug:', url);
@@ -33,17 +34,13 @@ export const load: Load = async ({ url, fetch }) => {
 		fetch: fetch
 	});
 
-	const baseUrl = 'https://avatar.iran.liara.run/username';
-
 	const expandedUsers = paginatedUsers.items.map((user: UserPublicInfo) => {
 		user.avatarCropped =
-			pb.files.getURL(user, user.avatarCropped || '') || `${baseUrl}?username=${user.nick}`;
+			pb.files.getURL(user, user.avatarCropped || '', { thumb: '64x0' }) ||
+			createAvatarUrl(user.nick, 'small');
 		user.bannerCropped = pb.files.getURL(user, user.bannerCropped || '') || undefined;
 		return user;
 	});
-	// (1, 10, {
-	// sort: 'nick'
-	// });
 
 	return {
 		paginatedUsers,
@@ -51,11 +48,4 @@ export const load: Load = async ({ url, fetch }) => {
 		pb,
 		error
 	};
-	// const publicUsers = await pb
-
-	// return {
-	// 	user: foundUser,
-	// 	isCurrentUser: user?.id === foundUser.id,
-	// 	slug: params.slug
-	// };
 };

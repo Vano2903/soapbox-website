@@ -15,5 +15,6 @@ export const loginSchema = z.object({
 			invalid_type_error: 'La password deve essere una stringa'
 		})
 		.min(minLength, `La password deve contenere almeno ${minLength} caratteri`)
-		.max(maxLength, `La password non può superare i ${maxLength} caratteri`)
+		.max(maxLength, `La password non può superare i ${maxLength} caratteri`),
+	redirectTo: z.string().optional()
 });

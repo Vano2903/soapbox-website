@@ -11,7 +11,7 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions = {
-	login: async ({ request, locals, url }) => {
+	login: async ({ request, locals }) => {
 		const form = await superValidate(request, zod(loginSchema));
 		console.log('form', form);
 		if (!form.valid) {
@@ -29,7 +29,7 @@ export const actions = {
 			// }
 			// let user = locals.user as User;
 			locals.user = user.record;
-			redirectTo = url.searchParams.get('redirectTo') || 'me';
+			redirectTo = form.data.redirectTo || 'me';
 			if (!redirectTo.startsWith('/')) {
 				redirectTo = `/${redirectTo}`;
 			}

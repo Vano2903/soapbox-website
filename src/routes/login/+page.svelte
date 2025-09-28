@@ -86,6 +86,11 @@
 		}
 	});
 
+	$effect(() => {
+		console.log('redirectLocation', redirectLocation);
+		$form.redirectTo = redirectLocation;
+	});
+
 	async function signInWithGoogle() {
 		console.log('Sign in with Google');
 		try {
@@ -193,6 +198,8 @@
 						{/if}
 					{/if}
 				</fieldset>
+
+				<input type="hidden" name="redirectTo" value={$form.redirectTo} />
 
 				<div>
 					<button aria-label="Accedi" type="submit" class="btn btn-primary w-full">Accedi</button>

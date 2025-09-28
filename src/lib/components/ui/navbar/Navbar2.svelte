@@ -128,6 +128,8 @@
 		<details
 			class="dropdown space-x-4 py-2 md:hidden"
 			onfocusout={handleMenuFocusLoss}
+			class:hidden={!isMenuOpen}
+			aria-hidden={!isMenuOpen}
 			ontoggle={() => handleMenuClick()}
 		>
 			<summary class="btn b-0 m-0 border-none bg-transparent p-0 shadow-none focus:outline-none"
@@ -151,6 +153,7 @@
 				{/each}
 			</ul>
 		</details>
+		
 		<div class="block md:hidden">
 			{@render logohome()}
 		</div>

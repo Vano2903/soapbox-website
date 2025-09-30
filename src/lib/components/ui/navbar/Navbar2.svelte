@@ -89,23 +89,20 @@
 	<div class="hidden md:block">
 		{@render logohome()}
 	</div>
-	<div class="ml-2 flex w-full items-center justify-between">
-		<!-- <div
+	<div class="flex w-full items-center justify-between">
+		<div
 			class="dropdown dropdown-start block space-x-4 py-2 md:hidden"
 			onfocusout={handleMenuFocusLoss}
 		>
 			<button
+				tabindex="0"
 				onclick={() => (isMenuOpen = !isMenuOpen)}
-				class="m-0 border-none bg-transparent p-0 focus:outline-none"
+				class="m-0 cursor-pointer border-none bg-transparent p-2 focus:outline-none"
 				aria-label="Menu"
 			>
 				<Menu color="white" />
 			</button>
-			<ul
-				class="dropdown-content menu bg-base-100 rounded-box z-1 mt-2 w-52 border-2 p-2 shadow"
-				class:hidden={!isMenuOpen}
-				aria-hidden={!isMenuOpen}
-			>
+			<ul class="dropdown-content menu bg-base-100 rounded-box z-1 mt-2 w-52 border-2 p-2 shadow">
 				<div class="join join-vertical flex">
 					{#each links as link}
 						{#if link.onSmall}
@@ -124,12 +121,10 @@
 					{/each}
 				</div>
 			</ul>
-		</div> -->
-		<details
+		</div>
+		<!-- <details
 			class="dropdown space-x-4 py-2 md:hidden"
 			onfocusout={handleMenuFocusLoss}
-			class:hidden={!isMenuOpen}
-			aria-hidden={!isMenuOpen}
 			ontoggle={() => handleMenuClick()}
 		>
 			<summary class="btn b-0 m-0 border-none bg-transparent p-0 shadow-none focus:outline-none"
@@ -152,8 +147,8 @@
 					{/if}
 				{/each}
 			</ul>
-		</details>
-		
+		</details> -->
+
 		<div class="block md:hidden">
 			{@render logohome()}
 		</div>

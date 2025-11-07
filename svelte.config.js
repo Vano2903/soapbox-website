@@ -15,6 +15,7 @@ const config = {
 		alias: {
 			$components: './src/lib/components/ui',
 			$types: './src/lib/types',
+			$assets: './src/lib/assets',
 			'@/*': './path/to/lib/*'
 		}
 	}

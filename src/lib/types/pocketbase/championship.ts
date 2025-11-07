@@ -1,4 +1,4 @@
-import type { EventId, Event } from './event'
+import type { EventId, Event } from './event';
 
 export type ChampionshipId = string;
 

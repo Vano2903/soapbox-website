@@ -1,4 +1,4 @@
-import type { StageId, Stage } from "./stage";
+import type { StageId, Stage } from './stage';
 
 export type TrackId = string;
 
@@ -31,7 +31,7 @@ export interface TrackExpand extends TrackBase {
 	isExpand: true;
 	expand: {
 		stages: Stage[];
-	}
+	};
 }
 
 export interface TrackNonExpand extends TrackBase {

@@ -1,4 +1,4 @@
-import type { EventId, Event } from './event'
+import type { EventId, Event } from './event';
 import type { TrackId, Track } from './tracks';
 
 export enum StageKind {
@@ -27,7 +27,7 @@ export interface StageExpand extends StageBase {
 	expand: {
 		track: Track;
 		event: Event;
-	}
+	};
 }
 
 export interface StageNonExpand extends StageBase {

@@ -1,9 +1,12 @@
+import type { Picture } from 'vite-imagetools';
+
 export type CarouselPageType = {
 	layout: 'horizontal' | 'vertical' | 'both';
 	breakpoint?: string;
-	horizontal?: { src: string; alt: string };
-	vertical?: { src: string; alt: string };
+	horizontal: { src: Picture; alt: string };
+	vertical: { src: Picture; alt: string };
 	loading: 'eager' | 'lazy';
+	fetchpriority?: 'high' | 'low' | 'auto';
 };
 
 export const defaultCarouselPage = {
@@ -11,4 +14,4 @@ export const defaultCarouselPage = {
 	breakpoint: 'md',
 	horizontal: { src: '', alt: '' },
 	loading: 'lazy'
-}
+};

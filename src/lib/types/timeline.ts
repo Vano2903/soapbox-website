@@ -13,7 +13,7 @@ export type TimelineItemType = {
 };
 
 export type TimelineExtensionType = {
-	style: "solid" | "dashed" | "dotted" | "double";
+	style: 'solid' | 'dashed' | 'dotted' | 'double';
 	color: string;
 	length: 1 | 2;
-}
+};

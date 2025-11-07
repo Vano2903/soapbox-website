@@ -1,6 +1,6 @@
-import type { StageId, Stage } from './stage'
-import type { LocationId, Location } from './location'
-import type { ResultId, Result } from './results'
+import type { StageId, Stage } from './stage';
+import type { LocationId, Location } from './location';
+import type { ResultId, Result } from './results';
 
 export enum EventKind {
 	Rally = 'rally'
@@ -31,7 +31,7 @@ export interface EventExpand extends EventBase {
 		stages: Stage[];
 		location: Location;
 		results: Result[];
-	}
+	};
 }
 
 export interface EventNonExpand extends EventBase {
@@ -84,10 +84,10 @@ export type EventDataType = {
 	shortName: string;
 	fullName: string;
 	isOnAir: boolean;
-}
+};
 
 export type YearDataType = {
-	year: string,
-	current: boolean,
-	eventsList: string[]
-}
+	year: string;
+	current: boolean;
+	eventsList: string[];
+};

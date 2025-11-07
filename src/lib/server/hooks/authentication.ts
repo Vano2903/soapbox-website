@@ -11,8 +11,6 @@ import { createAvatarUrl } from '$lib/utils/avatar';
 // 	return result;
 // }
 
-
-
 // function createAvatarUrl(name: string, lastname: string = '', gender?: GenderKind): string {
 // 	const baseUrl = 'https://avatar.iran.liara.run/public';
 // 	// const initials = `${name.charAt(0).toUpperCase()}${lastname.charAt(0).toUpperCase()}`;
@@ -72,7 +70,9 @@ const authentication: Handle = async ({ event, resolve }) => {
 		event.locals.user.isexpand = false;
 		if (pb.authStore.record) {
 			event.locals.user.avatarCropped =
-				pb.files.getURL(pb.authStore.record, pb.authStore.record.avatarCropped) || //IMPORTANT: DO NOT CHANGE THIS || IT IS CORRECT, IF USING ?? IT WILL NOT WORK AND RETURN EMPTY STRING
+				pb.files.getURL(pb.authStore.record, pb.authStore.record.avatarCropped, {
+					thumb: '64x0'
+				}) || //IMPORTANT: DO NOT CHANGE THIS || IT IS CORRECT, IF USING ?? IT WILL NOT WORK AND RETURN EMPTY STRING
 				createAvatarUrl(event.locals.user.nick, 'small');
 
 			event.locals.user.created = new Date(event.locals.user.created);

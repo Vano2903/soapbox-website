@@ -1,4 +1,4 @@
-import type { EventId, Event } from "./event";
+import type { EventId, Event } from './event';
 
 export enum LeaderboardType {
 	Stage = 'Stage',
@@ -8,7 +8,7 @@ export enum LeaderboardType {
 
 export enum CategoryType {
 	SoapBox = 'SoapBox',
-	DriftTrike = 'DriftTrike',
+	DriftTrike = 'DriftTrike'
 }
 
 export type ResultId = string;
@@ -28,7 +28,7 @@ export interface ResultExpand extends ResultBase {
 	isExpand: true;
 	expand: {
 		event: Event;
-	}
+	};
 }
 
 export interface ResultNonExpand extends ResultBase {

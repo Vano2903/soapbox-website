@@ -1,4 +1,5 @@
-import type { Icon as IconType } from "lucide-svelte";
+import type { Icon as IconType } from 'lucide-svelte';
+import type { Picture } from 'vite-imagetools';
 
 export type TabsPageType = {
 	headers: TabsPageHeader[];
@@ -12,5 +13,5 @@ export type TabsPageHeader = {
 
 export type TabsPageContent = {
 	text: string;
-	image: string;
+	image: Picture;
 };

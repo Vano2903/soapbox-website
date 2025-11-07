@@ -46,15 +46,13 @@
 		<button
 			onclick={handleDropdownClick}
 			data-sveltekit-reload
+			tabindex="0"
 			class="link-hover flex cursor-pointer items-center text-white"
+			aria-label="User menu"
 		>
 			{@render avatar(user)}
 		</button>
-		<ul
-			class="dropdown-content menu bg-base-100 rounded-box mt-2 w-52 border-2 p-2 shadow"
-			class:hidden={!isDropdownOpen}
-			aria-hidden={!isDropdownOpen}
-		>
+		<ul class="dropdown-content menu bg-base-100 rounded-box mt-2 w-52 border-2 p-2 shadow">
 			<div class="join join-vertical">
 				{#if !user.verified}
 					<li>

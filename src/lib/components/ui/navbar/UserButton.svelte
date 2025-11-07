@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { User } from '$lib/types/pocketbase/user';
-
+	import imageProfilePlaceholder from '$assets/images/navbar/profile.svg';
 	let { user }: { user: User } = $props();
 	let isDropdownOpen = $state(false);
 	const handleDropdownClick = () => {
@@ -32,9 +32,9 @@
 	<div class="avatar">
 		<div class="ring-offset-primary w-10 rounded-full ring-2 ring-white ring-offset-2">
 			<img
-				src={user
-					? user.avatarCropped || '/images/navbar/profile.svg'
-					: '/images/navbar/profile.svg'}
+				height="40"
+				width="40"
+				src={user?.avatarCropped || imageProfilePlaceholder}
 				alt={user ? 'User icon' : 'Login icon'}
 			/>
 		</div>
@@ -46,15 +46,12 @@
 		<button
 			onclick={handleDropdownClick}
 			data-sveltekit-reload
+			tabindex="0"
 			class="link-hover flex cursor-pointer items-center text-white"
 		>
 			{@render avatar(user)}
 		</button>
-		<ul
-			class="dropdown-content menu bg-base-100 rounded-box mt-2 w-52 border-2 p-2 shadow"
-			class:hidden={!isDropdownOpen}
-			aria-hidden={!isDropdownOpen}
-		>
+		<ul class="dropdown-content menu bg-base-100 rounded-box mt-2 w-52 border-2 p-2 shadow">
 			<div class="join join-vertical">
 				{#if !user.verified}
 					<li>

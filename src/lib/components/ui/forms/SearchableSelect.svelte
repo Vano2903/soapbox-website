@@ -57,7 +57,7 @@
 		</button>
 		<div
 			id="dropdown-menu"
-			class="ring-opacity-5 absolute right-0 mt-2 hidden space-y-1 rounded-md bg-white p-1 ring-1 shadow-lg ring-black"
+			class="ring-opacity-5 absolute right-0 mt-2 hidden space-y-1 rounded-md bg-white p-1 shadow-lg ring-1 ring-black"
 		>
 			<!-- Search input -->
 			<input

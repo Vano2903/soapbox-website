@@ -1,7 +1,7 @@
 <script lang="ts">
 	import SocialIcons from '@rodneylab/svelte-social-icons';
 
-	const basePath = '/images/footer/';
+	// const basePath = '/images/footer/';
 
 	const socialColors = {
 		foreground: '#000000',
@@ -66,32 +66,32 @@
 		}
 	];
 
-	const sponsors = [
-		{
-			link: basePath + 'eyc.svg',
-			active: true,
-			href: 'https://eye-culture.webflow.io/',
-			alt: 'eye culture by ottica del borgo'
-		},
-		{
-			link: basePath + 'nettuno.avif',
-			href: 'https://nettuno.net/',
-			active: true,
-			alt: 'nettuno'
-		},
-		{
-			link: basePath + 'fassi.svg',
-			href: 'https://www.fassi.com/it/',
-			active: true,
-			alt: 'fassi'
-		},
-		{
-			link: basePath + 'pedretti.png',
-			href: 'https://www.pedrettiserramenti.it/',
-			active: true,
-			alt: 'pedretti'
-		}
-	];
+	// const sponsors = [
+	// 	{
+	// 		link: imageEyc,
+	// 		active: true,
+	// 		href: 'https://eye-culture.webflow.io/',
+	// 		alt: 'eye culture by ottica del borgo'
+	// 	},
+	// 	{
+	// 		link: imageNettuno,
+	// 		href: 'https://nettuno.net/',
+	// 		active: true,
+	// 		alt: 'nettuno'
+	// 	},
+	// 	{
+	// 		link: imageFassi,
+	// 		href: 'https://www.fassi.com/it/',
+	// 		active: true,
+	// 		alt: 'fassi'
+	// 	},
+	// 	{
+	// 		link: imagePedretti,
+	// 		href: 'https://www.pedrettiserramenti.it/',
+	// 		active: true,
+	// 		alt: 'pedretti'
+	// 	}
+	// ];
 	const sections = [
 		{
 			name: 'informazioni',

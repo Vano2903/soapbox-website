@@ -3,6 +3,8 @@
 	import UserButton from './UserButton.svelte';
 	import { on } from 'svelte/events';
 
+	// import imageLogo from '$assets/images/navbar/logo.jpg?enhanced';
+
 	let isMenuOpen = $state(false);
 	const handleMenuClick = () => {
 		console.log('Menu click handled.');
@@ -66,14 +68,17 @@
 		></div>
 
 		<a
-			class="mb-2 flex h-12 w-12 flex-nowrap items-center bg-white leading-none lg:h-auto lg:w-auto lg:pr-[5rem]"
+			class="mb-2 flex h-12 w-12 flex-nowrap items-center bg-white leading-none lg:h-auto lg:w-auto lg:pr-5"
 			href="/"
 		>
-			<img
-				class="h-12 w-12 lg:h-15 lg:w-15"
-				src="/images/navbar/logo.jpg"
-				alt="Logo ASD Boxrally"
-			/>
+			<div class="h-12 w-12 lg:h-15 lg:w-15">
+				<!-- class="h-12 w-12 lg:h-15 lg:w-15" -->
+				<enhanced:img
+					src="/src/lib/assets/images/navbar/logo.jpg?w=64;48"
+					sizes="(min-width: 1024px) 64px, 48px"
+					alt="Logo ASD Boxrally"
+				/>
+			</div>
 			<span class="text-primary hidden h-12 items-end pb-1 text-base/6 whitespace-nowrap md:flex">
 				<span class="hidden text-4xl font-bold lg:block">BOXRALLY</span>
 			</span>
@@ -94,9 +99,9 @@
 			class="dropdown dropdown-start block space-x-4 py-2 md:hidden"
 			onfocusout={handleMenuFocusLoss}
 		>
+			<!-- onclick={() => (isMenuOpen = !isMenuOpen)} -->
 			<button
 				tabindex="0"
-				onclick={() => (isMenuOpen = !isMenuOpen)}
 				class="m-0 cursor-pointer border-none bg-transparent p-2 focus:outline-none"
 				aria-label="Menu"
 			>

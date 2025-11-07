@@ -3,9 +3,10 @@
 	import Autoplay from 'embla-carousel-autoplay';
 	import { defaultCarouselPage, type CarouselPageType } from '$lib/types/carouselPage';
 	import type { EmblaCarouselType } from 'embla-carousel';
+	import EnhancedImage from '$components/enhanedImage/enhancedImage.svelte';
 
 	let options = { loop: true };
-	let plugins = [Autoplay({ delay: 5000, stopOnInteraction: false })];
+	let plugins = []; //[Autoplay({ delay: 5000, stopOnInteraction: false })];
 
 	let emblaApi: EmblaCarouselType;
 	function onInit(event: CustomEvent<EmblaCarouselType>): void {
@@ -35,36 +36,62 @@
 </script>
 
 <div class="embla relative" use:emblaCarouselSvelte={{ options, plugins }} onemblaInit={onInit}>
-	<div class="embla__container">
+	<div class="embla__container h-full">
 		{#each pages as page}
 			<div class="embla__slide">
 				{#if (page.layout ?? defaultCarouselPage.layout) === 'both'}
-					<img
+					<!-- <enhanced:img
 						class="hidden h-full w-full object-none sm:aspect-video sm:object-cover
 								{page.breakpoint ?? defaultCarouselPage.breakpoint}:block"
 						loading={page.loading}
+						fetchpriority={page.fetchpriority}
 						src={page.horizontal?.src}
 						alt={page.horizontal?.alt}
 					/>
-					<img
+					<enhanced:img
 						class="block h-full w-full object-none sm:aspect-video sm:object-cover
 								{page.breakpoint ?? defaultCarouselPage.breakpoint}:hidden"
 						loading={page.loading}
-						src={page.vertical?.src}
+						fetchpriority={page.fetchpriority}
+						src={page.vertical?.src.img.src}
+						alt={page.vertical?.alt}
+					/> -->
+					<EnhancedImage
+						pictureClass="hidden h-full w-full object-cover sm:aspect-video 
+								{page.breakpoint ?? defaultCarouselPage.breakpoint}:block"
+						imageClass="h-full w-full sm:aspect-video object-cover"
+						loading={page.loading}
+						fetchpriority={page.fetchpriority}
+						picture={page.horizontal.src}
+						alt={page.horizontal?.alt}
+					/>
+					<EnhancedImage
+						pictureClass="block h-full w-full object-cover sm:aspect-video
+								{page.breakpoint ?? defaultCarouselPage.breakpoint}:hidden"
+						imageClass="h-full w-full sm:aspect-video object-cover"
+						loading={page.loading}
+						fetchpriority={page.fetchpriority}
+						picture={page.vertical.src}
 						alt={page.vertical?.alt}
 					/>
 				{:else if (page.layout ?? defaultCarouselPage.layout) === 'horizontal'}
-					<img
-						class="h-full w-full object-none sm:aspect-video sm:object-cover"
+					<EnhancedImage
+						pictureClass="hidden h-full w-full object-cover sm:aspect-video 
+								{page.breakpoint ?? defaultCarouselPage.breakpoint}:block"
+						imageClass="h-full w-full sm:aspect-video object-cover"
 						loading={page.loading}
-						src={page.horizontal?.src}
+						fetchpriority={page.fetchpriority}
+						picture={page.horizontal.src}
 						alt={page.horizontal?.alt}
 					/>
 				{:else if (page.layout ?? defaultCarouselPage.layout) === 'vertical'}
-					<img
-						class="h-full w-full object-none sm:aspect-video sm:object-cover"
+					<EnhancedImage
+						pictureClass="block h-full w-full object-cover sm:aspect-video
+								{page.breakpoint ?? defaultCarouselPage.breakpoint}:hidden"
+						imageClass="h-full w-full sm:aspect-video object-cover"
 						loading={page.loading}
-						src={page.vertical?.src}
+						fetchpriority={page.fetchpriority}
+						picture={page.vertical.src}
 						alt={page.vertical?.alt}
 					/>
 				{/if}

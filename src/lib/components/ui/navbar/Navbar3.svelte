@@ -4,6 +4,8 @@
 	import { writable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 
+	import imageLogo from '$assets/images/navbar/logo.jpg?enhanced';
+
 	const { user } = $props();
 	const openMenu = writable<string | null>(null);
 
@@ -45,7 +47,12 @@
 		class="mb-2 flex flex-nowrap items-center bg-white leading-none md:pr-[2rem] lg:pr-[5rem]"
 		href="/"
 	>
-		<img class="h-12 md:pr-2 lg:h-16" src="/images/navbar/logo.jpg" alt="Logo ASD box rally" />
+		<enhanced:img
+			class="h-12 md:pr-2 lg:h-16"
+			src={imageLogo}
+			sizes="(min-width: 1024px) 64px, 48px"
+			alt="Logo ASD box rally"
+		/>
 		<span class="text-primary hidden h-12 items-end pb-1 text-base/6 whitespace-nowrap md:flex">
 			<span class="text-4xl font-extrabold lg:text-5xl">ASD</span>&nbsp;&nbsp;
 			<span class="hidden text-3xl font-bold lg:block"><span class="text-5xl">B</span>OXRALLY</span>

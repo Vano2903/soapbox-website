@@ -1,5 +1,5 @@
-import { error } from "@sveltejs/kit";
-import { fetchSheetData } from "./fetchSheetData";
+import { error } from '@sveltejs/kit';
+import { fetchSheetData } from './fetchSheetData';
 // import { formatSheetData } from './formatData';
 import { formatSheetDataFromFullJson } from './formatSheetData';
 
@@ -17,22 +17,26 @@ const leaderboardsRange = new Map<string, string>([
 ]);
 
 export async function GET({ url }) {
-	const category = url.searchParams.get("category")
-	const leaderboard = url.searchParams.get("leaderboard")
+	const category = url.searchParams.get('category');
+	const leaderboard = url.searchParams.get('leaderboard');
 
 	if (category == null) {
-		error(400, "category must be specified")
+		error(400, 'category must be specified');
 	} else if (!categoryValues.includes(category)) {
-		error(404, "category not found")
+		error(404, 'category not found');
 	}
 	if (leaderboard == null) {
-		error(400, "leaderboard must be specified")
+		error(400, 'leaderboard must be specified');
 	} else if (!leaderboardsRange.has(leaderboard)) {
-		error(404, "leaderboard not found")
+		error(404, 'leaderboard not found');
 	}
 
-	const data = await fetchSheetData((enableTestURL ? testURL : `'Cl. ${leaderboard} [${category.toUpperCase()}]'!${leaderboardsRange.get(leaderboard)}`))
+	const data = await fetchSheetData(
+		enableTestURL
+			? testURL
+			: `'Cl. ${leaderboard} [${category.toUpperCase()}]'!${leaderboardsRange.get(leaderboard)}`
+	);
 
 	// return new Response(String(formatSheetData(data)))
-	return new Response(String(formatSheetDataFromFullJson(data)))
+	return new Response(String(formatSheetDataFromFullJson(data)));
 }

@@ -13,6 +13,12 @@
 		validators: zod(teamSchema)
 	});
 
+	$effect(() => {
+		console.log('form', $state.snapshot($form));
+		console.log('errors', $state.snapshot($errors));
+		console.log('message', $state.snapshot($message));
+	});
+
 	// --- username
 	const teamDomain = env.PUBLIC_BASE_URL + '/team/';
 
@@ -59,28 +65,27 @@
 
 	$effect(() => {
 		if (fileUrls) {
-			if (fileUrls.logoOriginal) {
+			console.log('fileUrls', fileUrls);
+			console.log('fetch logo', fileUrls.logoOriginal && fileUrls.logoCropped ? 'yes' : 'no');
+			console.log('fetch banner', fileUrls.bannerOriginal && fileUrls.bannerCropped ? 'yes' : 'no');
+			if (fileUrls.logoOriginal && fileUrls.logoCropped) {
 				createFile(fileUrls.logoOriginal, 'image/png', 'logo.png').then((file) => {
 					if (file) {
 						$logo = file;
 					}
 				});
-			}
-			if (fileUrls.bannerOriginal) {
-				createFile(fileUrls.bannerOriginal, 'image/png', 'banner.png').then((file) => {
-					if (file) {
-						$banner = file;
-					}
-				});
-			}
-			if (fileUrls.logoCropped) {
 				createFile(fileUrls.logoCropped, 'image/png', 'logo-cropped.png').then((file) => {
 					if (file) {
 						$logoCropped = file;
 					}
 				});
 			}
-			if (fileUrls.bannerCropped) {
+			if (fileUrls.bannerOriginal && fileUrls.bannerCropped) {
+				createFile(fileUrls.bannerOriginal, 'image/png', 'banner.png').then((file) => {
+					if (file) {
+						$banner = file;
+					}
+				});
 				createFile(fileUrls.bannerCropped, 'image/png', 'banner-cropped.png').then((file) => {
 					if (file) {
 						$bannerCropped = file;
@@ -90,6 +95,12 @@
 		}
 	});
 
+	$effect(() => {
+		console.log('logo state', $state.snapshot($logo));
+		console.log('logo cropped state', $state.snapshot($logoCropped));
+		console.log('banner state', $state.snapshot($banner));
+		console.log('banner cropped state', $state.snapshot($bannerCropped));
+	});
 	const checkUsername = debounce(200, submitCheckUsername);
 
 	// --- images
@@ -158,7 +169,7 @@
 						bind:value={
 							() => $username,
 							(n) => {
-								$username = n.trimStart().replaceAll(' ', '-').toLowerCase();
+								$username = n.replaceAll(' ', '-').toLowerCase();
 							}
 						}
 						aria-invalid={$errors.slug ? 'true' : undefined}
@@ -213,7 +224,7 @@
 				confirmed={!!$bannerCropped}
 				label="Carica un immagine di sfondo (banner) per la pagina del tuo team"
 				constraints={{ required: false }}
-				errors={$errors.bannerOriginal}
+				errors={$errors.bannerCropped}
 				bind:cropped={$bannerCropped}
 				bind:pixels={$form.bannerCroppedInfo}
 				{crop}

@@ -10,13 +10,20 @@ export const load: ServerLoad = async ({ locals, params, url }) => {
 		redirect(303, '/users');
 	}
 
-	const [foundUser, err] = (await goCatch(
-		pb.collection('publicUserInfo').getFirstListItem(`nick="${params.slug}"`)
-	)) as [UserPublicInfo, undefined] | [undefined, Error];
+	let foundUser: UserPublicInfo | undefined = user as UserPublicInfo;
+	if (params.slug !== user?.nick) {
+		let err: Error | undefined;
+		[foundUser, err] = (await goCatch(
+			pb.collection('publicUserInfo').getFirstListItem(`nick="${params.slug}"`)
+		)) as [UserPublicInfo, undefined] | [undefined, Error];
 
-	if (err || !foundUser) {
-		console.error('User not found:', err);
-		throw redirect(303, '/users?error=not-found&slug=' + params.slug);
+		if (err || !foundUser) {
+			console.error('User not found:', err);
+			throw redirect(303, '/users?error=not-found&slug=' + params.slug);
+		}
+		foundUser.avatarCropped =
+			pb.files.getURL(foundUser, foundUser.avatarCropped || '', { thumb: '128x0' }) ||
+			createAvatarUrl(foundUser.nick, 'medium');
 	}
 
 	const startPathname = '/user/' + params.slug;
@@ -29,13 +36,6 @@ export const load: ServerLoad = async ({ locals, params, url }) => {
 	) {
 		redirect(303, '/user/' + params.slug);
 	}
-
-	console.log('Found user:', foundUser);
-
-	foundUser.avatarCropped =
-		pb.files.getURL(foundUser, foundUser.avatarCropped || '', { thumb: '128x0' }) ||
-		createAvatarUrl(foundUser.nick, 'medium');
-	// `${baseUrl}?username=${foundUser.nick}`;
 
 	foundUser.bannerCropped = pb.files.getURL(foundUser, foundUser.bannerCropped || '') || undefined;
 

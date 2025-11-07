@@ -49,31 +49,39 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 	// check if the url contains championship and event parameters (to make the fetch) used in enrollment
 	if (!url.searchParams.get('championship') || !url.searchParams.get('event')) {
 		console.error('Championship and Event must be specified during enrollment');
-		return error(400, { message: "Campionato ed Evento devono essere specificati durante l'iscrizione" });
+		return error(400, {
+			message: "Campionato ed Evento devono essere specificati durante l'iscrizione"
+		});
 	}
 
 	// retrieve the selected ChampionshipExpand version (with full event list)
 	let foundChampionship: ChampionshipExpand;
 	try {
-		foundChampionship = await pb.collection('championships').getFirstListItem(`name="${url.searchParams.get('championship')}"`, { expand: 'events' });
+		foundChampionship = await pb
+			.collection('championships')
+			.getFirstListItem(`name="${url.searchParams.get('championship')}"`, { expand: 'events' });
 	} catch (err) {
 		console.error('Championship not found: ', err);
-		return error(404, { message: "Campionato non trovato" })
+		return error(404, { message: 'Campionato non trovato' });
 	}
 
 	// retrieve the selected event or, if nullish, the first event that hasn't yet passed for the requested championship.
-	const foundEvent = foundChampionship.expand.events.find((e) => { return (e.shortName === url.searchParams.get('event')) });
+	const foundEvent = foundChampionship.expand.events.find((e) => {
+		return e.shortName === url.searchParams.get('event');
+	});
 	if (!foundEvent) {
 		console.error(`Event not found for the championship ${url.searchParams.get('championship')}: `);
-		return error(404, { message: "Evento non trovato per il campionato " + url.searchParams.get('championship') })
+		return error(404, {
+			message: 'Evento non trovato per il campionato ' + url.searchParams.get('championship')
+		});
 	}
 
 	let isAlreadyEnrolled = false;
 	if (userTeams.length == 1) {
 		try {
-			await pb.collection('eventParticipations').getFirstListItem(
-				`event = "${foundEvent.id}" && team = "${userTeams[0].id}"`,
-			);
+			await pb
+				.collection('eventParticipations')
+				.getFirstListItem(`event = "${foundEvent.id}" && team = "${userTeams[0].id}"`);
 			isAlreadyEnrolled = true;
 		} catch {
 			isAlreadyEnrolled = false;
@@ -81,7 +89,12 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 	}
 
 	// set up the form based on the schema
-	const defaultData: { eventId: string; category: z.infer<typeof categoryEnum>; teamId?: string; teamAlias?: string } = { eventId: foundEvent.id, category: "SoapBox" };
+	const defaultData: {
+		eventId: string;
+		category: z.infer<typeof categoryEnum>;
+		teamId?: string;
+		teamAlias?: string;
+	} = { eventId: foundEvent.id, category: 'SoapBox' };
 	if (userTeams.length == 1) {
 		defaultData.teamId = userTeams[0].id;
 		defaultData.teamAlias = userTeams[0].name;
@@ -186,9 +199,9 @@ export const actions: Actions = {
 
 		let existingEnrollment;
 		try {
-			existingEnrollment = await pb.collection('eventParticipations').getFirstListItem(
-				`event = "${form.data.eventId}" && team = "${form.data.teamId}"`,
-			);
+			existingEnrollment = await pb
+				.collection('eventParticipations')
+				.getFirstListItem(`event = "${form.data.eventId}" && team = "${form.data.teamId}"`);
 		} catch {
 			//console.log("Checking existing enrollment:");
 		}
@@ -215,25 +228,27 @@ export const actions: Actions = {
 		}
 
 		try {
-			console.log("User's teams: ", teams, "(", teams?.length, ")");
-			console.log("User Enrolling team: ", form.data.teamId);
-			console.log("Form data", form.data);
+			console.log("User's teams: ", teams, '(', teams?.length, ')');
+			console.log('User Enrolling team: ', form.data.teamId);
+			console.log('Form data', form.data);
 			const newParticipation = await pb.collection('eventParticipations').create({
 				event: form.data.eventId,
 				team: form.data.teamId,
 				category: form.data.category,
 				participants: form.data.drivers,
-				teamNameAlias: form.data.teamAlias ?? teams?.find((team) => { return team.id === form.data.teamId })?.name ?? "",
-				notes: form.data.notes ?? ""
+				teamNameAlias:
+					form.data.teamAlias ??
+					teams?.find((team) => {
+						return team.id === form.data.teamId;
+					})?.name ??
+					'',
+				notes: form.data.notes ?? ''
 			});
 
-			return message(
-				form,
-				{
-					type: "success",
-					text: `Iscrizione avvenuta con successo per il team ${newParticipation.teamNameAlias}!`
-				}
-			);
+			return message(form, {
+				type: 'success',
+				text: `Iscrizione avvenuta con successo per il team ${newParticipation.teamNameAlias}!`
+			});
 		} catch (error) {
 			console.error('Error enrolling in event:', error);
 			console.log('Error enrolling in event:', error);

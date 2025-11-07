@@ -16,8 +16,6 @@ import type { TeamNonexpand } from '$types/pocketbase/team';
 const slugSchema = teamSchema.pick({ slug: true });
 
 export const load: PageServerLoad = async ({ locals, parent }) => {
-	console.log('locals value', locals);
-
 	const { user, pb } = locals;
 	if (!user) {
 		redirect(303, '/login');

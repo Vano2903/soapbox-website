@@ -6,13 +6,15 @@
 	import { fade } from 'svelte/transition';
 	import { VolumeX, Volume2, ChevronLeft, ChevronRight } from 'lucide-svelte';
 	import { onMount } from 'svelte';
-	import type { SponsorLogos, SponsorSlider } from '$types/SponsorSlider.js';
+	import type { SponsorLogoInfo, SponsorLogos, SponsorSlider } from '$types/SponsorSlider.js';
 	import type { CarouselPageType } from '$types/carouselPage.js';
 	import type { TabsPageType } from '$types/tabsPage.js';
 	import type { TimelineType } from '$types/timeline.js';
 	import { goto } from '$app/navigation';
 	import type { ChampionshipExpand } from '$types/pocketbase/championship.js';
 	import { toEventInfoType } from '$types/pocketbase/event';
+
+	import videoHighlight from '$assets/videos/highlight-2.mp4';
 
 	const { data } = $props();
 	const {
@@ -34,21 +36,21 @@
 	} = data;
 
 	// --- Waiting event Management ---
-	function enrollRedirect(year: string, event: string) {
+	function enrollRedirect(year: string, event: string): string {
 		console.log(
 			new Date().toLocaleTimeString('it-IT', { hour12: false }),
 			'redirect to enroll selection = {' + year + ' | ' + event + '}'
 		);
 		const params = new URLSearchParams(`championship=${year}&event=${event}`);
-		goto(`/enroll?${params.toString()}`);
+		return `/enroll?${params.toString()}`;
 	}
-	function resultsRedirect(year: string, event: string) {
+	function resultsRedirect(year: string, event: string): string {
 		console.log(
 			new Date().toLocaleTimeString('it-IT', { hour12: false }),
 			'redirect to enroll selection = {' + year + ' | ' + event + '}'
 		);
 		const params = new URLSearchParams(`championship=${year}&event=${event}`);
-		goto(`/championships?${params.toString()}`);
+		return `/championships?${params.toString()}`;
 	}
 
 	// --- Tabulated walkthroug Management ---
@@ -120,9 +122,9 @@
 	onMount(() => {
 		// --- Sponsor Slider Management ---
 		let sponsorSliderObserver: ResizeObserver;
-		function resizeArrayToMin(base: string[], minLength: number): string[] {
+		function resizeArrayToMin<T>(base: T[], minLength: number): T[] {
 			if (base.length === 0) return [];
-			let result: string[] = [];
+			let result: T[] = [];
 			while (result.length < minLength) {
 				result = result.concat(base);
 			}
@@ -248,7 +250,7 @@
 
 		// cleanup the observers on component unmount
 		return () => {
-			sponsorSliderObserver?.disconnect();
+			// sponsorSliderObserver?.disconnect();
 			timelineContainerObserver?.disconnect();
 			timelineContainer?.removeEventListener('scroll', updateScrollButtons);
 		};
@@ -336,22 +338,20 @@
 						</p>
 					{/if}
 					<div class="flex flex-row justify-end">
-						<button
+						<a
 							class="btn btn-error text-foreground max-w-70"
-							onclick={currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen
-								? () =>
-										enrollRedirect(
-											`${currentChampionship.name}`,
-											`${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`
-										)
-								: () =>
-										resultsRedirect(
-											`${currentChampionship.name}`,
-											`${currentChampionship.expand.events.at(nextEventIndex === -1 ? -1 : nextEventIndex - 1)?.shortName}`
-										)}
+							href={currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen
+								? enrollRedirect(
+										`${currentChampionship.name}`,
+										`${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`
+									)
+								: resultsRedirect(
+										`${currentChampionship.name}`,
+										`${currentChampionship.expand.events.at(nextEventIndex === -1 ? -1 : nextEventIndex - 1)?.shortName}`
+									)}
 						>
 							{#if currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen}Iscriviti{:else}Guarda{/if}
-						</button>
+						</a>
 					</div>
 				</div>
 				<div class="flex flex-col justify-center">
@@ -445,7 +445,7 @@
 							<div
 								class="absolute -right-0 -bottom-0 z-10 h-0 w-0 border-b-[40px] border-l-[40px] border-b-red-600 border-l-transparent lg:border-b-[60px] lg:border-l-[60px]"
 							></div>
-							<img
+							<enhanced:img
 								loading="lazy"
 								class="border-4 border-white object-cover"
 								src={tabs.contents[activeTab].image}
@@ -484,7 +484,7 @@
 					controlsList="nodownload nofullscreen noremoteplayback"
 					class="absolute h-full w-full object-cover"
 				>
-					<source src="/videos/highlight-2.mp4" type="video/mp4" />
+					<source src={videoHighlight} type="video/mp4" />
 				</video>
 				<div class="absolute flex h-full w-full items-center justify-center bg-black/40">
 					<h2 class="px-4 text-center text-4xl font-bold text-white md:text-5xl">
@@ -532,10 +532,10 @@
 										class="logo xs:h-24 xs:w-40 flex h-20 w-32 flex-none items-center justify-center rounded-xl shadow md:h-28 md:w-48"
 									>
 										<img
-											src={`/images/sponsor/${logo}`}
-											alt={logo}
-											class="max-h-[80%] max-w-[80%]"
+											src={logo.image.img.src}
+											alt={logo.alt}
 											loading="lazy"
+											class="max-h-[80%] max-w-[80%]"
 										/>
 									</div>
 								{/each}
@@ -549,10 +549,10 @@
 										class="logo xs:h-24 xs:w-40 flex h-20 w-32 flex-none items-center justify-center rounded-xl shadow md:h-28 md:w-48"
 									>
 										<img
-											src={`/images/sponsor/${logo}`}
-											alt={logo}
-											class="max-h-[80%] max-w-[80%]"
+											src={logo.image.img.src}
+											alt={logo.alt}
 											loading="lazy"
+											class="max-h-[80%] max-w-[80%]"
 										/>
 									</div>
 								{/each}

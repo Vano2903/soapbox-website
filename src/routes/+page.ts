@@ -3,17 +3,51 @@ import type { ChampionshipExpand } from '$types/pocketbase/championship';
 import type { OrganizationStatType } from '$types/organizationStat';
 import type { CarouselPageType } from '$types/carouselPage';
 import type { TabsPageType } from '$types/tabsPage';
-import {
-	Eye,
-	Hammer,
-	MapPinned,
-	Trophy,
-	Heart
-} from 'lucide-svelte';
+import { Eye, Hammer, MapPinned, Trophy, Heart } from 'lucide-svelte';
 import type { SponsorLogos } from '$types/SponsorSlider';
 import type { TimelineType } from '$types/timeline';
 
-export const load: PageLoad = async ({ data }): Promise<{ currentChampionship: ChampionshipExpand; nextEventIndex: number; organizationStats: OrganizationStatType[]; carouselImages: CarouselPageType[]; tabs: TabsPageType, sponsorLogos: SponsorLogos, timeline: TimelineType }> => {
+import imageHor1 from '$assets/images/carousel/1.jpeg?enhanced';
+import imageHor2 from '$assets/images/carousel/2.jpeg?enhanced';
+import imageHor3 from '$assets/images/carousel/3.jpeg?enhanced';
+import imageHor4 from '$assets/images/carousel/4.jpeg?enhanced';
+import imageHor5 from '$assets/images/carousel/5.jpeg?enhanced';
+import imageHor6 from '$assets/images/carousel/6.jpeg?enhanced';
+import imageHor7 from '$assets/images/carousel/7.jpeg?enhanced';
+import imageHor8 from '$assets/images/carousel/8.jpeg?enhanced';
+import imageHor9 from '$assets/images/carousel/9.jpeg?enhanced';
+
+import imageVer1 from '$assets/images/carousel/1-vert.jpg?enhanced';
+import imageVer2 from '$assets/images/carousel/2-vert.jpg?enhanced';
+import imageVer3 from '$assets/images/carousel/3-vert.jpeg?enhanced';
+import imageVer4 from '$assets/images/carousel/4-vert.jpg?enhanced';
+import imageVer5 from '$assets/images/carousel/5-vert.jpg?enhanced';
+import imageVer6 from '$assets/images/carousel/6.jpeg?enhanced';
+import imageVer7 from '$assets/images/carousel/7.jpeg?enhanced';
+import imageVer8 from '$assets/images/carousel/8.jpeg?enhanced';
+import imageVer9 from '$assets/images/carousel/9.jpeg?enhanced';
+
+import imageCarJump from '$assets/images/chi-siamo/jump.jpeg?enhanced';
+
+import imageFassi from '$assets/images/sponsor/fassi.png?enhanced';
+import imagePedretti from '$assets/images/sponsor/pedretti.png?enhanced';
+import imageItalianOptic from '$assets/images/sponsor/italianoptic.png?enhanced';
+import imageCargoWay from '$assets/images/sponsor/cargoway.png?enhanced';
+import imageSoapBox from '$assets/images/sponsor/soapbox.jpg?enhanced';
+import imageIpaas from '$assets/images/sponsor/ipaas-favicon.png?enhanced';
+import imageCargoWayRejected from '$assets/images/sponsor/cargoway-rejected.jpg?enhanced';
+
+export const load: PageLoad = async ({
+	data
+}): Promise<{
+	currentChampionship: ChampionshipExpand;
+	nextEventIndex: number;
+	organizationStats: OrganizationStatType[];
+	carouselImages: CarouselPageType[];
+	tabs: TabsPageType;
+	sponsorLogos: SponsorLogos;
+	timeline: TimelineType;
+}> => {
 	const { currentChampionship, nextEventIndex } = data;
 
 	const organizationStats = [
@@ -25,66 +59,75 @@ export const load: PageLoad = async ({ data }): Promise<{ currentChampionship: C
 	const carouselImages: CarouselPageType[] = [
 		{
 			layout: 'both',
-			breakpoint: 'md',
-			horizontal: { src: 'images/carousel/1.jpeg', alt: 'Car 1' },
-			vertical: { src: 'images/carousel/1.jpeg', alt: 'Car 1' },
-			loading: 'eager'
+			breakpoint: 'sm',
+			horizontal: { src: imageHor1, alt: 'Car 1' },
+			vertical: { src: imageVer1, alt: 'Car 1' },
+			loading: 'eager',
+			fetchpriority: 'high'
 		},
 		{
 			layout: 'both',
-			breakpoint: 'md',
-			horizontal: { src: 'images/carousel/2.jpeg', alt: 'Car 2' },
-			vertical: { src: 'images/carousel/2.jpeg', alt: 'Car 2' },
-			loading: 'lazy'
+			breakpoint: 'sm',
+			horizontal: { src: imageHor2, alt: 'Car 2' },
+			vertical: { src: imageVer2, alt: 'Car 2' },
+			loading: 'eager',
+			fetchpriority: 'high'
 		},
 		{
 			layout: 'both',
-			breakpoint: 'md',
-			horizontal: { src: 'images/carousel/3.jpeg', alt: 'Car 3' },
-			vertical: { src: 'images/carousel/3 - Vert.jpeg', alt: 'Car 3' },
-			loading: 'lazy'
+			breakpoint: 'sm',
+			horizontal: { src: imageHor3, alt: 'Car 3' },
+			vertical: { src: imageVer3, alt: 'Car 3' },
+			loading: 'eager',
+			fetchpriority: 'low'
 		},
 		{
 			layout: 'both',
-			breakpoint: 'md',
-			horizontal: { src: 'images/carousel/4.jpeg', alt: 'Car 4' },
-			vertical: { src: 'images/carousel/4.jpeg', alt: 'Car 4' },
-			loading: 'lazy'
+			breakpoint: 'sm',
+			horizontal: { src: imageHor4, alt: 'Car 4' },
+			vertical: { src: imageVer4, alt: 'Car 4' },
+			loading: 'eager',
+			fetchpriority: 'low'
 		},
 		{
 			layout: 'both',
-			breakpoint: 'md',
-			horizontal: { src: 'images/carousel/5.jpeg', alt: 'Car 5' },
-			vertical: { src: 'images/carousel/5.jpeg', alt: 'Car 5' },
-			loading: 'lazy'
+			breakpoint: 'sm',
+			horizontal: { src: imageHor5, alt: 'Car 5' },
+			vertical: { src: imageVer5, alt: 'Car 5' },
+			loading: 'eager',
+			fetchpriority: 'low'
 		},
 		{
 			layout: 'both',
-			breakpoint: 'md',
-			horizontal: { src: 'images/carousel/6.jpeg', alt: 'Car 6' },
-			vertical: { src: 'images/carousel/6.jpeg', alt: 'Car 6' },
-			loading: 'lazy'
+			breakpoint: 'sm',
+			horizontal: { src: imageHor6, alt: 'Car 6' },
+			vertical: { src: imageVer6, alt: 'Car 6' },
+			loading: 'eager',
+			fetchpriority: 'low'
 		},
 		{
 			layout: 'both',
-			breakpoint: 'md',
-			horizontal: { src: 'images/carousel/7.jpeg', alt: 'Car 7' },
-			vertical: { src: 'images/carousel/7.jpeg', alt: 'Car 7' },
-			loading: 'lazy'
+			breakpoint: 'sm',
+			horizontal: { src: imageHor7, alt: 'Car 7' },
+			vertical: { src: imageVer7, alt: 'Car 7' },
+			loading: 'eager',
+			fetchpriority: 'low'
 		},
 		{
 			layout: 'both',
-			breakpoint: 'md',
-			horizontal: { src: 'images/carousel/8.jpeg', alt: 'Car 8' },
-			vertical: { src: 'images/carousel/8.jpeg', alt: 'Car 8' },
-			loading: 'lazy'
+			breakpoint: 'sm',
+			horizontal: { src: imageHor8, alt: 'Car 8' },
+			vertical: { src: imageVer8, alt: 'Car 8' },
+			loading: 'eager',
+			fetchpriority: 'low'
 		},
 		{
 			layout: 'both',
-			breakpoint: 'md',
-			horizontal: { src: 'images/carousel/9.jpeg', alt: 'Car 9' },
-			vertical: { src: 'images/carousel/9.jpeg', alt: 'Car 9' },
-			loading: 'lazy'
+			breakpoint: 'sm',
+			horizontal: { src: imageHor9, alt: 'Car 9' },
+			vertical: { src: imageVer9, alt: 'Car 9' },
+			loading: 'eager',
+			fetchpriority: 'high'
 		}
 	];
 
@@ -99,38 +142,38 @@ export const load: PageLoad = async ({ data }): Promise<{ currentChampionship: C
 		contents: {
 			Guarda: {
 				text: 'Ogni curva è uno spettacolo, ogni discesa un tuffo al cuore. I nostri bolidi di legno scendono tra l’entusiasmo del pubblico: bambini che sognano, anziani che ricordano, sconosciuti che applaudono. BoxRally è un rito collettivo, una festa di paese che vibra di adrenalina e sorrisi.',
-				image: '/images/chi-siamo/jump.jpeg'
+				image: imageCarJump
 			},
 			Crea: {
 				text: 'Bastano legno, bulloni e un pizzico di follia. Costruire il proprio mezzo è più che un gesto tecnico: è l’inizio di un’avventura. Ogni squadra è un’officina di sogni, dove l’arte prende forma tra mani sporche e idee brillanti. L’iscrizione? Semplice. Il risultato? Indimenticabile.',
-				image: '/images/chi-siamo/jump.jpeg'
+				image: imageCarJump
 			},
 			Corri: {
 				text: 'Non ci basta scendere, ci mettiamo il cuore. Le nostre piste sono vere strade di montagna, dure e magnifiche. Le curve non perdonano, il legno canta e i freni urlano. Ma ci si lancia insieme, con l’anima in gola e lo sguardo fisso all’orizzonte. Qui si corre davvero.',
-				image: '/images/chi-siamo/jump.jpeg'
+				image: imageCarJump
 			},
 			Vinci: {
 				text: 'Vincere non è solo un trofeo, è arrivare in fondo con gli amici che ti aspettano al traguardo. È rompere qualcosa e ricostruirla insieme. È condividere una risata, una foto, un abbraccio. Il premio è esserci stati, è aver lasciato una traccia su quell’asfalto vissuto.',
-				image: '/images/chi-siamo/jump.jpeg'
+				image: imageCarJump
 			},
 			Ama: {
 				text: 'BoxRally è cura quotidiana, amore per un gioco serio fatto di sfide, dettagli e persone. È l’adrenalina che non svanisce, l’attesa per la prossima tappa, l’orgoglio di essere parte di qualcosa che pulsa. Non siamo solo appassionati: siamo legati da un’energia che non si spegne mai.',
-				image: '/images/chi-siamo/jump.jpeg'
+				image: imageCarJump
 			}
 		}
-	}
+	};
 
 	const sponsorLogos: SponsorLogos = {
 		main: [
-			'fassi.svg',
-			'pedretti.png',
-			'italianoptic.png',
-			'cargoway.png'
+			{ image: imageFassi, alt: 'Fassi' },
+			{ image: imagePedretti, alt: 'Pedretti' },
+			{ image: imageItalianOptic, alt: 'Italian Optic' },
+			{ image: imageCargoWay, alt: 'Cargo Way' }
 		],
 		secondary: [
-			'soapbox.jpg',
-			'ipaas-favicon.png',
-			'cargoway-rejected.jpg'
+			{ image: imageSoapBox, alt: 'Soap Box' },
+			{ image: imageIpaas, alt: 'IPAAS' },
+			{ image: imageCargoWayRejected, alt: 'Cargo Way Rejected' }
 		]
 	};
 
@@ -221,5 +264,13 @@ export const load: PageLoad = async ({ data }): Promise<{ currentChampionship: C
 		}
 	};
 
-	return { currentChampionship, nextEventIndex, organizationStats, carouselImages, tabs, sponsorLogos, timeline }
+	return {
+		currentChampionship,
+		nextEventIndex,
+		organizationStats,
+		carouselImages,
+		tabs,
+		sponsorLogos,
+		timeline
+	};
 };

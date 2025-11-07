@@ -1,6 +1,6 @@
 <script lang="ts">
 	const { data } = $props();
-	const { slug, team ,user} = data;
+	const { slug, team, user } = data;
 </script>
 
 <div class="p-2">

@@ -98,7 +98,7 @@ export const load: PageLoad = async ({ data }): Promise<{ currentChampionship: C
 		],
 		contents: {
 			Guarda: {
-				text: 'Ogni curva è uno spettacolo, ogni discesa un tuffo al cuore. I nostri bolidi di legno scendono tra l’entusiasmo del pubblico: bambini che sognano, anziani che ricordano, sconosciuti che applaudono. BoxRally è un rito collettivo, una festa di paese che vibra di adrenalina e sorrisi.',
+				text: 'Ogni curva è uno spettacolo, ogni discesa un tuffo al cuore. I nostri bolidi di legno scendono tra l’entusiasmo del pubblico: bambini che sognano, anziani che ricordano, sconosciuti che applaudono. Le SoapBox sono il rito collettivo, una festa di paese che vibra di adrenalina e sorrisi.',
 				image: '/images/chi-siamo/jump.jpeg'
 			},
 			Crea: {
@@ -110,7 +110,7 @@ export const load: PageLoad = async ({ data }): Promise<{ currentChampionship: C
 				image: '/images/chi-siamo/jump.jpeg'
 			},
 			Vinci: {
-				text: 'Vincere non è solo un trofeo, è arrivare in fondo con gli amici che ti aspettano al traguardo. È rompere qualcosa e ricostruirla insieme. È condividere una risata, una foto, un abbraccio. Il premio è esserci stati, è aver lasciato una traccia su quell’asfalto vissuto.',
+				text: 'Vincere non è solo un trofeo, è arrivare in fondo con gli amici che ti aspettano al traguardo. È rompere qualcosa e ricostruirla insieme. È condividere una risata, una foto, un abbraccio. Il premio è esserci stati e aver lasciato una traccia su quell’asfalto vissuto.',
 				image: '/images/chi-siamo/jump.jpeg'
 			},
 			Ama: {
@@ -144,28 +144,14 @@ export const load: PageLoad = async ({ data }): Promise<{ currentChampionship: C
 				postActive: true
 			},
 			{
-				year: '1978',
-				content: 'Primi rally nelle valli della provincia',
+				year: '2005',
+				content: 'Primo campionato ufficiale',
 				active: true,
 				preActive: true,
 				postActive: true
 			},
 			{
-				year: '1997',
-				content: 'Nascita del Regolamento Tecnico',
-				active: true,
-				preActive: true,
-				postActive: true
-			},
-			{
-				year: '2003',
-				content: 'Primo Campionato Ufficiale',
-				active: true,
-				preActive: true,
-				postActive: true
-			},
-			{
-				year: '2009',
+				year: '2006',
 				content: 'Edizione "Corriamo per vincere la SLA"',
 				active: true,
 				preActive: true,
@@ -194,7 +180,7 @@ export const load: PageLoad = async ({ data }): Promise<{ currentChampionship: C
 			},
 			{
 				year: '2024',
-				content: 'Introduzione del Campionato Drift Trike',
+				content: 'Revisione del Regolamento Tecnico',
 				active: true,
 				preActive: true,
 				postActive: true
@@ -207,7 +193,7 @@ export const load: PageLoad = async ({ data }): Promise<{ currentChampionship: C
 				postActive: true
 			},
 			{
-				year: '2026',
+				year: '2027',
 				content: 'Espansione del campionato in Lombardia',
 				active: false,
 				preActive: false,

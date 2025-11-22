@@ -379,9 +379,9 @@
 			<section class="mb-12 px-4 py-10 text-center">
 				<h2 class="mb-2 text-center text-3xl font-bold md:text-4xl">Non solo corse:</h2>
 				<p class="mx-auto mb-6 text-center text-base md:text-lg lg:max-w-3/4">
-					Boxrally è il gioco serio di chi crea, sogna e corre insieme.<br />
+					Le SoapBox è il gioco serio di chi crea, sogna e corre insieme.<br />
 					Le nostre piste? Le strade vere. I nostri piloti? Amici, artigiani, sognatori.<br />
-					Costruiamo meraviglie di legno e sfrecciamo giù per le montagne con orgoglio.
+					Costruiamo bolidi di legno e sfrecciamo giù per le montagne con orgoglio.
 				</p>
 
 				<div class="my-4 flex flex-row flex-wrap justify-evenly">
@@ -400,8 +400,8 @@
 
 				<p class="mx-auto mb-6 text-center text-base md:text-lg lg:max-w-3/4">
 					Ogni anno ci impegniamo per offrire più spettacolo, più sicurezza, più passione.<br />
-					Cresciamo ad ogni gara aggiungendo nuove tappe al calendario, ma il cuore resta lo stesso:
-					la nostra squadra che corre unita e non si ferma mai.
+					Cresciamo ad ogni evento aggiungendo nuove tappe al calendario, ma il cuore resta lo stesso:
+					la nostra è una squadra con la voglia di divertirsi e far divertire il pubblico.
 				</p>
 			</section>
 
@@ -484,7 +484,7 @@
 					controlsList="nodownload nofullscreen noremoteplayback"
 					class="absolute h-full w-full object-cover"
 				>
-					<source src="/videos/highlight-2.mp4" type="video/mp4" />
+					<source src="/videos/highlight.mp4" type="video/mp4" />
 				</video>
 				<div class="absolute flex h-full w-full items-center justify-center bg-black/40">
 					<h2 class="px-4 text-center text-4xl font-bold text-white md:text-5xl">

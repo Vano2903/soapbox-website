@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import { Splide, SplideSlide } from '@splidejs/svelte-splide';
 	import '@splidejs/svelte-splide/css';
 	import image1 from '$lib/assets/images/carousel/1.jpeg?enhanced';
@@ -42,4 +42,4 @@
 </Splide>
 
 <style>
-</style>
+</style> -->

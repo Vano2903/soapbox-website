@@ -7,35 +7,36 @@ import { Eye, Hammer, MapPinned, Trophy, Heart } from 'lucide-svelte';
 import type { SponsorLogos } from '$types/SponsorSlider';
 import type { TimelineType } from '$types/timeline';
 
-import imageHor1 from '$assets/images/carousel/1.jpeg?enhanced';
-import imageHor2 from '$assets/images/carousel/2.jpeg?enhanced';
-import imageHor3 from '$assets/images/carousel/3.jpeg?enhanced';
-import imageHor4 from '$assets/images/carousel/4.jpeg?enhanced';
-import imageHor5 from '$assets/images/carousel/5.jpeg?enhanced';
-import imageHor6 from '$assets/images/carousel/6.jpeg?enhanced';
-import imageHor7 from '$assets/images/carousel/7.jpeg?enhanced';
-import imageHor8 from '$assets/images/carousel/8.jpeg?enhanced';
-import imageHor9 from '$assets/images/carousel/9.jpeg?enhanced';
+// import imageHor1 from '$assets/images/carousel/1.jpeg?w=480;800;1200;1920&format=webp;avif;jpg&srcset';
+import imageHor1 from '$assets/images/carousel/1.jpeg?w=480;800;1200;1920&format=webp;avif;jpg';
+import imageHor2 from '$assets/images/carousel/2.jpeg??w=480;800;1200;1920&format=webp;avif;jpg';
+import imageHor3 from '$assets/images/carousel/3.jpeg??w=480;800;1200;1920&format=webp;avif;jpg';
+import imageHor4 from '$assets/images/carousel/4.jpeg??w=480;800;1200;1920&format=webp;avif;jpg';
+import imageHor5 from '$assets/images/carousel/5.jpeg??w=480;800;1200;1920&format=webp;avif;jpg';
+import imageHor6 from '$assets/images/carousel/6.jpeg??w=480;800;1200;1920&format=webp;avif;jpg';
+import imageHor7 from '$assets/images/carousel/7.jpeg??w=480;800;1200;1920&format=webp;avif;jpg';
+import imageHor8 from '$assets/images/carousel/8.jpeg??w=480;800;1200;1920&format=webp;avif;jpg';
+import imageHor9 from '$assets/images/carousel/9.jpeg??w=480;800;1200;1920&format=webp;avif;jpg';
 
-import imageVer1 from '$assets/images/carousel/1-vert.jpg?enhanced';
-import imageVer2 from '$assets/images/carousel/2-vert.jpg?enhanced';
-import imageVer3 from '$assets/images/carousel/3-vert.jpeg?enhanced';
-import imageVer4 from '$assets/images/carousel/4-vert.jpg?enhanced';
-import imageVer5 from '$assets/images/carousel/5-vert.jpg?enhanced';
-import imageVer6 from '$assets/images/carousel/6.jpeg?enhanced';
-import imageVer7 from '$assets/images/carousel/7.jpeg?enhanced';
-import imageVer8 from '$assets/images/carousel/8.jpeg?enhanced';
-import imageVer9 from '$assets/images/carousel/9.jpeg?enhanced';
+import imageVer1 from '$assets/images/carousel/1-vert.jpg??w=480;800;1200;1920&format=webp;avif;jpg';
+import imageVer2 from '$assets/images/carousel/2-vert.jpg??w=480;800;1200;1920&format=webp;avif;jpg';
+import imageVer3 from '$assets/images/carousel/3-vert.jpeg??w=480;800;1200;1920&format=webp;avif;jpg';
+import imageVer4 from '$assets/images/carousel/4-vert.jpg??w=480;800;1200;1920&format=webp;avif;jpg';
+import imageVer5 from '$assets/images/carousel/5-vert.jpg??w=480;800;1200;1920&format=webp;avif;jpg';
+import imageVer6 from '$assets/images/carousel/6.jpeg??w=480;800;1200;1920&format=webp;avif;jpg';
+import imageVer7 from '$assets/images/carousel/7.jpeg??w=480;800;1200;1920&format=webp;avif;jpg';
+import imageVer8 from '$assets/images/carousel/8.jpeg??w=480;800;1200;1920&format=webp;avif;jpg';
+import imageVer9 from '$assets/images/carousel/9.jpeg??w=480;800;1200;1920&format=webp;avif;jpg';
 
-import imageCarJump from '$assets/images/chi-siamo/jump.jpeg?enhanced';
+import imageCarJump from '$assets/images/chi-siamo/jump.jpeg';
 
-import imageFassi from '$assets/images/sponsor/fassi.png?enhanced';
-import imagePedretti from '$assets/images/sponsor/pedretti.png?enhanced';
-import imageItalianOptic from '$assets/images/sponsor/italianoptic.png?enhanced';
-import imageCargoWay from '$assets/images/sponsor/cargoway.png?enhanced';
-import imageSoapBox from '$assets/images/sponsor/soapbox.jpg?enhanced';
-import imageIpaas from '$assets/images/sponsor/ipaas-favicon.png?enhanced';
-import imageCargoWayRejected from '$assets/images/sponsor/cargoway-rejected.jpg?enhanced';
+import imageFassi from '$assets/images/sponsor/fassi.png';
+import imagePedretti from '$assets/images/sponsor/pedretti.png';
+import imageItalianOptic from '$assets/images/sponsor/italianoptic.png';
+import imageCargoWay from '$assets/images/sponsor/cargoway.png';
+import imageSoapBox from '$assets/images/sponsor/soapbox.jpg';
+import imageIpaas from '$assets/images/sponsor/ipaas-favicon.png';
+import imageCargoWayRejected from '$assets/images/sponsor/cargoway-rejected.jpg';
 
 export const load: PageLoad = async ({
 	data

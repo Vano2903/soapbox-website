@@ -59,6 +59,9 @@
 	];
 
 	const { user } = $props();
+
+	import logo from '$assets/images/navbar/logo.jpg?w=64;48&format=avif;webp;jpg';
+	import EnhancedImage from '$components/enhanedImage/enhancedImage.svelte';
 </script>
 
 {#snippet logohome()}
@@ -73,11 +76,16 @@
 		>
 			<div class="h-12 w-12 lg:h-15 lg:w-15">
 				<!-- class="h-12 w-12 lg:h-15 lg:w-15" -->
-				<enhanced:img
+				<!-- <img
 					src="/src/lib/assets/images/navbar/logo.jpg?w=64;48"
 					sizes="(min-width: 1024px) 64px, 48px"
 					alt="Logo ASD Boxrally"
-				/>
+				/> -->
+				<!-- <EnhancedImage
+					picture={logo}
+					alt="Logo ASD Boxrally"
+					sizes="(min-width: 1024px) 64px, 48px"
+				/> -->
 			</div>
 			<span class="text-primary hidden h-12 items-end pb-1 text-base/6 whitespace-nowrap md:flex">
 				<span class="hidden text-4xl font-bold lg:block">BOXRALLY</span>

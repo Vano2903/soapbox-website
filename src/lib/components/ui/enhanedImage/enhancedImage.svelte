@@ -8,6 +8,10 @@
 		fetchpriority?: 'high' | 'low' | 'auto';
 		alt?: string;
 		picture: Picture;
+		width?: number | string;
+		height?: number | string;
+		media?: string;
+		sizes?: string;
 	}
 	const {
 		pictureClass = '',
@@ -15,7 +19,11 @@
 		loading = 'lazy',
 		fetchpriority = 'auto',
 		alt,
-		picture
+		picture,
+		sizes,
+		width,
+		height,
+		media
 	}: Props = $props();
 
 	const srcsets = Object.entries(picture.sources).map(([format, source]) => ({
@@ -26,7 +34,16 @@
 
 <picture class={pictureClass}>
 	{#each srcsets as { format, srcset }}
-		<source {srcset} type={'image/' + format} />
+		<source {srcset} {media} type={'image/' + format} />
 	{/each}
-	<img class={imageClass} {loading} {fetchpriority} src={picture.img.src} {alt} />
+	<img
+		class={imageClass}
+		{loading}
+		{fetchpriority}
+		src={picture.img.src}
+		{alt}
+		{sizes}
+		width={width ?? picture.img.w}
+		height={height ?? picture.img.h}
+	/>
 </picture>

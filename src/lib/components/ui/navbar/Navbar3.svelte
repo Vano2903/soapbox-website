@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import UserButton from './UserButton.svelte';
 	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
@@ -109,4 +109,4 @@
 		</div>
 		<UserButton {user} />
 	</div>
-</nav>
+</nav> -->

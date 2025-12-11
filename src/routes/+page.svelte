@@ -15,6 +15,7 @@
 	import { toEventInfoType } from '$types/pocketbase/event';
 
 	import videoHighlight from '$assets/videos/highlight-2.mp4';
+	import EnhancedImage from '$components/enhanedImage/enhancedImage.svelte';
 
 	const { data } = $props();
 	const {
@@ -445,10 +446,10 @@
 							<div
 								class="absolute -right-0 -bottom-0 z-10 h-0 w-0 border-b-[40px] border-l-[40px] border-b-red-600 border-l-transparent lg:border-b-[60px] lg:border-l-[60px]"
 							></div>
-							<enhanced:img
+							<EnhancedImage
 								loading="lazy"
-								class="border-4 border-white object-cover"
-								src={tabs.contents[activeTab].image}
+								pictureClass="border-4 border-white object-cover"
+								picture={tabs.contents[activeTab].image}
 								alt="macchina salta tra la schiuma"
 							/>
 						</div>

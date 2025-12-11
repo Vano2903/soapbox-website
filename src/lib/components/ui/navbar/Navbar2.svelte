@@ -42,7 +42,7 @@
 			onSmall: true,
 			onMedium: true,
 			dropdown: [
-				{ name: 'Bacheca', href: '/bulletin-board', onSmall: true, onMedium: true },
+				{ name: 'Regolamento', href: '/bulletin-board', onSmall: true, onMedium: true },
 				{ name: 'Calendario', href: '/calendars', onSmall: true, onMedium: true },
 				{ name: 'Classifiche', href: '/leaderboards', onSmall: true, onMedium: true }
 			]

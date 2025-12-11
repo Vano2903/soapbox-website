@@ -72,23 +72,18 @@
 			links: [
 				{ herf: '/site-map', name: 'mappa del sito', active: false },
 				{
-					href: '/static/documents/privacy-policy.pdf',
+					href: '/documents/privacy-policy.pdf',
 					name: 'informativa privacy',
 					active: true
 				},
 				{
-					href: '/static/documents/terms-and-conditions.pdf',
+					href: '/documents/terms-and-conditions.pdf',
 					name: 'termini e condizioni',
 					active: true
 				},
 				{
-					href: '/static/documents/statute-of-liability.pdf',
-					name: 'sgravio di responsabilità',
-					active: true
-				},
-				{
-					href: '/static/documents/liability-relief.pdf',
-					name: 'sgravio di responsabilità',
+					href: '/documents/statute-of-liability.pdf',
+					name: 'sgravio responsabilità',
 					active: true
 				}
 			]
@@ -120,7 +115,7 @@
 <footer class="flex min-h-[160px] flex-col bg-black pt-2 pr-4 pl-4">
 	<hr class="mx-4 mt-0.75 mb-3 h-1 w-auto rounded-sm border-0 bg-red-600" />
 	<div
-		class="flex flex-col flex-wrap items-center justify-center gap-2 text-center lg:flex-row lg:items-start lg:justify-between lg:text-left"
+		class="flex flex-col flex-wrap items-center justify-center gap-2 text-center lg:flex-row lg:items-start lg:justify-between 2xl:text-left"
 	>
 		<!-- Brand and Socials -->
 		<div
@@ -182,17 +177,18 @@
 			</div>
 		</div>
 		<!-- Navigations link -->
-		<div class="flex flex-col flex-wrap justify-center gap-4 sm:flex-row lg:mr-4">
+		<div class="flex flex-col flex-wrap justify-center gap-4 sm:flex-row lg:mr-4 lg:gap-6">
 			<!-- <div class={`m-auto grid grid-cols-1 ${largeSectionGridCols}`}> -->
 			<!-- <div class="m-auto grid grid-cols-1 lg:grid-cols-{sectionsGridCols}"> -->
 			<!-- <div class="lg:grid-cols- grid w-100 grid-cols-1"> -->
 			{#each sections as section}
 				{#if section.active}
 					<div class="flex flex-col">
-						<span class="text-base font-bold text-gray-400 uppercase md:text-xl lg:text-2xl"
+						<span
+							class="text-base font-bold text-gray-400 uppercase md:text-xl lg:text-2xl 2xl:text-3xl"
 							>{section.name}</span
 						>
-						<span class="flex flex-col pl-2 text-sm md:text-base">
+						<span class="flex flex-col text-sm md:text-base 2xl:pl-3">
 							{#each section.links as link}
 								{#if link.active}
 									<a href={link.href} class="text-gray-400 hover:text-red-600">{link.name}</a>
@@ -206,13 +202,13 @@
 	</div>
 	<div class="flex w-full items-center justify-center py-2 pt-4 text-center text-gray-500">
 		<span class="inner-container">
-			Copyright &copy {new Date().getFullYear()} all rights reserved | Made with love by
+			Copyright &copy {new Date().getFullYear()} all rights reserved | Made with passion by
 			<a target="_blank" class="underline hover:text-red-600" href="https://github.com/vano2903"
 				>Vano</a
 			>
 			and
 			<a target="_blank" class="underline hover:text-red-600" href="https://github.com/MoraGames"
-				>Morandi</a
+				>Mora</a
 			>
 		</span>
 	</div>

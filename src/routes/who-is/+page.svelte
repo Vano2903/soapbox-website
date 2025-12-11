@@ -10,17 +10,17 @@
 			pages: [
 				{
 					layout: 'horizontal',
-					horizontal: { src: '/images/chi-siamo/soapbox.jpg', alt: 'macchine soapbox' },
+					horizontal: { src: '/images/who-is/soapbox-1.jpg', alt: 'macchine soapbox' },
 					loading: 'eager'
 				},
 				{
 					layout: 'horizontal',
-					horizontal: { src: '/images/chi-siamo/soapbox.jpg', alt: 'macchine soapbox' },
+					horizontal: { src: '/images/who-is/soapbox-2.jpg', alt: 'macchine soapbox' },
 					loading: 'lazy'
 				},
 				{
 					layout: 'horizontal',
-					horizontal: { src: '/images/chi-siamo/soapbox.jpg', alt: 'macchine soapbox' },
+					horizontal: { src: '/images/who-is/soapbox-3.jpg', alt: 'macchine soapbox' },
 					loading: 'lazy'
 				}
 			] as CarouselPageType[],
@@ -34,7 +34,7 @@
 				{
 					layout: 'horizontal',
 					horizontal: {
-						src: '/images/chi-siamo/race.jpeg',
+						src: '/images/who-is/race-1.jpg',
 						alt: 'discesa di bergamo con macchina'
 					},
 					loading: 'lazy'
@@ -42,7 +42,7 @@
 				{
 					layout: 'horizontal',
 					horizontal: {
-						src: '/images/chi-siamo/race.jpeg',
+						src: '/images/who-is/race-2.jpg',
 						alt: 'discesa di bergamo con macchina'
 					},
 					loading: 'lazy'
@@ -50,7 +50,7 @@
 				{
 					layout: 'horizontal',
 					horizontal: {
-						src: '/images/chi-siamo/race.jpeg',
+						src: '/images/who-is/race-3.jpeg',
 						alt: 'discesa di bergamo con macchina'
 					},
 					loading: 'lazy'
@@ -65,17 +65,17 @@
 			pages: [
 				{
 					layout: 'horizontal',
-					horizontal: { src: '/images/chi-siamo/jump.jpeg', alt: 'macchina salta tra la schiuma' },
+					horizontal: { src: '/images/who-is/show-1.jpg', alt: 'macchina salta tra la schiuma' },
 					loading: 'lazy'
 				},
 				{
 					layout: 'horizontal',
-					horizontal: { src: '/images/chi-siamo/jump.jpeg', alt: 'macchina salta tra la schiuma' },
+					horizontal: { src: '/images/who-is/show-2.jpeg', alt: 'macchina salta tra la schiuma' },
 					loading: 'lazy'
 				},
 				{
 					layout: 'horizontal',
-					horizontal: { src: '/images/chi-siamo/jump.jpeg', alt: 'macchina salta tra la schiuma' },
+					horizontal: { src: '/images/who-is/show-3.jpg', alt: 'macchina salta tra la schiuma' },
 					loading: 'lazy'
 				}
 			] as CarouselPageType[],
@@ -89,7 +89,7 @@
 				{
 					layout: 'horizontal',
 					horizontal: {
-						src: 'images/chi-siamo/persone.jpeg',
+						src: '/images/who-is/team-1.jpeg',
 						alt: 'foto di gruppo degli organizzatori'
 					},
 					loading: 'lazy'
@@ -97,7 +97,7 @@
 				{
 					layout: 'horizontal',
 					horizontal: {
-						src: 'images/chi-siamo/persone.jpeg',
+						src: '/images/who-is/team-1.jpeg',
 						alt: 'foto di gruppo degli organizzatori'
 					},
 					loading: 'lazy'
@@ -105,7 +105,7 @@
 				{
 					layout: 'horizontal',
 					horizontal: {
-						src: 'images/chi-siamo/persone.jpeg',
+						src: '/images/who-is/team-1.jpeg',
 						alt: 'foto di gruppo degli organizzatori'
 					},
 					loading: 'lazy'

@@ -122,15 +122,18 @@ export const load: PageLoad = async ({ data }): Promise<{ currentChampionship: C
 
 	const sponsorLogos: SponsorLogos = {
 		main: [
-			'fassi.svg',
 			'pedretti.png',
-			'italianoptic.png',
-			'cargoway.png'
+			'italian_optic.png',
+			'baby_bazar.png',
+			'ronzoni.jpeg'
 		],
 		secondary: [
-			'soapbox.jpg',
-			'ipaas-favicon.png',
-			'cargoway-rejected.jpg'
+			'abf.png',
+			'bcc_milano.png',
+			'csi_bergamo.png',
+			'idraulica_salvi.jpg',
+			'provincia_bergamo.png',
+			'trony_nembro.png'
 		]
 	};
 

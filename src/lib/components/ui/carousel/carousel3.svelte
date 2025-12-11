@@ -23,11 +23,13 @@
 	let {
 		pages,
 		withControls = false,
-		startingPage = 0
+		startingPage = 0,
+		classes = ''
 	}: {
 		pages: CarouselPageType[];
 		withControls?: boolean;
 		startingPage?: number;
+		classes?: string;
 	} = $props();
 
 	let activePage = $state(startingPage);
@@ -37,7 +39,7 @@
 <div class="embla relative" use:emblaCarouselSvelte={{ options, plugins }} onemblaInit={onInit}>
 	<div class="embla__container">
 		{#each pages as page}
-			<div class="embla__slide">
+			<div class="embla__slide {classes}">
 				{#if (page.layout ?? defaultCarouselPage.layout) === 'both'}
 					<img
 						class="hidden h-full w-full object-none sm:aspect-video sm:object-cover

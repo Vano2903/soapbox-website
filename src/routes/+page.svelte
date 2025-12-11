@@ -258,7 +258,7 @@
 <main>
 	<div class="carousel">
 		<!-- <Carousel /> -->
-		<Carousel3 pages={carouselImages} />
+		<Carousel3 pages={carouselImages} classes="max-h-100 object-cover md:max-h-full" />
 		<aside
 			class="absolute z-10 box-border hidden h-87/100 max-h-[380px] w-1/3 max-w-[430px] rounded-l-xl bg-white py-2 pl-2 md:block lg:h-3/4 lg:max-h-[450px] lg:w-1/4 xl:max-h-[550px]"
 		>

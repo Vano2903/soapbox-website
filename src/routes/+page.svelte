@@ -447,9 +447,9 @@
 							></div>
 							<img
 								loading="lazy"
-								class="border-4 border-white object-cover"
-								src={tabs.contents[activeTab].image}
-								alt="macchina salta tra la schiuma"
+								class="max-h-100 border-4 border-white object-cover"
+								src={tabs.contents[activeTab].image.url}
+								alt={tabs.contents[activeTab].image.alt}
 							/>
 						</div>
 					</div>

@@ -12,5 +12,10 @@ export type TabsPageHeader = {
 
 export type TabsPageContent = {
 	text: string;
-	image: string;
+	image: TabsImageContent;
 };
+
+export type TabsImageContent = {
+	url: string;
+	alt: string;
+}

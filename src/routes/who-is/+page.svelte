@@ -141,13 +141,13 @@
 						{#each section.pages as page, i}
 							<div class="relative flex max-w-1/4 flex-row items-center justify-center">
 								<button
-									class="mt-4 object-cover {section.activePage === i
+									class="overflow-hidden rounded-md object-cover {section.activePage === i
 										? `h-full w-full`
-										: `h-9/10 w-9/10`}"
+										: `h-8/10 w-9/10`}"
 									onclick={() => (section.activePage = i)}
 								>
 									<img
-										class="rounded-md"
+										class="h-full w-full overflow-hidden rounded-md object-cover"
 										loading={page.loading}
 										src={page.horizontal?.src}
 										alt={page.horizontal?.alt}
@@ -163,7 +163,7 @@
 				</div>
 				<div class="hidden flex-col content-between gap-4 md:flex md:w-1/2">
 					<img
-						class="rounded-sm object-cover"
+						class="w-full self-center overflow-hidden rounded-md object-cover"
 						loading={section.pages[section.activePage].loading}
 						src={section.pages[section.activePage].horizontal?.src}
 						alt={section.pages[section.activePage].horizontal?.alt}
@@ -172,13 +172,12 @@
 						{#each section.pages as page, i}
 							<div class="relative flex max-w-1/4 flex-row items-center justify-center">
 								<button
-									class="object-cover {section.activePage === i
+									class="overflow-hidden rounded-md object-cover {section.activePage === i
 										? `h-full w-full`
-										: `h-9/10 w-9/10`}"
+										: `h-8/10 w-9/10`}"
 									onclick={() => (section.activePage = i)}
 								>
 									<img
-										class="rounded-md"
 										loading={page.loading}
 										src={page.horizontal?.src}
 										alt={page.horizontal?.alt}

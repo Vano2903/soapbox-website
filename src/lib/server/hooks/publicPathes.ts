@@ -9,7 +9,7 @@ export const isPublicPath = (path: string): boolean => {
 		'^\/register$',
 		'^\/forgot-password$',
 		'^\/gallery$',
-		'^\/bulletin-boards$',
+		'^\/bulletin-board$',
 		'^\/calendars$',
 		'^\/leaderboards$',
 		'^\/leaderboards\/sheetData$',

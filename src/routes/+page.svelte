@@ -455,7 +455,7 @@
 					</div>
 				</div>
 				<div class="mt-6 flex justify-center">
-					<a href="/chi-siamo" class="group px-2 pt-1 text-lg font-bold transition duration-300">
+					<a href="/who-is" class="group px-2 pt-1 text-lg font-bold transition duration-300">
 						<span class="flex flex-row items-center"
 							><ChevronRight
 								class="group-hover:stroke-primary transition duration-300 group-hover:rotate-360"

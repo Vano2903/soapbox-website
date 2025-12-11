@@ -14,7 +14,7 @@
 			fgColor: socialColors.foreground,
 			bgColor: socialColors.background,
 			alt: 'Canale Youtube',
-			href: ''
+			href: 'https://www.youtube.com/channel/UCw1pbrZpdikVRmootOMrFQg'
 		},
 		{
 			active: true,
@@ -22,7 +22,7 @@
 			fgColor: socialColors.foreground,
 			bgColor: socialColors.background,
 			alt: 'Pagina Facebook',
-			href: ''
+			href: 'https://www.facebook.com/OfficialASDBoxRallyClub/'
 		},
 		{
 			active: true,
@@ -30,15 +30,7 @@
 			fgColor: socialColors.foreground,
 			bgColor: socialColors.background,
 			alt: 'Pagina Instagram',
-			href: ''
-		},
-		{
-			active: true,
-			network: 'telegram',
-			fgColor: socialColors.foreground,
-			bgColor: socialColors.background,
-			alt: 'Canale Telegram',
-			href: ''
+			href: 'https://www.instagram.com/box.rally/'
 		},
 		{
 			active: false,
@@ -46,6 +38,14 @@
 			fgColor: socialColors.foreground,
 			bgColor: socialColors.background,
 			alt: 'Feed WhatsApp',
+			href: ''
+		},
+		{
+			active: false,
+			network: 'telegram',
+			fgColor: socialColors.foreground,
+			bgColor: socialColors.background,
+			alt: 'Canale Telegram',
 			href: ''
 		},
 		{
@@ -65,33 +65,6 @@
 			href: ''
 		}
 	];
-
-	const sponsors = [
-		{
-			link: basePath + 'eyc.svg',
-			active: true,
-			href: 'https://eye-culture.webflow.io/',
-			alt: 'eye culture by ottica del borgo'
-		},
-		{
-			link: basePath + 'nettuno.avif',
-			href: 'https://nettuno.net/',
-			active: true,
-			alt: 'nettuno'
-		},
-		{
-			link: basePath + 'fassi.svg',
-			href: 'https://www.fassi.com/it/',
-			active: true,
-			alt: 'fassi'
-		},
-		{
-			link: basePath + 'pedretti.png',
-			href: 'https://www.pedrettiserramenti.it/',
-			active: true,
-			alt: 'pedretti'
-		}
-	];
 	const sections = [
 		{
 			name: 'informazioni',
@@ -101,14 +74,23 @@
 				{
 					href: '/static/documents/privacy-policy.pdf',
 					name: 'informativa privacy',
-					active: false
+					active: true
 				},
 				{
 					href: '/static/documents/terms-and-conditions.pdf',
 					name: 'termini e condizioni',
-					active: false
+					active: true
 				},
-				{ href: '/static/documents/statute-of-association.pdf', name: 'statuto', active: true }
+				{
+					href: '/static/documents/statute-of-liability.pdf',
+					name: 'sgravio di responsabilità',
+					active: true
+				},
+				{
+					href: '/static/documents/liability-relief.pdf',
+					name: 'sgravio di responsabilità',
+					active: true
+				}
 			]
 		},
 		{
@@ -116,19 +98,20 @@
 			active: true,
 			links: [
 				{ herf: '/', name: 'home', active: true },
-				{ herf: '/archivio', name: 'archivio', active: false },
+				{ herf: '/leaderboards', name: 'classifiche', active: true },
+				{ herf: '/bulletin-board', name: 'regolamenti', active: true },
 				{ href: '/contacts', name: 'contatti', active: true },
-				{ href: '/lavora-con-noi', name: 'lavora con noi', active: true }
+				{ href: '/lavora-con-noi', name: 'lavora con noi', active: false }
 			]
 		},
 		{
 			name: 'assistenza',
 			active: true,
 			links: [
-				{ herf: '/content-removal', name: 'rimozione contenuti', active: true },
+				{ herf: '/content-removal', name: 'rimozione contenuti', active: false },
 				{ herf: '/faq', name: 'domande frequenti', active: true },
 				{ herf: '/cookies', name: 'gestione cookies', active: true },
-				{ herf: '/support', name: 'supporto clienti', active: true }
+				{ herf: '/support', name: 'supporto clienti', active: false }
 			]
 		}
 	];

@@ -136,65 +136,149 @@ export const load: PageLoad = async ({ data }): Promise<{ currentChampionship: C
 
 	const timeline: TimelineType = {
 		items: [
+			// {
+			// 	year: '1955',
+			// 	content: 'Prima gara sulle Mura di Città Alta',
+			// 	active: true,
+			// 	preActive: false,
+			// 	postActive: true
+			// },
+			// {
+			// 	year: '2005',
+			// 	content: 'Primo campionato ufficiale',
+			// 	active: true,
+			// 	preActive: true,
+			// 	postActive: true
+			// },
+			// {
+			// 	year: '2006',
+			// 	content: 'Edizione "Corriamo per vincere la SLA"',
+			// 	active: true,
+			// 	preActive: true,
+			// 	postActive: true
+			// },
+			// {
+			// 	year: '2011',
+			// 	content: 'Espansione del campionato nella Bergamasca',
+			// 	active: true,
+			// 	preActive: true,
+			// 	postActive: true
+			// },
+			// {
+			// 	year: '2014',
+			// 	content: 'Primo rally nel Trentino Alto Adige',
+			// 	active: true,
+			// 	preActive: true,
+			// 	postActive: true
+			// },
+			// {
+			// 	year: '2016',
+			// 	content: 'Campionato da oltre 10 eventi',
+			// 	active: true,
+			// 	preActive: true,
+			// 	postActive: true
+			// },
+			// {
+			// 	year: '2024',
+			// 	content: 'Revisione del Regolamento Tecnico',
+			// 	active: true,
+			// 	preActive: true,
+			// 	postActive: true
+			// },
+			// {
+			// 	year: '2025',
+			// 	content: 'Premolo ospita il primo rally notturno',
+			// 	active: true,
+			// 	preActive: true,
+			// 	postActive: true
+			// },
+			// {
+			// 	year: '2027',
+			// 	content: 'Espansione del campionato in Lombardia',
+			// 	active: false,
+			// 	preActive: false,
+			// 	postActive: false
+			// }
 			{
 				year: '1955',
-				content: 'Prima gara sulle Mura di Città Alta',
+				content: 'Primo evento sulle Mura di Città Alta',
 				active: true,
 				preActive: false,
 				postActive: true
 			},
 			{
+				year: '1974',
+				content: '10ᵃ edizione della SoapBox Rally',
+				active: true,
+				preActive: true,
+				postActive: true
+			},
+			{
+				year: '1988',
+				content: '20ᵃ edizione della SoapBox Rally',
+				active: true,
+				preActive: true,
+				postActive: true
+			},
+			{
+				year: '2002',
+				content: '30ᵃ edizione della SoapBox Rally',
+				active: true,
+				preActive: true,
+				postActive: true
+			},
+			{
+				year: '2004',
+				content: 'Nasce il BoxRally Club',
+				active: true,
+				preActive: true,
+				postActive: true
+			},
+			{
 				year: '2005',
-				content: 'Primo campionato ufficiale',
+				content: 'Primo campionato provinciale',
 				active: true,
 				preActive: true,
 				postActive: true
 			},
 			{
-				year: '2006',
-				content: 'Edizione "Corriamo per vincere la SLA"',
+				year: '2010',
+				content: 'Oltre 15 eventi in Lombardia, Piemonte e Trentino',
 				active: true,
 				preActive: true,
 				postActive: true
 			},
 			{
-				year: '2011',
-				content: 'Espansione del campionato nella Bergamasca',
+				year: '2012',
+				content: '40ᵃ edizione della SoapBox Rally',
 				active: true,
 				preActive: true,
 				postActive: true
 			},
 			{
 				year: '2014',
-				content: 'Primo rally nel Trentino Alto Adige',
+				content: '10° Campionato provinciale',
 				active: true,
 				preActive: true,
 				postActive: true
 			},
 			{
-				year: '2016',
-				content: 'Campionato da oltre 10 eventi',
+				year: '2023',
+				content: 'Nasce il nuovo club',
 				active: true,
 				preActive: true,
 				postActive: true
 			},
 			{
-				year: '2024',
-				content: 'Revisione del Regolamento Tecnico',
-				active: true,
-				preActive: true,
-				postActive: true
-			},
-			{
-				year: '2025',
-				content: 'Premolo ospita il primo rally notturno',
+				year: '2026',
+				content: '50ᵃ edizione della SoapBox Rally',
 				active: true,
 				preActive: true,
 				postActive: true
 			},
 			{
 				year: '2027',
-				content: 'Espansione del campionato in Lombardia',
+				content: 'Espansione del campionato nel mondo',
 				active: false,
 				preActive: false,
 				postActive: false

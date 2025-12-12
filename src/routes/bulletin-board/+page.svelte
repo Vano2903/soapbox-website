@@ -36,7 +36,7 @@
 				value: v.name,
 				current: v.name === foundChampionshipDerived.name,
 				disabled: false,
-				icon: v.ongoing ? null : LucideCalendarCheck,
+				icon: new Date(v.endDate) > new Date() ? null : LucideCalendarCheck,
 				iconProps: {}
 			};
 		});

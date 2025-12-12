@@ -47,7 +47,12 @@
 				value: v.name,
 				current: v.name === foundChampionshipDerived.name,
 				disabled: false,
-				icon: isOngoing && isLive ? LucideRadio : isOngoing ? null : LucideCalendarCheck,
+				icon:
+					isOngoing && isLive
+						? LucideRadio
+						: new Date(v.endDate) > new Date()
+							? null
+							: LucideCalendarCheck,
 				iconProps: isOngoing && isLive ? { color: '#e7000b' } : {}
 			};
 		});

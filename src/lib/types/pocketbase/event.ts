@@ -12,7 +12,7 @@ export interface EventBase {
 	name: string;
 	shortName: string;
 	kind: EventKind;
-	startDate: Date;
+	startDate?: Date;
 	endDate?: Date;
 	stages?: StageId[];
 	location: LocationId;

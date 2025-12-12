@@ -193,6 +193,17 @@
 		}
 		return elementsList;
 	}
+
+	// console.log(foundEventDerived?.endDate);
+	// console.log(foundEventDerived?.startDate);
+	// console.log(
+	// 	new Date(foundEventDerived?.endDate ?? foundEventDerived?.startDate ?? new Date()).valueOf()
+	// );
+	// console.log(new Date().valueOf());
+	// console.log(
+	// 	new Date(foundEventDerived?.endDate ?? foundEventDerived?.startDate ?? new Date()).valueOf() >=
+	// 		new Date().valueOf()
+	// );
 </script>
 
 <main class="px-5 pb-16 lg:px-15">
@@ -260,7 +271,7 @@
 					{@html sheetHTML}
 				</div>
 			</section>
-		{:else if new Date(foundEventDerived?.endDate ?? foundEventDerived?.startDate ?? '').valueOf() > new Date().valueOf()}
+		{:else if (foundEventDerived?.endDate ?? foundEventDerived?.startDate) ? new Date(foundEventDerived?.endDate ?? foundEventDerived?.startDate ?? '').valueOf() > new Date().valueOf() : true}
 			<section class="flex flex-col items-center gap-2">
 				<h1 class="text-3xl font-bold">Informazioni Evento:</h1>
 				<div class="flex w-full flex-col gap-2 sm:w-2/3 lg:w-1/2 2xl:w-1/3">

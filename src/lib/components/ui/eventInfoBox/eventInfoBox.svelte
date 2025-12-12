@@ -34,20 +34,25 @@
 			<p class="pb-2 text-sm text-gray-600 lg:text-base xl:text-lg">
 				Campionato {championshipInfo.name}
 			</p>
-			<p class="lg:text-lg xl:text-xl">Mura di Bergamo —</p>
+			<p class="lg:text-lg xl:text-xl">{eventInfo.shortName}</p>
 			<p class="pb-2 text-2xl lg:pb-4 xl:pb-6 xl:text-3xl">
 				{eventInfo.name}
 			</p>
 			<p class="text-gray-700 xl:text-lg">
-				Data: {new Date(eventInfo.startDate).toLocaleDateString()}
+				Data: {eventInfo.startDate
+					? new Date(eventInfo.startDate).toLocaleDateString()
+					: 'Da definirsi'}
 			</p>
 			<p class="pb-6 text-gray-700 tabular-nums xl:pb-6 xl:text-lg">
-				Ora: {new Date(eventInfo.startDate).getHours() < 10
-					? '0' + new Date(eventInfo.startDate).getHours()
-					: new Date(eventInfo.startDate).getHours()}:{new Date(eventInfo.startDate).getMinutes() <
-				10
-					? '0' + new Date(eventInfo.startDate).getMinutes()
-					: new Date(eventInfo.startDate).getMinutes()}
+				Ora: {eventInfo.startDate
+					? (new Date(eventInfo.startDate).getHours() < 10
+							? '0' + new Date(eventInfo.startDate).getHours()
+							: new Date(eventInfo.startDate).getHours()) +
+						':' +
+						(new Date(eventInfo.startDate).getMinutes() < 10
+							? '0' + new Date(eventInfo.startDate).getMinutes()
+							: new Date(eventInfo.startDate).getMinutes())
+					: 'Da definirsi'}
 			</p>
 			<p class="pb-2 text-gray-700 tabular-nums xl:text-lg">
 				<span>
@@ -81,14 +86,21 @@
 			<p class="pb-4 text-2xl">
 				{eventInfo.name}
 			</p>
-			<p class="text-gray-700">Data: {new Date(eventInfo.startDate).toLocaleDateString()}</p>
+			<p class="text-gray-700">
+				Data: {eventInfo.startDate
+					? new Date(eventInfo.startDate).toLocaleDateString()
+					: 'Da definirsi'}
+			</p>
 			<p class="pb-6 text-gray-700 tabular-nums">
-				Ora: {new Date(eventInfo.startDate).getHours() < 10
-					? '0' + new Date(eventInfo.startDate).getHours()
-					: new Date(eventInfo.startDate).getHours()}:{new Date(eventInfo.startDate).getMinutes() <
-				10
-					? '0' + new Date(eventInfo.startDate).getMinutes()
-					: new Date(eventInfo.startDate).getMinutes()}
+				Ora: {eventInfo.startDate
+					? (new Date(eventInfo.startDate).getHours() < 10
+							? '0' + new Date(eventInfo.startDate).getHours()
+							: new Date(eventInfo.startDate).getHours()) +
+						':' +
+						(new Date(eventInfo.startDate).getMinutes() < 10
+							? '0' + new Date(eventInfo.startDate).getMinutes()
+							: new Date(eventInfo.startDate).getMinutes())
+					: 'Da definirsi'}
 			</p>
 			<p class="pb-2 text-gray-700 tabular-nums xl:pb-8 xl:text-lg">
 				<span>

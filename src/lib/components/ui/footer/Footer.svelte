@@ -201,16 +201,27 @@
 		</div>
 	</div>
 	<div class="flex w-full items-center justify-center py-2 pt-4 text-center text-gray-500">
-		<span class="inner-container">
-			Copyright &copy {new Date().getFullYear()} all rights reserved | Made with passion by
-			<a target="_blank" class="underline hover:text-red-600" href="https://github.com/vano2903"
-				>Vano</a
-			>
-			and
-			<a target="_blank" class="underline hover:text-red-600" href="https://github.com/MoraGames"
-				>Mora</a
-			>
-		</span>
+		<div class="group">
+			<span class="inner-container">
+				Copyright &copy {new Date().getFullYear()} all rights reserved | Made by
+
+				<div class="tooltip" data-tip="with ❤️">
+					<!-- <button class="btn">Hover me</button> -->
+					<a target="_blank" class="underline hover:text-red-600" href="https://github.com/vano2903"
+						>Vano</a
+					>
+				</div>
+				and
+				<div class="tooltip" data-tip="with ❤️">
+					<a
+						target="_blank"
+						class="underline hover:text-red-600"
+						href="https://github.com/MoraGames">Mora</a
+					>
+				</div>
+				<!-- <span class="ml-1 opacity-0 transition-opacity group-hover:opacity-100"> with Love </span> -->
+			</span>
+		</div>
 	</div>
 </footer>
 

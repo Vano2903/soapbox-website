@@ -1,69 +1,78 @@
 # x-public_pb_instance_env: &public_pb_instance_env PUBLIC_PB_INSTANCE=${PUBLIC_PB_INSTANCE:-https://pb.bruum.cargoway.cloud}
 
 services:
-  pb:
-    build: './pocketbase'
-    container_name: 'bruum-pb-dev'
-    restart: 'unless-stopped'
-    volumes:
-      - './pocketdb-dev:/app/pb_data'
-    ports:
-      - '8080:8080'
-
-  pb-prod:
-    image: 'ghcr.io/vano2903/soapbox-website-pb:latest'
+  pb-dev:
+    image: "ghcr.io/vano2903/soapbox-website-pb:latest"
     # build: './pocketbase'
-    container_name: 'bruum-pb-prod'
-    restart: 'unless-stopped'
+    container_name: "bruum-pb-dev"
+    restart: "unless-stopped"
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.bruum-pb-prod.rule=Host(`pb.bruum.cargoway.cloud`)'
-      - 'traefik.http.routers.bruum-pb-prod.entrypoints=https'
-      - 'traefik.http.routers.bruum-pb-prod.tls.certresolver=letsencrypt'
-      - 'traefik.http.routers.bruum-pb-prod.tls=true'
-      - 'traefik.http.services.bruum-pb-prod.loadbalancer.server.port=8080'
+      - "traefik.enable=true"
+      - "traefik.http.routers.bruum-pb-dev.rule=Host(`pb.dev.bruum.cargoway.cloud`)"
+      - "traefik.http.routers.bruum-pb-dev.entrypoints=https"
+      - "traefik.http.routers.bruum-pb-dev.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.bruum-pb-dev.tls=true"
+      - "traefik.http.services.bruum-pb-dev.loadbalancer.server.port=8080"
     volumes:
-      - './pocketdb:/app/pb_data'
+      - "./pocketdb-dev:/app/pb_data"
     networks:
       - traefik
 
-  # frontend:
-  #   build:
-  #     context: './'
-  #     dockerfile: 'Dockerfile'
-  #   container_name: 'bruum-frontend-dev'
-  #   restart: 'unless-stopped'
-  #   labels:
-  #     - 'traefik.enable=true'
-  #     - 'traefik.http.routers.bruum-frontend-prod.entrypoints=https'
-  #     - 'traefik.http.routers.bruum-frontend-prod.tls=true'
-  #     - 'traefik.http.routers.bruum-frontend-prod.tls.certresolver=letsencrypt'
-  #     - 'traefik.http.routers.bruum-frontend-prod.rule=Host(`bruum.cargoway.cloud`)'
-  #     - 'traefik.http.services.bruum-frontend-prod.loadbalancer.server.port=3000'
-  #   depends_on:
-  #     - pb
-  #   environment:
-  #     - *public_pb_instance_env
-  #     - GSHEETS_APIKEY=${GSHEETS_APIKEY}
-  #     - GSHEETS_CLIENTID=${GSHEETS_CLIENTID}
+  pb-prod:
+    image: "ghcr.io/vano2903/soapbox-website-pb:latest"
+    # build: './pocketbase'
+    container_name: "bruum-pb-prod"
+    restart: "unless-stopped"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bruum-pb-prod.rule=Host(`pb.bruum.cargoway.cloud`)"
+      - "traefik.http.routers.bruum-pb-prod.entrypoints=https"
+      - "traefik.http.routers.bruum-pb-prod.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.bruum-pb-prod.tls=true"
+      - "traefik.http.services.bruum-pb-prod.loadbalancer.server.port=8080"
+    volumes:
+      - "./pocketdb:/app/pb_data"
+    networks:
+      - traefik
 
   frontend-prod:
-    image: 'ghcr.io/vano2903/soapbox-website:latest'
-    container_name: 'bruum-frontend-prod'
-    restart: 'unless-stopped'
+    image: "ghcr.io/vano2903/soapbox-website:sha-cf26288"
+    container_name: "bruum-frontend-prod"
+    restart: "unless-stopped"
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.bruum-frontend-prod.entrypoints=https'
-      - 'traefik.http.routers.bruum-frontend-prod.tls=true'
-      - 'traefik.http.routers.bruum-frontend-prod.tls.certresolver=letsencrypt'
-      - 'traefik.http.routers.bruum-frontend-prod.rule=Host(`bruum.cargoway.cloud`)'
-      - 'traefik.http.services.bruum-frontend-prod.loadbalancer.server.port=3000'
+      - "traefik.enable=true"
+      - "traefik.http.routers.bruum-frontend-prod.entrypoints=https"
+      - "traefik.http.routers.bruum-frontend-prod.tls=true"
+      - "traefik.http.routers.bruum-frontend-prod.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.bruum-frontend-prod.rule=Host(`bruum.cargoway.cloud`)"
+      - "traefik.http.services.bruum-frontend-prod.loadbalancer.server.port=3000"
     depends_on:
       - pb
     environment:
       # - *public_pb_instance_env
       - PUBLIC_PB_INSTANCE=${PUBLIC_PB_INSTANCE:-https://pb.bruum.cargoway.cloud}
       - PUBLIC_BASE_URL=${PUBLIC_BASE_URL:-https://bruum.cargoway.cloud}
+      - GSHEETS_APIKEY=${GSHEETS_APIKEY}
+      - GSHEETS_CLIENTID=${GSHEETS_CLIENTID}
+    networks:
+      - traefik
+  frontend-dev:
+    image: "ghcr.io/vano2903/soapbox-website:latest"
+    container_name: "bruum-frontend-dev"
+    restart: "unless-stopped"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bruum-frontend-dev.entrypoints=https"
+      - "traefik.http.routers.bruum-frontend-dev.tls=true"
+      - "traefik.http.routers.bruum-frontend-dev.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.bruum-frontend-dev.rule=Host(`dev.bruum.cargoway.cloud`)"
+      - "traefik.http.services.bruum-frontend-dev.loadbalancer.server.port=3000"
+    depends_on:
+      - pb-dev
+    environment:
+      # - *public_pb_instance_env
+      - PUBLIC_PB_INSTANCE=${PUBLIC_PB_INSTANCE:-https://pb.dev.bruum.cargoway.cloud}
+      - PUBLIC_BASE_URL=${PUBLIC_BASE_URL:-https://dev.bruum.cargoway.cloud}
       - GSHEETS_APIKEY=${GSHEETS_APIKEY}
       - GSHEETS_CLIENTID=${GSHEETS_CLIENTID}
     networks:

@@ -1,7 +1,7 @@
-<script lang="ts">
-	import { Carta, MarkdownEditor } from 'carta-md';
+<!-- <script lang="ts">
+	// import { Carta, MarkdownEditor } from 'carta-md';
 	import 'carta-md/default.css'; /* Default theme */
-	import DOMPurify from 'isomorphic-dompurify';
+	// import DOMPurify from 'isomorphic-dompurify';
 
 	const carta = new Carta({
 		sanitizer: DOMPurify.sanitize
@@ -20,4 +20,4 @@
 	} = $props();
 </script>
 
-<MarkdownEditor {carta} bind:value />
+<MarkdownEditor {carta} bind:value /> -->

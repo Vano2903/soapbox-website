@@ -1,6 +1,6 @@
 import { GenderKind, UserVisiblityKind } from '$types/pocketbase/user';
 import CodiceFiscale from 'codice-fiscale-js';
-import { z } from 'zod';
+import { z } from 'zod/v3';
 
 // const MEGA5 = 5000000;
 const MEGA2 = 2000000;

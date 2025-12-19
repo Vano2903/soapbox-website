@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v3';
 
 // const MEGA5 = 5000000;
 const MEGA2 = 2000000;
@@ -12,11 +12,12 @@ export const teamSchema = z.object({
 		})
 		.max(60, 'Il nome del team deve avere al massimo 60 caratteri'),
 	bio: z.optional(
-		z.string({
-			required_error: 'La descrizione del team è obbligatoria',
-			invalid_type_error: 'La descrizione del team deve essere una stringa'
-		})
-		.max(1000, 'La descrizione del team deve avere al massimo 1000 caratteri')
+		z
+			.string({
+				required_error: 'La descrizione del team è obbligatoria',
+				invalid_type_error: 'La descrizione del team deve essere una stringa'
+			})
+			.max(1000, 'La descrizione del team deve avere al massimo 1000 caratteri')
 	),
 	// sponsors: z.optional(
 	// 	z.array(

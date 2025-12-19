@@ -4,10 +4,10 @@
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { teamSchema } from '$lib/schemas/teamSchema';
 	import ImageCropper from '$components/imageCropper/imageCropper.svelte';
+	import { env } from '$env/dynamic/public';
+	
 	const { data } = $props();
 	const { fileUrls } = data;
-	import { env } from '$env/dynamic/public';
-
 	const { form, errors, message, constraints, enhance } = superForm(data.form, {
 		dataType: 'json',
 		validators: zod(teamSchema)
@@ -60,30 +60,38 @@
 	$effect(() => {
 		if (fileUrls) {
 			if (fileUrls.logoOriginal) {
-				createFile(fileUrls.logoOriginal, 'image/png', 'logo.png').then((file) => {
+				const fileType = fileUrls.logoOriginal.split(".").pop()?.toLowerCase() || 'png';
+				createFile(fileUrls.logoOriginal, `image/${fileType}`, `logo.${fileType}`).then((file) => {
 					if (file) {
 						$logo = file;
+						console.log("logo file created",file);
 					}
 				});
 			}
 			if (fileUrls.bannerOriginal) {
-				createFile(fileUrls.bannerOriginal, 'image/png', 'banner.png').then((file) => {
+				const fileType = fileUrls.bannerOriginal.split(".").pop()?.toLowerCase() || 'png';
+				createFile(fileUrls.bannerOriginal, `image/${fileType}`, `banner.${fileType}`).then((file) => {
 					if (file) {
 						$banner = file;
+						console.log("banner file created",file);
 					}
 				});
 			}
 			if (fileUrls.logoCropped) {
-				createFile(fileUrls.logoCropped, 'image/png', 'logo-cropped.png').then((file) => {
+				const fileType = fileUrls.logoCropped.split(".").pop()?.toLowerCase() || 'png';
+				createFile(fileUrls.logoCropped, `image/${fileType}`, `logo-cropped.${fileType}`).then((file) => {
 					if (file) {
 						$logoCropped = file;
+						console.log("logo cropped file created",file);
 					}
 				});
 			}
 			if (fileUrls.bannerCropped) {
-				createFile(fileUrls.bannerCropped, 'image/png', 'banner-cropped.png').then((file) => {
+				const fileType = fileUrls.bannerCropped.split(".").pop()?.toLowerCase() || 'png';
+				createFile(fileUrls.bannerCropped, `image/${fileType}`, `banner-cropped.${fileType}`).then((file) => {
 					if (file) {
 						$bannerCropped = file;
+						console.log("banner cropped file created",file);
 					}
 				});
 			}
@@ -199,7 +207,10 @@
 				confirmed={!!$logoCropped}
 				label="Carica un logo per il tuo team"
 				constraints={{ required: false }}
-				errors={$errors.logoOriginal}
+				errors={[
+					...(Array.isArray($errors.logoOriginal) ? $errors.logoOriginal : ($errors.logoOriginal?._errors ?? [])),
+					...(Array.isArray($errors.logoCropped) ? $errors.logoCropped : ($errors.logoCropped?._errors ?? []))
+				]}
 				bind:cropped={$logoCropped}
 				bind:pixels={$form.logoCroppedInfo}
 				{crop}
@@ -213,7 +224,10 @@
 				confirmed={!!$bannerCropped}
 				label="Carica un immagine di sfondo (banner) per la pagina del tuo team"
 				constraints={{ required: false }}
-				errors={$errors.bannerOriginal}
+				errors={[
+					...(Array.isArray($errors.bannerOriginal) ? $errors.bannerOriginal : ($errors.bannerOriginal?._errors ?? [])),
+					...(Array.isArray($errors.bannerCropped) ? $errors.bannerCropped : ($errors.bannerCropped?._errors ?? []))
+				]}
 				bind:cropped={$bannerCropped}
 				bind:pixels={$form.bannerCroppedInfo}
 				{crop}

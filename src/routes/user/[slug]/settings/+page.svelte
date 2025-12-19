@@ -87,33 +87,42 @@
 		// ... do something with the file or return it
 	}
 
+
 	$effect(() => {
 		if (fileUrls) {
 			if (fileUrls.avatarOriginal) {
-				createFile(fileUrls.avatarOriginal, 'image/png', 'avatar.png').then((file) => {
+				const fileType = fileUrls.avatarOriginal.split(".").pop()?.toLowerCase() || 'png';
+				createFile(fileUrls.avatarOriginal, `image/${fileType}`, `avatar.${fileType}`).then((file) => {
 					if (file) {
 						$avatar = file;
+						console.log("avatar file created",file);
 					}
 				});
 			}
 			if (fileUrls.bannerOriginal) {
-				createFile(fileUrls.bannerOriginal, 'image/png', 'banner.png').then((file) => {
+				const fileType = fileUrls.bannerOriginal.split(".").pop()?.toLowerCase() || 'png';
+				createFile(fileUrls.bannerOriginal, `image/${fileType}`, `banner.${fileType}`).then((file) => {
 					if (file) {
 						$banner = file;
+						console.log("banner file created",file);
 					}
 				});
 			}
 			if (fileUrls.avatarCropped) {
-				createFile(fileUrls.avatarCropped, 'image/png', 'avatar-cropped.png').then((file) => {
+				const fileType = fileUrls.avatarCropped.split(".").pop()?.toLowerCase() || 'png';
+				createFile(fileUrls.avatarCropped, `image/${fileType}`, `avatar-cropped.${fileType}`).then((file) => {
 					if (file) {
 						$avatarCropped = file;
+						console.log("avatar cropped file created",file);
 					}
 				});
 			}
 			if (fileUrls.bannerCropped) {
-				createFile(fileUrls.bannerCropped, 'image/png', 'banner-cropped.png').then((file) => {
+				const fileType = fileUrls.bannerCropped.split(".").pop()?.toLowerCase() || 'png';
+				createFile(fileUrls.bannerCropped, `image/${fileType}`, `banner-cropped.${fileType}`).then((file) => {
 					if (file) {
 						$bannerCropped = file;
+						console.log("banner cropped file created",file);
 					}
 				});
 			}

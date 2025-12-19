@@ -592,7 +592,7 @@
 									<div class="timeline-end invisible w-16"></div>
 									<hr
 										class={timeline.prefix && timeline.prefix.length === 2
-											? `!border-${timeline.prefix.style} !border-0 !border-t-4 !border-${timeline.prefix.color} !bg-transparent`
+											? `border-${timeline.prefix.style} border-0 border-t-4 border-${timeline.prefix.color} bg-transparent`
 											: 'invisible'}
 									/>
 								</li>
@@ -601,7 +601,7 @@
 										<hr
 											class=" {index === 0
 												? timeline.prefix
-													? `!border-${timeline.prefix.style} !border-0 !border-t-4 !border-${timeline.prefix.color} !bg-transparent`
+													? `border-${timeline.prefix.style} border-0 border-t-4 border-${timeline.prefix.color} bg-transparent`
 													: 'hidden'
 												: item.preActive
 													? 'bg-primary'
@@ -638,7 +638,7 @@
 										<hr
 											class=" {index === timeline.items.length - 1
 												? timeline.postfix
-													? `!border-${timeline.postfix.style} !border-0 !border-t-4 !border-${timeline.postfix.color} !bg-transparent`
+													? `border-${timeline.postfix.style} border-0 border-t-4 border-${timeline.postfix.color} bg-transparent`
 													: 'hidden'
 												: item.postActive
 													? 'bg-primary'
@@ -649,7 +649,7 @@
 								<li>
 									<hr
 										class={timeline.postfix && timeline.postfix.length === 2
-											? `!border-${timeline.postfix.style} !border-0 !border-t-4 !border-${timeline.postfix.color} !bg-transparent`
+											? `border-${timeline.postfix.style} border-0 border-t-4 border-${timeline.postfix.color} bg-transparent`
 											: 'invisible'}
 									/>
 									<div class="timeline-start invisible w-16"></div>

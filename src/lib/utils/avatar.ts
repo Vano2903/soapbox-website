@@ -1,6 +1,6 @@
 export function createAvatarUrl(nick: string, size?: 'small' | 'medium' | 'big'): string {
-	let url = 'https://avatar.iran.liara.run/username';
-	url += `?username=${nick}`;
+	let url = 'https://api.dicebear.com/9.x/initials/svg?radius=50';
+	url += `&seed=${nick}`;
 	if (size) {
 		switch (size) {
 			case 'small':

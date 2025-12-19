@@ -9,7 +9,7 @@
 	
 	const { data } = $props();
 	const { fileUrls } = data;
-	const { form, errors, message, constraints, enhance } = superForm(data.form, {
+	const { form, errors, message, constraints, enhance, submitting } = superForm(data.form, {
 		dataType: 'json',
 		validators: zod(teamSchema)
 	});
@@ -257,8 +257,10 @@
 		</fieldset>
 
 		<!-- Submit Button -->
-		<button disabled={$delayed} type="submit" class="btn btn-primary w-full">
+		<button disabled={$delayed || $submitting} type="submit" class="btn btn-primary w-full">
 			<!-- class="mt-8 w-full rounded-lg bg-red-600 py-3 font-medium text-white transition-colors hover:bg-red-700 focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:outline-none" -->
+				 {#if $submitting}<span class="loading loading-spinner"></span>{/if}
+
 			Aggiorna il team
 		</button>
 

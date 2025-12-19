@@ -5,6 +5,7 @@
 	import { teamSchema } from '$lib/schemas/teamSchema';
 	import ImageCropper from '$components/imageCropper/imageCropper.svelte';
 	import { env } from '$env/dynamic/public';
+	import { getFileTypeFromUrl } from '$lib/utils/images.js';
 	
 	const { data } = $props();
 	const { fileUrls } = data;
@@ -54,13 +55,12 @@
 			console.error('Error creating file from URL:', e);
 			return undefined;
 		}
-		// ... do something with the file or return it
 	}
 
 	$effect(() => {
 		if (fileUrls) {
 			if (fileUrls.logoOriginal) {
-				const fileType = fileUrls.logoOriginal.split(".").pop()?.toLowerCase() || 'png';
+				const fileType = getFileTypeFromUrl(fileUrls.logoOriginal);
 				createFile(fileUrls.logoOriginal, `image/${fileType}`, `logo.${fileType}`).then((file) => {
 					if (file) {
 						$logo = file;
@@ -69,7 +69,7 @@
 				});
 			}
 			if (fileUrls.bannerOriginal) {
-				const fileType = fileUrls.bannerOriginal.split(".").pop()?.toLowerCase() || 'png';
+				const fileType = getFileTypeFromUrl(fileUrls.bannerOriginal);
 				createFile(fileUrls.bannerOriginal, `image/${fileType}`, `banner.${fileType}`).then((file) => {
 					if (file) {
 						$banner = file;
@@ -78,7 +78,7 @@
 				});
 			}
 			if (fileUrls.logoCropped) {
-				const fileType = fileUrls.logoCropped.split(".").pop()?.toLowerCase() || 'png';
+				const fileType = getFileTypeFromUrl(fileUrls.logoCropped);
 				createFile(fileUrls.logoCropped, `image/${fileType}`, `logo-cropped.${fileType}`).then((file) => {
 					if (file) {
 						$logoCropped = file;
@@ -87,7 +87,7 @@
 				});
 			}
 			if (fileUrls.bannerCropped) {
-				const fileType = fileUrls.bannerCropped.split(".").pop()?.toLowerCase() || 'png';
+				const fileType = getFileTypeFromUrl(fileUrls.bannerCropped);
 				createFile(fileUrls.bannerCropped, `image/${fileType}`, `banner-cropped.${fileType}`).then((file) => {
 					if (file) {
 						$bannerCropped = file;

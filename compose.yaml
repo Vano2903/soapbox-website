@@ -70,6 +70,8 @@ services:
       - "traefik.http.services.bruum-frontend-dev.loadbalancer.server.port=3000"
     depends_on:
       - pb-dev
+    env_file:
+      - .env.dev
     environment:
       # - *public_pb_instance_env
       - PUBLIC_PB_INSTANCE=${PUBLIC_PB_INSTANCE:-https://pb.dev.bruum.cargoway.cloud}

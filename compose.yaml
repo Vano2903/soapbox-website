@@ -72,12 +72,12 @@ services:
       - pb-dev
     env_file:
       - .env.dev
-    environment:
-      # - *public_pb_instance_env
-      - PUBLIC_PB_INSTANCE=${PUBLIC_PB_INSTANCE:-https://pb.dev.bruum.cargoway.cloud}
-      - PUBLIC_BASE_URL=${PUBLIC_BASE_URL:-https://dev.bruum.cargoway.cloud}
-      - GSHEETS_APIKEY=${GSHEETS_APIKEY}
-      - GSHEETS_CLIENTID=${GSHEETS_CLIENTID}
+    # environment:
+    # - *public_pb_instance_env
+    # - PUBLIC_PB_INSTANCE=${PUBLIC_PB_INSTANCE:-https://pb.dev.bruum.cargoway.cloud}
+    # - PUBLIC_BASE_URL=${PUBLIC_BASE_URL:-https://dev.bruum.cargoway.cloud}
+    # - GSHEETS_APIKEY=${GSHEETS_APIKEY}
+    # - GSHEETS_CLIENTID=${GSHEETS_CLIENTID}
     networks:
       - traefik
 

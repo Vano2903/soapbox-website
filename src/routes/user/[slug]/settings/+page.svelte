@@ -10,6 +10,7 @@
 	import { goto, invalidateAll } from '$app/navigation';
 	import ImageCropper from '$components/imageCropper/imageCropper.svelte';
 	import { env } from '$env/dynamic/public';
+	import { getFileTypeFromUrl } from '$lib/utils/images.js';
 
 	const { data } = $props();
 	const { countryPhoneCodes, fileUrls } = data;
@@ -91,7 +92,7 @@
 	$effect(() => {
 		if (fileUrls) {
 			if (fileUrls.avatarOriginal) {
-				const fileType = fileUrls.avatarOriginal.split(".").pop()?.toLowerCase() || 'png';
+				const fileType = getFileTypeFromUrl(fileUrls.avatarOriginal);
 				createFile(fileUrls.avatarOriginal, `image/${fileType}`, `avatar.${fileType}`).then((file) => {
 					if (file) {
 						$avatar = file;
@@ -100,7 +101,7 @@
 				});
 			}
 			if (fileUrls.bannerOriginal) {
-				const fileType = fileUrls.bannerOriginal.split(".").pop()?.toLowerCase() || 'png';
+				const fileType = getFileTypeFromUrl(fileUrls.bannerOriginal);
 				createFile(fileUrls.bannerOriginal, `image/${fileType}`, `banner.${fileType}`).then((file) => {
 					if (file) {
 						$banner = file;
@@ -109,7 +110,7 @@
 				});
 			}
 			if (fileUrls.avatarCropped) {
-				const fileType = fileUrls.avatarCropped.split(".").pop()?.toLowerCase() || 'png';
+				const fileType = getFileTypeFromUrl(fileUrls.avatarCropped);
 				createFile(fileUrls.avatarCropped, `image/${fileType}`, `avatar-cropped.${fileType}`).then((file) => {
 					if (file) {
 						$avatarCropped = file;
@@ -118,7 +119,7 @@
 				});
 			}
 			if (fileUrls.bannerCropped) {
-				const fileType = fileUrls.bannerCropped.split(".").pop()?.toLowerCase() || 'png';
+				const fileType = getFileTypeFromUrl(fileUrls.bannerCropped);
 				createFile(fileUrls.bannerCropped, `image/${fileType}`, `banner-cropped.${fileType}`).then((file) => {
 					if (file) {
 						$bannerCropped = file;

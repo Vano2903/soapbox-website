@@ -8,7 +8,7 @@
 		name,
 		value = $bindable(),
 		type = 'file',
-		accepts = ['image/png', 'image/jpeg'],
+		accepts = ['image/png', 'image/jpeg','image/webp'],
 		label,
 		errors,
 		constraints,
@@ -116,7 +116,7 @@
 			accept={accepts.join(', ')}
 			aria-invalid={errors ? 'true' : undefined}
 			bind:files={value}
-			class="input w-full"
+			class="file-input w-full"
 			{name}
 			{...rest}
 		/>

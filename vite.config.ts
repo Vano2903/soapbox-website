@@ -17,7 +17,6 @@ export default defineConfig({
 				plugins: [{ name: 'removeViewBox' }, { name: 'sortAttrs' }]
 			}
 		}),
-		,
 		enhancedImages()
 	],
 	// server: {

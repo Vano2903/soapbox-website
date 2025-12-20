@@ -42,14 +42,14 @@
 			<div class="embla__slide {classes}">
 				{#if (page.layout ?? defaultCarouselPage.layout) === 'both'}
 					<img
-						class="hidden h-full w-full object-none sm:aspect-video sm:object-cover
+						class="hidden h-full w-full object-cover
 								{page.breakpoint ?? defaultCarouselPage.breakpoint}:block"
 						loading={page.loading}
 						src={page.horizontal?.src}
 						alt={page.horizontal?.alt}
 					/>
 					<img
-						class="block h-full w-full object-none sm:aspect-video sm:object-cover
+						class="block h-full w-full object-cover
 								{page.breakpoint ?? defaultCarouselPage.breakpoint}:hidden"
 						loading={page.loading}
 						src={page.vertical?.src}
@@ -57,14 +57,14 @@
 					/>
 				{:else if (page.layout ?? defaultCarouselPage.layout) === 'horizontal'}
 					<img
-						class="h-full w-full object-none sm:aspect-video sm:object-cover"
+						class="h-full w-full object-cover"
 						loading={page.loading}
 						src={page.horizontal?.src}
 						alt={page.horizontal?.alt}
 					/>
 				{:else if (page.layout ?? defaultCarouselPage.layout) === 'vertical'}
 					<img
-						class="h-full w-full object-none sm:aspect-video sm:object-cover"
+						class="h-full w-full object-cover"
 						loading={page.loading}
 						src={page.vertical?.src}
 						alt={page.vertical?.alt}
@@ -93,14 +93,16 @@
 <style>
 	.embla {
 		overflow: hidden;
+		height: 50vh;
 	}
 	.embla__container {
-		max-height: calc(100vh - 72px);
+		height: 100%;
 		display: flex;
 	}
 	.embla__slide {
 		flex: 0 0 100%;
 		min-width: 0;
+		height: 100%;
 	}
 
 	.embla__controls {

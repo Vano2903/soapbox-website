@@ -27,7 +27,7 @@ services:
       - "traefik.http.routers.bruum-frontend-prod.entrypoints=https"
       - "traefik.http.routers.bruum-frontend-prod.tls=true"
       - "traefik.http.routers.bruum-frontend-prod.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.bruum-frontend-prod.rule=Host(`bruum.cargoway.cloud`)"
+      - "traefik.http.routers.bruum-frontend-prod.rule=Host(`bruum.cargoway.cloud`) || Host(`www.bruum.cargoway.cloud`) || Host(`boxrally.eu`) || Host(`www.boxrally.eu`)"
       - "traefik.http.services.bruum-frontend-prod.loadbalancer.server.port=3000"
     depends_on:
       - pb-prod

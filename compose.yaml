@@ -24,7 +24,7 @@ services:
     restart: "unless-stopped"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bruum-frontend-prod.entrypoints=https-boxrally"
+      - "traefik.http.routers.bruum-frontend-prod.entrypoints=https"
       - "traefik.http.routers.bruum-frontend-prod.tls=true"
       - "traefik.http.routers.bruum-frontend-prod.tls.certresolver=httpcert"
       - "traefik.http.routers.bruum-frontend-prod.rule=Host(`www.boxrally.eu`)"

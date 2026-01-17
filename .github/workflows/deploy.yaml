@@ -5,6 +5,11 @@ on:
     branches: 
       - master
       - dev
+    paths-ignore:
+      - compose.yaml
+      - README.md
+      - todo.md
+      - .env.example
 
 env:
   REGISTRY: ghcr.io

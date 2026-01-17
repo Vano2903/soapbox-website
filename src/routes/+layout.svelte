@@ -30,11 +30,11 @@
 	const baseUrl = 'https://' + (env.PUBLIC_BASE_URL ?? 'localhost:5173');
 	const url = new URL(page.url.pathname, baseUrl).toString();
 	const image = ogInfo?.image ?? new URL('images/carousel/8.jpeg', baseUrl).toString();
-	const siteName = 'BoxRally - Sito ufficiale delle SoapBox';
-	const title = ogInfo?.title ?? 'Il Garage del SoapBox Rally Club';
+	const siteName = 'BoxRally - Sito ufficiale';
+	const title = ogInfo?.title ?? 'Il Garage delle SoapBox';
 	const description =
 		ogInfo?.description ??
-		'Scopri tutti gli eventi, news, foto e video del gruppo sportivo SoapBox Rally: il downhill fatto in legno e su misura.';
+		'Scopri tutti gli eventi, news, foto e video del gruppo sportivo BoxRally: il downhill fatto in legno e su misura.';
 </script>
 
 <svelte:head>

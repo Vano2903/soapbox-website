@@ -173,7 +173,7 @@
 
 				<!-- Team Alias -->
 				<fieldset class="fieldset flex-1 text-base">
-					<legend class="fieldset-legend">Nome del team per questa gara</legend>
+					<legend class="fieldset-legend">Nome del team per questo evento</legend>
 					<input
 						{...$constraints.teamAlias}
 						bind:value={$form.teamAlias}
@@ -182,7 +182,7 @@
 						aria-invalid={$errors.teamAlias ? 'true' : undefined}
 						type="text"
 						name="teamAlias"
-						placeholder="Nome del team per la gara"
+						placeholder="Nome del team per l'evento"
 					/>
 					{#if $errors.teamAlias}
 						<p class="fieldset-label text-error alert-soft">{$errors.teamAlias}</p>

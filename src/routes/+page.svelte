@@ -696,7 +696,7 @@
 				<div class="m-auto grid max-w-5/6 gap-6 md:max-w-full md:grid-cols-3 lg:max-w-4/5">
 					<div class="flex flex-col justify-between rounded-lg bg-neutral-100 p-4 shadow-md">
 						<p class="text-sm italic">
-							"Questa gara è stata fantastica, ci siamo superati sia come impegno di squadra, sia
+							"Questa corsa è stata fantastica, ci siamo superati sia come impegno di squadra, sia
 							come fiducia tra fratelli."
 						</p>
 						<p class="mt-4 text-right">
@@ -723,7 +723,7 @@
 					</div>
 					<div class="flex flex-col justify-between rounded-lg bg-neutral-100 p-4 shadow-md">
 						<p class="text-sm italic">
-							"Organizzare questa gara è come costruire una macchina a mano ogni anno: la fatica è
+							"Organizzare questi eventi è come costruire una macchina a mano ogni anno: la fatica è
 							tanta, ma quando la vedi correre... non puoi fare altro che sorridere."
 						</p>
 						<p class="mt-4 text-right">

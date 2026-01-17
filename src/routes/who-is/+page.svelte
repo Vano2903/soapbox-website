@@ -6,7 +6,7 @@
 		{
 			title: 'La nostra passione',
 			content:
-				'Siamo appassionati costruttori di Soap-Box: veicoli senza motore in legno, nati da un regolamento tecnico di 70 anni fa. Ogni mezzo è unico, frutto di teorie strampalate su aerodinamica e velocità, realizzato con materiali semplici e tanta inventiva. Non siamo professionisti, ma miglioriamo le nostre creazioni gara dopo gara, trasformando libri maltrattati da studenti in ispirazione. L’adrenalina della discesa si unisce alla gioia di progettare opere in continua evoluzione.',
+				'Siamo appassionati costruttori di Soap-Box: veicoli senza motore in legno, nati da un regolamento tecnico di 70 anni fa. Ogni mezzo è unico, frutto di teorie strampalate su aerodinamica e velocità, realizzato con materiali semplici e tanta inventiva. Non siamo professionisti, ma miglioriamo le nostre creazioni dopo ogni sfida, trasformando libri maltrattati da studenti in ispirazione. L’adrenalina della discesa si unisce alla gioia di progettare opere in continua evoluzione.',
 			pages: [
 				{
 					layout: 'horizontal',

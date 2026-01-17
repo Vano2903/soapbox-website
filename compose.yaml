@@ -39,6 +39,8 @@ services:
       - GSHEETS_CLIENTID=${GSHEETS_CLIENTID}
       - ORIGIN=${ORIGIN}
       - BODY_SIZE_LIMIT=${BODY_SIZE_LIMIT}
+      - PROTOCOL_HEADER=${PROTOCOL_HEADER}
+      - HOST_HEADER=${HOST_HEADER}
     networks:
       - traefik
 

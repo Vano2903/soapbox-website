@@ -119,29 +119,18 @@ export const actions = {
 
 		try {
 			const user = locals.user as User;
-			console.log('user in onboard action', user);
+			console.log('user updateAccount action', user);
 			locals.user = await pb.collection('users').update(user.id, {
-				name: form.data.name,
-				lastName: form.data.lastName,
-				birthDate: form.data.birthDate,
+				...form.data,
 				fiscalCode: form.data.fiscalCode ?? '',
 				phone: `${form.data.prefix}-${form.data.phone}`,
-				gender: form.data.gender,
 
-				visibility: form.data.visibility,
-				nick: form.data.nick,
 				avatar: form.data.avatarOriginal,
 				avatarCropped: form.data.avatarCropped,
 				avatarCrop: form.data.avatarCroppedInfo,
 				banner: form.data.bannerOriginal,
 				bannerCropped: form.data.bannerCropped,
-				bannerCrop: form.data.bannerCroppedInfo,
-				bio: form.data.bio
-			});
-
-			return message(form, {
-				type: 'success',
-				text: `Profilo aggiornato con successo torna alla<a href="/user/${locals.user?.nick}/dash" class="link">dashboard</a>`
+				bannerCrop: form.data.bannerCroppedInfo
 			});
 		} catch (e) {
 			console.log(e);
@@ -153,6 +142,7 @@ export const actions = {
 				}
 			);
 		}
+		redirect(303, `/user/${locals.user?.nick}/dash`);
 	},
 
 	checkUsername: async ({ request, locals }) => {

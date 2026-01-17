@@ -11,8 +11,6 @@ import { createAvatarUrl } from '$lib/utils/avatar';
 // 	return result;
 // }
 
-
-
 // function createAvatarUrl(name: string, lastname: string = '', gender?: GenderKind): string {
 // 	const baseUrl = 'https://avatar.iran.liara.run/public';
 // 	// const initials = `${name.charAt(0).toUpperCase()}${lastname.charAt(0).toUpperCase()}`;
@@ -77,6 +75,8 @@ const authentication: Handle = async ({ event, resolve }) => {
 
 			event.locals.user.created = new Date(event.locals.user.created);
 			event.locals.user.updated = new Date(event.locals.user.updated);
+			if (event.locals.user.birthDate)
+				event.locals.user.birthDate = new Date(event.locals.user.birthDate);
 		}
 	}
 

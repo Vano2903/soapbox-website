@@ -1,17 +1,18 @@
 <script lang="ts">
 	import '../app.css';
 
+	import  { Toaster } from 'svelte-french-toast';
 	import { ModeWatcher } from 'mode-watcher';
+
+
 	import Footer from '$components/footer/Footer.svelte';
 	import Navbar2 from '$components/navbar/Navbar2.svelte';
 	import type { User } from '$types/pocketbase/user';
 	import { env } from '$env/dynamic/public';
-	import type { Snippet } from 'svelte';
+	import { type Snippet } from 'svelte';
 
 	import { page } from '$app/state';
 
-	// import Navbar from '$components/navbar/Navbar.svelte';
-	// import Navbar3 from '$components/navbar/Navbar3.svelte';
 
 	interface Props {
 		children: Snippet;
@@ -64,6 +65,7 @@
 <div class="app">
 	<!-- <Navbar3 /> -->
 	<!-- <hr class="py-10" /> -->
+	 <Toaster position="bottom-right"  />
 	<header class="sticky top-0 z-50">
 		<Navbar2 user={data.user} />
 	</header>

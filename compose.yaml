@@ -37,6 +37,8 @@ services:
       - PUBLIC_BASE_URL=${PUBLIC_BASE_URL:-https://bruum.cargoway.cloud}
       - GSHEETS_APIKEY=${GSHEETS_APIKEY}
       - GSHEETS_CLIENTID=${GSHEETS_CLIENTID}
+      - ORIGIN=${ORIGIN}
+      - BODY_SIZE_LIMIT=${BODY_SIZE_LIMIT}
     networks:
       - traefik
 

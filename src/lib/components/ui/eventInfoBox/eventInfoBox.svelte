@@ -27,7 +27,7 @@
 				{/if}
 			</span>
 
-			<hr class="mt-2 mb-6 h-0.75 w-1/3 max-w-70 rounded-sm border-0 bg-red-600 lg:mb-8 xl:mb-10" />
+			<hr class="mt-2 mb-4 h-0.75 w-1/2 max-w-75 rounded-sm border-0 bg-red-600 lg:mb-6 xl:mb-8" />
 		</div>
 
 		<div>

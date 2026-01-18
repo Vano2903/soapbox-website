@@ -44,6 +44,8 @@
 		href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
 		rel="stylesheet"
 	/>
+	
+    <script async defer data-website-id="213fa50b-0804-47f5-862c-09a060f8ed52" src="/stats"></script>
 	<title>{title}</title>
 	<meta name="description" content={description} />
 	<meta property="og:title" content={title} />

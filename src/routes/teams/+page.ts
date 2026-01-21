@@ -4,7 +4,7 @@ import { createPocketBaseInstance } from '$lib/utils/pocketbase';
 import type { Team } from '$types/pocketbase/team';
 import { createAvatarUrl } from '$lib/utils/avatar';
 
-export const load: Load = async ({ url }) => {
+export const load: Load = async ({ url, fetch }) => {
 	console.log('Loading team with slug:', url);
 
 	let error: string | null = null;
@@ -30,7 +30,8 @@ export const load: Load = async ({ url }) => {
 	}
 
 	const paginatedTeams = await pb.collection('teams').getList(1, 10, {
-		sort: 'slug'
+		sort: 'slug',
+		fetch: fetch
 	});
 
 	const expandedTeams = paginatedTeams.items.map((team: Team) => {

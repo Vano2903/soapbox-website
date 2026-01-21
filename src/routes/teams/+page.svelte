@@ -3,6 +3,7 @@
 	import type { ListResult } from 'pocketbase';
 	import type { Team } from '$types/pocketbase/team';
 	import EntityCard from '$components/entityCard/entityCard.svelte';
+	import { createAvatarUrl } from '$lib/utils/avatar';
 
 	interface Props {
 		data: {
@@ -14,16 +15,25 @@
 	}
 
 	const { data }: Props = $props();
-	let { pb, error } = data;
-	let paginatedTeams = $state(data.paginatedTeams);
-	let expandedTeams = $state(data.expandedTeams);
+	let { pb, error } = $derived(data);
+	let paginatedTeams = $derived(data.paginatedTeams);
+	let expandedTeams = $derived(data.expandedTeams);
 
-	async function fetchnNewPage(page: number) {
+	async function fetchNewPage(page: number) {
 		if (pb) {
+			console.log('fetching page', page);
+
 			const result = await pb.collection('teams').getList(page, 10, {
-				sort: 'nick'
+				sort: 'slug'
 			});
 			paginatedTeams = result;
+
+			expandedTeams = paginatedTeams.items.map((team: Team) => {
+				team.logoCropped =
+					pb.files.getURL(team, team.logoCropped || '') || createAvatarUrl(team.slug, 'small');
+				team.bannerCropped = pb.files.getURL(team, team.bannerCropped || '') || undefined;
+				return team;
+			});
 		}
 	}
 
@@ -101,7 +111,7 @@
 			<button
 				class="join-item btn"
 				class:btn-active={i === paginatedTeams.page}
-				onclick={() => fetchnNewPage(i + 1)}>{i + 1}</button
+				onclick={() => fetchNewPage(i + 1)}>{i + 1}</button
 			>
 		{/each}
 	</div>

@@ -11,7 +11,7 @@ export const load: ServerLoad = async ({ locals, params, url }) => {
 	}
 
 	const [foundUser, err] = (await goCatch(
-		pb.collection('users').getFirstListItem(`nick="${params.slug}"`)
+		pb.collection(user?.nick === params.slug ? 'users' : 'publicUserInfo').getFirstListItem(`nick="${params.slug}"`)
 	)) as [UserPublicInfo, undefined] | [undefined, Error];
 
 	if (err || !foundUser) {

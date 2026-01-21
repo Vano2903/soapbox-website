@@ -7,6 +7,7 @@
 	import type { ListResult } from 'pocketbase';
 	import { onMount } from 'svelte';
 	import EntityCard from '$components/entityCard/entityCard.svelte';
+	import { createAvatarUrl } from '$lib/utils/avatar';
 
 	interface Props {
 		data: {
@@ -18,16 +19,29 @@
 	}
 
 	const { data }: Props = $props();
-	let { pb, error } = data;
-	let paginatedUsers = $state(data.paginatedUsers);
-	let expandedUsers = $state(data.expandedUsers);
+	let { pb, error } = $derived(data);
+	let paginatedUsers = $derived(data.paginatedUsers);
+	let expandedUsers = $derived(data.expandedUsers);
 
-	async function fetchnNewPage(page: number) {
+	console.log('fetched users', paginatedUsers);
+
+	async function fetchNewPage(page: number) {
 		if (pb) {
+			console.log('fetching page', page);
 			const result = await pb.collection('publicUserInfo').getList(page, 10, {
 				sort: 'nick'
 			});
+			console.log('result', result);
 			paginatedUsers = result;
+			console.log('fetched users', paginatedUsers);
+
+			expandedUsers = paginatedUsers.items.map((user: UserPublicInfo) => {
+				user.avatarCropped =
+					pb.files.getURL(user, user.avatarCropped || '', { thumb: '64x0' }) ||
+					createAvatarUrl(user.nick, 'small');
+				user.bannerCropped = pb.files.getURL(user, user.bannerCropped || '') || undefined;
+				return user;
+			});
 		}
 	}
 
@@ -105,7 +119,7 @@
 			<button
 				class="join-item btn"
 				class:btn-active={i === paginatedUsers.page}
-				onclick={() => fetchnNewPage(i + 1)}>{i + 1}</button
+				onclick={() => fetchNewPage(i + 1)}>{i + 1}</button
 			>
 		{/each}
 	</div>

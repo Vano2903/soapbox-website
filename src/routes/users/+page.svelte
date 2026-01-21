@@ -23,17 +23,12 @@
 	let paginatedUsers = $derived(data.paginatedUsers);
 	let expandedUsers = $derived(data.expandedUsers);
 
-	console.log('fetched users', paginatedUsers);
-
 	async function fetchNewPage(page: number) {
 		if (pb) {
-			console.log('fetching page', page);
 			const result = await pb.collection('publicUserInfo').getList(page, 10, {
 				sort: 'nick'
 			});
-			console.log('result', result);
 			paginatedUsers = result;
-			console.log('fetched users', paginatedUsers);
 
 			expandedUsers = paginatedUsers.items.map((user: UserPublicInfo) => {
 				user.avatarCropped =

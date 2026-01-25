@@ -19,9 +19,11 @@ export interface TrackBase {
 	startingAltitude: number;
 	arrivalAltitude: number;
 	differenceAltitude: number;
+	maxAltitude: number;
+	minAltitude: number;
 	rightTurns: number;
 	leftTurns: number;
-	surface?: SurfaceInfo;
+	surfaces?: SurfaceInfo;
 	stages?: StageId[];
 	created: Date;
 	updated: Date;

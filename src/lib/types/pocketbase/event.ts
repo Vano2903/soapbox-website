@@ -24,6 +24,7 @@ export interface EventBase {
 	results: ResultId[];
 	cover?: string;
 	poster?: string;
+	regulation?: string;
 	championship: ChampionshipId;
 	created: Date;
 	updated: Date;

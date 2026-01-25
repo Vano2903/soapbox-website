@@ -6,7 +6,7 @@ import type { TypedPocketBase } from '$types/pocketbase/pocketbase';
 import type { ChampionshipExpand } from '$types/pocketbase/championship';
 import { fail } from '@sveltejs/kit';
 import type { EventExpand } from '$types/pocketbase/event';
-import type { EventParticipation } from '$types/pocketbase/eventParticipation';
+import type { EventParticipationExpand } from '$types/pocketbase/eventParticipation';
 
 export const load: PageLoad = async ({ data, url, fetch }) => {
 	console.log('Loading championships:\n > data = ', data, '\n > url = ', url);
@@ -31,6 +31,7 @@ export const load: PageLoad = async ({ data, url, fetch }) => {
 		foundChampionship = await pb
 			.collection('championships')
 			.getFirstListItem(`id="${championshipsList.at(researchChampionshipIndex)?.id}"`, {
+				fetch: fetch,
 				expand: 'events'
 			});
 	} catch (err) {
@@ -54,7 +55,8 @@ export const load: PageLoad = async ({ data, url, fetch }) => {
 			foundEvent = await pb
 				.collection('events')
 				.getFirstListItem(`id="${researchedEvent.id}"`, {
-					expand: 'results,stages,location'
+					fetch: fetch,
+					expand: 'results,stages,location,track'
 				});
 		} catch (err) {
 			console.error('Event not found: ', err);
@@ -71,23 +73,24 @@ export const load: PageLoad = async ({ data, url, fetch }) => {
 	if (foundEvent?.poster) {
 		foundEvent.poster = pb.files.getURL(foundEvent, foundEvent.poster);
 	}
+	if (foundEvent?.regulation) {
+		foundEvent.regulation = pb.files.getURL(foundEvent, foundEvent.regulation);
+	}
 
 	// retrieve the event participations
-	let eventParticipations: EventParticipation[];
+	let eventParticipations: EventParticipationExpand[];
 	try {
 		eventParticipations = await pb
 			.collection('eventParticipations')
 			.getFullList({
+				fetch: fetch,
 				filter: `event="${foundEvent.id}"`,
+				expand: 'team'
 			});
 	} catch (err) {
 		console.error('Event participations not found: ', err);
 		throw fail(500);
 	}
-
-	// if (foundEvent.stages && foundEvent.stages.length > 0) {
-
-	// }
 
 	// 	let eventResults;
 	// if (responseEventResults) {

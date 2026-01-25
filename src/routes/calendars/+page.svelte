@@ -176,6 +176,12 @@
 											Iscrizioni chiuse
 										{/if}
 									</p>
+									<a
+										href={`/events?${new URLSearchParams(`championship=${foundChampionshipDerived.name}&event=${event.shortName}`).toString()}`}
+										class="btn btn-neutral text-foreground max-w-5/12 text-xs md:text-lg"
+									>
+										Info
+									</a>
 								</div>
 							</div>
 							<hr

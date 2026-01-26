@@ -27,6 +27,7 @@ export interface EventBase {
 	cover?: string;
 	poster?: string;
 	regulation?: string;
+	map?: string;
 	championship: ChampionshipId;
 	created: Date;
 	updated: Date;

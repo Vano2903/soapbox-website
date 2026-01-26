@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { ChampionshipNonExpand } from '$types/pocketbase/championship.js';
 	import ElementSelection from '$components/elementSelection/elementSelection.svelte';
-	import { LucideCalendarCheck, LucideRadio, LucideLock } from 'lucide-svelte';
+	import { LucideCalendarCheck, LucideRadio, LucideLock, UserRoundPlus, Info } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
 
 	// constant that defines how many elements to show on each side of the current element of the ElementSelection component
@@ -158,7 +158,12 @@
 											href={`/enroll?${new URLSearchParams(`championship=${foundChampionshipDerived.name}&event=${event.shortName}`).toString()}`}
 											class="btn btn-error text-foreground max-w-5/12 text-xs md:text-lg"
 										>
-											Iscriviti
+											<UserRoundPlus /> Iscriviti
+										</a>
+										<a
+											href={`/events?${new URLSearchParams(`championship=${foundChampionshipDerived.name}&event=${event.shortName}`).toString()}`}
+											class="btn btn-neutral text-foreground max-w-5/12 text-xs md:text-lg">
+											<Info /> Info
 										</a>
 									{:else}
 										<button
@@ -166,6 +171,11 @@
 										>
 											Iscriviti
 										</button>
+										<a
+											href={`/events?${new URLSearchParams(`championship=${foundChampionshipDerived.name}&event=${event.shortName}`).toString()}`}
+											class="btn btn-neutral text-foreground max-w-5/12 text-xs md:text-lg">
+											<Info /> Info
+										</a>
 									{/if}
 									<p class="mt-2 text-xs text-gray-500 md:text-base">
 										{#if event.subscriptionsOpen}
@@ -176,12 +186,6 @@
 											Iscrizioni chiuse
 										{/if}
 									</p>
-									<a
-										href={`/events?${new URLSearchParams(`championship=${foundChampionshipDerived.name}&event=${event.shortName}`).toString()}`}
-										class="btn btn-neutral text-foreground max-w-5/12 text-xs md:text-lg"
-									>
-										Info
-									</a>
 								</div>
 							</div>
 							<hr

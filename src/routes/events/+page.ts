@@ -76,6 +76,9 @@ export const load: PageLoad = async ({ data, url, fetch }) => {
 	if (foundEvent?.regulation) {
 		foundEvent.regulation = pb.files.getURL(foundEvent, foundEvent.regulation);
 	}
+	if (foundEvent?.map) {
+		foundEvent.map = pb.files.getURL(foundEvent, foundEvent.map);
+	}
 
 	// retrieve the event participations
 	let eventParticipations: EventParticipationExpand[];
@@ -91,32 +94,6 @@ export const load: PageLoad = async ({ data, url, fetch }) => {
 		console.error('Event participations not found: ', err);
 		throw fail(500);
 	}
-
-	// 	let eventResults;
-	// if (responseEventResults) {
-	// 	eventResults = responseEventResults.map((result) => {
-	// 		return {
-	// 			publicUrl: pb.files.getURL(result, result.leaderboard),
-	// 			data: {
-	// 				...result,
-	// 				formattedCreated: new Date(result.created).toLocaleDateString('it-IT', {
-	// 					year: 'numeric',
-	// 					month: '2-digit',
-	// 					day: '2-digit',
-	// 					hour: '2-digit',
-	// 					minute: '2-digit'
-	// 				}),
-	// 				formattedUpdated: new Date(result.updated).toLocaleDateString('it-IT', {
-	// 					year: 'numeric',
-	// 					month: '2-digit',
-	// 					day: '2-digit',
-	// 					hour: '2-digit',
-	// 					minute: '2-digit'
-	// 				})
-	// 			}
-	// 		};
-	// 	});
-	// }
 
 	return { championshipsList, foundChampionship, foundEvent, eventParticipations };
 };

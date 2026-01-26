@@ -8,6 +8,11 @@ export interface SurfaceInfo {
 	asphalt?: number;
 }
 
+export interface CoordinatesInfo {
+	lon?: number;
+	lat?: number;
+}
+
 export interface Track {
 	id: TrackId;
 	name: string;
@@ -22,6 +27,7 @@ export interface Track {
 	rightTurns: number;
 	leftTurns: number;
 	surfaces?: SurfaceInfo;
+	coordinates?: CoordinatesInfo;
 	created: Date;
 	updated: Date;
 }

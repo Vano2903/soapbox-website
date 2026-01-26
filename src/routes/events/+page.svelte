@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { LeaderboardType } from '$types/pocketbase/results';
 	import { CategoryKind } from '$types/pocketbase/eventParticipation';
-	import { ToSurfaceInfoExpandArray } from '$types/surfaceUtils';
+	import { ToSurfaceInfoExpandArray } from '$types/surfaceUtils.js';
 	import { CalendarDays, MapPin, LucideRadio, UserRoundCheck, UserRoundPlus, FileCheck, Map as MapBase, SquarePen, Route, Ruler, Mountain, TriangleRight, ChartSpline } from 'lucide-svelte';
 	import { string } from 'zod';
 
@@ -28,15 +28,8 @@
 	);
 
 	// --- Interactive Map management ---
-	// TODO: Replace trackDetails structure with dynamic values from Track collection in PocketBase
-	let trackDetails = {
-		mapCenter: {
-			lat: 45.70343159802979,
-			lng: 9.662562626595031,
-		}
-	};
 	const mapZoom = 16;
-	const trackMapURL = `https://www.google.com/maps/d/embed?mid=1UhQ2GD9N4TgOZ-KBu2nn7ak-WqbYjuo&hl=it&ll=${trackDetails.mapCenter.lat},${trackDetails.mapCenter.lng}&z=${mapZoom}&noprof=1`;
+	const trackMapURL = $derived(`https://www.google.com/maps/d/embed?mid=1UhQ2GD9N4TgOZ-KBu2nn7ak-WqbYjuo&hl=it&ll=${foundEventDerived.expand.track?.coordinates?.lat},${foundEventDerived.expand.track?.coordinates?.lon}&z=${mapZoom}&noprof=1`);
 	let showInteractiveMap = $state(true);
 </script>
 
@@ -199,7 +192,7 @@
 										<SquarePen class="swap-on h-6 w-6 text-red-600"/>
 									</label>
 								</div>
-								{#if showInteractiveMap}
+								{#if showInteractiveMap && foundEventDerived.expand.track.coordinates}
 									<div class="w-full h-100 rounded-lg mb-4 overflow-hidden bg-neutral-100">
 										<iframe
 										src={trackMapURL}
@@ -212,7 +205,7 @@
 										title="Mappa tracciato"
 										></iframe>
 									</div>
-								{:else if foundEventDerived.map && foundEventDerived.map != ''}
+								{:else if !showInteractiveMap && foundEventDerived.map && foundEventDerived.map != ''}
 									<img 
 										src={foundEventDerived.map}
 										alt="Mappa del tracciato"

@@ -11,6 +11,7 @@ export const isPublicPath = (path: string): boolean => {
 		'^\/gallery$',
 		'^\/bulletin-board$',
 		'^\/calendars$',
+		'^\/events$',
 		'^\/leaderboards$',
 		'^\/leaderboards\/sheetData$',
 		'^\/users$',

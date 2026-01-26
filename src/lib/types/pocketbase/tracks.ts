@@ -1,5 +1,3 @@
-import type { StageId, Stage } from "./stage";
-
 export type TrackId = string;
 
 export interface SurfaceInfo {
@@ -10,7 +8,12 @@ export interface SurfaceInfo {
 	asphalt?: number;
 }
 
-export interface TrackBase {
+export interface CoordinatesInfo {
+	lon?: number;
+	lat?: number;
+}
+
+export interface Track {
 	id: TrackId;
 	name: string;
 	length: number;
@@ -19,24 +22,12 @@ export interface TrackBase {
 	startingAltitude: number;
 	arrivalAltitude: number;
 	differenceAltitude: number;
+	maxAltitude: number;
+	minAltitude: number;
 	rightTurns: number;
 	leftTurns: number;
-	surface?: SurfaceInfo;
-	stages?: StageId[];
+	surfaces?: SurfaceInfo;
+	coordinates?: CoordinatesInfo;
 	created: Date;
 	updated: Date;
 }
-
-export interface TrackExpand extends TrackBase {
-	isExpand: true;
-	expand: {
-		stages: Stage[];
-	}
-}
-
-export interface TrackNonExpand extends TrackBase {
-	isExpand: false;
-	expand: undefined;
-}
-
-export type Track = TrackNonExpand | TrackExpand;

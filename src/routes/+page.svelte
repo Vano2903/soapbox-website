@@ -4,7 +4,7 @@
 	import Carousel3 from '$components/carousel/carousel3.svelte';
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
 	import { fade } from 'svelte/transition';
-	import { VolumeX, Volume2, ChevronLeft, ChevronRight } from 'lucide-svelte';
+	import { VolumeX, Volume2, ChevronLeft, ChevronRight, UserRoundPlus, MonitorPlay, Info } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import type { SponsorLogos, SponsorSlider } from '$types/SponsorSlider.js';
 	import type { CarouselPageType } from '$types/carouselPage.js';
@@ -260,7 +260,7 @@
 		<!-- <Carousel /> -->
 		<Carousel3 pages={carouselImages} classes="max-h-100 object-cover md:max-h-full" />
 		<aside
-			class="absolute z-10 box-border hidden h-9/10 max-h-90 w-2/5 max-w-110 rounded-l-xl bg-white py-2 pl-2 md:block lg:h-7/8 lg:max-h-110 lg:w-1/4 xl:max-h-130"
+			class="absolute z-10 box-border hidden h-9/10 max-h-90 w-2/5 max-w-110 rounded-l-xl bg-white py-2 pl-2 md:block lg:h-7/8 lg:max-h-110 lg:w-3/10 xl:max-h-130"
 		>
 			<div class="inner p-2 lg:p-4">
 				<EventInfoBox
@@ -274,12 +274,22 @@
 						class="btn btn-error text-foreground max-w-70"
 						href={`/enroll?${new URLSearchParams(`championship=${currentChampionship.name}&event=${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`).toString()}`}
 					>
-						Iscriviti
+						<UserRoundPlus class="h-5 w-5"/> Iscriviti
+					</a>
+					<a
+						href={`/events?${new URLSearchParams(`championship=${currentChampionship.name}&event=${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`).toString()}`}
+						class="btn btn-neutral text-foreground max-w-70">
+						<Info class="h-5 w-5"/> Info
 					</a>
 				{:else}
 					<button class="btn btn-disabled flex-nowrap text-nowrap text-gray-600">
-						Iscriviti
+						<UserRoundPlus class="h-5 w-5"/> Iscriviti
 					</button>
+					<a
+						href={`/events?${new URLSearchParams(`championship=${currentChampionship.name}&event=${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`).toString()}`}
+						class="btn btn-neutral text-foreground max-w-70">
+						<Info class="h-5 w-5"/> Info
+					</a>
 				{/if}
 				<!-- <button
 					class="btn btn-error text-foreground max-w-70"
@@ -335,9 +345,9 @@
 							</span>
 						</p>
 					{/if}
-					<div class="flex flex-row justify-end">
+					<div class="flex flex-col xs:flex-row justify-end gap-2 items-end">
 						<button
-							class="btn btn-error text-foreground max-w-70"
+							class="btn btn-error text-foreground max-w-22"
 							onclick={currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen
 								? () =>
 										enrollRedirect(
@@ -352,6 +362,11 @@
 						>
 							{#if currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen}Iscriviti{:else}Guarda{/if}
 						</button>
+						<a
+							href={`/events?${new URLSearchParams(`championship=${currentChampionship.name}&event=${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`).toString()}`}
+							class="btn btn-neutral text-foreground max-w-22">
+							Info
+						</a>
 					</div>
 				</div>
 				<div class="flex flex-col justify-center">

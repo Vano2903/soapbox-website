@@ -6,8 +6,10 @@ export interface Location {
 	description: string;
 	city: string;
 	province: string;
+	provinceShort?: string;
 	region: string;
 	country: string;
+	countryShort?: string;
 	created: Date;
 	updated: Date;
 }

@@ -2,6 +2,7 @@ import type { StageId, Stage } from './stage'
 import type { LocationId, Location } from './location'
 import type { ResultId, Result } from './results'
 import type { ChampionshipId, Championship } from './championship';
+import type { TrackId, Track } from './tracks';
 
 export enum EventKind {
 	Rally = 'rally'
@@ -17,6 +18,7 @@ export interface EventBase {
 	endDate?: Date;
 	stages?: StageId[];
 	location: LocationId;
+	track?: TrackId;
 	numSubscriptions: number;
 	maxSubscriptions: number | null;
 	subscriptionsOpen: boolean;
@@ -24,6 +26,8 @@ export interface EventBase {
 	results: ResultId[];
 	cover?: string;
 	poster?: string;
+	regulation?: string;
+	map?: string;
 	championship: ChampionshipId;
 	created: Date;
 	updated: Date;
@@ -34,6 +38,7 @@ export interface EventExpand extends EventBase {
 	expand: {
 		stages: Stage[];
 		location: Location;
+		track: Track;
 		results: Result[];
 		championship: Championship;
 	}

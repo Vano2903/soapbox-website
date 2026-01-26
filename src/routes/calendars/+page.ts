@@ -48,5 +48,12 @@ export const load: PageLoad = async ({ data, url, fetch }) => {
 		throw fail(500);
 	}
 
-	return { championshipsList, foundChampionship, warnings };
+	const championshipEvents = foundChampionship.expand.events.map((foundEvent) => {
+		return {
+			...foundEvent,
+			cover: foundEvent.cover ? pb.files.getURL(foundEvent, foundEvent.cover) : null
+		};
+	});
+
+	return { championshipsList, foundChampionship, championshipEvents, warnings };
 };

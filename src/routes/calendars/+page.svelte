@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { ChampionshipNonExpand } from '$types/pocketbase/championship.js';
 	import ElementSelection from '$components/elementSelection/elementSelection.svelte';
-	import { LucideCalendarCheck, LucideRadio, LucideLock } from 'lucide-svelte';
+	import { LucideCalendarCheck, LucideRadio, LucideLock, UserRoundPlus, Info } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
 
 	// constant that defines how many elements to show on each side of the current element of the ElementSelection component
@@ -11,6 +11,7 @@
 	const { data } = $props();
 	const championshipsListDerived = $derived(data.championshipsList);
 	const foundChampionshipDerived = $derived(data.foundChampionship);
+	const championshipsEventsDerived = $derived(data.championshipEvents);
 	const warningsDerived = $derived(data.warnings);
 
 	// Functions to handle the selection of championship, causing a navigation to the new URL with hydration and updated props
@@ -41,7 +42,7 @@
 	function transformToElementList(championshipList: ChampionshipNonExpand[]) {
 		let elementsList = championshipList.map((v) => {
 			const isOngoing = v.ongoing;
-			const isLive = foundChampionshipDerived.expand.events.some((e) => e.onAir === true);
+			const isLive = championshipsEventsDerived.some((e) => e.onAir === true);
 
 			return {
 				value: v.name,
@@ -111,14 +112,14 @@
 
 	<div class="space-y-8">
 		<section class="flex flex-wrap justify-center gap-4">
-			{#if foundChampionshipDerived && foundChampionshipDerived.expand.events.length > 0}
-				{#each foundChampionshipDerived.expand.events as event, index}
+			{#if foundChampionshipDerived && championshipsEventsDerived.length > 0}
+				{#each championshipsEventsDerived as event, index}
 					<div
-						class="flex h-75 w-50 flex-col overflow-hidden rounded-xl bg-white shadow-md transition duration-300 hover:scale-105 hover:bg-neutral-100 md:h-120 md:w-80"
+						class="flex h-75 w-60 flex-col overflow-hidden rounded-xl bg-white shadow-md transition duration-300 hover:scale-105 hover:bg-neutral-100 md:h-120 md:w-80"
 					>
 						<div class="relative h-1/3">
 							<img
-								src="/images/calendars/eventCover.png"
+								src={event.cover ?? "/images/calendars/eventCover.png"}
 								alt={event.name}
 								class="h-full w-full object-cover"
 							/>
@@ -158,7 +159,12 @@
 											href={`/enroll?${new URLSearchParams(`championship=${foundChampionshipDerived.name}&event=${event.shortName}`).toString()}`}
 											class="btn btn-error text-foreground max-w-5/12 text-xs md:text-lg"
 										>
-											Iscriviti
+											<UserRoundPlus /> Iscriviti
+										</a>
+										<a
+											href={`/events?${new URLSearchParams(`championship=${foundChampionshipDerived.name}&event=${event.shortName}`).toString()}`}
+											class="btn btn-neutral text-foreground max-w-5/12 text-xs md:text-lg">
+											<Info /> Info
 										</a>
 									{:else}
 										<button
@@ -166,6 +172,11 @@
 										>
 											Iscriviti
 										</button>
+										<a
+											href={`/events?${new URLSearchParams(`championship=${foundChampionshipDerived.name}&event=${event.shortName}`).toString()}`}
+											class="btn btn-neutral text-foreground max-w-5/12 text-xs md:text-lg">
+											<Info /> Info
+										</a>
 									{/if}
 									<p class="mt-2 text-xs text-gray-500 md:text-base">
 										{#if event.subscriptionsOpen}
@@ -196,8 +207,8 @@
 		<section class="flex flex-col items-center gap-2">
 			<h1 class="text-3xl font-bold">Eventi in calendario:</h1>
 			<div class="flex w-full flex-row justify-evenly gap-4 md:w-8/10 md:gap-6">
-				{#if foundChampionshipDerived && foundChampionshipDerived.expand.events.length > 0}
-					{#each foundChampionshipDerived.expand.events as event, index}
+				{#if foundChampionshipDerived && championshipsEventsDerived.length > 0}
+					{#each championshipsEventsDerived as event, index}
 						<div
 							class="xs:m-auto xs:w-9/10 flex flex-col justify-center rounded-md bg-neutral-50 p-2 shadow-md transition duration-300 hover:scale-105 hover:bg-neutral-200 md:flex-row lg:w-7/10 hover:lg:scale-110"
 						>
@@ -213,7 +224,7 @@
 							</div>
 						</div>
 					{/each}
-					{#each foundChampionshipDerived.expand.events as event, index}
+					{#each championshipsEventsDerived as event, index}
 						<div
 							class="xs:m-auto xs:w-9/10 flex flex-col justify-center rounded-md bg-neutral-50 p-2 shadow-md transition duration-300 hover:scale-105 hover:bg-neutral-200 md:flex-row lg:w-7/10 hover:lg:scale-110"
 						>

@@ -4,7 +4,7 @@
 	import Carousel3 from '$components/carousel/carousel3.svelte';
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
 	import { fade } from 'svelte/transition';
-	import { VolumeX, Volume2, ChevronLeft, ChevronRight, UserRoundPlus, MonitorPlay, Info } from 'lucide-svelte';
+	import { VolumeX, Volume2, ChevronLeft, ChevronRight, UserRoundPlus, MonitorPlay, Info, ExternalLink } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import type { SponsorLogos, SponsorSlider } from '$types/SponsorSlider.js';
 	import type { CarouselPageType } from '$types/carouselPage.js';
@@ -507,16 +507,27 @@
 						Ogni curva è una promessa di leggenda.
 					</h2>
 				</div>
-				<button
-					onclick={toggleMute}
-					class="absolute right-4 bottom-4 z-10 cursor-pointer rounded-full bg-white/80 px-3 py-1 text-sm font-semibold text-black backdrop-blur hover:bg-white"
-				>
-					{#if isHighlightMuted}
-						<VolumeX />
-					{:else}
-						<Volume2 />
-					{/if}
-				</button>
+				<div class="flex flex-row justify-end absolute right-4 bottom-4 z-10 gap-2">
+					<button
+						onclick={toggleMute}
+						class="cursor-pointer rounded-full bg-white/80 px-3 py-1 text-sm font-semibold text-black backdrop-blur hover:bg-white tooltip tooltip-top"
+						data-tip="{isHighlightMuted ? 'Unmute' : 'Mute'} Video"
+					>
+						{#if isHighlightMuted}
+							<VolumeX />
+						{:else}
+							<Volume2 />
+						{/if}
+					</button>
+					<a
+						href="https://www.youtube.com/watch?v=fUBB9sdClnE"
+						target="_blank"
+						class="cursor-pointer rounded-full bg-white/80 px-3 py-1 text-sm font-semibold text-black backdrop-blur hover:bg-white tooltip tooltip-top"
+						data-tip="Watch on YouTube"
+					>
+						<ExternalLink />
+					</a>
+				</div>
 			</section>
 
 			<!-- Sponsor slider -->

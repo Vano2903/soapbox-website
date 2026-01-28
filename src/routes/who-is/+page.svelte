@@ -89,7 +89,7 @@
 				{
 					layout: 'horizontal',
 					horizontal: {
-						src: '/images/who-is/team-1.jpeg',
+						src: '/images/who-is/team-1.jpg',
 						alt: 'foto di gruppo degli organizzatori'
 					},
 					loading: 'lazy'
@@ -97,7 +97,7 @@
 				{
 					layout: 'horizontal',
 					horizontal: {
-						src: '/images/who-is/team-2.jpeg',
+						src: '/images/who-is/team-2.jpg',
 						alt: 'foto di gruppo degli organizzatori'
 					},
 					loading: 'lazy'
@@ -105,7 +105,7 @@
 				{
 					layout: 'horizontal',
 					horizontal: {
-						src: '/images/who-is/team-3.jpeg',
+						src: '/images/who-is/team-3.jpg',
 						alt: 'foto di gruppo degli organizzatori'
 					},
 					loading: 'lazy'

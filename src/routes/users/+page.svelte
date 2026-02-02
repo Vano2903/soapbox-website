@@ -23,10 +23,30 @@
 	let paginatedUsers = $derived(data.paginatedUsers);
 	let expandedUsers = $derived(data.expandedUsers);
 
-	async function fetchNewPage(page: number) {
+	let username = $state("");
+	const bannedUsernames = ['admin', 'root', 'superuser', 'user', 'guest', 'test', 'users', 'dash'];
+	async function fetchNewPage(page: number, username?: string) {
 		if (pb) {
+			if (username !== undefined && bannedUsernames.includes(username)) {
+				return;
+			}
+
+			let filterString = [];
+			if (usernameEnabled) {
+				filterString.push(`nick${strictSearchEnabled ? '=' : '~'}"${username ?? ''}"`);
+			}
+			if (nameEnabled) {
+				filterString.push(`name${strictSearchEnabled ? '=' : '~'}"${username ?? ''}"`);
+			}
+			if (lastNameEnabled) {
+				filterString.push(`lastName${strictSearchEnabled ? '=' : '~'}"${username ?? ''}"`);
+			}
+
+			console.log('Fetching new page from PocketBase: (', page, ', ', username, ')');
+			console.log(filterString.join(' || '));
 			const result = await pb.collection('publicUserInfo').getList(page, 10, {
-				sort: 'nick'
+				sort: 'nick',
+				filter: filterString.join(' || ')
 			});
 			paginatedUsers = result;
 
@@ -66,6 +86,12 @@
 	// let error = $state<string | null>(null);
 
 	console.log('data', data);
+
+	let showResearch = $state(false);
+	let nameEnabled = $state(true);
+	let lastNameEnabled = $state(true);
+	let usernameEnabled = $state(true);
+	let strictSearchEnabled = $state(false);
 </script>
 
 <div class="mx-4 space-y-2">
@@ -92,6 +118,77 @@
 			<span>{error}</span>
 		</div>
 	{/if}
+
+	<div class="flex flex-row items-center justify-center gap-2">
+		<!-- <h2 class="card-title text-2xl">Ricerca Utenti</h2> -->
+		<fieldset class="swap-off fieldset flex-1 text-base max-w-1/1 md:max-w-1/2">
+			<legend class="fieldset-legend">Ricerca Utente</legend>
+
+			<label
+				class="input w-full"
+			>
+				<input
+					autocomplete="username"
+					type="text"
+					form="check"
+					name="username"
+					id="username"
+					bind:value={
+						() => username,
+						(n) => (username = n.trimStart().replaceAll(' ', '-').toLowerCase())
+					}
+					placeholder="mario-rossi"
+					oninput={() => fetchNewPage(1, username)}
+				/>
+			</label>
+			<input type="hidden" name="username" value={username} />
+		</fieldset>
+		<!-- <div class="bg-base-100 border-base-300 collapse-plus collapse mt-4 border">
+			<input type="checkbox" bind:checked={showResearch} />
+			<div class="collapse-title">Ricerca Avanzata</div>
+			<div class="collapse-content text-sm">
+				<fieldset class="fieldset">
+					<legend class="fieldset-legend">Parametri</legend>
+					<label class="label">
+						<input
+							type="checkbox"
+							bind:checked={nameEnabled}
+							class="toggle toggle-error"
+						/>
+						Nome
+					</label>
+					<label class="label">
+						<input
+							type="checkbox"
+							bind:checked={lastNameEnabled}
+							class="toggle toggle-error"
+						/>
+						Cognome
+					</label>
+					<label class="label">
+						<input
+							type="checkbox"
+							bind:checked={usernameEnabled}
+							class="toggle toggle-error"
+						/>
+						Username
+					</label>
+				</fieldset>
+				<fieldset class="fieldset">
+					<legend class="fieldset-legend">Ricerca Rigorosa</legend>
+					<label class="label">
+						<input
+							type="checkbox"
+							bind:checked={strictSearchEnabled}
+							class="toggle toggle-error"
+						/>
+					</label>
+				</fieldset>
+			</div>
+		</div> -->
+	</div>
+
+	<hr>
 
 	<div class="space-y-1">
 		{#each expandedUsers as user}

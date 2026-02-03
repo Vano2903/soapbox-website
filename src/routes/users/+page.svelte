@@ -1,11 +1,8 @@
 <script lang="ts">
 	import type { TypedPocketBase } from '$types/pocketbase/pocketbase';
-	import type { UserNonExpand, UserPublicInfo } from '$types/pocketbase/user';
-	import { ArrowUpDown, ArrowDown, ArrowUp, ExternalLink, Search, SlidersHorizontal, X, User, ChevronRight, ChevronLeft } from 'lucide-svelte';
-	import { env } from '$env/dynamic/public';
-	import { createPocketBaseInstance } from '$lib/utils/pocketbase';
+	import type { UserPublicInfo } from '$types/pocketbase/user';
+	import { ArrowUpDown, ArrowDown, ArrowUp, Search, SlidersHorizontal, X, User, ChevronRight, ChevronLeft } from 'lucide-svelte';
 	import type { ListResult } from 'pocketbase';
-	import { onMount } from 'svelte';
 	import EntityCard2 from '$components/entityCard/entityCard2.svelte';
 	import { createAvatarUrl } from '$lib/utils/avatar';
 

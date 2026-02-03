@@ -2,7 +2,7 @@
 
 services:
   pb-prod:
-    image: "ghcr.io/vano2903/soapbox-website-pb:sha-d1a0908"
+    image: "ghcr.io/vano2903/soapbox-website-pb:sha-ed2cf69"
     # build: './pocketbase'
     container_name: "bruum-pb-prod"
     restart: "unless-stopped"

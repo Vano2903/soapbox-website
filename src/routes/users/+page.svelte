@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { TypedPocketBase } from '$types/pocketbase/pocketbase';
 	import type { UserNonExpand, UserPublicInfo } from '$types/pocketbase/user';
-	import { ExternalLink } from 'lucide-svelte';
+	import { ExternalLink, Search, SlidersHorizontal, X } from 'lucide-svelte';
 	import { env } from '$env/dynamic/public';
 	import { createPocketBaseInstance } from '$lib/utils/pocketbase';
 	import type { ListResult } from 'pocketbase';
@@ -23,41 +23,53 @@
 	let paginatedUsers = $derived(data.paginatedUsers);
 	let expandedUsers = $derived(data.expandedUsers);
 
-	let username = $state("");
+	// --- Search state & options ---
+	let researchField = $state('');
+	let showAdvanced = $state(false);
+
+	let nameEnabled = $state(true);
+	let lastNameEnabled = $state(true);
+	let usernameEnabled = $state(true);
+	let strictSearchEnabled = $state(false);
+	
+	let activeFieldCount = $derived([nameEnabled, lastNameEnabled, usernameEnabled].filter(Boolean).length);
 	const bannedUsernames = ['admin', 'root', 'superuser', 'user', 'guest', 'test', 'users', 'dash'];
-	async function fetchNewPage(page: number, username?: string) {
-		if (pb) {
-			if (username !== undefined && bannedUsernames.includes(username)) {
-				return;
-			}
 
-			let filterString = [];
-			if (usernameEnabled) {
-				filterString.push(`nick${strictSearchEnabled ? '=' : '~'}"${username ?? ''}"`);
-			}
-			if (nameEnabled) {
-				filterString.push(`name${strictSearchEnabled ? '=' : '~'}"${username ?? ''}"`);
-			}
-			if (lastNameEnabled) {
-				filterString.push(`lastName${strictSearchEnabled ? '=' : '~'}"${username ?? ''}"`);
-			}
+	async function fetchNewPage(page: number, query?: string) {
+		if (!pb) return;
+		if (query !== undefined && bannedUsernames.includes(query)) return;
 
-			console.log('Fetching new page from PocketBase: (', page, ', ', username, ')');
-			console.log(filterString.join(' || '));
-			const result = await pb.collection('publicUserInfo').getList(page, 10, {
-				sort: 'nick',
-				filter: filterString.join(' || ')
-			});
-			paginatedUsers = result;
-
-			expandedUsers = paginatedUsers.items.map((user: UserPublicInfo) => {
-				user.avatarCropped =
-					pb.files.getURL(user, user.avatarCropped || '', { thumb: '64x0' }) ||
-					createAvatarUrl(user.nick, 'small');
-				user.bannerCropped = pb.files.getURL(user, user.bannerCropped || '') || undefined;
-				return user;
-			});
+		let filtersString = [];
+		const operator = strictSearchEnabled ? '=' : '~';
+		const value = query ?? '';
+		if (usernameEnabled) {
+			filtersString.push(`nick${operator}"${value}"`);
 		}
+		if (nameEnabled) {
+			filtersString.push(`name${operator}"${value}"`);
+		}
+		if (lastNameEnabled) {
+			filtersString.push(`lastName${operator}"${value}"`);
+		}
+
+		const result = await pb.collection('publicUserInfo').getList(page, 10, {
+			sort: 'nick',
+			filter: filtersString.join(' || ')
+		});
+
+		paginatedUsers = result;
+		expandedUsers = paginatedUsers.items.map((user: UserPublicInfo) => {
+			user.avatarCropped =
+				pb.files.getURL(user, user.avatarCropped || '', { thumb: '64x0' }) ||
+				createAvatarUrl(user.nick, 'small');
+			user.bannerCropped = pb.files.getURL(user, user.bannerCropped || '') || undefined;
+			return user;
+		});
+	}
+
+	function clearSearch() {
+		researchField = '';
+		fetchNewPage(1, researchField);
 	}
 
 	// let users = $derived(() => paginatedUsers.items);
@@ -86,12 +98,6 @@
 	// let error = $state<string | null>(null);
 
 	console.log('data', data);
-
-	let showResearch = $state(false);
-	let nameEnabled = $state(true);
-	let lastNameEnabled = $state(true);
-	let usernameEnabled = $state(true);
-	let strictSearchEnabled = $state(false);
 </script>
 
 <div class="mx-4 space-y-2">
@@ -119,73 +125,73 @@
 		</div>
 	{/if}
 
-	<div class="flex flex-row items-center justify-center gap-2">
-		<!-- <h2 class="card-title text-2xl">Ricerca Utenti</h2> -->
-		<fieldset class="swap-off fieldset flex-1 text-base max-w-1/1 md:max-w-1/2">
-			<legend class="fieldset-legend">Ricerca Utente</legend>
-
-			<label
-				class="input w-full"
-			>
+	<div class="mx-auto w-full max-w-xl mt-2">
+		<div class="flex items-center gap-2">
+			<label class="input flex-1 flex items-center gap-2">
+				<Search class="h-4 w-4 text-base-content/40" />
 				<input
-					autocomplete="username"
+					autocomplete="off"
 					type="text"
-					form="check"
 					name="username"
-					id="username"
 					bind:value={
-						() => username,
-						(n) => (username = n.trimStart().replaceAll(' ', '-').toLowerCase())
+						() => researchField,
+						(n) => (researchField = n.trimStart().replaceAll(' ', '-').toLowerCase())
 					}
 					placeholder="mario-rossi"
-					oninput={() => fetchNewPage(1, username)}
+					oninput={() => fetchNewPage(1, researchField)}
 				/>
+				{#if researchField.length > 0}
+					<button onclick={clearSearch} class="ml-auto text-base-content/40 hover:text-base-content transition-colors">
+						<X class="h-4 w-4" />
+					</button>
+				{/if}
 			</label>
-			<input type="hidden" name="username" value={username} />
-		</fieldset>
-		<!-- <div class="bg-base-100 border-base-300 collapse-plus collapse mt-4 border">
-			<input type="checkbox" bind:checked={showResearch} />
-			<div class="collapse-title">Ricerca Avanzata</div>
-			<div class="collapse-content text-sm">
-				<fieldset class="fieldset">
-					<legend class="fieldset-legend">Parametri</legend>
-					<label class="label">
-						<input
-							type="checkbox"
-							bind:checked={nameEnabled}
-							class="toggle toggle-error"
-						/>
-						Nome
-					</label>
-					<label class="label">
-						<input
-							type="checkbox"
-							bind:checked={lastNameEnabled}
-							class="toggle toggle-error"
-						/>
-						Cognome
-					</label>
-					<label class="label">
-						<input
-							type="checkbox"
-							bind:checked={usernameEnabled}
-							class="toggle toggle-error"
-						/>
-						Username
-					</label>
-				</fieldset>
-				<fieldset class="fieldset">
-					<legend class="fieldset-legend">Ricerca Rigorosa</legend>
-					<label class="label">
-						<input
-							type="checkbox"
-							bind:checked={strictSearchEnabled}
-							class="toggle toggle-error"
-						/>
-					</label>
-				</fieldset>
+			
+			<button
+				onclick={() => (showAdvanced = !showAdvanced)}
+				class="btn btn-ghost btn-sm relative"
+				class:btn-active={showAdvanced}
+				aria-expanded={showAdvanced}
+				title="Opzioni di ricerca"
+			>
+				<SlidersHorizontal class="h-4 w-4" />
+				{#if activeFieldCount < 3}
+					<span class="badge badge-xs badge-error absolute -top-1 -right-1">{activeFieldCount}</span>
+				{/if}
+			</button>
+		</div>
+
+		{#if showAdvanced}
+			<div class="mt-2 rounded-lg border border-base-300 bg-base-100 p-4 space-y-4">
+				<div>
+					<span class="text-xs font-semibold uppercase tracking-wider text-base-content/50">Cerca in</span>
+					<div class="mt-2 flex flex-wrap gap-2">
+						<label class="flex items-center gap-2 cursor-pointer">
+							<input type="checkbox" class="checkbox checkbox-sm" bind:checked={usernameEnabled} />
+							<span class="text-sm">Username</span>
+						</label>
+						<label class="flex items-center gap-2 cursor-pointer">
+							<input type="checkbox" class="checkbox checkbox-sm" bind:checked={nameEnabled} />
+							<span class="text-sm">Nome</span>
+						</label>
+						<label class="flex items-center gap-2 cursor-pointer">
+							<input type="checkbox" class="checkbox checkbox-sm" bind:checked={lastNameEnabled} />
+							<span class="text-sm">Cognome</span>
+						</label>
+					</div>
+				</div>
+
+				<hr class="border-base-200" />
+
+				<div class="flex items-center justify-between">
+					<div>
+						<span class="text-sm font-medium">Ricerca rigorosa</span>
+						<p class="text-xs text-base-content/50">Cerca solo corrispondenze esatte</p>
+					</div>
+					<input type="checkbox" class="toggle toggle-sm toggle-primary" bind:checked={strictSearchEnabled} />
+				</div>
 			</div>
-		</div> -->
+		{/if}
 	</div>
 
 	<hr>
@@ -206,13 +212,16 @@
 	</div>
 
 	<br />
-	<div class="join">
-		{#each paginatedUsers.totalPages > 0 ? Array(paginatedUsers.totalPages) : [] as _, i}
-			<button
-				class="join-item btn"
-				class:btn-active={i === paginatedUsers.page}
-				onclick={() => fetchNewPage(i + 1)}>{i + 1}</button
-			>
-		{/each}
+
+	<div class="flex justify-center">
+		<div class="join">
+			{#each paginatedUsers.totalPages > 0 ? Array(paginatedUsers.totalPages) : [] as _, i}
+				<button
+					class="join-item btn"
+					class:btn-active={i+1 === paginatedUsers.page}
+					onclick={() => fetchNewPage(i + 1, researchField)}>{i + 1}</button
+				>
+			{/each}
+		</div>
 	</div>
 </div>

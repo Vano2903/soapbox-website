@@ -1,12 +1,12 @@
 <script lang="ts">
 	import type { TypedPocketBase } from '$types/pocketbase/pocketbase';
 	import type { UserNonExpand, UserPublicInfo } from '$types/pocketbase/user';
-	import { ArrowDown, ArrowUp, ExternalLink, Search, SlidersHorizontal, X } from 'lucide-svelte';
+	import { ArrowUpDown, ArrowDown, ArrowUp, ExternalLink, Search, SlidersHorizontal, X, User, ChevronRight, ChevronLeft } from 'lucide-svelte';
 	import { env } from '$env/dynamic/public';
 	import { createPocketBaseInstance } from '$lib/utils/pocketbase';
 	import type { ListResult } from 'pocketbase';
 	import { onMount } from 'svelte';
-	import EntityCard from '$components/entityCard/entityCard.svelte';
+	import EntityCard2 from '$components/entityCard/entityCard2.svelte';
 	import { createAvatarUrl } from '$lib/utils/avatar';
 
 	interface Props {
@@ -84,6 +84,25 @@
 		fetchNewPage(1, researchField);
 	}
 
+	function clearFilters() {
+		researchField = '';
+		nameEnabled = true;
+		lastNameEnabled = true;
+		usernameEnabled = true;
+		strictSearchEnabled = false;
+		sortField = 'nick';
+		sortOrder = 'asc';
+		fetchNewPage(1, researchField);
+	}
+
+	function pageRange () {
+		const radius = 2;
+		const start = Math.max(1, paginatedUsers.page - radius);
+		const end = Math.min(paginatedUsers.totalPages, paginatedUsers.page + radius);
+		// console.log('New pageRange calculated: (', start, '-', end, ') =\n |- ', Array.from({ length: end - start + 1 }, (_, i) => start + i));
+		return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+	}
+
 	// let users = $derived(() => paginatedUsers.items);
 	// const pbEndpoint = env.PUBLIC_PB_INSTANCE;
 	// const pb = createPocketBaseInstance(pbEndpoint);
@@ -110,6 +129,7 @@
 	// let error = $state<string | null>(null);
 
 	console.log('data', data);
+	pageRange();
 </script>
 
 <div class="mx-4 space-y-2">
@@ -241,24 +261,76 @@
 
 	<hr>
 
-	<div class="space-y-1">
-		{#each expandedUsers as user}
-			<EntityCard
-				title={`${user.name} ${user.lastName}`}
-				slug={user.nick}
-				description={user.bio}
-				link={`/user/${user.nick}`}
-			>
-				{#snippet picture()}
-					<img src={user.avatarCropped} alt="User Avatar" class="size-16 rounded-full ring-1" />
-				{/snippet}
-			</EntityCard>
-		{/each}
+	<div class="mx-auto w-full max-w-md">
+		<div class="flex items-center justify-around">
+			<span class="text-sm text-base-content/50">
+				{#if paginatedUsers.totalItems === 0}
+					Nessun utente trovato
+				{:else}
+					{paginatedUsers.totalItems} utent{paginatedUsers.totalItems === 1 ? 'e' : 'i'} trovat{paginatedUsers.totalItems === 1 ? 'o' : 'i'}
+				{/if}
+			</span>
+			<!-- Sort attivo compatto, visibile anche con pannello chiuso -->
+			{#if !showAdvanced}
+				<button
+					onclick={() => (showAdvanced = true)}
+					class="flex items-center gap-1 text-xs text-base-content/50 hover:text-base-content transition-colors"
+				>
+					<ArrowUpDown class="h-3 w-3" />
+					{sortOptions.find(o => o.field === sortField)?.label}
+					{#if sortOrder === 'asc'}
+						<ArrowUp class="h-3 w-3" />
+					{:else}
+						<ArrowDown class="h-3 w-3" />
+					{/if}
+				</button>
+			{/if}
+		</div>
+	</div>
+
+	<div class="mx-5 lg:mx-15">
+		{#if expandedUsers.length === 0}
+			<!-- Empty state -->
+			<div class="flex flex-col items-center justify-center rounded-xl border border-base-300 bg-base-100 py-16 px-6 text-center">
+				<div class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-base-200">
+					<User class="h-8 w-8 text-base-content/30" />
+				</div>
+				<h3 class="text-base font-semibold">Nessun utente trovato</h3>
+				<p class="mt-1 text-sm text-base-content/50">
+					{#if researchField.length > 0 || strictSearchEnabled}
+						Prova a modificare la ricerca o cambia i filtri
+					{:else}
+						Non ci sono ancora utenti pubblici
+					{/if}
+				</p>
+				{#if researchField.length > 0 || strictSearchEnabled}
+					<button onclick={clearFilters} class="btn btn-sm btn-ghost mt-4">
+						Cancella filtro
+					</button>
+				{/if}
+			</div>
+
+		{:else}
+			<div class="space-y-2">
+				{#each expandedUsers as user}
+					<EntityCard2
+						title={`${user.name} ${user.lastName}`}
+						slug={user.nick}
+						description={user.bio}
+						link="/user/{user.nick}"
+					>
+						{#snippet picture()}
+							<img src={user.avatarCropped} alt="Avatar di {user.nick}" class="h-14 w-14 rounded-full object-cover" />
+						{/snippet}
+					</EntityCard2>
+				{/each}
+			</div>
+		{/if}
 	</div>
 
 	<br />
 
-	<div class="flex justify-center">
+	<!-- <div class="flex justify-center">
 		<div class="join">
 			{#each paginatedUsers.totalPages > 0 ? Array(paginatedUsers.totalPages) : [] as _, i}
 				<button
@@ -268,5 +340,55 @@
 				>
 			{/each}
 		</div>
-	</div>
+	</div> -->
+
+	{#if paginatedUsers.totalPages > 1}
+		<div class="mx-auto w-full max-w-xl">
+			<div class="flex items-center justify-center gap-1">
+				<button
+					class="btn btn-ghost btn-sm"
+					disabled={!(paginatedUsers.page > 1)}
+					onclick={() => fetchNewPage(paginatedUsers.page - 1, researchField)}
+				>
+					<ChevronLeft class="h-4 w-4" />
+				</button>
+
+				{#if pageRange()[0] > 1}
+					<button
+						class="btn btn-ghost btn-sm btn-square"
+						onclick={() => fetchNewPage(1, researchField)}
+					>1</button>
+					{#if pageRange()[0] > 2}
+						<span class="text-base-content px-1 btn-sm btn-square flex items-center">…</span>
+					{/if}
+				{/if}
+
+				{#each pageRange() as p}
+					<button
+						class="btn btn-ghost btn-sm btn-square"
+						class:btn-active={p === paginatedUsers.page}
+						onclick={() => fetchNewPage(p, researchField)}
+					>{p}</button>
+				{/each}
+
+				{#if pageRange()[pageRange().length - 1] < paginatedUsers.totalPages}
+					{#if pageRange()[pageRange().length - 1] < paginatedUsers.totalPages - 1}
+						<span class="text-base-content px-1 btn-sm btn-square flex items-center">…</span>
+					{/if}
+					<button
+						class="btn btn-ghost btn-sm btn-square"
+						onclick={() => fetchNewPage(paginatedUsers.totalPages, researchField)}
+					>{paginatedUsers.totalPages}</button>
+				{/if}
+
+				<button
+					class="btn btn-ghost btn-sm"
+					disabled={!(paginatedUsers.page < paginatedUsers.totalPages)}
+					onclick={() => fetchNewPage(paginatedUsers.page + 1, researchField)}
+				>
+					<ChevronRight class="h-4 w-4" />
+				</button>
+			</div>
+		</div>
+	{/if}
 </div>

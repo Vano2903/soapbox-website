@@ -37,9 +37,9 @@
 	let sortOrder = $state('asc');
 
 	const sortOptions: { label: string; field: string }[] = [
-		{ label: 'Username',      field: 'nick' },
-		{ label: 'Nome',          field: 'name' },
-		{ label: 'Cognome',       field: 'lastName' },
+		{ label: 'Username', field: 'nick' },
+		{ label: 'Nome', field: 'name' },
+		{ label: 'Cognome', field: 'lastName' },
 		// { label: 'Data creazione', field: 'created' }
 	];
 
@@ -224,17 +224,14 @@
 				<div>
 					<span class="text-xs font-semibold uppercase tracking-wider text-base-content/50">Ordinamento</span>
 					<div class="mt-2 flex flex-wrap items-center gap-2">
-						<!-- Sort field pills -->
 						{#each sortOptions as option}
 							<button
 								class="btn btn-xs btn-ghost"
 								class:btn-active={sortField === option.field}
 								onclick={() => {
 									if (sortField === option.field) {
-										// Stesso campo: toggl direction
 										sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
 									} else {
-										// Campo diverso: switchia campo, mantieni direction
 										sortField = option.field;
 									}
 									fetchNewPage(1, researchField);
@@ -267,7 +264,6 @@
 					{paginatedUsers.totalItems} utent{paginatedUsers.totalItems === 1 ? 'e' : 'i'} trovat{paginatedUsers.totalItems === 1 ? 'o' : 'i'}
 				{/if}
 			</span>
-			<!-- Sort attivo compatto, visibile anche con pannello chiuso -->
 			{#if !showAdvanced}
 				<button
 					onclick={() => (showAdvanced = true)}
@@ -287,7 +283,6 @@
 
 	<div class="mx-5 lg:mx-15">
 		{#if expandedUsers.length === 0}
-			<!-- Empty state -->
 			<div class="flex flex-col items-center justify-center rounded-xl border border-base-300 bg-base-100 py-16 px-6 text-center">
 				<div class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-base-200">
 					<User class="h-8 w-8 text-base-content/30" />

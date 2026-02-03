@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { TypedPocketBase } from '$types/pocketbase/pocketbase';
 	import type { UserNonExpand, UserPublicInfo } from '$types/pocketbase/user';
-	import { ExternalLink, Search, SlidersHorizontal, X } from 'lucide-svelte';
+	import { ArrowDown, ArrowUp, ExternalLink, Search, SlidersHorizontal, X } from 'lucide-svelte';
 	import { env } from '$env/dynamic/public';
 	import { createPocketBaseInstance } from '$lib/utils/pocketbase';
 	import type { ListResult } from 'pocketbase';
@@ -35,6 +35,17 @@
 	let activeFieldCount = $derived([nameEnabled, lastNameEnabled, usernameEnabled].filter(Boolean).length);
 	const bannedUsernames = ['admin', 'root', 'superuser', 'user', 'guest', 'test', 'users', 'dash'];
 
+	// --- Sort state & options ---
+	let sortField = $state('nick');
+	let sortOrder = $state('asc');
+
+	const sortOptions: { label: string; field: string }[] = [
+		{ label: 'Username',      field: 'nick' },
+		{ label: 'Nome',          field: 'name' },
+		{ label: 'Cognome',       field: 'lastName' },
+		// { label: 'Data creazione', field: 'created' }
+	];
+
 	async function fetchNewPage(page: number, query?: string) {
 		if (!pb) return;
 		if (query !== undefined && bannedUsernames.includes(query)) return;
@@ -51,9 +62,10 @@
 		if (lastNameEnabled) {
 			filtersString.push(`lastName${operator}"${value}"`);
 		}
+		let sortString = `${sortOrder === 'desc' ? '-' : ''}${sortField}`;
 
 		const result = await pb.collection('publicUserInfo').getList(page, 10, {
-			sort: 'nick',
+			sort: sortString,
 			filter: filtersString.join(' || ')
 		});
 
@@ -125,7 +137,7 @@
 		</div>
 	{/if}
 
-	<div class="mx-auto w-full max-w-xl mt-2">
+	<div class="mx-auto w-full max-w-3xl mt-2">
 		<div class="flex items-center gap-2">
 			<label class="input flex-1 flex items-center gap-2">
 				<Search class="h-4 w-4 text-base-content/40" />
@@ -135,7 +147,8 @@
 					name="username"
 					bind:value={
 						() => researchField,
-						(n) => (researchField = n.trimStart().replaceAll(' ', '-').toLowerCase())
+						// (n) => (researchField = n.trimStart().replaceAll(' ', '-').toLowerCase())
+						(n) => (researchField = n.trimStart())
 					}
 					placeholder="mario-rossi"
 					oninput={() => fetchNewPage(1, researchField)}
@@ -181,14 +194,46 @@
 					</div>
 				</div>
 
-				<hr class="border-base-200" />
-
 				<div class="flex items-center justify-between">
 					<div>
 						<span class="text-sm font-medium">Ricerca rigorosa</span>
 						<p class="text-xs text-base-content/50">Cerca solo corrispondenze esatte</p>
 					</div>
 					<input type="checkbox" class="toggle toggle-sm toggle-primary" bind:checked={strictSearchEnabled} />
+				</div>
+
+				<hr class="border-base-200" />
+
+				<div>
+					<span class="text-xs font-semibold uppercase tracking-wider text-base-content/50">Ordinamento</span>
+					<div class="mt-2 flex flex-wrap items-center gap-2">
+						<!-- Sort field pills -->
+						{#each sortOptions as option}
+							<button
+								class="btn btn-xs btn-ghost"
+								class:btn-active={sortField === option.field}
+								onclick={() => {
+									if (sortField === option.field) {
+										// Stesso campo: toggl direction
+										sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+									} else {
+										// Campo diverso: switchia campo, mantieni direction
+										sortField = option.field;
+									}
+									fetchNewPage(1, researchField);
+								}}
+							>
+								{option.label}
+								{#if sortField === option.field}
+									{#if sortOrder === 'asc'}
+										<ArrowUp class="h-3 w-3" />
+									{:else}
+										<ArrowDown class="h-3 w-3" />
+									{/if}
+								{/if}
+							</button>
+						{/each}
+					</div>
 				</div>
 			</div>
 		{/if}

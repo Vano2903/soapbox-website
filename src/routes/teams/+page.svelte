@@ -310,6 +310,11 @@
 						description={team.bio}
 						link="/team/{team.slug}"
 					>
+						{#snippet backgroundSnippet()}
+							{#if team.bannerCropped}
+								<img src={team.bannerCropped} alt="Banner di {team.name}" class="h-full w-auto min-w-full object-cover object-left"/>
+							{/if}
+						{/snippet}
 						{#snippet iconSnippet()}
 							{#if team.number > 0}
 								<span class="w-5.5 flex badge badge-xs border-primary rounded-none justify-center">{team.number}</span>

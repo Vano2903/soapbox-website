@@ -311,6 +311,11 @@
 						description={user.bio}
 						link="/user/{user.nick}"
 					>
+						{#snippet backgroundSnippet()}
+							{#if user.bannerCropped}
+								<img src={user.bannerCropped} alt="Banner di {user.name}" class="h-full w-auto min-w-full object-cover object-left"/>
+							{/if}
+						{/snippet}
 						{#snippet picture()}
 							<img src={user.avatarCropped} alt="Avatar di {user.nick}" class="h-14 w-14 rounded-full object-cover" />
 						{/snippet}

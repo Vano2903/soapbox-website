@@ -57,7 +57,7 @@
 			filtersString.push(`slug${operator}"${value}"`);
 		}
 		if (numberEnabled) {
-			filtersString.push(`number${operator}"${value}"`);
+			filtersString.push(`number${operator}"${value}" && number > "0"`);
 		}
 		let sortString = `${sortOrder === 'desc' ? '-' : ''}${sortField}`;
 
@@ -310,6 +310,11 @@
 						description={team.bio}
 						link="/team/{team.slug}"
 					>
+						{#snippet iconSnippet()}
+							{#if team.number > 0}
+								<span class="w-5.5 flex badge badge-xs border-primary rounded-none justify-center">{team.number}</span>
+							{/if}
+						{/snippet}
 						{#snippet picture()}
 							<img src={team.logoCropped} alt="Logo di {team.name}" class="h-14 w-14 rounded-full object-cover" />
 						{/snippet}

@@ -172,7 +172,7 @@
 				</fieldset>
 
 				<div>
-					<button aria-label="Accedi" type="submit" class="btn btn-primary w-full">Accedi</button>
+					<button aria-label="Registrati" type="submit" class="btn btn-primary w-full">Registrati</button>
 				</div>
 			</form>
 			{#if $message}

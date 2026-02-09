@@ -1,14 +1,16 @@
 export type DocumentId = string;
 
-export enum DocumentKind {
-	Regulation = 'regulation'
+export enum DocumentCategory {
+	Regulation = 'Regolamento',
+	Module = 'Modulo',
+	Comunication = 'Comunicazione',
+	Investigation = 'Investigazione'
 }
 
 export interface Document {
 	id: DocumentId;
-	kind: DocumentKind;
+	category: DocumentCategory;
 	name: string;
-	category: string;
 	enabled: boolean;
 	file: string;
 	created: Date;

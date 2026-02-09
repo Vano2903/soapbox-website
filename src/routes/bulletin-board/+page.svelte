@@ -3,6 +3,7 @@
 	import ElementSelection from '$components/elementSelection/elementSelection.svelte';
 	import { LucideCalendarCheck, LucideRadio, LucideLock } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
+	import { DocumentCategory } from '$types/pocketbase/document.js';
 
 	// constant that defines how many elements to show on each side of the current element of the ElementSelection component
 	const championshipsListOffset: number = 3;
@@ -52,18 +53,23 @@
 		return elementsList;
 	}
 
-	function formatDate(date: Date | (Date | undefined)) {
-		if (!date) {
-			return null;
-		}
-		return new Date(date).toLocaleDateString('it-IT', {
-			year: 'numeric',
-			month: '2-digit',
-			day: '2-digit',
-			hour: '2-digit',
-			minute: '2-digit'
-		});
-	}
+	// split documents by metadata
+	const regulationAndModuleDocumentsDerived = $derived(
+		championshipDocumentsDerived?.filter((document) => {
+			return (
+				document.data.category == DocumentCategory.Regulation ||
+				document.data.category == DocumentCategory.Module
+			);
+		})
+	);
+	const comunicationAndInvestigationDocumentsDerived = $derived(
+		championshipDocumentsDerived?.filter((document) => {
+			return (
+				document.data.category == DocumentCategory.Comunication ||
+				document.data.category == DocumentCategory.Investigation
+			);
+		})
+	);
 </script>
 
 <main class="px-5 pb-16 lg:px-15">
@@ -76,7 +82,7 @@
 	</header>
 
 	<div class="flex flex-col">
-		<div class="mt-5 mb-13 flex justify-center">
+		<div class="mt-5 mb-8 flex justify-center">
 			<ElementSelection
 				offset={championshipsListOffset}
 				elements={transformToElementList(championshipsListDerived)}
@@ -87,9 +93,12 @@
 	</div>
 
 	<div class="space-y-8">
-		<section class="flex flex-wrap justify-center gap-4">
-			{#if championshipDocumentsDerived && championshipDocumentsDerived.length > 0}
-				{#each championshipDocumentsDerived as document}
+		{#if championshipDocumentsDerived && championshipDocumentsDerived.length > 0}
+			{#if regulationAndModuleDocumentsDerived && regulationAndModuleDocumentsDerived.length > 0}
+				<h2 class="mb-2 mt-4 text-center text-2xl font-bold md:text-3xl">Regolamenti e Moduli</h2>
+			{/if}
+			<section class="flex flex-wrap justify-center gap-4">
+				{#each regulationAndModuleDocumentsDerived as document}
 					<div
 						class="h-52 w-50 overflow-hidden rounded-xl bg-white shadow-md transition duration-300 hover:scale-105 hover:bg-neutral-100 md:h-70 md:w-80"
 					>
@@ -130,16 +139,65 @@
 						</div>
 					</div>
 				{/each}
-			{:else}
-				<div
-					class="xs:m-auto xs:w-9/10 flex flex-col justify-center rounded-md bg-neutral-50 px-4 py-8 shadow-md lg:w-7/10"
-				>
-					<p class="text-center">
-						Per questo campionato non sono ancora stati annunciati regolamenti.
-					</p>
-				</div>
+			</section>
+			{#if (regulationAndModuleDocumentsDerived && regulationAndModuleDocumentsDerived.length > 0) && (comunicationAndInvestigationDocumentsDerived && comunicationAndInvestigationDocumentsDerived.length > 0)}
+				<hr class="mx-auto border rounded-sm">
 			{/if}
-		</section>
+			{#if comunicationAndInvestigationDocumentsDerived && comunicationAndInvestigationDocumentsDerived.length > 0}
+				<h2 class="mb-2 mt-4 text-center text-2xl font-bold md:text-3xl">Comunicazioni e Investigazioni</h2>
+			{/if}
+			<section class="flex flex-wrap justify-center gap-4">
+				{#each comunicationAndInvestigationDocumentsDerived as document}
+					<div
+						class="h-52 w-50 overflow-hidden rounded-xl bg-white shadow-md transition duration-300 hover:scale-105 hover:bg-neutral-100 md:h-70 md:w-80"
+					>
+						<div class="flex flex-col content-between items-center p-1 text-center">
+							<hr
+								class="mx-auto mt-1.5 mb-2 h-0.75 w-2/3 max-w-70 rounded-sm border-0 bg-red-600 md:mb-4"
+							/>
+							<div>
+								<p class="text-base text-gray-600 md:text-xl">— {document.data.category} —</p>
+								<h3 class="text-xl font-bold md:px-5 md:text-3xl">{document.data.name}</h3>
+								<div class="mt-2 md:mt-8">
+									{#if document.data.enabled}
+										<a
+											target="_blank"
+											href={document.publicUrl}
+											class="btn btn-error text-foreground max-w-5/12 text-xs md:text-lg"
+										>
+											Visualizza
+										</a>
+									{:else}
+										<button
+											class="btn btn-disabled flex-nowrap text-xs text-nowrap text-gray-600 md:text-lg"
+										>
+											Visualizza
+										</button>
+									{/if}
+								</div>
+								<div class="mt-2 text-sm text-gray-500 md:mt-4 md:text-base">
+									<div class="flex flex-col gap-1">
+										<p>Aggiornato il:</p>
+										<p>{document.data.formattedUpdated}</p>
+									</div>
+								</div>
+							</div>
+							<hr
+								class="mx-auto mt-2 mb-1.5 h-0.75 w-2/3 max-w-70 rounded-sm border-0 bg-red-600 md:mt-4"
+							/>
+						</div>
+					</div>
+				{/each}
+			</section>
+		{:else}
+			<div
+				class="xs:m-auto xs:w-9/10 flex flex-col justify-center rounded-md bg-neutral-50 px-4 py-8 shadow-md lg:w-7/10"
+			>
+				<p class="text-center">
+					Per questo campionato non sono ancora stati annunciati regolamenti.
+				</p>
+			</div>
+		{/if}
 	</div>
 </main>
 

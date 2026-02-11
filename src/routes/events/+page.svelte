@@ -77,7 +77,7 @@
 
 		<div class="max-w-7xl mx-auto px-4 md:px-6 py-8">
 			<div 
-				class="card bg-base-100 shadow-xl mb-8 cursor-pointer hover:shadow-2xl transition duration-300 hover:bg-neutral-100"
+				class="card bg-base-100 shadow-xl mb-8 cursor-pointer hover:shadow-2xl transition duration-300 hover:bg-neutral-100 active:scale-98"
 				onclick={() => (document.getElementById('subscribed-member-list_modal') as HTMLDialogElement)?.showModal()}
 				onkeypress={(e) => e.key === 'Enter' && (document.getElementById('subscribed-member-list_modal') as HTMLDialogElement)?.showModal()}
 				role="button"
@@ -95,9 +95,27 @@
 								<p class="text-xs md:text-base text-gray-600">Clicca per vedere la lista di tutti i team iscritti</p>
 							</div>
 						</div>
-						<button class="btn btn-primary btn-md md:btn-lg" onclick={(e) => {e.stopPropagation();}}>
-							Iscriviti
-						</button>
+						{#if foundEventDerived.subscriptionsOpen && (foundEventDerived.maxSubscriptions === 0 || foundEventDerived.numSubscriptions < (foundEventDerived.maxSubscriptions || 0)) && (!foundEventDerived.startDate || new Date(foundEventDerived.startDate).valueOf() >= new Date().valueOf())}
+							<a
+								href={`/enroll?${new URLSearchParams(`championship=${foundChampionshipDerived.name}&event=${foundEventDerived.shortName}`).toString()}`}
+								class="btn btn-primary btn-md md:btn-lg"
+								onclick={(e) => {e.stopPropagation();}}
+							>
+								<UserRoundPlus /> Iscriviti
+							</a>
+						{:else}
+							<div class="flex flex-col items-center gap-2">
+								<div class="cursor-not-allowed">
+									<button
+										class="btn btn-disabled btn-md md:btn-lg  pointer-events-none"
+										onclick={(e) => {e.stopPropagation();}}
+									>
+										<UserRoundPlus /> Iscriviti
+									</button>
+								</div>
+								<span class="text-gray-600">Iscrizioni Chiuse</span>
+							</div>
+						{/if}
 					</div>
 				</div>
 

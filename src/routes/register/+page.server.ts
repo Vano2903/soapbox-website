@@ -27,7 +27,7 @@ export const actions = {
 				email: form.data.email,
 				password: form.data.password,
 				passwordConfirm: form.data.confirmPassword,
-				role: [Roles.User],
+				roles: [Roles.User],
 				visibility: UserVisiblityKind.Public
 			});
 			const user = await pb

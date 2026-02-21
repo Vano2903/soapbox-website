@@ -204,7 +204,8 @@
 						<label for="confirmTerms" class="label-text cursor-pointer">
 							Ho letto e accetto <a
 								class="text-gray-600 underline hover:text-red-600"
-								href="/static/documents/waiver-of-liability.pdf"
+								href="/documents/waiver-of-liability.pdf"
+								target="_blank"
 								>la liberatoria per la partecipazione</a
 							> all'evento
 						</label>

@@ -6,6 +6,7 @@
 	import { superForm } from 'sveltekit-superforms';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { Eye, EyeOff } from 'lucide-svelte';
 
 	const { data } = $props();
 
@@ -127,6 +128,8 @@
 		console.log('Redirecting to', redirectLocation);
 		goto(redirectLocation);
 	}
+
+	let showPassword = $state(false);
 </script>
 
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
@@ -168,24 +171,37 @@
 				<fieldset class="fieldset">
 					<div class="flex items-center justify-between">
 						<legend class="fieldset-legend">Password</legend>
-						<a href="/forgot-password" class="link link-hover link-accent"
+						<a href="/forgot-password" class="link link-hover link-accent text-right"
 							>Hai dimenticato la password?</a
 						>
 					</div>
-					<input
-						autocomplete="current-password"
-						type="password"
-						required
-						name="password"
-						class="input w-full"
-						placeholder=""
-						id="password"
-						{...$constraints.password}
-						class:input-error={$errors.password}
-						class:input-success={$form.password && 'password' in $errors && !$errors.password}
-						aria-invalid={$errors.password ? 'true' : undefined}
-						bind:value={$form.password}
-					/>
+					<div class="relative">
+						<input
+							autocomplete="current-password"
+							type={showPassword ? 'text' : 'password'}
+							required
+							name="password"
+							class="input w-full pr-10"
+							placeholder=""
+							id="password"
+							{...$constraints.password}
+							class:input-error={$errors.password}
+							class:input-success={$form.password && 'password' in $errors && !$errors.password}
+							aria-invalid={$errors.password ? 'true' : undefined}
+							bind:value={$form.password}
+						/>
+						<button
+							type="button"
+							class="absolute inset-y-0 right-0 flex items-center pr-3"
+							onclick={() => (showPassword = !showPassword)}
+						>
+							{#if showPassword}
+								<EyeOff class="h-5 w-5 text-gray-500" />
+							{:else}
+								<Eye class="h-5 w-5 text-gray-500" />
+							{/if}
+						</button>
+					</div>
 					{#if $errors.password}
 						{#if $errors.password.length == 1}
 							<p class="fieldset-label text-error">{$errors.password}</p>

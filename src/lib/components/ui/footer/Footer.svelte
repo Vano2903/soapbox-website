@@ -82,7 +82,7 @@
 					active: true
 				},
 				{
-					href: '/documents/statute-of-liability.pdf',
+					href: '/documents/waiver-of-liability.pdf',
 					name: 'sgravio responsabilità',
 					active: true
 				}
@@ -112,7 +112,7 @@
 	];
 </script>
 
-<footer class="flex min-h-[160px] flex-col bg-black pt-2 pr-4 pl-4">
+<footer class="flex min-h-40 flex-col bg-black pt-2 pr-4 pl-4">
 	<hr class="mx-4 mt-0.75 mb-3 h-1 w-auto rounded-sm border-0 bg-red-600" />
 	<div
 		class="flex flex-col flex-wrap items-center justify-center gap-2 text-center lg:flex-row lg:items-start lg:justify-between 2xl:text-left"

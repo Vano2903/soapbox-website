@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { LeaderboardType } from '$types/pocketbase/results';
 	import { CategoryKind } from '$types/pocketbase/eventParticipation';
+	import { Roles } from '$types/pocketbase/user';
 	import { ToSurfaceInfoExpandArray } from '$types/surfaceUtils.js';
-	import { CalendarDays, MapPin, LucideRadio, UserRoundCheck, UserRoundPlus, FileCheck, Map as MapBase, SquarePen, Route, Ruler, Mountain, TriangleRight, ChartSpline } from 'lucide-svelte';
+	import { CalendarDays, MapPin, LucideRadio, UserRoundCheck, UserRoundPlus, FileCheck, Map as MapBase, SquarePen, Route, Ruler, Mountain, TriangleRight, ChartSpline, Download, X } from 'lucide-svelte';
 	import { string } from 'zod';
+	import EntityCard2 from '$components/entityCard/entityCard2.svelte';
 
 	// destructures the data received from the PageLoad and prepares it to be derived (reactive to changes in value)
 	const { data } = $props();
@@ -11,6 +13,67 @@
 	const foundChampionshipDerived = $derived(data.foundChampionship);
 	const foundEventDerived = $derived(data.foundEvent);
 	const eventParticipationsDerived = $derived(data.eventParticipations);
+	const userDerived = $derived(data.user);
+
+	// --- Event participations modal management ---
+	let activeModalTab = $state<CategoryKind>(CategoryKind.SoapBox);
+
+	function downloadParticipantsList() {
+		let content = `Evento: ${foundEventDerived.name} (${foundEventDerived.shortName})\n`;
+		content += `Data evento: ${foundEventDerived?.startDate ? new Date(foundEventDerived?.startDate).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }) : "Non definita"}\n`;
+		content += `Data download: ${new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })}\n`;
+		content += `Totale iscritti: ${eventParticipationsDerived?.length}\n\n`;
+		content += '='.repeat(80) + '\n\n';
+
+		// SoapBox category
+		const soapboxParticipations = eventParticipationsDerived.filter((p) => p.category == CategoryKind.SoapBox);
+		content += `CATEGORIA SOAPBOX (${soapboxParticipations.length} Iscritti)\n`;
+		content += '-'.repeat(80) + '\n';
+		soapboxParticipations.forEach((participation, index) => {
+			content += `${(index + 1).toString().padStart(2, "0")}. ${participation.expand.team.name}\n`;
+			if (participation.expand.team.number != 0) {
+				content += `    Numero: ${participation.expand.team.number}\n`;
+			}
+			if (participation.teamNameAlias != "" && participation.teamNameAlias != participation.expand.team.name) {
+				content += `    Alias: ${participation.teamNameAlias}\n`;
+			}
+			if (participation.participants && participation.participants.length > 0) {
+				content += `    Partecipanti: ${participation.expand.participants.map((p) => `${p.name} ${p.lastName}`).join(', ')}\n`;
+			}
+			content += '\n';
+		});
+
+		content += '\n';
+
+		// Drift-Trike category
+		const driftTrikeParticipations = eventParticipationsDerived.filter((p) => p.category == CategoryKind.DriftTrike);
+		content += `CATEGORIA DRIFT-TRIKE (${driftTrikeParticipations.length} Iscritti)\n`;
+		content += '-'.repeat(80) + '\n';
+		driftTrikeParticipations.forEach((participation, index) => {
+			content += `${(index + 1).toString().padStart(2, "0")}. ${participation.expand.team.name}\n`;
+			if (participation.expand.team.number != 0) {
+				content += `    Numero: ${participation.expand.team.number}\n`;
+			}
+			if (participation.teamNameAlias != "" && participation.teamNameAlias != participation.expand.team.name) {
+				content += `    Alias: ${participation.teamNameAlias}\n`;
+			}
+			if (participation.participants && participation.participants.length > 0) {
+				content += `    Partecipanti: ${participation.expand.participants.map((p) => `${p.name} ${p.lastName}`).join(', ')}\n`;
+			}
+			content += '\n';
+		});
+
+		// Create download
+		const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+		const url = URL.createObjectURL(blob);
+		const link = document.createElement('a');
+		link.href = url;
+		link.download = `Iscritti_${foundEventDerived.shortName.replaceAll(" ", "-")}_${new Date().toISOString().split('T')[0]}.txt`;
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+		URL.revokeObjectURL(url);
+	}
 
 	// split results by metadata
 	const stageAndEventResultsDerived = $derived(
@@ -124,42 +187,118 @@
 					class="modal modal-bottom sm:modal-middle"
 					>
 					<div class="modal-box max-w-4xl">
-						<form method="dialog">
-							<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-						</form>
-						<!-- TODO: Review modal layout: should contain a tab-view, one for each category. Use TeamCard and not a simple template -->
-						<h3 class="font-bold text-2xl mb-6">Team Iscritti - {eventParticipationsDerived?.length} Totali</h3>
-						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-							<div>
-								<div class="flex items-center justify-between mb-4">
-									<h4 class="text-xl font-semibold">SoapBox</h4>
-									<span class="badge badge-primary badge-lg">{eventParticipationsDerived.filter((p) => p.category == CategoryKind.SoapBox)
-											.length}</span>
-								</div>
-								<div class="space-y-2 max-h-100 overflow-y-auto pr-2">
-									{#each eventParticipationsDerived.filter((p) => p.category == CategoryKind.SoapBox) as eventParticipation}
-										<div class="p-3 bg-base-200 rounded-lg hover:bg-base-300 transition-colors">
-											<div class="font-semibold">{eventParticipation.expand.team.name}</div>
-											<div class="text-sm text-base-content/70">{eventParticipation.teamNameAlias}</div>
-										</div>
-									{/each}
-								</div>
+						<div class="flex items-start justify-between mb-4">
+							<div class="flex-1">
+								<h3 class="font-bold text-xl md:text-2xl">Iscritti all'evento<br class="block md:hidden"> {foundEventDerived.name}:</h3>
+								<p class="text-xs md:text-sm text-base-content/70 mt-1">
+									Totale: {foundEventDerived.numSubscriptions} iscritt{foundEventDerived.numSubscriptions === 1 ? 'o' : 'i'}
+								</p>
 							</div>
-							<div>
-								<div class="flex items-center justify-between mb-4">
-									<h4 class="text-xl font-semibold">Drift-Trike</h4>
-									<span class="badge badge-primary badge-lg">{eventParticipationsDerived.filter((p) => p.category == CategoryKind.DriftTrike)
-											.length}</span>
-								</div>
-								<div class="space-y-2 max-h-100 overflow-y-auto pr-2">
-									{#each eventParticipationsDerived.filter((p) => p.category == CategoryKind.DriftTrike) as eventParticipation}
-										<div class="p-3 bg-base-200 rounded-lg hover:bg-base-300 transition-colors">
-											<div class="font-semibold">{eventParticipation.expand.team.name}</div>
-											<div class="text-sm text-base-content/70">{eventParticipation.teamNameAlias}</div>
-										</div>
-									{/each}
-								</div>
+							<div class="flex items-start gap-2">
+								{#if userDerived && userDerived.roles && userDerived.roles.includes(Roles.Admin)}
+									<button 
+										class="btn btn-square btn-ghost btn-md md:btn-lg"
+										onclick={downloadParticipantsList}
+										title="Scarica lista iscritti"
+									>
+										<Download class="h-6 w-6" />
+									</button>
+								{/if}
+								<form method="dialog">
+									<button class="btn btn-square btn-ghost btn-md md:btn-lg" title="Chiudi">
+										<X class="h-6 w-6" />
+									</button>
+								</form>
 							</div>
+						</div>
+
+						<!-- Tabs -->
+						<div role="tablist" class="tabs tabs-md md:tabs-lg tabs-lift flex justify-center p-1">
+							<button
+								role="tab"
+								class="tab"
+								class:tab-active={activeModalTab === CategoryKind.SoapBox}
+								class:text-primary={activeModalTab === CategoryKind.SoapBox}
+								onclick={() => (activeModalTab = CategoryKind.SoapBox)}
+							>
+								SoapBox
+								<span class="badge badge-sm ml-2 bg-neutral-100">{eventParticipationsDerived.filter((p) => p.category === CategoryKind.SoapBox).length}</span>
+							</button>
+							<button
+								role="tab"
+								class="tab"
+								class:tab-active={activeModalTab === CategoryKind.DriftTrike}
+								class:text-primary={activeModalTab === CategoryKind.DriftTrike}
+								onclick={() => (activeModalTab = CategoryKind.DriftTrike)}
+							>
+								Drift-Trike
+								<span class="badge badge-sm ml-2 bg-neutral-100">{eventParticipationsDerived.filter((p) => p.category === CategoryKind.DriftTrike).length}</span>
+							</button>
+						</div>
+
+						<!-- Tab Content -->
+						<div class="space-y-2 max-h-96 overflow-y-auto pr-2">
+							{#if activeModalTab === CategoryKind.SoapBox}
+								{#each eventParticipationsDerived.filter((p) => p.category === CategoryKind.SoapBox) as eventParticipation}
+									<EntityCard2
+										title={(eventParticipation.teamNameAlias && eventParticipation.teamNameAlias != eventParticipation.expand.team.name) ? eventParticipation.teamNameAlias : eventParticipation.expand.team.name}
+										slug={eventParticipation.expand.team.slug}
+										link="/team/{eventParticipation.expand.team.slug}"
+									>
+										{#snippet backgroundSnippet()}
+											{#if eventParticipation.expand.team.bannerCropped}
+												<img src={eventParticipation.expand.team.bannerCropped} alt="Banner di {eventParticipation.expand.team.name}" class="h-full w-auto min-w-full object-cover object-left"/>
+											{/if}
+										{/snippet}
+										{#snippet iconSnippet()}
+											{#if eventParticipation.expand.team.number > 0}
+												<span class="w-5.5 flex badge badge-xs border-primary rounded-none justify-center">{eventParticipation.expand.team.number}</span>
+											{/if}
+										{/snippet}
+										{#snippet picture()}
+											<img src={eventParticipation.expand.team.logoCropped} alt="Logo di {eventParticipation.expand.team.name}" class="h-14 w-14 rounded-full object-cover" />
+										{/snippet}
+									</EntityCard2>
+									<!-- <div class="p-4 bg-base-200 rounded-lg hover:bg-base-300 transition-colors">
+										<div class="font-semibold text-lg">{eventParticipation.expand.team.name}</div>
+										<div class="text-sm text-base-content/70">{eventParticipation.teamNameAlias}</div>
+									</div> -->
+								{:else}
+									<div class="text-center py-8 text-base-content/70">
+										Nessun team iscritto in questa categoria
+									</div>
+								{/each}
+							{:else if activeModalTab === CategoryKind.DriftTrike}
+								{#each eventParticipationsDerived.filter((p) => p.category === CategoryKind.DriftTrike) as eventParticipation}
+									<EntityCard2
+										title={(eventParticipation.teamNameAlias && eventParticipation.teamNameAlias != eventParticipation.expand.team.name) ? eventParticipation.teamNameAlias : eventParticipation.expand.team.name}
+										slug={eventParticipation.expand.team.slug}
+										link="/team/{eventParticipation.expand.team.slug}"
+									>
+										{#snippet backgroundSnippet()}
+											{#if eventParticipation.expand.team.bannerCropped}
+												<img src={eventParticipation.expand.team.bannerCropped} alt="Banner di {eventParticipation.expand.team.name}" class="h-full w-auto min-w-full object-cover object-left"/>
+											{/if}
+										{/snippet}
+										{#snippet iconSnippet()}
+											{#if eventParticipation.expand.team.number > 0}
+												<span class="w-5.5 flex badge badge-xs border-primary rounded-none justify-center">{eventParticipation.expand.team.number}</span>
+											{/if}
+										{/snippet}
+										{#snippet picture()}
+											<img src={eventParticipation.expand.team.logoCropped} alt="Logo di {eventParticipation.expand.team.name}" class="h-14 w-14 rounded-full object-cover" />
+										{/snippet}
+									</EntityCard2>
+									<!-- <div class="p-4 bg-base-200 rounded-lg hover:bg-base-300 transition-colors">
+										<div class="font-semibold text-lg">{eventParticipation.expand.team.name}</div>
+										<div class="text-sm text-base-content/70">{eventParticipation.teamNameAlias}</div>
+									</div> -->
+								{:else}
+									<div class="text-center py-8 text-base-content/70">
+										Nessun team iscritto in questa categoria
+									</div>
+								{/each}
+							{/if}
 						</div>
 					</div>
 				</dialog>

@@ -7,6 +7,7 @@ import type { ChampionshipExpand } from '$types/pocketbase/championship';
 import { fail } from '@sveltejs/kit';
 import type { EventExpand } from '$types/pocketbase/event';
 import type { EventParticipationExpand } from '$types/pocketbase/eventParticipation';
+import { createAvatarUrl } from '$lib/utils/avatar';
 
 export const load: PageLoad = async ({ data, url, fetch }) => {
 	console.log('Loading championships:\n > data = ', data, '\n > url = ', url);
@@ -88,12 +89,18 @@ export const load: PageLoad = async ({ data, url, fetch }) => {
 			.getFullList({
 				fetch: fetch,
 				filter: `event="${foundEvent.id}"`,
-				expand: 'team'
+				expand: 'team,participants'
 			});
 	} catch (err) {
 		console.error('Event participations not found: ', err);
 		throw fail(500);
 	}
+
+	eventParticipations = eventParticipations.map((ep) => {
+		ep.expand.team.logoCropped = pb.files.getURL(ep.expand.team, ep.expand.team.logoCropped || '') || createAvatarUrl(ep.expand.team.slug, 'small');
+		ep.expand.team.bannerCropped = pb.files.getURL(ep.expand.team, ep.expand.team.bannerCropped || '') || undefined;
+		return ep;
+	});
 
 	return { championshipsList, foundChampionship, foundEvent, eventParticipations };
 };

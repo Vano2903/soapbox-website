@@ -5,6 +5,7 @@
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { superForm } from 'sveltekit-superforms';
 	import { goto } from '$app/navigation';
+	import { Eye, EyeOff } from 'lucide-svelte';
 	// import { render } from 'svelte/server';
 
 	const { data } = $props();
@@ -44,6 +45,9 @@
 			return;
 		}
 	}
+
+	let showPassword = $state(false);
+	let showConfirmPassword = $state(false);
 </script>
 
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
@@ -81,20 +85,33 @@
 					<div class="flex items-center justify-between">
 						<legend class="fieldset-legend">Password</legend>
 					</div>
-					<input
-						autocomplete="current-password"
-						type="password"
-						required
-						name="password"
-						class="input w-full"
-						placeholder=""
-						id="password"
-						{...$constraints.password}
-						class:input-error={$errors.password}
-						class:input-success={$form.password && 'password' in $errors && !$errors.password}
-						aria-invalid={$errors.password ? 'true' : undefined}
-						bind:value={$form.password}
-					/>
+					<div class="relative">
+						<input
+							autocomplete="current-password"
+							type={showPassword ? 'text' : 'password'}
+							required
+							name="password"
+							class="input w-full"
+							placeholder=""
+							id="password"
+							{...$constraints.password}
+							class:input-error={$errors.password}
+							class:input-success={$form.password && 'password' in $errors && !$errors.password}
+							aria-invalid={$errors.password ? 'true' : undefined}
+							bind:value={$form.password}
+						/>
+						<button
+							type="button"
+							class="absolute inset-y-0 right-0 flex items-center pr-3"
+							onclick={() => (showPassword = !showPassword)}
+						>
+							{#if showPassword}
+								<EyeOff class="h-5 w-5 text-gray-500" />
+							{:else}
+								<Eye class="h-5 w-5 text-gray-500" />
+							{/if}
+						</button>
+					</div>
 					{#if $errors.password}
 						{#if $errors.password.length == 1}
 							<p class="fieldset-label text-error">{$errors.password}</p>
@@ -112,22 +129,35 @@
 					<div class="flex items-center justify-between">
 						<legend class="fieldset-legend">Conferma la password</legend>
 					</div>
-					<input
-						autocomplete="current-password"
-						type="password"
-						required
-						name="confirmPassword"
-						class="input w-full"
-						placeholder=""
-						id="confirmPassword"
-						{...$constraints.confirmPassword}
-						class:input-error={$errors.confirmPassword}
-						class:input-success={$form.confirmPassword &&
-							'confirmPassword' in $errors &&
-							!$errors.confirmPassword}
-						aria-invalid={$errors.confirmPassword ? 'true' : undefined}
-						bind:value={$form.confirmPassword}
-					/>
+					<div class="relative">
+						<input
+							autocomplete="current-password"
+							type={showConfirmPassword ? 'text' : 'password'}
+							required
+							name="confirmPassword"
+							class="input w-full"
+							placeholder=""
+							id="confirmPassword"
+							{...$constraints.confirmPassword}
+							class:input-error={$errors.confirmPassword}
+							class:input-success={$form.confirmPassword &&
+								'confirmPassword' in $errors &&
+								!$errors.confirmPassword}
+							aria-invalid={$errors.confirmPassword ? 'true' : undefined}
+							bind:value={$form.confirmPassword}
+						/>
+						<button
+							type="button"
+							class="absolute inset-y-0 right-0 flex items-center pr-3"
+							onclick={() => (showConfirmPassword = !showConfirmPassword)}
+						>
+							{#if showConfirmPassword}
+								<EyeOff class="h-5 w-5 text-gray-500" />
+							{:else}
+								<Eye class="h-5 w-5 text-gray-500" />
+							{/if}
+						</button>
+					</div>
 					{#if $errors.confirmPassword}
 						{#if $errors.confirmPassword.length == 1}
 							<p class="fieldset-label text-error">{$errors.confirmPassword}</p>
@@ -142,7 +172,7 @@
 				</fieldset>
 
 				<div>
-					<button aria-label="Accedi" type="submit" class="btn btn-primary w-full">Accedi</button>
+					<button aria-label="Registrati" type="submit" class="btn btn-primary w-full">Registrati</button>
 				</div>
 			</form>
 			{#if $message}

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { LeaderboardType } from '$types/pocketbase/results';
 	import { CategoryKind } from '$types/pocketbase/eventParticipation';
+	import { Roles } from '$types/pocketbase/user';
 	import { ToSurfaceInfoExpandArray } from '$types/surfaceUtils.js';
 	import { CalendarDays, MapPin, LucideRadio, UserRoundCheck, UserRoundPlus, FileCheck, Map as MapBase, SquarePen, Route, Ruler, Mountain, TriangleRight, ChartSpline, Download, X } from 'lucide-svelte';
 	import { string } from 'zod';
@@ -12,6 +13,67 @@
 	const foundChampionshipDerived = $derived(data.foundChampionship);
 	const foundEventDerived = $derived(data.foundEvent);
 	const eventParticipationsDerived = $derived(data.eventParticipations);
+	const userDerived = $derived(data.user);
+
+	// --- Event participations modal management ---
+	let activeModalTab = $state<CategoryKind>(CategoryKind.SoapBox);
+
+	function downloadParticipantsList() {
+		let content = `Evento: ${foundEventDerived.name} (${foundEventDerived.shortName})\n`;
+		content += `Data evento: ${foundEventDerived?.startDate ? new Date(foundEventDerived?.startDate).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }) : "Non definita"}\n`;
+		content += `Data download: ${new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })}\n`;
+		content += `Totale iscritti: ${eventParticipationsDerived?.length}\n\n`;
+		content += '='.repeat(80) + '\n\n';
+
+		// SoapBox category
+		const soapboxParticipations = eventParticipationsDerived.filter((p) => p.category == CategoryKind.SoapBox);
+		content += `CATEGORIA SOAPBOX (${soapboxParticipations.length} Iscritti)\n`;
+		content += '-'.repeat(80) + '\n';
+		soapboxParticipations.forEach((participation, index) => {
+			content += `${(index + 1).toString().padStart(2, "0")}. ${participation.expand.team.name}\n`;
+			if (participation.expand.team.number != 0) {
+				content += `    Numero: ${participation.expand.team.number}\n`;
+			}
+			if (participation.teamNameAlias != "" && participation.teamNameAlias != participation.expand.team.name) {
+				content += `    Alias: ${participation.teamNameAlias}\n`;
+			}
+			if (participation.participants && participation.participants.length > 0) {
+				content += `    Partecipanti: ${participation.expand.participants.map((p) => `${p.name} ${p.lastName}`).join(', ')}\n`;
+			}
+			content += '\n';
+		});
+
+		content += '\n';
+
+		// Drift-Trike category
+		const driftTrikeParticipations = eventParticipationsDerived.filter((p) => p.category == CategoryKind.DriftTrike);
+		content += `CATEGORIA DRIFT-TRIKE (${driftTrikeParticipations.length} Iscritti)\n`;
+		content += '-'.repeat(80) + '\n';
+		driftTrikeParticipations.forEach((participation, index) => {
+			content += `${(index + 1).toString().padStart(2, "0")}. ${participation.expand.team.name}\n`;
+			if (participation.expand.team.number != 0) {
+				content += `    Numero: ${participation.expand.team.number}\n`;
+			}
+			if (participation.teamNameAlias != "" && participation.teamNameAlias != participation.expand.team.name) {
+				content += `    Alias: ${participation.teamNameAlias}\n`;
+			}
+			if (participation.participants && participation.participants.length > 0) {
+				content += `    Partecipanti: ${participation.expand.participants.map((p) => `${p.name} ${p.lastName}`).join(', ')}\n`;
+			}
+			content += '\n';
+		});
+
+		// Create download
+		const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+		const url = URL.createObjectURL(blob);
+		const link = document.createElement('a');
+		link.href = url;
+		link.download = `Iscritti_${foundEventDerived.shortName.replaceAll(" ", "-")}_${new Date().toISOString().split('T')[0]}.txt`;
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+		URL.revokeObjectURL(url);
+	}
 
 	// split results by metadata
 	const stageAndEventResultsDerived = $derived(
@@ -115,11 +177,20 @@
 								</p>
 							</div>
 							<div class="flex items-start gap-2">
-						<form method="dialog">
+								{#if userDerived && userDerived.roles && userDerived.roles.includes(Roles.Admin)}
+									<button 
+										class="btn btn-square btn-ghost btn-md md:btn-lg"
+										onclick={downloadParticipantsList}
+										title="Scarica lista iscritti"
+									>
+										<Download class="h-6 w-6" />
+									</button>
+								{/if}
+								<form method="dialog">
 									<button class="btn btn-square btn-ghost btn-md md:btn-lg" title="Chiudi">
 										<X class="h-6 w-6" />
 									</button>
-						</form>
+								</form>
 							</div>
 						</div>
 
@@ -145,7 +216,7 @@
 								Drift-Trike
 								<span class="badge badge-sm ml-2 bg-neutral-100">{eventParticipationsDerived.filter((p) => p.category === CategoryKind.DriftTrike).length}</span>
 							</button>
-								</div>
+						</div>
 
 						<!-- Tab Content -->
 						<div class="space-y-2 max-h-96 overflow-y-auto pr-2">
@@ -172,13 +243,13 @@
 									</EntityCard2>
 									<!-- <div class="p-4 bg-base-200 rounded-lg hover:bg-base-300 transition-colors">
 										<div class="font-semibold text-lg">{eventParticipation.expand.team.name}</div>
-											<div class="text-sm text-base-content/70">{eventParticipation.teamNameAlias}</div>
+										<div class="text-sm text-base-content/70">{eventParticipation.teamNameAlias}</div>
 									</div> -->
 								{:else}
 									<div class="text-center py-8 text-base-content/70">
 										Nessun team iscritto in questa categoria
-										</div>
-									{/each}
+									</div>
+								{/each}
 							{:else if activeModalTab === CategoryKind.DriftTrike}
 								{#each eventParticipationsDerived.filter((p) => p.category === CategoryKind.DriftTrike) as eventParticipation}
 									<EntityCard2
@@ -207,7 +278,7 @@
 								{:else}
 									<div class="text-center py-8 text-base-content/70">
 										Nessun team iscritto in questa categoria
-								</div>
+									</div>
 								{/each}
 							{/if}
 						</div>

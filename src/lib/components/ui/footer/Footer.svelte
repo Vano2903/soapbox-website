@@ -72,14 +72,19 @@
 			links: [
 				{ herf: '/site-map', name: 'mappa del sito', active: false },
 				{
+					href: '/documents/statute-of-association.pdf',
+					name: 'statuto dell\'associazione',
+					active: true
+				},
+				{
 					href: '/documents/privacy-policy.pdf',
 					name: 'informativa privacy',
-					active: true
+					active: false
 				},
 				{
 					href: '/documents/terms-and-conditions.pdf',
 					name: 'termini e condizioni',
-					active: true
+					active: false
 				},
 				{
 					href: '/documents/waiver-of-liability.pdf',
@@ -95,13 +100,13 @@
 				{ herf: '/', name: 'home', active: true },
 				{ herf: '/leaderboards', name: 'classifiche', active: true },
 				{ herf: '/bulletin-board', name: 'regolamenti', active: true },
-				{ href: '/contacts', name: 'contatti', active: true },
+				{ href: '/contacts', name: 'contatti', active: false },
 				{ href: '/lavora-con-noi', name: 'lavora con noi', active: false }
 			]
 		},
 		{
 			name: 'assistenza',
-			active: true,
+			active: false,
 			links: [
 				{ herf: '/content-removal', name: 'rimozione contenuti', active: false },
 				{ herf: '/faq', name: 'domande frequenti', active: true },

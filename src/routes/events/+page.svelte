@@ -395,7 +395,7 @@
 											</div>
 											<div class="flex items-center gap-2">
 												<div class="flex flex-col items-center justify-center">
-													<span class="text-2xl font-bold">{foundEventDerived.expand.track.rightTurns}</span>
+													<span class="text-2xl font-bold">{foundEventDerived.expand.track.leftTurns}</span>
 													<span class="text-sm text-base-content/70">Sinistra</span>
 												</div>
 												<div class="divider divider-horizontal m-0.5"></div>

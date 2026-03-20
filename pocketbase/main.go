@@ -25,15 +25,21 @@ func main() {
 
 		e.Record.Set("person", person.Id)
 		if err := e.App.Save(person); err != nil {
+			e.App.Delete(person)
 			return err
 		}
 		// e.Record.Set("id:autogenerate", "")
 		if err := e.Next(); err != nil {
+			e.App.Delete(person)
 			return err
 		}
 
 		person.Set("user", e.Record.Id)
-		return e.App.Save(person)
+		if err := e.App.Save(person); err != nil {
+			e.App.Delete(person)
+			return err
+		}
+		return nil
 	})
 
 	app.OnRecordUpdate("users").BindFunc(func(e *core.RecordEvent) error {

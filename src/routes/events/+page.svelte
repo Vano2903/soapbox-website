@@ -93,7 +93,21 @@
 	// --- Interactive Map management ---
 	const mapZoom = 16;
 	const trackMapURL = $derived(`https://www.google.com/maps/d/embed?mid=1UhQ2GD9N4TgOZ-KBu2nn7ak-WqbYjuo&hl=it&ll=${foundEventDerived.expand.track?.coordinates?.lat},${foundEventDerived.expand.track?.coordinates?.lon}&z=${mapZoom}&noprof=1`);
-	let showInteractiveMap = $state(true);
+	let showInteractiveMap = $state(foundEventDerived.expand.track.coordinates && !(foundEventDerived.expand.track.coordinates.lat == 0 && foundEventDerived.expand.track.coordinates.lon == 0));
+
+	function switchShowInteractiveMap() {
+		if (showInteractiveMap) {
+			// check if a event static map is available, if not keep the interactive map shown
+			if (foundEventDerived.map && foundEventDerived.map != '') {
+				showInteractiveMap = false;
+			}
+		} else {
+			// check if track coordinates are available and valid, if not keep the static map shown
+			if (foundEventDerived.expand.track.coordinates && !(foundEventDerived.expand.track.coordinates.lat == 0 && foundEventDerived.expand.track.coordinates.lon == 0)) {
+				showInteractiveMap = true;
+			}
+		}
+	}
 </script>
 
 <main class="pb-16">
@@ -338,36 +352,40 @@
 						</div>
 					{/if}
 					<!-- Track Details -->
-					{#if foundEventDerived.expand.track}
+					{#if foundEventDerived.expand.track || foundEventDerived.map}
 						<div class="card bg-base-100 shadow-xl">
 							<div class="card-body">
 								<div class="flex items-center justify-between mb-4">
 									<h2 class="card-title text-2xl">Tracciato</h2>
-									<label class="swap swap-rotate">
-										<input type="checkbox" bind:checked={showInteractiveMap} class="tooltip tooltip-left" data-tip={showInteractiveMap ? "Visualizza cartina" : "Visualizza mappa interattiva"}/>
-										<MapBase class="swap-off h-6 w-6 text-red-600"/>
-										<SquarePen class="swap-on h-6 w-6 text-red-600"/>
-									</label>
+									{#if foundEventDerived.expand.track.coordinates && !(foundEventDerived.expand.track.coordinates.lat == 0 && foundEventDerived.expand.track.coordinates.lon == 0) && (foundEventDerived.map && foundEventDerived.map != '')}
+										<label class="swap swap-rotate">
+											<input type="checkbox" class="tooltip tooltip-left" onclick={switchShowInteractiveMap} data-tip={showInteractiveMap ? "Visualizza cartina" : "Visualizza mappa interattiva"}/>
+											<MapBase class="swap-on h-6 w-6 text-red-600"/>
+											<SquarePen class="swap-off h-6 w-6 text-red-600"/>
+										</label>
+									{/if}
 								</div>
-								{#if showInteractiveMap && foundEventDerived.expand.track.coordinates}
-									<div class="w-full h-100 rounded-lg mb-4 overflow-hidden bg-neutral-100">
-										<iframe
-										src={trackMapURL}
-										width="100%"
-										height="100%"
-										style="border:0;"
-										allowfullscreen={null}
-										loading="lazy"
-										referrerpolicy="no-referrer-when-downgrade"
-										title="Mappa tracciato"
-										></iframe>
-									</div>
-								{:else if !showInteractiveMap && foundEventDerived.map && foundEventDerived.map != ''}
-									<img 
-										src={foundEventDerived.map}
-										alt="Mappa del tracciato"
-										class="w-full rounded-lg mb-4"
-									/>
+								{#if (foundEventDerived.expand.track.coordinates && !(foundEventDerived.expand.track.coordinates.lat == 0 && foundEventDerived.expand.track.coordinates.lon == 0)) || (foundEventDerived.map && foundEventDerived.map != '')}
+									{#if showInteractiveMap}
+										<div class="w-full h-100 rounded-lg mb-4 overflow-hidden bg-neutral-100">
+											<iframe
+											src={trackMapURL}
+											width="100%"
+											height="100%"
+											style="border:0;"
+											allowfullscreen={null}
+											loading="lazy"
+											referrerpolicy="no-referrer-when-downgrade"
+											title="Mappa interattiva del tracciato"
+											></iframe>
+										</div>
+									{:else}
+										<img 
+											src={foundEventDerived.map}
+											alt="Cartina del tracciato"
+											class="w-full rounded-lg mb-4"
+										/>
+									{/if}
 								{/if}
 								<div class="space-y-4">
 									<!-- Length -->

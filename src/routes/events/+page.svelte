@@ -166,7 +166,7 @@
 							<div class="flex flex-col items-center gap-2">
 								<div class="cursor-not-allowed">
 									<button
-										class="btn btn-disabled btn-md md:btn-lg  pointer-events-none"
+										class="btn btn-disabled btn-md md:btn-lg pointer-events-none"
 										onclick={(e) => {e.stopPropagation();}}
 									>
 										<UserRoundPlus /> Iscriviti
@@ -340,19 +340,25 @@
 								<div class="flex items-center justify-between mb-4">
 									<h2 class="card-title text-2xl">Tracciato</h2>
 									{#if foundEventDerived.expand.track.coordinates && !(foundEventDerived.expand.track.coordinates.lat == 0 && foundEventDerived.expand.track.coordinates.lon == 0) && (foundEventDerived.map && foundEventDerived.map != '')}
-										<div class="flex items-center gap-2">
-											<!--
-												Should be accessible for mobile devices too, so tooltip isn't an option,
-												the question mark should be clicked for popup info and then contain a redirect to the full documentation
-											-->
-											<a href="/docs#change-track-image" class="tooltip tooltip-left" data-tip="Informazioni sul tracciato">
+										<div class="flex items-center gap-1">
+											<button class="btn btn-sm btn-circle btn-ghost tooltip tooltip-left tooltip-unbold" data-tip="Informazioni sul tracciato" onclick={() => (document.getElementById('change-track-image-help_modal') as HTMLDialogElement)?.showModal()}>
 												<CircleHelp class="h-6 w-6 text-gray-600"/>
-											</a>
-											<label class="swap swap-rotate">
-												<input type="checkbox" class="tooltip tooltip-left" onclick={switchShowInteractiveMap} data-tip={showInteractiveMap ? "Visualizza cartina" : "Visualizza mappa interattiva"}/>
+											</button>
+											<label class="swap swap-rotate btn btn-sm btn-circle btn-ghost tooltip tooltip-left tooltip-unbold" data-tip={showInteractiveMap ? "Visualizza cartina" : "Visualizza mappa interattiva"}>
+												<input type="checkbox" onclick={switchShowInteractiveMap} />
 												<MapBase class="swap-on h-6 w-6 text-red-600"/>
 												<SquarePen class="swap-off h-6 w-6 text-red-600"/>
 											</label>
+
+											<dialog id="change-track-image-help_modal" class="modal">
+												<div class="modal-box">
+													<form method="dialog">
+														<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+													</form>
+													<h3 class="text-lg font-bold">Hello!</h3>
+													<p class="py-4">Press ESC key or click on ✕ button to close</p>
+												</div>
+											</dialog>
 										</div>
 									{/if}
 								</div>
@@ -589,3 +595,9 @@
 		</div>
 	{/if} -->
 </main>
+
+<style>
+	.tooltip-unbold.tooltip::before {
+		font-weight: 400;
+	}
+</style>

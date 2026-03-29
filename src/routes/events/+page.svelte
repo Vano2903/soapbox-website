@@ -11,6 +11,7 @@
 	const foundEventDerived = $derived(data.foundEvent);
 	const eventParticipationsDerived = $derived(data.eventParticipations);
 	const userDerived = $derived(data.user);
+	const contextualHelps = $derived(data.contextualHelps);
 
 	// --- Event participations modal management ---
 	let activeModalTab = $state<CategoryKind>(CategoryKind.SoapBox);
@@ -357,7 +358,7 @@
 												<div class="modal-box">
 													<div class="flex items-start justify-between mb-4">
 														<div class="flex-1">
-															<h3 class="font-bold text-lg md:text-xl">Cambia immagine del tracciato</h3>
+															<h3 class="font-bold text-lg md:text-xl">{contextualHelps.events_changeTrackImage?.name ?? 'Contenuto non trovato'}</h3>
 															<p class="text-xs md:text-sm text-base-content/70 mt-1">
 																Guida all'utilizzo del sito
 															</p>
@@ -371,10 +372,10 @@
 														</div>
 													</div>
 													<p class="text-xs md:text-sm">
-														Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+														{contextualHelps.events_changeTrackImage?.shortContent ?? ''}
 													</p>
 													<p class="text-xs md:text-sm mt-1">
-														Maggiori informazioni nella <a href="/documentation#change-track-image" target="_blank" class="text-primary underline">documentazione</a>
+														Maggiori informazioni nella <a href={`/documentations/${contextualHelps.events_changeTrackImage?.docReference ?? ''}`} target="_blank" class="text-primary underline">documentazione</a>
 													</p>
 												</div>
 												<form method="dialog" class="modal-backdrop">

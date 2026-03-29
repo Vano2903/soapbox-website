@@ -1,15 +1,12 @@
 <script lang="ts">
-	import { LeaderboardType } from '$types/pocketbase/results';
 	import { CategoryKind } from '$types/pocketbase/eventParticipation';
 	import { Roles } from '$types/pocketbase/user';
 	import { ToSurfaceInfoExpandArray } from '$types/surfaceUtils.js';
-	import { CalendarDays, MapPin, LucideRadio, UserRoundCheck, UserRoundPlus, FileCheck, Map as MapBase, SquarePen, Route, Ruler, Mountain, TriangleRight, ChartSpline, Download, X } from 'lucide-svelte';
-	import { string } from 'zod';
+	import { CalendarDays, MapPin, UserRoundPlus, FileCheck, Map as MapBase, SquarePen, Route, Ruler, Mountain, TriangleRight, ChartSpline, Download, X, CircleHelp } from 'lucide-svelte';
 	import EntityCard2 from '$components/entityCard/entityCard2.svelte';
 
 	// destructures the data received from the PageLoad and prepares it to be derived (reactive to changes in value)
 	const { data } = $props();
-	const championshipsListDerived = $derived(data.championshipsList);
 	const foundChampionshipDerived = $derived(data.foundChampionship);
 	const foundEventDerived = $derived(data.foundEvent);
 	const eventParticipationsDerived = $derived(data.eventParticipations);
@@ -74,21 +71,6 @@
 		document.body.removeChild(link);
 		URL.revokeObjectURL(url);
 	}
-
-	// split results by metadata
-	const stageAndEventResultsDerived = $derived(
-		foundEventDerived.expand.results?.filter((result) => {
-			return (
-				result.leaderboardType == LeaderboardType.Stage ||
-				result.leaderboardType == LeaderboardType.Event
-			);
-		})
-	);
-	const championshipResultsDerived = $derived(
-		foundEventDerived.expand.results?.filter((result) => {
-			return result.leaderboardType == LeaderboardType.Championship;
-		})
-	);
 
 	// --- Interactive Map management ---
 	const mapZoom = 16;
@@ -358,11 +340,20 @@
 								<div class="flex items-center justify-between mb-4">
 									<h2 class="card-title text-2xl">Tracciato</h2>
 									{#if foundEventDerived.expand.track.coordinates && !(foundEventDerived.expand.track.coordinates.lat == 0 && foundEventDerived.expand.track.coordinates.lon == 0) && (foundEventDerived.map && foundEventDerived.map != '')}
-										<label class="swap swap-rotate">
-											<input type="checkbox" class="tooltip tooltip-left" onclick={switchShowInteractiveMap} data-tip={showInteractiveMap ? "Visualizza cartina" : "Visualizza mappa interattiva"}/>
-											<MapBase class="swap-on h-6 w-6 text-red-600"/>
-											<SquarePen class="swap-off h-6 w-6 text-red-600"/>
-										</label>
+										<div class="flex items-center gap-2">
+											<!--
+												Should be accessible for mobile devices too, so tooltip isn't an option,
+												the question mark should be clicked for popup info and then contain a redirect to the full documentation
+											-->
+											<a href="/docs#change-track-image" class="tooltip tooltip-left" data-tip="Informazioni sul tracciato">
+												<CircleHelp class="h-6 w-6 text-gray-600"/>
+											</a>
+											<label class="swap swap-rotate">
+												<input type="checkbox" class="tooltip tooltip-left" onclick={switchShowInteractiveMap} data-tip={showInteractiveMap ? "Visualizza cartina" : "Visualizza mappa interattiva"}/>
+												<MapBase class="swap-on h-6 w-6 text-red-600"/>
+												<SquarePen class="swap-off h-6 w-6 text-red-600"/>
+											</label>
+										</div>
 									{/if}
 								</div>
 								{#if (foundEventDerived.expand.track.coordinates && !(foundEventDerived.expand.track.coordinates.lat == 0 && foundEventDerived.expand.track.coordinates.lon == 0)) || (foundEventDerived.map && foundEventDerived.map != '')}

@@ -344,7 +344,7 @@
 									<h2 class="card-title text-2xl">Tracciato</h2>
 									{#if foundEventDerived.expand.track.coordinates && !(foundEventDerived.expand.track.coordinates.lat == 0 && foundEventDerived.expand.track.coordinates.lon == 0) && (foundEventDerived.map && foundEventDerived.map != '')}
 										<div class="flex items-center gap-1">
-											<button class="btn btn-sm btn-circle btn-ghost tooltip tooltip-left tooltip-unbold" data-tip="Informazioni sul tracciato" onclick={() => (document.getElementById('change-track-image-help_modal') as HTMLDialogElement)?.showModal()}>
+											<button class="btn btn-sm btn-circle btn-ghost tooltip tooltip-left tooltip-unbold" data-tip="Mostra aiuto" onclick={() => (document.getElementById('change-track-image-help_modal') as HTMLDialogElement)?.showModal()}>
 												<CircleHelp class="h-6 w-6 text-gray-600"/>
 											</button>
 											<label class="swap swap-rotate btn btn-sm btn-circle btn-ghost tooltip tooltip-left tooltip-unbold" data-tip={showInteractiveMap ? "Visualizza cartina" : "Visualizza mappa interattiva"}>
@@ -355,11 +355,27 @@
 
 											<dialog id="change-track-image-help_modal" class="modal modal-bottom sm:modal-middle">
 												<div class="modal-box">
-													<form method="dialog">
-														<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-													</form>
-													<h3 class="text-lg font-bold">Hello!</h3>
-													<p class="py-4">Press ESC key or click on ✕ button to close</p>
+													<div class="flex items-start justify-between mb-4">
+														<div class="flex-1">
+															<h3 class="font-bold text-lg md:text-xl">Cambia immagine del tracciato</h3>
+															<p class="text-xs md:text-sm text-base-content/70 mt-1">
+																Guida all'utilizzo del sito
+															</p>
+														</div>
+														<div class="flex items-start gap-2">
+															<form method="dialog">
+																<button class="btn btn-square btn-ghost btn-md md:btn-lg" title="Chiudi">
+																	<X class="h-6 w-6" />
+																</button>
+															</form>
+														</div>
+													</div>
+													<p class="text-xs md:text-sm">
+														Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+													</p>
+													<p class="text-xs md:text-sm mt-1">
+														Maggiori informazioni nella <a href="/documentation#change-track-image" target="_blank" class="text-primary underline">documentazione</a>
+													</p>
 												</div>
 												<form method="dialog" class="modal-backdrop">
 													<button>close</button>

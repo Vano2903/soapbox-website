@@ -298,6 +298,9 @@
 						</div>
 					</div>
 				</dialog>
+				<form method="dialog" class="modal-backdrop">
+					<button>close</button>
+				</form>
 			</div>
 
 			<hr class="my-8" />
@@ -350,7 +353,7 @@
 												<SquarePen class="swap-off h-6 w-6 text-red-600"/>
 											</label>
 
-											<dialog id="change-track-image-help_modal" class="modal">
+											<dialog id="change-track-image-help_modal" class="modal modal-bottom sm:modal-middle">
 												<div class="modal-box">
 													<form method="dialog">
 														<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
@@ -358,6 +361,9 @@
 													<h3 class="text-lg font-bold">Hello!</h3>
 													<p class="py-4">Press ESC key or click on ✕ button to close</p>
 												</div>
+												<form method="dialog" class="modal-backdrop">
+													<button>close</button>
+												</form>
 											</dialog>
 										</div>
 									{/if}

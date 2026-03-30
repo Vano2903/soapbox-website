@@ -346,12 +346,12 @@
 									{#if foundEventDerived.expand.track.coordinates && !(foundEventDerived.expand.track.coordinates.lat == 0 && foundEventDerived.expand.track.coordinates.lon == 0) && (foundEventDerived.map && foundEventDerived.map != '')}
 										<div class="flex items-center gap-1">
 											<button class="btn btn-sm btn-circle btn-ghost tooltip tooltip-left tooltip-unbold" data-tip="Mostra aiuto" onclick={() => (document.getElementById('change-track-image-help_modal') as HTMLDialogElement)?.showModal()}>
-												<CircleHelp class="h-6 w-6 text-gray-600"/>
+												<CircleHelp class="h-5 w-5 text-gray-600"/>
 											</button>
-											<label class="swap swap-rotate btn btn-sm btn-circle btn-ghost tooltip tooltip-left tooltip-unbold" data-tip={showInteractiveMap ? "Visualizza cartina" : "Visualizza mappa interattiva"}>
+											<label class="swap swap-rotate btn btn-sm btn-circle tooltip tooltip-left tooltip-unbold" data-tip={showInteractiveMap ? "Visualizza cartina" : "Visualizza mappa interattiva"}>
 												<input type="checkbox" onclick={switchShowInteractiveMap} />
-												<MapBase class="swap-on h-6 w-6 text-red-600"/>
-												<SquarePen class="swap-off h-6 w-6 text-red-600"/>
+												<MapBase class="swap-on h-5 w-5 text-red-600"/>
+												<SquarePen class="swap-off h-5 w-5 text-red-600"/>
 											</label>
 
 											<dialog id="change-track-image-help_modal" class="modal modal-bottom sm:modal-middle">

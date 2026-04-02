@@ -2,5 +2,7 @@
 node_modules/
 build/
 pocketbase-data/
+pocketdb/
+pocketdb-dev/
 .env
-pocketdb/.env.dev
+.env.dev

@@ -1,8 +1,0 @@
-{
-	"events_changeTrackImage": {
-		"name": "Cambia immagine del tracciato",
-		"shortContent": "L'icona rossa in alto a destra della sezione del tracciato è un pulsante che permette di alternare la visualizzazione del tracciato tra la 'cartina' e la 'mappa interattiva di Google'.",
-		"longContent": "L'icona rossa in alto a destra della sezione del tracciato è un pulsante che permette di alternare la visualizzazione del tracciato tra la 'cartina' e la 'mappa interattiva di Google'. L'icona rappresenta l'immagine che verrà caricata qualora si dovesse premere il pulsante: 'carta e penna' se si sta visualizzando già la mappa interattiva (quindi cliccando si va sulla cartina), 'mappa' se invecce si sta visualizzando la cartina (e quindi il click porterà sulla mappa).",
-		"docReference": "events#change-track-image"
-	}
-}

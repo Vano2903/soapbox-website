@@ -1,0 +1,339 @@
+{
+	"faq": [
+		{
+			"question": "Come posso capire rapidamente cosa succede nella pagina evento?",
+			"linkLabel": "Pagina evento",
+			"targetId": "events"
+		},
+		{
+			"question": "Dove sono spiegati i prerequisiti di iscrizione?",
+			"linkLabel": "Iscrizione",
+			"targetId": "enroll"
+		},
+		{
+			"question": "Come trovo le regole di organizzazione media per stagione e categoria?",
+			"linkLabel": "Galleria",
+			"targetId": "gallery"
+		},
+		{
+			"question": "Dove sono spiegate classifica attuale e storico?",
+			"linkLabel": "Classifiche",
+			"targetId": "leaderboards"
+		}
+	],
+	"categories": [
+		{
+			"id": "race-days",
+			"title": "Giorni di gara",
+			"intro": "Le pagine che accompagnano il visitatore dalla panoramica evento all'iscrizione e alle informazioni operative.",
+			"icon": "calendar",
+			"pages": [
+				{
+					"id": "events",
+					"title": "Pagina evento",
+					"icon": "route",
+					"path": "/events",
+					"summary": "La pagina evento unisce hero pubblico, modale partecipanti, programma e presentazione del tracciato in un'unica vista.",
+					"notes": [
+						"Mantieni sempre leggibili hero e metadati principali (nome, luogo, data).",
+						"Le azioni importanti come l'iscrizione devono restare visibili prima di scorrere troppo.",
+						"Nel blocco tracciato puoi indicare in modo chiaro il cambio vista: [[icon:pen]] significa passaggio verso cartina, [[icon:map]] significa passaggio verso mappa interattiva."
+					],
+					"chapters": [
+						{
+							"title": "Panoramica",
+							"body": "Apri con un header visivo forte e mostra subito nome evento, luogo e data prima di qualsiasi interazione."
+						},
+						{
+							"title": "Partecipazione",
+							"body": "Mantieni visibili il conteggio iscritti e la CTA di iscrizione, cosi l'utente capisce subito se l'evento e ancora aperto."
+						},
+						{
+							"title": "Tracciato e mappa",
+							"body": "La sezione tracciato e il punto giusto per aiuti contestuali inline, perche gestisce una scelta visibile tra stati della mappa."
+						}
+					],
+					"helpKeys": [
+						"events_changeTrackImage"
+					]
+				},
+				{
+					"id": "calendars",
+					"title": "Calendari",
+					"icon": "calendar",
+					"path": "/calendars",
+					"summary": "Questa pagina spiega la navigazione stagionale e come passare rapidamente da una data evento all'altra.",
+					"notes": [
+						"La stagione selezionata deve essere sempre evidente nell'interfaccia.",
+						"Le card data devono privilegiare leggibilita e scansione rapida."
+					],
+					"chapters": [
+						{
+							"title": "Vista stagione",
+							"body": "Usa la stagione corrente come base e permetti all'utente di spostarsi avanti o indietro senza perdere il contesto."
+						},
+						{
+							"title": "Card eventi",
+							"body": "Mantieni ogni card data compatta e prevedibile, cosi luogo, titolo e orario sono subito scansionabili."
+						},
+						{
+							"title": "Aiuto contestuale",
+							"body": "E il punto corretto per guida orientata al programma quando un elemento richiede una spiegazione in piu."
+						}
+					],
+					"helpKeys": [
+						"event_schedule"
+					]
+				},
+				{
+					"id": "enroll",
+					"title": "Iscrizione",
+					"icon": "userAdd",
+					"path": "/enroll",
+					"summary": "Il flusso di iscrizione deve mostrare prerequisiti, validazioni e stato finale di invio senza sorprese.",
+					"notes": [
+						"I requisiti devono essere visibili prima che l'utente investa tempo nel form.",
+						"Stati disabilitati e fallback devono avere feedback testuale esplicito."
+					],
+					"chapters": [
+						{
+							"title": "Condizioni di accesso",
+							"body": "Rendi visibili i controlli richiesti prima della compilazione, soprattutto quando iscrizione e limitata o chiusa."
+						},
+						{
+							"title": "Chiarezza del form",
+							"body": "Raggruppa i campi per team, evento e partecipanti, cosi la catena di dipendenze e chiara a colpo d'occhio."
+						},
+						{
+							"title": "Stato invio",
+							"body": "Mostra in modo esplicito stati disabilitati o fallback invece di farli scoprire dopo un invio fallito."
+						}
+					],
+					"helpKeys": [
+						"enrollment_requirements"
+					]
+				}
+			]
+		},
+		{
+			"id": "media-archives",
+			"title": "Archivio media",
+			"intro": "I contenuti navigabili funzionano meglio quando il modello di filtro resta evidente e coerente.",
+			"icon": "image",
+			"pages": [
+				{
+					"id": "gallery",
+					"title": "Galleria",
+					"icon": "camera",
+					"path": "/gallery",
+					"summary": "La galleria raggruppa i contenuti per stagione e categoria, cosi la navigazione resta rapida anche con archivio in crescita.",
+					"notes": [
+						"I filtri stagione e categoria dovrebbero restare visibili durante la navigazione.",
+						"La densita visiva deve favorire la scansione rapida, non card piene di metadati."
+					],
+					"chapters": [
+						{
+							"title": "Filtro anno",
+							"body": "Parti dal selettore stagione, cosi l'utente restringe l'archivio prima di aprire i singoli media."
+						},
+						{
+							"title": "Categorie",
+							"body": "Usa blocchi categoria per tenere i contenuti raggruppati per classe gara o tipologia, invece di un unico feed lungo."
+						},
+						{
+							"title": "Focus media",
+							"body": "Mantieni anteprime grandi e label brevi, cosi l'archivio resta leggibile e non sembra un foglio tabellare."
+						}
+					],
+					"helpKeys": [
+						"gallery_yearFilter",
+						"gallery_imageCategories"
+					]
+				}
+			]
+		},
+		{
+			"id": "rankings",
+			"title": "Classifiche e statistiche",
+			"intro": "Classifica live e confronti storici devono essere separati chiaramente, cosi la stagione corrente resta immediata da leggere.",
+			"icon": "trophy",
+			"pages": [
+				{
+					"id": "leaderboards",
+					"title": "Classifiche",
+					"icon": "chart",
+					"path": "/leaderboards",
+					"summary": "Questa pagina mostra prima la classifica attiva e mantiene le stagioni passate separate dalla vista principale.",
+					"notes": [
+						"La stagione corrente deve essere riconoscibile a colpo d'occhio.",
+						"Lo storico non deve competere visivamente con la classifica live."
+					],
+					"chapters": [
+						{
+							"title": "Stagione corrente",
+							"body": "Mostra prima la classifica live, cosi l'utente non deve dedurre quale campagna sta guardando."
+						},
+						{
+							"title": "Storico",
+							"body": "Le classifiche storiche vanno raggruppate separatamente dalla stagione corrente per evitare confronti confusi."
+						},
+						{
+							"title": "Confronto",
+							"body": "Usa le stagioni come asse principale di confronto, cosi la pagina resta chiara anche con piu dati."
+						}
+					],
+					"helpKeys": [
+						"leaderboard_currentSeason",
+						"leaderboard_history"
+					]
+				},
+				{
+					"id": "stats",
+					"title": "Statistiche",
+					"icon": "trophy",
+					"path": "/stats",
+					"summary": "Pagina di supporto per metriche aggregate, riepiloghi e lettura dei trend.",
+					"notes": [
+						"Esplicita la definizione delle metriche, cosi l'interpretazione dei trend resta coerente.",
+						"Il range temporale deve essere sempre esplicito in ogni grafico."
+					],
+					"chapters": [
+						{
+							"title": "Colpo d'occhio",
+							"body": "Apri con il set minimo di metriche che descrive comunque lo stato attuale."
+						},
+						{
+							"title": "Trend",
+							"body": "Quando usi grafici, rendi esplicito il periodo temporale per evitare l'effetto istantanea isolata."
+						},
+						{
+							"title": "Contesto",
+							"body": "Le pagine statistiche funzionano meglio con una breve spiegazione su cosa viene misurato e con quale frequenza si aggiorna."
+						}
+					],
+					"helpKeys": []
+				}
+			]
+		},
+		{
+			"id": "community",
+			"title": "Community e identita",
+			"intro": "Le pagine team e account devono rendere subito evidenti proprieta, permessi e azioni profilo.",
+			"icon": "users",
+			"pages": [
+				{
+					"id": "teams",
+					"title": "Team",
+					"icon": "users",
+					"path": "/teams",
+					"summary": "Questa pagina e il punto naturale per profilo team, gestione membri e identita della squadra.",
+					"notes": [
+						"I confini dei ruoli devono essere visibili vicino alle azioni di gestione.",
+						"Asset identitari del team e metadati principali dovrebbero restare vicini per coerenza."
+					],
+					"chapters": [
+						{
+							"title": "Panoramica team",
+							"body": "Mostra prima l'identita del team, poi numero, logo e banner, cosi la pagina risulta completa fin da subito."
+						},
+						{
+							"title": "Membri",
+							"body": "Mantieni la lista membri vicina al profilo team, cosi proprieta e appartenenza non si separano visivamente."
+						},
+						{
+							"title": "Gestione",
+							"body": "Rendi chiare le azioni di modifica e quelle riservate al capitano, cosi i permessi sono comprensibili prima del click."
+						}
+					],
+					"helpKeys": [
+						"team_management"
+					]
+				},
+				{
+					"id": "users",
+					"title": "Utenti",
+					"icon": "userAdd",
+					"path": "/users",
+					"summary": "Le pagine account e ruoli devono rendere facile capire accesso, verifica e proprieta del profilo.",
+					"notes": [
+						"Semantica di accesso e permessi deve essere comprensibile anche senza competenze amministrative.",
+						"I percorsi di recupero devono restare visibili da contesto profilo e login."
+					],
+					"chapters": [
+						{
+							"title": "Profilo",
+							"body": "Usa l'header profilo per stabilire subito chi e l'utente prima di mostrare dettagli personali o amministrativi."
+						},
+						{
+							"title": "Ruoli e permessi",
+							"body": "Descrivi cosa puo fare ogni ruolo, cosi l'utente capisce perche alcune azioni sono abilitate o nascoste."
+						},
+						{
+							"title": "Flusso di recupero",
+							"body": "Verifica, reset password e onboarding devono restare facili da trovare, perche sono percorsi usati spesso in situazioni critiche."
+						}
+					],
+					"helpKeys": [
+						"user_profile_roles"
+					]
+				}
+			]
+		}
+	],
+	"contextualHelps": {
+		"gallery_yearFilter": {
+			"name": "Filtro per anno",
+			"shortContent": "Seleziona l'anno per visualizzare i rilievi di quella stagione.",
+			"longContent": "La galleria contiene rilievi divisi per anno di gara. Usa il filtro anno per navigare tra stagioni e visualizzare i contenuti fotografici della gara selezionata.",
+			"docReference": "gallery-year-filter"
+		},
+		"gallery_imageCategories": {
+			"name": "Categorie immagini",
+			"shortContent": "Le immagini sono organizzate per categoria gara.",
+			"longContent": "Ogni galleria annuale organizza le immagini per categoria di gara (1000cc, 500cc, 250cc, ecc.), cosi trovi piu rapidamente i contenuti della categoria desiderata.",
+			"docReference": "gallery-categories"
+		},
+		"leaderboard_currentSeason": {
+			"name": "Classifica stagione attuale",
+			"shortContent": "Mostra i piazzamenti della stagione in corso.",
+			"longContent": "La classifica stagionale riporta i punti accumulati da piloti e team nel campionato corrente, aggiornata dopo ogni evento.",
+			"docReference": "leaderboards-current-season"
+		},
+		"leaderboard_history": {
+			"name": "Storico campionati",
+			"shortContent": "Consulta le classifiche dei campionati passati.",
+			"longContent": "Accedi all'archivio storico delle stagioni precedenti per confrontare prestazioni e analizzare l'evoluzione delle competizioni.",
+			"docReference": "leaderboards-history"
+		},
+		"team_management": {
+			"name": "Gestione team",
+			"shortContent": "Organizza membri e informazioni della tua squadra.",
+			"longContent": "Come capitano puoi gestire i membri del team, aggiornare i contatti e configurare i dati principali della squadra.",
+			"docReference": "teams-management"
+		},
+		"enrollment_requirements": {
+			"name": "Requisiti iscrizione",
+			"shortContent": "Verifica i requisiti per partecipare alle gare.",
+			"longContent": "L'iscrizione richiede onboarding completato, dati corretti dei piloti e pagamento quota: verifica ogni requisito prima dell'invio.",
+			"docReference": "enroll-requirements"
+		},
+		"event_schedule": {
+			"name": "Calendario eventi",
+			"shortContent": "Visualizza date e dettagli dei prossimi eventi.",
+			"longContent": "Il calendario mostra eventi programmati con data, orario e location. Puoi filtrare per categoria o cercare un evento specifico.",
+			"docReference": "calendars-schedule"
+		},
+		"user_profile_roles": {
+			"name": "Ruoli e permessi",
+			"shortContent": "Comprendi i diversi ruoli disponibili.",
+			"longContent": "Soapbox Rally prevede ruoli diversi (pilota, capitano, organizzatore, admin), ciascuno con permessi e responsabilita specifiche.",
+			"docReference": "users-roles"
+		},
+		"events_changeTrackImage": {
+			"name": "Cambia immagine del tracciato",
+			"shortContent": "L'icona rossa in alto a destra della sezione tracciato alterna cartina e mappa interattiva.",
+			"longContent": "L'icona rappresenta la vista che verra caricata al click: [[icon:pen]] se stai gia visualizzando la mappa interattiva (passi alla cartina), [[icon:map]] se invece stai visualizzando la cartina (passi alla mappa interattiva).",
+			"docReference": "events-change-track-image"
+		}
+	}
+}

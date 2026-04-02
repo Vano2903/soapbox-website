@@ -14,7 +14,7 @@ export const load: PageLoad = async ({ data, url, fetch, parent }) => {
 	const pb = new pocketbase(env.PUBLIC_PB_INSTANCE) as TypedPocketBase;
 
 	// destructures the data received from the PageServerLoad and prepare the variables
-	const { contextualHelps } = await parent();
+	const { docsContent } = await parent();
 	const { championshipsList } = data;
 
 	// retrieve the selected championship or, if nullish, the last ongoingChampionship available
@@ -103,5 +103,11 @@ export const load: PageLoad = async ({ data, url, fetch, parent }) => {
 		return ep;
 	});
 
-	return { championshipsList, foundChampionship, foundEvent, eventParticipations, contextualHelps };
+	return {
+		championshipsList,
+		foundChampionship,
+		foundEvent,
+		eventParticipations,
+		contextualHelps: docsContent.contextualHelps
+	};
 };

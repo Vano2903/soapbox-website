@@ -76,7 +76,11 @@
 	// --- Interactive Map management ---
 	const mapZoom = 16;
 	const trackMapURL = $derived(`https://www.google.com/maps/d/embed?mid=1UhQ2GD9N4TgOZ-KBu2nn7ak-WqbYjuo&hl=it&ll=${foundEventDerived.expand.track?.coordinates?.lat},${foundEventDerived.expand.track?.coordinates?.lon}&z=${mapZoom}&noprof=1`);
-	let showInteractiveMap = $state(foundEventDerived.expand.track.coordinates && !(foundEventDerived.expand.track.coordinates.lat == 0 && foundEventDerived.expand.track.coordinates.lon == 0));
+	const hasInteractiveMap = $derived(!!(foundEventDerived.expand.track.coordinates && !(foundEventDerived.expand.track.coordinates.lat == 0 && foundEventDerived.expand.track.coordinates.lon == 0)));
+	let showInteractiveMap = $state(false);
+	$effect(() => {
+		showInteractiveMap = hasInteractiveMap;
+	});
 
 	function switchShowInteractiveMap() {
 		if (showInteractiveMap) {
@@ -375,7 +379,7 @@
 														{contextualHelps.events_changeTrackImage?.shortContent ?? ''}
 													</p>
 													<p class="text-xs md:text-sm mt-1">
-														Maggiori informazioni nella <a href={`/documentations/${contextualHelps.events_changeTrackImage?.docReference ?? ''}`} target="_blank" class="text-primary underline">documentazione</a>
+														Maggiori informazioni nella <a href={`/docs#${contextualHelps.events_changeTrackImage?.docReference ?? ''}`} class="text-primary underline">documentazione</a>
 													</p>
 												</div>
 												<form method="dialog" class="modal-backdrop">

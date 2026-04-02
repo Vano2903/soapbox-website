@@ -1,16 +1,13 @@
-# x-public_pb_instance_env: &public_pb_instance_env PUBLIC_PB_INSTANCE=${PUBLIC_PB_INSTANCE:-https://pb.bruum.cargoway.cloud}
-
 services:
   pb-prod:
     image: "ghcr.io/vano2903/soapbox-website-pb:sha-d1a0908"
-    # build: './pocketbase'
     container_name: "bruum-pb-prod"
     restart: "unless-stopped"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bruum-pb-prod.rule=Host(`pb.bruum.cargoway.cloud`)"
+      - "traefik.http.routers.bruum-pb-prod.rule=Host(`pb.boxrally.eu`)"
       - "traefik.http.routers.bruum-pb-prod.entrypoints=https"
-      - "traefik.http.routers.bruum-pb-prod.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.bruum-pb-prod.tls.certresolver=httpcert"
       - "traefik.http.routers.bruum-pb-prod.tls=true"
       - "traefik.http.services.bruum-pb-prod.loadbalancer.server.port=8080"
     volumes:
@@ -29,11 +26,19 @@ services:
       - "traefik.http.routers.bruum-frontend-prod.tls.certresolver=httpcert"
       - "traefik.http.routers.bruum-frontend-prod.rule=Host(`www.boxrally.eu`)"
       - "traefik.http.services.bruum-frontend-prod.loadbalancer.server.port=3000"
+      # Bare domain redirect: boxrally.eu -> www.boxrally.eu
+      - "traefik.http.routers.bruum-bare-redirect.entrypoints=https"
+      - "traefik.http.routers.bruum-bare-redirect.rule=Host(`boxrally.eu`)"
+      - "traefik.http.routers.bruum-bare-redirect.tls=true"
+      - "traefik.http.routers.bruum-bare-redirect.tls.certresolver=httpcert"
+      - "traefik.http.routers.bruum-bare-redirect.middlewares=bare-to-www"
+      - "traefik.http.middlewares.bare-to-www.redirectregex.regex=^https://boxrally\\.eu/(.*)"
+      - "traefik.http.middlewares.bare-to-www.redirectregex.replacement=https://www.boxrally.eu/$${1}"
+      - "traefik.http.middlewares.bare-to-www.redirectregex.permanent=true"
     depends_on:
       - pb-prod
     environment:
-      # - *public_pb_instance_env
-      - PUBLIC_PB_INSTANCE=${PUBLIC_PB_INSTANCE:-https://pb.bruum.cargoway.cloud}
+      - PUBLIC_PB_INSTANCE=${PUBLIC_PB_INSTANCE:-https://pb.boxrally.eu}
       - PUBLIC_BASE_URL=${PUBLIC_BASE_URL:-https://www.boxrally.eu}
       - GSHEETS_APIKEY=${GSHEETS_APIKEY}
       - GSHEETS_CLIENTID=${GSHEETS_CLIENTID}
@@ -46,14 +51,13 @@ services:
 
   pb-dev:
     image: "ghcr.io/vano2903/soapbox-website-pb:latest"
-    # build: './pocketbase'
     container_name: "bruum-pb-dev"
     restart: "unless-stopped"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.bruum-pb-dev.rule=Host(`pb.dev.bruum.cargoway.cloud`)"
+      - "traefik.http.routers.bruum-pb-dev.rule=Host(`pb.dev.boxrally.eu`)"
       - "traefik.http.routers.bruum-pb-dev.entrypoints=https"
-      - "traefik.http.routers.bruum-pb-dev.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.bruum-pb-dev.tls.certresolver=httpcert"
       - "traefik.http.routers.bruum-pb-dev.tls=true"
       - "traefik.http.services.bruum-pb-dev.loadbalancer.server.port=8080"
     volumes:
@@ -69,19 +73,13 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.bruum-frontend-dev.entrypoints=https"
       - "traefik.http.routers.bruum-frontend-dev.tls=true"
-      - "traefik.http.routers.bruum-frontend-dev.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.bruum-frontend-dev.rule=Host(`dev.bruum.cargoway.cloud`)"
+      - "traefik.http.routers.bruum-frontend-dev.tls.certresolver=httpcert"
+      - "traefik.http.routers.bruum-frontend-dev.rule=Host(`dev.boxrally.eu`)"
       - "traefik.http.services.bruum-frontend-dev.loadbalancer.server.port=3000"
     depends_on:
       - pb-dev
     env_file:
       - .env.dev
-    # environment:
-    # - *public_pb_instance_env
-    # - PUBLIC_PB_INSTANCE=${PUBLIC_PB_INSTANCE:-https://pb.dev.bruum.cargoway.cloud}
-    # - PUBLIC_BASE_URL=${PUBLIC_BASE_URL:-https://dev.bruum.cargoway.cloud}
-    # - GSHEETS_APIKEY=${GSHEETS_APIKEY}
-    # - GSHEETS_CLIENTID=${GSHEETS_CLIENTID}
     networks:
       - traefik
 

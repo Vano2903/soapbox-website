@@ -3,4 +3,4 @@ node_modules/
 build/
 pocketbase-data/
 .env
-pocketdb/
+pocketdb/.env.dev

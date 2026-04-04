@@ -26,7 +26,7 @@
 				tokens.push({ kind: 'text', value: content.slice(cursor, start) });
 			}
 
-			tokens.push({ kind: 'icon', component: resolveDocsIcon(iconName, 'help') });
+			tokens.push({ kind: 'icon', component: resolveDocsIcon(iconName, 'CircleHelp') });
 			cursor = start + fullMatch.length;
 		}
 
@@ -44,10 +44,10 @@
 	const docsCategoriesView = $derived(
 		docsContent.categories.map((category) => ({
 			...category,
-			iconComponent: resolveDocsIcon(category.icon, 'help'),
+			iconComponent: resolveDocsIcon(category.icon, 'CircleHelp'),
 			pages: category.pages.map((page) => ({
 				...page,
-				iconComponent: resolveDocsIcon(page.icon, 'route'),
+				iconComponent: resolveDocsIcon(page.icon, 'Route'),
 				noteTokens: page.notes.map((note) => parseInlineTokens(note))
 			}))
 		}))
@@ -257,24 +257,26 @@
 												</div>
 											{/if}
 
-											<div class="mt-5 grid gap-3 md:grid-cols-3">
-												{#each page.chapters as chapter}
-													<div class="rounded-2xl bg-base-200 p-4">
-														<p class="text-sm font-semibold text-primary">{chapter.title}</p>
-														<p class="mt-2 text-sm text-base-content/70">{chapter.body}</p>
-													</div>
-												{/each}
-											</div>
+											{#if page.chapters.length > 0}
+												<div class={`mt-5 grid gap-3 ${page.chapters.length === 1 ? 'md:grid-cols-1' : page.chapters.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'}`}>
+													{#each page.chapters as chapter}
+														<div class="rounded-2xl bg-base-200 p-4">
+															<p class="text-sm font-semibold text-primary">{chapter.title}</p>
+															<p class="mt-2 text-sm text-base-content/70">{chapter.body}</p>
+														</div>
+													{/each}
+												</div>
+											{/if}
 
 											{#if page.helpKeys.length > 0}
 												<div class="mt-5 border-t border-base-300 pt-5">
 													<h4 class="font-semibold">Aiuti contestuali</h4>
-													<div class={page.helpKeys.length === 1 ? 'mt-4 grid grid-cols-1 gap-4' : 'mt-4 grid grid-cols-1 gap-4 md:grid-cols-2'}>
+													<div class={`mt-4 grid grid-cols-1 gap-4 ${page.helpKeys.length > 1 ? 'md:grid-cols-2' : ''}`}>
 														{#each page.helpKeys as helpKey}
 															{@const help = contextualHelpsView[helpKey]}
 															{#if help}
 																<article id={help.docReference} data-doc-section="true" class="scroll-mt-28 rounded-2xl border border-red-100 bg-red-50/60 p-4">
-																	<p class="text-xs font-semibold uppercase tracking-[0.2em] text-red-700/70">{helpKey.replaceAll('_', ' ')}</p>
+																	<p class="text-xs font-semibold uppercase tracking-[0.2em] text-red-700/70">{help.location}</p>
 																	<h5 class="mt-1 text-lg font-semibold">{help.name}</h5>
 																	<p class="mt-3 text-sm text-base-content/80">
 																		{#each help.shortTokens as token}
@@ -285,7 +287,9 @@
 																			{/if}
 																		{/each}
 																	</p>
-																	<p class="mt-2 text-sm text-base-content/70">
+																	<hr class="my-2 border-neutral-200">
+																	<p class="font-semibold text-sm text-base-content/80">Nel dettaglio:</p>
+																	<p class="text-sm text-base-content/70">
 																		{#each help.longTokens as token}
 																			{#if token.kind === 'icon'}
 																				<token.component class="mx-1 inline h-4 w-4 text-primary align-[-1px]" />

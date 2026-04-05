@@ -4,6 +4,7 @@
 	import { ToSurfaceInfoExpandArray } from '$types/surfaceUtils.js';
 	import { CalendarDays, MapPin, UserRoundPlus, FileCheck, Map as MapBase, SquarePen, Route, Ruler, Mountain, TriangleRight, ChartSpline, Download, X, CircleHelp } from 'lucide-svelte';
 	import EntityCard2 from '$components/entityCard/entityCard2.svelte';
+	import ContextualHelp from '$components/contextualHelpButton/contextualHelp.svelte';
 
 	// destructures the data received from the PageLoad and prepares it to be derived (reactive to changes in value)
 	const { data } = $props();
@@ -349,43 +350,13 @@
 									<h2 class="card-title text-2xl">Tracciato</h2>
 									{#if foundEventDerived.expand.track.coordinates && !(foundEventDerived.expand.track.coordinates.lat == 0 && foundEventDerived.expand.track.coordinates.lon == 0) && (foundEventDerived.map && foundEventDerived.map != '')}
 										<div class="flex items-center gap-1">
-											<button class="btn btn-sm btn-circle btn-ghost tooltip tooltip-left tooltip-unbold" data-tip="Mostra aiuto" onclick={() => (document.getElementById('change-track-image-help_modal') as HTMLDialogElement)?.showModal()}>
-												<CircleHelp class="h-5 w-5 text-gray-600"/>
-											</button>
+											<ContextualHelp contextualHelp={contextualHelps.events_changeTrackImage} />
+
 											<label class="swap swap-rotate btn btn-sm btn-circle tooltip tooltip-left tooltip-unbold" data-tip={showInteractiveMap ? "Visualizza cartina" : "Visualizza mappa interattiva"}>
 												<input type="checkbox" onclick={switchShowInteractiveMap} />
 												<MapBase class="swap-on h-5 w-5 text-red-600"/>
 												<SquarePen class="swap-off h-5 w-5 text-red-600"/>
 											</label>
-
-											<dialog id="change-track-image-help_modal" class="modal modal-bottom sm:modal-middle">
-												<div class="modal-box">
-													<div class="flex items-start justify-between mb-4">
-														<div class="flex-1">
-															<h3 class="font-bold text-lg md:text-xl">{contextualHelps.events_changeTrackImage?.name ?? 'Contenuto non trovato'}</h3>
-															<p class="text-xs md:text-sm text-base-content/70 mt-1">
-																Guida all'utilizzo del sito
-															</p>
-														</div>
-														<div class="flex items-start gap-2">
-															<form method="dialog">
-																<button class="btn btn-square btn-ghost btn-md md:btn-lg" title="Chiudi">
-																	<X class="h-6 w-6" />
-																</button>
-															</form>
-														</div>
-													</div>
-													<p class="text-xs md:text-sm">
-														{contextualHelps.events_changeTrackImage?.shortContent ?? ''}
-													</p>
-													<p class="text-xs md:text-sm mt-1">
-														Maggiori informazioni nella <a href={`/docs#${contextualHelps.events_changeTrackImage?.docReference ?? ''}`} class="text-primary underline">documentazione</a>
-													</p>
-												</div>
-												<form method="dialog" class="modal-backdrop">
-													<button>close</button>
-												</form>
-											</dialog>
 										</div>
 									{/if}
 								</div>

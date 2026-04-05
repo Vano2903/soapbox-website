@@ -1,11 +1,4 @@
-import type { ContextualHelps } from './contextualHelp';
 import type { DocsIconKey } from '$lib/utils/docsIconRegistry';
-
-export interface DocsFaqItem {
-	question: string;
-	linkLabel: string;
-	targetId: string;
-}
 
 export interface DocsChapter {
 	title: string;
@@ -36,3 +29,19 @@ export interface DocsContent {
 	categories: DocsCategory[];
 	contextualHelps: ContextualHelps;
 }
+
+export interface DocsFaqItem {
+	question: string;
+	linkLabel: string;
+	targetId: string;
+}
+
+export interface ContextualHelp {
+	location: string;
+	name: string;
+	shortContent: string;
+	longContent: string;
+	docReference: string;
+}
+
+export type ContextualHelps = Record<string, ContextualHelp>;

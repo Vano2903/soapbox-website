@@ -230,11 +230,13 @@
 													<page.iconComponent class="h-5 w-5 text-primary" />
 													<h3 class="text-xl md:text-2xl font-semibold">{page.title}</h3>
 												</div>
-												<a href={page.path} class="btn btn-ghost btn-sm gap-2 rounded-full">
-													<span class="block md:hidden">Vedi pagina</span>
-													<span class="hidden md:block">Vai alla pagina</span>
-													<ArrowRight class="h-4 w-4" />
-												</a>
+												{#if page.path && page.path !== ''}
+													<a href={page.path} class="btn btn-ghost btn-sm gap-2 rounded-full">
+														<span class="block md:hidden">Vedi pagina</span>
+														<span class="hidden md:block">Vai alla pagina</span>
+														<ArrowRight class="h-4 w-4" />
+													</a>
+												{/if}
 											</div>
 											<p class="mt-3 max-w-3xl text-sm text-base-content/70">{page.summary}</p>
 
@@ -246,7 +248,7 @@
 															<li>
 																{#each noteTokens as token}
 																	{#if token.kind === 'icon'}
-																		<token.component class="mx-1 inline h-4 w-4 text-primary align-[-1px]" />
+																		<token.component class="mx-1 inline h-4 w-4 text-primary align-[-3px]" />
 																	{:else}
 																		{token.value}
 																	{/if}
@@ -281,7 +283,7 @@
 																	<p class="mt-3 text-sm text-base-content/80">
 																		{#each help.shortTokens as token}
 																			{#if token.kind === 'icon'}
-																				<token.component class="mx-1 inline h-4 w-4 text-primary align-[-1px]" />
+																				<token.component class="mx-1 inline h-4 w-4 text-primary align-[-3px]" />
 																			{:else}
 																				{token.value}
 																			{/if}
@@ -292,7 +294,7 @@
 																	<p class="text-sm text-base-content/70">
 																		{#each help.longTokens as token}
 																			{#if token.kind === 'icon'}
-																				<token.component class="mx-1 inline h-4 w-4 text-primary align-[-1px]" />
+																				<token.component class="mx-1 inline h-4 w-4 text-primary align-[-3px]" />
 																			{:else}
 																				{token.value}
 																			{/if}

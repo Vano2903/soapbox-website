@@ -1,40 +1,55 @@
 import {
-	BookOpenText,
+	CalendarHeart,
 	CalendarDays,
-	Image,
-	Trophy,
+	Ticket,
+	UserRoundPlus,
+	ChartColumn,
+	PenTool,
+	Signature,
+	LogIn,
+	PencilRuler,
+	TicketPlus,
 	Users,
-	CircleHelp,
+	Store,
+	User,
+	Handshake,
 	SquarePen,
 	Map,
-	Camera,
-	ChartSpline,
-	ShieldCheck,
-	UserRoundPlus,
+	Crown,
+	CircleHelp,
 	Route
 } from 'lucide-svelte';
 import type { ComponentType } from 'svelte';
 
 export const docsIcons = {
-	book: BookOpenText,
-	calendar: CalendarDays,
-	image: Image,
-	trophy: Trophy,
-	users: Users,
-	help: CircleHelp,
-	pen: SquarePen,
-	map: Map,
-	camera: Camera,
-	chart: ChartSpline,
-	shield: ShieldCheck,
-	userAdd: UserRoundPlus,
-	route: Route
+	// Category or pages icons
+	CalendarHeart: CalendarHeart,
+	CalendarDays: CalendarDays,
+	Ticket: Ticket,
+	UserRoundPlus: UserRoundPlus,
+	ChartColumn: ChartColumn,
+	PenTool: PenTool,
+	Signature: Signature,
+	LogIn: LogIn,
+	PencilRuler: PencilRuler,
+	TicketPlus: TicketPlus,
+	Users: Users,
+	Store: Store,
+	User: User,
+	Handshake: Handshake,
+	// Notes or Contextual Helps icons
+	SquarePen: SquarePen,
+	Map: Map,
+	Crown: Crown,
+	// Default or fallback icons
+	CircleHelp: CircleHelp,
+	Route: Route,
 } as const;
 
 export type DocsIconKey = keyof typeof docsIcons;
 export type LucideComponent = ComponentType;
 
-export function resolveDocsIcon(icon: unknown, fallback: DocsIconKey = 'help'): LucideComponent {
+export function resolveDocsIcon(icon: unknown, fallback: DocsIconKey = 'CircleHelp'): LucideComponent {
 	if (typeof icon === 'string' && icon in docsIcons) {
 		return docsIcons[icon as DocsIconKey] as LucideComponent;
 	}

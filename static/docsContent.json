@@ -1,339 +1,387 @@
 {
 	"faq": [
 		{
-			"question": "Come posso capire rapidamente cosa succede nella pagina evento?",
-			"linkLabel": "Pagina evento",
+			"question": "Dove posso recuperare organigramma e orari di un evento?",
+			"linkLabel": "Eventi",
 			"targetId": "events"
 		},
 		{
-			"question": "Dove sono spiegati i prerequisiti di iscrizione?",
+			"question": "Come creo un account per il mio team e invito i membri a partecipare?",
+			"linkLabel": "Team e Utente",
+			"targetId": "user"
+		},
+		{
+			"question": "Come iscrivo il mio team ad un evento e quali sono i requisiti?",
 			"linkLabel": "Iscrizione",
 			"targetId": "enroll"
 		},
 		{
-			"question": "Come trovo le regole di organizzazione media per stagione e categoria?",
-			"linkLabel": "Galleria",
-			"targetId": "gallery"
-		},
-		{
-			"question": "Dove sono spiegate classifica attuale e storico?",
+			"question": "Dove trovo i risultati di un evento e/o la classifica di campionato?",
 			"linkLabel": "Classifiche",
 			"targetId": "leaderboards"
 		}
 	],
 	"categories": [
 		{
-			"id": "race-days",
-			"title": "Giorni di gara",
-			"intro": "Le pagine che accompagnano il visitatore dalla panoramica evento all'iscrizione e alle informazioni operative.",
-			"icon": "calendar",
+			"id": "race-weekends",
+			"title": "Weekend degli eventi",
+			"intro": "Gli elementi che accompagnano il visitatore dalla panoramica evento all'iscrizione e alle informazioni operative.",
+			"icon": "CalendarHeart",
 			"pages": [
 				{
-					"id": "events",
-					"title": "Pagina evento",
-					"icon": "route",
-					"path": "/events",
-					"summary": "La pagina evento unisce hero pubblico, modale partecipanti, programma e presentazione del tracciato in un'unica vista.",
+					"id": "calendars",
+					"title": "Calendari",
+					"icon": "CalendarDays",
+					"path": "/calendars",
+					"summary": "Questa pagina serve per la navigazione dei vari eventi di tutte le stagioni presenti e passate. Se son già pianificati eventi futuri, questi saranno ugualmente accessibili.",
 					"notes": [
-						"Mantieni sempre leggibili hero e metadati principali (nome, luogo, data).",
-						"Le azioni importanti come l'iscrizione devono restare visibili prima di scorrere troppo.",
-						"Nel blocco tracciato puoi indicare in modo chiaro il cambio vista: [[icon:pen]] significa passaggio verso cartina, [[icon:map]] significa passaggio verso mappa interattiva."
+						"La stagione scelta è indicata in alto al centro; tramite diverse interazioni è possibile scorrere i diversi anni.",
+						"Ogni singola scheda riporta luogo, periodo dell'evento e numero di iscritti. I pulsanti permettono l'iscrizione o la visualizzazione dettagliata delle informazioni."
+					],
+					"chapters": [],
+					"helpKeys": []
+				},
+				{
+					"id": "events",
+					"title": "Eventi",
+					"icon": "Ticket",
+					"path": "",
+					"summary": "La pagina principale che contiene tutte le informazioni sul programma e sui partecipanti di un determinato evento.",
+					"notes": [
+						"Tieni controllati luogo, data, orari, iscritti e tracciato, così da non perderti neanche una informazione.",
+						"Di ogni prova, dalla punzonatura alle discese, trovi l'organigramma dettagliato e aggiornato.",
+						"Nel caso di eventi live, un intuitivo pulsante ti permette di visualizzare direttamente la classifica in tempo reale."
 					],
 					"chapters": [
 						{
 							"title": "Panoramica",
-							"body": "Apri con un header visivo forte e mostra subito nome evento, luogo e data prima di qualsiasi interazione."
+							"body": "Intestazione chiara e distintiva, con nome evento, luogo e data prima di qualsiasi interazione."
 						},
 						{
 							"title": "Partecipazione",
-							"body": "Mantieni visibili il conteggio iscritti e la CTA di iscrizione, cosi l'utente capisce subito se l'evento e ancora aperto."
+							"body": "Iscriviti oppure visualizza i partecipanti già iscritti in modo facile e diretto, senza dover cercare tra le sezioni."
 						},
 						{
-							"title": "Tracciato e mappa",
-							"body": "La sezione tracciato e il punto giusto per aiuti contestuali inline, perche gestisce una scelta visibile tra stati della mappa."
+							"title": "Tracciato e regole",
+							"body": "Locandine e regolamenti specifici saranno visibili se presenti. La sezione tracciato riporta invece tutte le statistiche del percorso."
 						}
 					],
 					"helpKeys": [
+						"events_subscriptionInteraction",
 						"events_changeTrackImage"
-					]
-				},
-				{
-					"id": "calendars",
-					"title": "Calendari",
-					"icon": "calendar",
-					"path": "/calendars",
-					"summary": "Questa pagina spiega la navigazione stagionale e come passare rapidamente da una data evento all'altra.",
-					"notes": [
-						"La stagione selezionata deve essere sempre evidente nell'interfaccia.",
-						"Le card data devono privilegiare leggibilita e scansione rapida."
-					],
-					"chapters": [
-						{
-							"title": "Vista stagione",
-							"body": "Usa la stagione corrente come base e permetti all'utente di spostarsi avanti o indietro senza perdere il contesto."
-						},
-						{
-							"title": "Card eventi",
-							"body": "Mantieni ogni card data compatta e prevedibile, cosi luogo, titolo e orario sono subito scansionabili."
-						},
-						{
-							"title": "Aiuto contestuale",
-							"body": "E il punto corretto per guida orientata al programma quando un elemento richiede una spiegazione in piu."
-						}
-					],
-					"helpKeys": [
-						"event_schedule"
 					]
 				},
 				{
 					"id": "enroll",
 					"title": "Iscrizione",
-					"icon": "userAdd",
-					"path": "/enroll",
-					"summary": "Il flusso di iscrizione deve mostrare prerequisiti, validazioni e stato finale di invio senza sorprese.",
+					"icon": "UserRoundPlus",
+					"path": "",
+					"summary": "Modulo unico per l'iscrizione ad un evento specifico. Tramite i campi è possibile selezionare il team, la categoria, i piloti e eventuali soprannomi.",
 					"notes": [
-						"I requisiti devono essere visibili prima che l'utente investa tempo nel form.",
-						"Stati disabilitati e fallback devono avere feedback testuale esplicito."
+						"La prima selezione è quella del team, se solo un team è idoneo allora la selezione sarà precompilata.",
+						"A seconda della categoria scelta, la quantità minima di piloti da iscrivere sarà indicata nello step successivo.",
+						"Il nome del team è un campo opzionale già precompilato. Può essere personalizzato come soprannome visibile per quell'evento specifico."
 					],
 					"chapters": [
 						{
 							"title": "Condizioni di accesso",
-							"body": "Rendi visibili i controlli richiesti prima della compilazione, soprattutto quando iscrizione e limitata o chiusa."
+							"body": "Per poter compilare il modulo è necessario far parte di almeno un team che abbia un numero di membri sufficiente per la categoria desiderata. Non è necessario essere capitani del team."
 						},
 						{
-							"title": "Chiarezza del form",
-							"body": "Raggruppa i campi per team, evento e partecipanti, cosi la catena di dipendenze e chiara a colpo d'occhio."
-						},
-						{
-							"title": "Stato invio",
-							"body": "Mostra in modo esplicito stati disabilitati o fallback invece di farli scoprire dopo un invio fallito."
+							"title": "Conferma iscrizione",
+							"body": "Il pulsante per il completamento dell'iscrizione è disabilitato finchè non sono soddisfatti tutti i requisiti, accettazione della liberatoria compresa."
 						}
 					],
 					"helpKeys": [
-						"enrollment_requirements"
-					]
-				}
-			]
-		},
-		{
-			"id": "media-archives",
-			"title": "Archivio media",
-			"intro": "I contenuti navigabili funzionano meglio quando il modello di filtro resta evidente e coerente.",
-			"icon": "image",
-			"pages": [
-				{
-					"id": "gallery",
-					"title": "Galleria",
-					"icon": "camera",
-					"path": "/gallery",
-					"summary": "La galleria raggruppa i contenuti per stagione e categoria, cosi la navigazione resta rapida anche con archivio in crescita.",
-					"notes": [
-						"I filtri stagione e categoria dovrebbero restare visibili durante la navigazione.",
-						"La densita visiva deve favorire la scansione rapida, non card piene di metadati."
-					],
-					"chapters": [
-						{
-							"title": "Filtro anno",
-							"body": "Parti dal selettore stagione, cosi l'utente restringe l'archivio prima di aprire i singoli media."
-						},
-						{
-							"title": "Categorie",
-							"body": "Usa blocchi categoria per tenere i contenuti raggruppati per classe gara o tipologia, invece di un unico feed lungo."
-						},
-						{
-							"title": "Focus media",
-							"body": "Mantieni anteprime grandi e label brevi, cosi l'archivio resta leggibile e non sembra un foglio tabellare."
-						}
-					],
-					"helpKeys": [
-						"gallery_yearFilter",
-						"gallery_imageCategories"
-					]
-				}
-			]
-		},
-		{
-			"id": "rankings",
-			"title": "Classifiche e statistiche",
-			"intro": "Classifica live e confronti storici devono essere separati chiaramente, cosi la stagione corrente resta immediata da leggere.",
-			"icon": "trophy",
-			"pages": [
-				{
-					"id": "leaderboards",
-					"title": "Classifiche",
-					"icon": "chart",
-					"path": "/leaderboards",
-					"summary": "Questa pagina mostra prima la classifica attiva e mantiene le stagioni passate separate dalla vista principale.",
-					"notes": [
-						"La stagione corrente deve essere riconoscibile a colpo d'occhio.",
-						"Lo storico non deve competere visivamente con la classifica live."
-					],
-					"chapters": [
-						{
-							"title": "Stagione corrente",
-							"body": "Mostra prima la classifica live, cosi l'utente non deve dedurre quale campagna sta guardando."
-						},
-						{
-							"title": "Storico",
-							"body": "Le classifiche storiche vanno raggruppate separatamente dalla stagione corrente per evitare confronti confusi."
-						},
-						{
-							"title": "Confronto",
-							"body": "Usa le stagioni come asse principale di confronto, cosi la pagina resta chiara anche con piu dati."
-						}
-					],
-					"helpKeys": [
-						"leaderboard_currentSeason",
-						"leaderboard_history"
+						"enroll_teamAliasField"
 					]
 				},
 				{
-					"id": "stats",
-					"title": "Statistiche",
-					"icon": "trophy",
-					"path": "/stats",
-					"summary": "Pagina di supporto per metriche aggregate, riepiloghi e lettura dei trend.",
+					"id": "leaderboards",
+					"title": "Classifiche",
+					"icon": "ChartColumn",
+					"path": "/leaderboards",
+					"summary": "Questa pagina è esclusivamente dedicata alla visualizzazione delle classifiche. Una volta selezionata la stagione, sarà possibile indicare uno dei relativi eventi e visualizzarne i risultati.",
 					"notes": [
-						"Esplicita la definizione delle metriche, cosi l'interpretazione dei trend resta coerente.",
-						"Il range temporale deve essere sempre esplicito in ogni grafico."
+						"Una volta selezionata la stagione, sarà possibile indicare uno dei relativi eventi.",
+						"Per ogni evento saranno disponibili i risultati delle prove e quella di campionato aggiornata fino a quel punto.",
+						"Qualora l'evento fosse in corso, al posto dei file scaricabili sarà visibile una classifica aggiornata in diretta."
 					],
 					"chapters": [
 						{
-							"title": "Colpo d'occhio",
-							"body": "Apri con il set minimo di metriche che descrive comunque lo stato attuale."
+							"title": "Risultati eventi",
+							"body": "Per ogni evento completato vengono pubblicati come file scaricabili i risultati delle singole prove divise per categoria insieme alla classifica di campionato aggiornata a quell'evento."
 						},
 						{
-							"title": "Trend",
-							"body": "Quando usi grafici, rendi esplicito il periodo temporale per evitare l'effetto istantanea isolata."
+							"title": "Classifiche live",
+							"body": "Quando un evento è in corso o non ancora concluso, non saranno disponibili i risultati scaricabili, ma sarà visibile una classifica che si aggiorna ogni 30s circa."
+						}
+					],
+					"helpKeys": [
+						"leaderboards_liveLeaderboardSelection"
+					]
+				}
+			]
+		},
+		{
+			"id": "registration",
+			"title": "Registrazione profili",
+			"intro": "Alcune pagine e funzionalità all'interno del sito richiedono la creazione di profili utente e/o team. Queste pagine guidano il visitatore attraverso i processi di registrazione, gestione e personalizzazione dei profili.",
+			"icon": "PenTool",
+			"pages": [
+				{
+					"id": "register",
+					"title": "Registrazione",
+					"icon": "Signature",
+					"path": "/register",
+					"summary": "Modulo di registrazione per la creazione di un nuovo profilo utente. La creazione è disponibile anche con l'autenticazione tramite Google.",
+					"notes": [
+						"La registrazione prevede 2 passaggi: il primo è l'inserimento delle credenziali con successiva conferma dell'indirizzo email, il secondo passaggio prevede la compilazione di tutti i dettagli del profilo utente.",
+						"L'autenticazione è possibile anche tramite Google, in questo caso il primo passaggio e la conferma email vengono sostituiti dalla scelta dell'account Google da utilizzare."
+					],
+					"chapters": [
+						{
+							"title": "Primo passaggio: credenziali",
+							"body": "Dalla pagina di registrazione, inserisci email, password e ripeti password. Ti verrà inviata una email di conferma: clicca sul link per procedere. In alternativa puoi premere il pulsante di Google e fare tutto più velocemente."
 						},
 						{
-							"title": "Contesto",
-							"body": "Le pagine statistiche funzionano meglio con una breve spiegazione su cosa viene misurato e con quale frequenza si aggiorna."
+							"title": "Secondo passaggio: dettagli",
+							"body": "Una volta confermata la mail o scelta l'autenticazione Google, procedi inserendo dati come nome, cognome, il tuo nickname unico e la data di nascita. Se vuoi puoi anche caricare una foto profilo e una biografia."
+						},
+						{
+							"title": "Vantaggi di un profilo:",
+							"body": "Oltre a poter creare o partecipare ad un team, puoi arricchire il tuo profilo con dettagli personalizzati per renderlo unico e visibile alla community, comprese le statistiche estratte dai risultati degli eventi a cui parteciperai."
+						}
+					],
+					"helpKeys": [
+						"register_profileVisibility"
+					]
+				},
+				{
+					"id": "login",
+					"title": "Autenticazione",
+					"icon": "LogIn",
+					"path": "/login",
+					"summary": "Modulo per l'accesso a un profilo utente esistente. L'accesso è disponibile con l'autenticazione tramite Google se si è registrato il profilo tramite la stessa metodologia.",
+					"notes": [
+						"L'accesso all'account prevede l'inserimento di email e password che, se inserite correttamente, reindirizzeranno alla pagina del proprio profilo.",
+						"L'autenticazione tramite Google è disponibile se il profilo è stato creato con tale metodo. In questo caso, cliccando il pulsante di Google, si verrà reindirizzati al proprio profilo senza dover inserire email e password.",
+						"L'autenticazione al proprio profilo potrebbe esseere rifiutata se il profilo, per motivi di sicurezza, è stato disabilitato da un amministratore. In questo caso, contatta l'assistenza per ulteriori informazioni."
+					],
+					"chapters": [
+						{
+							"title": "Problemi di accesso",
+							"body": "Ci sono diversi motivi per cui potresti avere problemi ad accedere. Assicurati di inserire le credenziali corrette ed eventualmente prova a reimpostare la password. Se il problema persiste potrebbe essere che è in corso una verifica dei contenuti per motivi di sicurezza e quindi il profilo è stato temporaneamente disabilitato."
+						},
+						{
+							"title": "Proprietà del profilo",
+							"body": "Ogni profilo utente è personale, questo significa che non è assolutamente necessario condividere le credenziali con altre persone per nessun motivo. Nessuno ti chiederà mai la password, neanche gli amministratori o l'assistenza."
+						}
+					],
+					"helpKeys": [
+						"login_disabledProfile"
+					]
+				},
+				{
+					"id": "user-new-team",
+					"title": "Creazione profilo team",
+					"icon": "PencilRuler",
+					"path": "",
+					"summary": "Modulo di registrazione per la creazione di un nuovo profilo team. Una volta creato, il team può essere gestito e personalizzato dai suoi membri ed essere iscritto agli eventi.",
+					"notes": [
+						"Un profilo del team è necessario per l'iscrizione agli eventi. Ogni utente può creare un team o entrare a far parte di un team già esistente se riceve un invito.",
+						"Creare un team non richiede credenziali. La sua gestione e personalizzazione avviene tramite i profili dei membri che ne fanno parte.",
+						"Ad esclusione delle credenziali, la informazioni per creare un profilo team sono simili a quelle di un profilo utente. Per crearne uno è necessario recarsi sul proprio profilo e premere il pulsante \"crea nuovo team\"."
+					],
+					"chapters": [
+						{
+							"title": "Pulsante di creazione",
+							"body": "Andando all'interno del pannello di gestione del proprio profilo utente, è possibile creare un nuovo team premendo il pulsante \"crea nuovo team\". Il processo di creazione è simile a quello di un profilo utente, ma non richiede credenziali."
 						}
 					],
 					"helpKeys": []
+				},
+				{
+					"id": "team-invites",
+					"title": "Inviti ad un team",
+					"icon": "TicketPlus",
+					"path": "",
+					"summary": "Per poter prendere parte ad un team esistente è necessario creare, all'interno del profilo del team, un invito (link) da mandare alle persone desiderate. ",
+					"notes": [
+						"Un membro del team può creare un invito all'interno del pannello di gestione del profilo del team. L'invito è un link che può essere copiato e condiviso.",
+						"Durante la creazione di un link di invito è possibile personalizzare il link alcuni parametri opzionali."
+					],
+					"chapters": [
+						{
+							"title": "Creazione",
+							"body": "Andando all'interno del pannello di gestione del profilo team, è possibile creare un nuovo invito premendo il pulsante \"crea nuovo invito\" sotto la relativa sezione. Siccome tutti i parametri sono opzionali è possibile creare un invito senza dover compilare nessun campo."
+						},
+						{
+							"title": "Parametri",
+							"body": "Per chi desiderasse, è possibile personalizzare il link d'invito ad un team con parametri opzionali come un nome facile da ricordare, una data di scadenza o un numero massimo di utilizzi. Questi parametri possono essere utili per gestire meglio le adesioni al team, ma non sono strettamente necessari."
+						},
+						{
+							"title": "Condivisione",
+							"body": "Una volta creato l'invito è sufficiente premere il relativo pulsante \"Copia link\". Così facendo si può facilmente condividere l'invito a chiunque. Chi lo riceve può entrare a far parte del team cliccando sul link se crea o accede al proprio profilo utente."
+						}
+					],
+					"helpKeys": [
+						"invites_optionalParameters"
+					]
 				}
 			]
 		},
 		{
 			"id": "community",
-			"title": "Community e identita",
-			"intro": "Le pagine team e account devono rendere subito evidenti proprieta, permessi e azioni profilo.",
-			"icon": "users",
+			"title": "Utenti e Community",
+			"intro": "I profili di organizzatori, team e piloti che vengono resi pubblici possono essere personalizzati e messi in mostra in questo spazio dedicato alla community, ricca di statistiche e riconoscimenti esclusivi basati su risultati e attività.",
+			"icon": "Users",
 			"pages": [
 				{
-					"id": "teams",
-					"title": "Team",
-					"icon": "users",
-					"path": "/teams",
-					"summary": "Questa pagina e il punto naturale per profilo team, gestione membri e identita della squadra.",
+					"id": "who-is",
+					"title": "Chi siamo",
+					"icon": "Store",
+					"path": "/who-is",
+					"summary": "Pagina di supporto per un'introduzione alla storia e alla missione dell'associazione, organizzatrice dei campionati e della community.",
 					"notes": [
-						"I confini dei ruoli devono essere visibili vicino alle azioni di gestione.",
-						"Asset identitari del team e metadati principali dovrebbero restare vicini per coerenza."
+						"La narrazione è divisa per sezioni tematiche, ciascuna accompagnata da un carosello di immagini che possono essere fatte scorrere per visualizzarle tutte."
 					],
 					"chapters": [
 						{
-							"title": "Panoramica team",
-							"body": "Mostra prima l'identita del team, poi numero, logo e banner, cosi la pagina risulta completa fin da subito."
+							"title": "Carosello immagini",
+							"body": "Ogni carosello ruota automaticamente le immagini, ma è possibile anche scorrerle o direttamente selezionarle manualmente tramite gli appositi controlli di navigazione integrati nel carosello stesso."
 						},
 						{
-							"title": "Membri",
-							"body": "Mantieni la lista membri vicina al profilo team, cosi proprieta e appartenenza non si separano visivamente."
-						},
-						{
-							"title": "Gestione",
-							"body": "Rendi chiare le azioni di modifica e quelle riservate al capitano, cosi i permessi sono comprensibili prima del click."
+							"title": "Contatti",
+							"body": "Tutte le informazioni di reperibilità principali sono raccolte in una sezione in coda alla pagina e riassunte con i social ufficiali nel piedipagina."
 						}
 					],
 					"helpKeys": [
-						"team_management"
+						"who-is_carouselControls"
 					]
 				},
 				{
 					"id": "users",
 					"title": "Utenti",
-					"icon": "userAdd",
+					"icon": "User",
 					"path": "/users",
-					"summary": "Le pagine account e ruoli devono rendere facile capire accesso, verifica e proprieta del profilo.",
+					"summary": "Raccolta completa di tutti i profili pubblici degli utenti. Ogni contenitore funge da reindirizzamento alla pagina del profilo completa di tutti i dettagli configurati dall'utente stesso.",
 					"notes": [
-						"Semantica di accesso e permessi deve essere comprensibile anche senza competenze amministrative.",
-						"I percorsi di recupero devono restare visibili da contesto profilo e login."
+						"Ogni scheda rappresenta il profilo di un utente pubblico. Se cliccato reindirizza alla pagina del profilo completo.",
+						"Tutti i contenuti come nomi, biografie, foto, social sono personalizzabili e quindi scelti dall'utente stesso."
 					],
 					"chapters": [
 						{
-							"title": "Profilo",
-							"body": "Usa l'header profilo per stabilire subito chi e l'utente prima di mostrare dettagli personali o amministrativi."
+							"title": "Scheda profilo",
+							"body": "Riassume le informazioni principali quali nominativo, tag unico e foto profilo. Se cliccato reindirizza alla pagina completa di tutti i dettagli inseriti."
 						},
 						{
-							"title": "Ruoli e permessi",
-							"body": "Descrivi cosa puo fare ogni ruolo, cosi l'utente capisce perche alcune azioni sono abilitate o nascoste."
-						},
-						{
-							"title": "Flusso di recupero",
-							"body": "Verifica, reset password e onboarding devono restare facili da trovare, perche sono percorsi usati spesso in situazioni critiche."
+							"title": "Visibilità utenti",
+							"body": "Solo gli utenti che scelgono di rendere pubblico il proprio profilo saranno visibili in questa sezione e ogni altra parte del sito. Gli utenti privati non saranno visibili a nessuno tranne che a se stessi."
 						}
 					],
 					"helpKeys": [
-						"user_profile_roles"
+						"users_searchFilters"
+					]
+				},
+				{
+					"id": "teams",
+					"title": "Team",
+					"icon": "Handshake",
+					"path": "/teams",
+					"summary": "Raccolta completa di tutti i profili pubblici dei team. Ogni contenitore funge da reindirizzamento alla pagina del profilo completa di tutti i dettagli configurati dai membri del team stesso.",
+					"notes": [
+						"Ogni scheda rappresenta il profilo di un team. Se cliccato reindirizza alla pagina del profilo completo.",
+						"Tutti i contenuti come nomi, biografie, foto, social sono personalizzabili e quindi scelti dai membri del team.",
+						"All'interno del team un membro sarà indicato come owner ([[icon:Crown]]) del team, che è un utente con permessi speciali per la gestione del profilo del team."
+					],
+					"chapters": [
+						{
+							"title": "Scheda profilo",
+							"body": "Riassume le informazioni principali quali nome del team, tag unico e foto profilo. Se cliccato reindirizza alla pagina completa di tutti i dettagli inseriti."
+						},
+						{
+							"title": "Owner del team",
+							"body": "All'interno di ogni team, un membro è indicato come owner del team con un'icona [[icon:Crown]] accanto al nome. Egli ha permessi speciali per la gestione del profilo del team."
+						}
+					],
+					"helpKeys": [
+						"teams_searchFilters"
 					]
 				}
 			]
 		}
 	],
 	"contextualHelps": {
-		"gallery_yearFilter": {
-			"name": "Filtro per anno",
-			"shortContent": "Seleziona l'anno per visualizzare i rilievi di quella stagione.",
-			"longContent": "La galleria contiene rilievi divisi per anno di gara. Usa il filtro anno per navigare tra stagioni e visualizzare i contenuti fotografici della gara selezionata.",
-			"docReference": "gallery-year-filter"
-		},
-		"gallery_imageCategories": {
-			"name": "Categorie immagini",
-			"shortContent": "Le immagini sono organizzate per categoria gara.",
-			"longContent": "Ogni galleria annuale organizza le immagini per categoria di gara (1000cc, 500cc, 250cc, ecc.), cosi trovi piu rapidamente i contenuti della categoria desiderata.",
-			"docReference": "gallery-categories"
-		},
-		"leaderboard_currentSeason": {
-			"name": "Classifica stagione attuale",
-			"shortContent": "Mostra i piazzamenti della stagione in corso.",
-			"longContent": "La classifica stagionale riporta i punti accumulati da piloti e team nel campionato corrente, aggiornata dopo ogni evento.",
-			"docReference": "leaderboards-current-season"
-		},
-		"leaderboard_history": {
-			"name": "Storico campionati",
-			"shortContent": "Consulta le classifiche dei campionati passati.",
-			"longContent": "Accedi all'archivio storico delle stagioni precedenti per confrontare prestazioni e analizzare l'evoluzione delle competizioni.",
-			"docReference": "leaderboards-history"
-		},
-		"team_management": {
-			"name": "Gestione team",
-			"shortContent": "Organizza membri e informazioni della tua squadra.",
-			"longContent": "Come capitano puoi gestire i membri del team, aggiornare i contatti e configurare i dati principali della squadra.",
-			"docReference": "teams-management"
-		},
-		"enrollment_requirements": {
-			"name": "Requisiti iscrizione",
-			"shortContent": "Verifica i requisiti per partecipare alle gare.",
-			"longContent": "L'iscrizione richiede onboarding completato, dati corretti dei piloti e pagamento quota: verifica ogni requisito prima dell'invio.",
-			"docReference": "enroll-requirements"
-		},
-		"event_schedule": {
-			"name": "Calendario eventi",
-			"shortContent": "Visualizza date e dettagli dei prossimi eventi.",
-			"longContent": "Il calendario mostra eventi programmati con data, orario e location. Puoi filtrare per categoria o cercare un evento specifico.",
-			"docReference": "calendars-schedule"
-		},
-		"user_profile_roles": {
-			"name": "Ruoli e permessi",
-			"shortContent": "Comprendi i diversi ruoli disponibili.",
-			"longContent": "Soapbox Rally prevede ruoli diversi (pilota, capitano, organizzatore, admin), ciascuno con permessi e responsabilita specifiche.",
-			"docReference": "users-roles"
+		"events_subscriptionInteraction": {
+			"location": "Sezione: Partecipanti",
+			"name": "Scheda degli iscritti",
+			"shortContent": "L'intero riquadro informativo, se cliccato, mostra la lista completa dei partecipanti divisi per categoria. Il pulsante rosso reindirizza all'iscrizione dell'evento.",
+			"longContent": "Il riquadro partecipanti mostra un'anteprima dei team iscritti: cliccandolo sarà possibile visualizzare l'intera lista divisa per categorie. Il pulsante rosso [[icon:UserRoundPlus]] in sovraimpressione invece è un collegamento veloce alla pagina di iscrizione per l'evento visualizzato.",
+			"docReference": "events-subscription-interaction"
 		},
 		"events_changeTrackImage": {
+			"location": "Sezione: Tracciato",
 			"name": "Cambia immagine del tracciato",
-			"shortContent": "L'icona rossa in alto a destra della sezione tracciato alterna cartina e mappa interattiva.",
-			"longContent": "L'icona rappresenta la vista che verra caricata al click: [[icon:pen]] se stai gia visualizzando la mappa interattiva (passi alla cartina), [[icon:map]] se invece stai visualizzando la cartina (passi alla mappa interattiva).",
+			"shortContent": "L'icona rossa, in alto a destra della sezione tracciato, alterna cartina con ostacoli e mappa interattiva di Google.",
+			"longContent": "Nella sezione del tracciato, sopra alla relativa immagine, un pulsante con l'icona rossa permette di alternare il contenuto da visualizzare: clicca [[icon:SquarePen]] per vedere la cartina con gli ostacoli, altrimenti clicca [[icon:Map]] per vedere la mappa interattiva di Google.",
 			"docReference": "events-change-track-image"
+		},
+		"enroll_teamAliasField": {
+			"location": "Modulo: Iscrizione evento",
+			"name": "Nome del team per l'evento",
+			"shortContent": "Questo campo è il nome che verrà usato per identificare il team nell'evento. Di base è precompilato con il nome ufficiale, ma può essere personalizzato specificatamente per l'evento.",
+			"longContent": "Per consentire ai team di personalizzare il proprio nome di evento in evento, il campo opzionale funge da alias per il team, esclusivamente per l'evento alla quale ci si sta iscrivendo. Consegue che quel soprannome verrà utilizzato come sostitutivo del nome ufficiale, ma non andrà ad influenzare iscrizioni diverse da quella in in oggetto del modulo.",
+			"docReference": "enroll-team-alias-field"
+		},
+		"leaderboards_liveLeaderboardSelection": {
+			"location": "Sezione: Classifica live",
+			"name": "Visualizza risultati in diretta",
+			"shortContent": "Automaticamente, nel caso di eventi trasmessi in diretta, verrà mostrata la classifica live della prova in corso. Il selettore sarà comunque disponibile per visualizzare le altre classifiche in diretta dell'evento.",
+			"longContent": "Durante un evento in corso, la sezione della classifica live offre un menu a tendina che elenca tutte le classifiche disponibili. Selezionando una di queste opzioni, la classifica scelta si aggiorna ogni 30s circa per mostrare i piazzamenti in diretta per la prova selezionata, così da poter seguire l'andamento dell'evento dal punto di vista dei risultati preferiti.",
+			"docReference": "leaderboards-live-leaderboard-selection"
+		},
+		"register_profileVisibility": {
+			"location": "Sezione: Impostazioni profilo",
+			"name": "Visibilità del profilo",
+			"shortContent": "Solo i profili resi pubblici saranno visibili alla community e nella maggior parte delle sezioni del sito. I profili privati saranno visibili dal proprietario.",
+			"longContent": "Gli utenti hanno la possibilità di scegliere se rendere pubblico o privato il proprio profilo. Questa impostazione è modificabile in qualsiasi momento così come tutte le altre informazioni nella schermata delle impostazioni profilo. I profili pubblici saranno visibili a chiunque nella sezione utenti e in altre parti del sito. I profili privati invece saranno sempre visibili al proprietario dell'account, mentre nome e cognome saranno visibili anche dagli altri membri dei team in cui si partecipa per una questione di reperibilità per le iscrizioni agli eventi.",
+			"docReference": "registration-profile-visibility"
+		},
+		"login_disabledProfile": {
+			"location": "Sezione: Accesso al profilo",
+			"name": "Errori durante l'accesso",
+			"shortContent": "Ci sono diverse problematiche che potrebbero impedire l'accesso al profilo. Se il problema persiste è possibile che il profilo sia stato temporaneamente disabilitato per motivi di sicurezza. In caso di difficoltà con l'accesso, contatta l'assistenza.",
+			"longContent": "Se stai riscontrando problemi ad accedere al tuo profilo, assicurati di aver inserito le credenziali corrette ed eventualmente prova a reimpostare la password. Se il problema persiste, potrebbe essere che il profilo è stato temporaneamente disabilitato per motivi di sicurezza, ad esempio se sono in corso verifiche dei contenuti. In questo caso, ti invitiamo a contattare l'assistenza per ulteriori informazioni e supporto.",
+			"docReference": "login-disabled-profile"
+		},
+		"invites_optionalParameters": {
+			"location": "Sezione: Inviti",
+			"name": "Parametri opzionali",
+			"shortContent": "Durante la creazione di un link di invito è possibile indicare alcuni parametri opzionali come un nome facile da ricordare, la data di scadenza o il numero massimo di utilizzi.",
+			"longContent": "I parametri opzionali consentono di personalizzare il comportamento dell'invito. Ad esempio, è possibile impostare una data di scadenza per il link o limitare il numero di volte in cui può essere utilizzato. Si può anche scegliere un nome personalizzato per rendere l'invito più riconoscibile e facile da ricordare. Tutti i parametri sono opzionali e possono essere saltati o lasciati vuoti i campi se non si desidera personalizzare determinati aspetti dell'invito.",
+			"docReference": "invites-optional-parameters"
+		},
+		"who-is_carouselControls": {
+			"location": "Sezione: Carosello immagini",
+			"name": "Controlli scorrimento immagini",
+			"shortContent": "Il carosello ruota automaticamente le immagini, ma è possibile selezionarle o utilizzare i controlli di navigazione per scorrerle manualmente.",
+			"longContent": "Per poter visualizzare le immagini del carosello a piacimento, l'avanzamento automatico è affiancato a controlli di navigazione: utilizzandoli è possibile scorrere o selezionare manualmente le immagini e temporaneamente disabilitare l'avanzamento automatico in modo da soffermarsi su quelle di proprio interesse.",
+			"docReference": "who-is-carousel-controls"
+		},
+		"users_searchFilters": {
+			"location": "Sezione: Ricerca utenti",
+			"name": "Filti e Ordinamento",
+			"shortContent": "La ricerca viene effettuata tramite corrispondenza tra il testo inserito e i vari dati di un profilo utente. I filtri permettono di specificare quali dati devono essere presi in considerazione, mentre l'ordinamento è un pulsante che alterna crescende e descrescente sulla base del parametro selezionato, anche se non è incluso nei filtri.",
+			"longContent": "Nella pagina dedicata alla visualizzazione di tutti i profili utente è possibile ridurre il numero di risultati tramite la ricerca. Di base il comportamento è confrontare il testo inserito con tutti i dati di un profilo, ma tramite i filtri è possibile specificare se cercare solo in uno o più tra username, nome o cognome. E' inoltre possibile scegliere se la ricerca deve essere effettuata per corrispondenze esatte oppure in generale. Infine nella stessa schermata sono disponibili diversi pulsati per poter selezionare quale parametro utilizzare per l'ordinamento dei risultati e cliccando più volte sullo stesso si alterna tra ordine crescende o decrescente. L'ordinamento è indipendente dai filtri, quindi è possibile ordinare anche per un parametro che non è incluso nei filtri.",
+			"docReference": "users-profile-roles"
+		},
+		"teams_searchFilters": {
+			"location": "Sezione: Ricerca team",
+			"name": "Filti e Ordinamento",
+			"shortContent": "La ricerca viene effettuata tramite corrispondenza tra il testo inserito e i vari dati di un profilo team. I filtri permettono di specificare quali dati devono essere presi in considerazione, mentre l'ordinamento è un pulsante che alterna crescende e descrescente sulla base del parametro selezionato, anche se non è incluso nei filtri.",
+			"longContent": "Nella pagina dedicata alla visualizzazione di tutti i profili team è possibile ridurre il numero di risultati tramite la ricerca. Di base il comportamento è confrontare il testo inserito con tutti i dati di un profilo, ma tramite i filtri è possibile specificare se cercare solo in uno o più tra nome, slug univoco o numero di gara. E' inoltre possibile scegliere se la ricerca deve essere effettuata per corrispondenze esatte oppure in generale. Infine nella stessa schermata sono disponibili diversi pulsati per poter selezionare quale parametro utilizzare per l'ordinamento dei risultati e cliccando più volte sullo stesso si alterna tra ordine crescende o decrescente. L'ordinamento è indipendente dai filtri, quindi è possibile ordinare anche per un parametro che non è incluso nei filtri.",
+			"docReference": "teams-profile-roles"
 		}
 	}
 }

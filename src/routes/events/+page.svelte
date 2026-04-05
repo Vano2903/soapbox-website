@@ -4,7 +4,7 @@
 	import { ToSurfaceInfoExpandArray } from '$types/surfaceUtils.js';
 	import { CalendarDays, MapPin, UserRoundPlus, FileCheck, Map as MapBase, SquarePen, Route, Ruler, Mountain, TriangleRight, ChartSpline, Download, X, CircleHelp } from 'lucide-svelte';
 	import EntityCard2 from '$components/entityCard/entityCard2.svelte';
-	import ContextualHelp from '$components/contextualHelpButton/contextualHelp.svelte';
+	import ContextualHelp from '$components/contextualHelp/contextualHelp.svelte';
 
 	// destructures the data received from the PageLoad and prepares it to be derived (reactive to changes in value)
 	const { data } = $props();

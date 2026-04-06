@@ -6,17 +6,25 @@
 	interface Props {
 		/** contenuto della guida contestuale da visualizzare nel modale */
 		contextualHelp: ContextualHelp;
+		/** */
+		stopPropagation?: boolean;
 		/** icona opzionale per il pulsante */
 		iconSnippet?: Snippet;
 	}
 
 	let {
 		contextualHelp,
+		stopPropagation = false,
 		iconSnippet,
 	}: Props = $props();
 </script>
 
-<button class="btn btn-sm btn-circle btn-ghost tooltip tooltip-left tooltip-unbold" data-tip="Mostra aiuto" onclick={() => (document.getElementById(contextualHelp.docReference + '-help_modal') as HTMLDialogElement)?.showModal()}>
+<button class="btn btn-sm btn-circle btn-ghost tooltip tooltip-left tooltip-unbold" data-tip="Mostra aiuto" onclick={(e) => {
+		(document.getElementById(contextualHelp.docReference + '-help_modal') as HTMLDialogElement)?.showModal()
+		if (stopPropagation) {
+			e.stopPropagation();
+		}
+	}}>
 	{#if iconSnippet}
 		{@render iconSnippet()}
 	{:else}

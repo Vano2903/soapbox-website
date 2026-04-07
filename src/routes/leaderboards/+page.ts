@@ -7,12 +7,13 @@ import type { ChampionshipExpand } from '$types/pocketbase/championship';
 import { fail } from '@sveltejs/kit';
 import type { Result } from '$types/pocketbase/results';
 
-export const load: PageLoad = async ({ data, url, fetch }) => {
+export const load: PageLoad = async ({ data, url, fetch, parent }) => {
 	console.log('Loading championships:\n > data = ', data, '\n > url = ', url);
 	const warnings: string[] = [];
 	const pb = new pocketbase(env.PUBLIC_PB_INSTANCE) as TypedPocketBase;
 
 	// destructures the data received from the PageServerLoad and prepare the variables
+	const { docsContent } = await parent();
 	const { championshipsList, lastOngoingChampionshipIndex } = data;
 
 	// retrieve the selected championship or, if nullish, the last ongoingChampionship available
@@ -107,5 +108,12 @@ export const load: PageLoad = async ({ data, url, fetch }) => {
 		});
 	}
 
-	return { championshipsList, foundChampionship, foundEvent, eventResults, warnings };
+	return {
+		championshipsList,
+		foundChampionship,
+		foundEvent,
+		eventResults,
+		warnings,
+		contextualHelps: docsContent.contextualHelps
+	};
 };

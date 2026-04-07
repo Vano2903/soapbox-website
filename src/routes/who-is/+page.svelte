@@ -1,6 +1,10 @@
 <script lang="ts">
 	import Carousel3 from '$components/carousel/carousel3.svelte';
 	import type { CarouselPageType } from '$types/carouselPage.js';
+	import ContextualHelp from '$components/contextualHelp/contextualHelp.svelte';
+
+	const { data } = $props();
+	const contextualHelps = $derived(data.docsContent.contextualHelps);
 
 	const sections = [
 		{
@@ -117,13 +121,14 @@
 </script>
 
 <main class="pb-16">
-	<header class="flex flex-col items-center space-y-2 px-8 py-15 text-center">
-		<span class="text-5xl font-bold"> Chi siamo </span>
-		<p class="text-neutral-500">
+	<header class="flex flex-col items-center space-y-2 px-8 py-15">
+		<span class="text-5xl font-bold text-center"> Chi siamo </span>
+		<p class="text-neutral-500 text-center">
 			Ogni centimetro percorso racconta la tenacia di chi ci ha creduto. Siamo fatti di strampalate
 			idee diventate realtà e case improvvisate ad officine, e ogni tappa è un pezzo di storia che
 			ha formato questa compagnia di amici.
 		</p>
+		<ContextualHelp contextualHelp={contextualHelps['who-is_carouselControls']} />
 	</header>
 	<div class="space-y-16">
 		{#each sections as section, i}

@@ -5,6 +5,8 @@
 	import type { ListResult } from 'pocketbase';
 	import EntityCard2 from '$components/entityCard/entityCard2.svelte';
 	import { createAvatarUrl } from '$lib/utils/avatar';
+	import ContextualHelp from '$components/contextualHelp/contextualHelp.svelte';
+	import type { ContextualHelps as ContextualHelpsType } from '$types/documentation';
 
 	interface Props {
 		data: {
@@ -12,10 +14,12 @@
 			expandedTeams: Team[];
 			pb: TypedPocketBase;
 			error: string | null;
+			contextualHelps: ContextualHelpsType;
 		};
 	}
 
 	const { data }: Props = $props();
+	let contextualHelps = $derived(data.contextualHelps);
 	let { pb, error } = $derived(data);
 	let paginatedTeams = $derived(data.paginatedTeams);
 	let expandedTeams = $derived(data.expandedTeams);
@@ -188,6 +192,8 @@
 					<span class="badge badge-xs badge-error absolute -top-1 -right-1">{activeFieldCount}</span>
 				{/if}
 			</button>
+
+			<ContextualHelp contextualHelp={contextualHelps.teams_searchFilters} />
 		</div>
 
 		{#if showAdvanced}

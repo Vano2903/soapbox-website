@@ -9,6 +9,8 @@
 	import { onMount } from 'svelte';
 	import { env } from '$env/dynamic/public';
 	import ClipboardButton from '$components/clipboardButton/clipboardButton.svelte';
+	import ContextualHelp from '$components/contextualHelp/contextualHelp.svelte';
+	import type { ContextualHelps as ContextualHelpsType } from '$types/documentation';
 
 	interface Props {
 		data: {
@@ -25,12 +27,14 @@
 			isCurrentMember: boolean;
 			slug: string;
 			invites?: TeamInvitationNonExpand[];
+			contextualHelps: ContextualHelpsType;
 		};
 	}
 
 	const { data }: Props = $props();
 	// const pb = new PocketBase(data.pbUri) as TypedPocketBase;
 	const pb = data.pb;
+	const contextualHelps = $derived(data.contextualHelps);
 	let user = $state(data.user);
 	let team = $state(data.team);
 	let members = $state(data.members);
@@ -470,7 +474,8 @@
 					{:else if currentTab === 'invites'}
 						<p class="mt-4 w-full text-3xl font-bold">INVITI:</p>
 
-						<div class="flex w-full justify-end">
+						<div class="flex w-full justify-end items-center gap-2">
+							<ContextualHelp contextualHelp={contextualHelps.invites_optionalParameters} />
 							<button
 								class=" btn btn-primary"
 								onclick={() =>

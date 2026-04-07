@@ -1,19 +1,18 @@
 <script lang="ts">
-	import { LeaderboardType } from '$types/pocketbase/results';
 	import { CategoryKind } from '$types/pocketbase/eventParticipation';
 	import { Roles } from '$types/pocketbase/user';
 	import { ToSurfaceInfoExpandArray } from '$types/surfaceUtils.js';
-	import { CalendarDays, MapPin, LucideRadio, UserRoundCheck, UserRoundPlus, FileCheck, Map as MapBase, SquarePen, Route, Ruler, Mountain, TriangleRight, ChartSpline, Download, X } from 'lucide-svelte';
-	import { string } from 'zod';
+	import { CalendarDays, MapPin, UserRoundPlus, FileCheck, Map as MapBase, SquarePen, Route, Ruler, Mountain, TriangleRight, ChartSpline, Download, X, CircleHelp } from 'lucide-svelte';
 	import EntityCard2 from '$components/entityCard/entityCard2.svelte';
+	import ContextualHelp from '$components/contextualHelp/contextualHelp.svelte';
 
 	// destructures the data received from the PageLoad and prepares it to be derived (reactive to changes in value)
 	const { data } = $props();
-	const championshipsListDerived = $derived(data.championshipsList);
 	const foundChampionshipDerived = $derived(data.foundChampionship);
 	const foundEventDerived = $derived(data.foundEvent);
 	const eventParticipationsDerived = $derived(data.eventParticipations);
 	const userDerived = $derived(data.user);
+	const contextualHelps = $derived(data.contextualHelps);
 
 	// --- Event participations modal management ---
 	let activeModalTab = $state<CategoryKind>(CategoryKind.SoapBox);
@@ -75,25 +74,14 @@
 		URL.revokeObjectURL(url);
 	}
 
-	// split results by metadata
-	const stageAndEventResultsDerived = $derived(
-		foundEventDerived.expand.results?.filter((result) => {
-			return (
-				result.leaderboardType == LeaderboardType.Stage ||
-				result.leaderboardType == LeaderboardType.Event
-			);
-		})
-	);
-	const championshipResultsDerived = $derived(
-		foundEventDerived.expand.results?.filter((result) => {
-			return result.leaderboardType == LeaderboardType.Championship;
-		})
-	);
-
 	// --- Interactive Map management ---
 	const mapZoom = 16;
 	const trackMapURL = $derived(`https://www.google.com/maps/d/embed?mid=1UhQ2GD9N4TgOZ-KBu2nn7ak-WqbYjuo&hl=it&ll=${foundEventDerived.expand.track?.coordinates?.lat},${foundEventDerived.expand.track?.coordinates?.lon}&z=${mapZoom}&noprof=1`);
-	let showInteractiveMap = $state(foundEventDerived.expand.track.coordinates && !(foundEventDerived.expand.track.coordinates.lat == 0 && foundEventDerived.expand.track.coordinates.lon == 0));
+	const hasInteractiveMap = $derived(!!(foundEventDerived.expand.track.coordinates && !(foundEventDerived.expand.track.coordinates.lat == 0 && foundEventDerived.expand.track.coordinates.lon == 0)));
+	let showInteractiveMap = $state(false);
+	$effect(() => {
+		showInteractiveMap = hasInteractiveMap;
+	});
 
 	function switchShowInteractiveMap() {
 		if (showInteractiveMap) {
@@ -152,7 +140,12 @@
 			</div>
 		</div>
 
-		<div class="max-w-7xl mx-auto px-4 md:px-6 py-8">
+		<div class="max-w-7xl mx-auto px-4 md:px-6 pb-8 mt-8">
+			<div class="flex items-center gap-2 m-2">
+				<h2 class="text-xl md:text-2xl font-bold">Informazioni evento:</h2>
+				<ContextualHelp contextualHelp={contextualHelps.events_subscriptionInteraction} stopPropagation={true} />
+			</div>
+
 			<div 
 				class="card bg-base-100 shadow-xl mb-8 cursor-pointer hover:shadow-2xl transition duration-300 hover:bg-neutral-100 active:scale-98"
 				onclick={() => (document.getElementById('subscribed-member-list_modal') as HTMLDialogElement)?.showModal()}
@@ -160,7 +153,7 @@
 				role="button"
 				tabindex="0"
 			>
-				<div class="card-body">
+				<div class="card-body pb-2">
 					<div class="flex flex-row items-center xs:justify-between gap-4">
 						<div class="flex flex-row items-center gap-4 justify-between">
 							<div class="hidden xs:flex flex-col items-center border rounded-md p-2 shadow-md min-w-24">
@@ -184,7 +177,7 @@
 							<div class="flex flex-col items-center gap-2">
 								<div class="cursor-not-allowed">
 									<button
-										class="btn btn-disabled btn-md md:btn-lg  pointer-events-none"
+										class="btn btn-disabled btn-md md:btn-lg pointer-events-none"
 										onclick={(e) => {e.stopPropagation();}}
 									>
 										<UserRoundPlus /> Iscriviti
@@ -316,6 +309,9 @@
 						</div>
 					</div>
 				</dialog>
+				<form method="dialog" class="modal-backdrop">
+					<button>close</button>
+				</form>
 			</div>
 
 			<hr class="my-8" />
@@ -358,11 +354,15 @@
 								<div class="flex items-center justify-between mb-4">
 									<h2 class="card-title text-2xl">Tracciato</h2>
 									{#if foundEventDerived.expand.track.coordinates && !(foundEventDerived.expand.track.coordinates.lat == 0 && foundEventDerived.expand.track.coordinates.lon == 0) && (foundEventDerived.map && foundEventDerived.map != '')}
-										<label class="swap swap-rotate">
-											<input type="checkbox" class="tooltip tooltip-left" onclick={switchShowInteractiveMap} data-tip={showInteractiveMap ? "Visualizza cartina" : "Visualizza mappa interattiva"}/>
-											<MapBase class="swap-on h-6 w-6 text-red-600"/>
-											<SquarePen class="swap-off h-6 w-6 text-red-600"/>
-										</label>
+										<div class="flex items-center gap-1">
+											<ContextualHelp contextualHelp={contextualHelps.events_changeTrackImage} />
+
+											<label class="swap swap-rotate btn btn-sm btn-circle tooltip tooltip-left tooltip-unbold" data-tip={showInteractiveMap ? "Visualizza cartina" : "Visualizza mappa interattiva"}>
+												<input type="checkbox" onclick={switchShowInteractiveMap} />
+												<MapBase class="swap-on h-5 w-5 text-red-600"/>
+												<SquarePen class="swap-off h-5 w-5 text-red-600"/>
+											</label>
+										</div>
 									{/if}
 								</div>
 								{#if (foundEventDerived.expand.track.coordinates && !(foundEventDerived.expand.track.coordinates.lat == 0 && foundEventDerived.expand.track.coordinates.lon == 0)) || (foundEventDerived.map && foundEventDerived.map != '')}
@@ -598,3 +598,9 @@
 		</div>
 	{/if} -->
 </main>
+
+<style>
+	.tooltip-unbold.tooltip::before {
+		font-weight: 400;
+	}
+</style>

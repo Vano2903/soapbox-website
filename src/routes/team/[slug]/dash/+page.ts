@@ -4,7 +4,7 @@ import type { TeamInvitationNonExpand } from '$types/pocketbase/team';
 import type { Load } from '@sveltejs/kit';
 
 export const load: Load = async ({ parent, data }) => {
-	const { isCurrentOwner, team } = await parent();
+	const { isCurrentOwner, team, docsContent } = await parent();
 
 	// if (!user) {
 	// 	const message = 'Devi essere autenticato prima di poter accedere al team';
@@ -26,6 +26,7 @@ export const load: Load = async ({ parent, data }) => {
 
 	return {
 		pb,
-		invites
+		invites,
+		contextualHelps: docsContent.contextualHelps
 	};
 };

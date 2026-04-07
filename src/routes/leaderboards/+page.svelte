@@ -12,6 +12,8 @@
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
 	import type { EventNonExpand } from '$types/pocketbase/event';
 	import { LeaderboardType } from '$types/pocketbase/results';
+	import ContextualHelp from '$components/contextualHelp/contextualHelp.svelte';
+	import { StageKind } from '$types/pocketbase/stage.js';
 
 	// const {
 	// 	championshipsList,
@@ -35,6 +37,7 @@
 	const foundEventDerived = $derived(data.foundEvent);
 	const eventResultsDerived = $derived(data.eventResults);
 	const warningsDerived = $derived(data.warnings);
+	const contextualHelps = $derived(data.contextualHelps);
 
 	// split results by metadata
 	const stageAndEventResultsDerived = $derived(
@@ -246,7 +249,10 @@
 	<div class="space-y-8">
 		{#if foundEventDerived?.onAir}
 			<section class="flex flex-col items-center gap-2">
-				<h1 class="text-3xl font-bold">Classifica Live:</h1>
+				<div class="flex flex-row items-center gap-2">
+					<h1 class="text-3xl font-bold">Classifica Live:</h1>
+					<ContextualHelp contextualHelp={contextualHelps.leaderboards_liveLeaderboardSelection} />
+				</div>
 				<div class="flex flex-row items-center justify-center gap-4">
 					<select
 						bind:value={selectedCategory}

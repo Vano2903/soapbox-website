@@ -4,7 +4,8 @@ import { createPocketBaseInstance } from '$lib/utils/pocketbase';
 import type { Team } from '$types/pocketbase/team';
 import { createAvatarUrl } from '$lib/utils/avatar';
 
-export const load: Load = async ({ url, fetch }) => {
+export const load: Load = async ({ url, fetch, parent }) => {
+	const { docsContent } = await parent();
 	console.log('Loading team with slug:', url);
 
 	let error: string | null = null;
@@ -45,6 +46,7 @@ export const load: Load = async ({ url, fetch }) => {
 		paginatedTeams,
 		expandedTeams,
 		pb,
-		error
+		error,
+		contextualHelps: docsContent.contextualHelps
 	};
 };

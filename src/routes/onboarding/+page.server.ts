@@ -15,7 +15,7 @@ import { onboardingSchema } from '$lib/schemas/onboardingSchema';
 const usernameSchema = onboardingSchema.pick({ username: true });
 
 export const load: PageServerLoad = async ({ fetch, parent }) => {
-	const { user } = await parent();
+	const { user, docsContent } = await parent();
 
 	const name = user.name.split(' ').slice(0, -1).join(' ');
 	const surname = user.name.split(' ').slice(-1).join(' ');
@@ -33,7 +33,7 @@ export const load: PageServerLoad = async ({ fetch, parent }) => {
 	}[];
 
 	// Always return { form } in load functions
-	return { form, countryPhoneCodes };
+	return { form, countryPhoneCodes, contextualHelps: docsContent.contextualHelps };
 };
 
 async function isUsernameValid(

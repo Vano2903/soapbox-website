@@ -5,7 +5,8 @@ import type { PageLoad } from './$types';
 import pocketbase from 'pocketbase';
 import type { TypedPocketBase } from '$types/pocketbase/pocketbase';
 
-export const load: PageLoad = async ({ data, fetch }) => {
+export const load: PageLoad = async ({ data, fetch, parent }) => {
+	const { docsContent } = await parent();
 	const pb = new pocketbase(env.PUBLIC_PB_INSTANCE) as TypedPocketBase;
 
 	try {
@@ -14,7 +15,8 @@ export const load: PageLoad = async ({ data, fetch }) => {
 		});
 		return {
 			...data,
-			authMethods: authList
+			authMethods: authList,
+			contextualHelps: docsContent.contextualHelps
 		};
 	} catch (err) {
 		console.error('An error occurred in page load, getting list auth methods:', err);

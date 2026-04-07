@@ -70,7 +70,7 @@
 			name: 'informazioni',
 			active: true,
 			links: [
-				{ herf: '/site-map', name: 'mappa del sito', active: false },
+				{ href: '/site-map', name: 'mappa del sito', active: false },
 				{
 					href: '/documents/statute-of-association.pdf',
 					name: 'statuto dell\'associazione',
@@ -97,21 +97,21 @@
 			name: 'contenuti',
 			active: true,
 			links: [
-				{ herf: '/', name: 'home', active: true },
-				{ herf: '/leaderboards', name: 'classifiche', active: true },
-				{ herf: '/bulletin-board', name: 'regolamenti', active: true },
+				{ href: '/', name: 'home', active: true },
+				{ href: '/leaderboards', name: 'classifiche', active: true },
+				{ href: '/bulletin-board', name: 'regolamenti', active: true },
 				{ href: '/contacts', name: 'contatti', active: false },
 				{ href: '/lavora-con-noi', name: 'lavora con noi', active: false }
 			]
 		},
 		{
 			name: 'assistenza',
-			active: false,
+			active: true,
 			links: [
-				{ herf: '/content-removal', name: 'rimozione contenuti', active: false },
-				{ herf: '/faq', name: 'domande frequenti', active: true },
-				{ herf: '/cookies', name: 'gestione cookies', active: true },
-				{ herf: '/support', name: 'supporto clienti', active: false }
+				{ href: '/content-removal', name: 'rimozione contenuti', active: false },
+				{ href: '/docs', name: 'domande frequenti', active: true },
+				{ href: '/cookies', name: 'gestione cookies', active: false },
+				{ href: '/support', name: 'supporto clienti', active: false }
 			]
 		}
 	];

@@ -25,8 +25,9 @@ import { z } from 'zod';
 // 	return [event, eventErr] as [EventNonExpand | undefined, undefined | Error];
 // }
 
-export const load: PageServerLoad = async ({ locals, url }) => {
+export const load: PageServerLoad = async ({ locals, url, parent }) => {
 	const { user, pb } = locals;
+	const { docsContent } = await parent();
 	//const warnings: string[] = [];
 
 	if (!user) {
@@ -93,7 +94,8 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 		userTeams,
 		foundChampionship,
 		foundEvent,
-		isAlreadyEnrolled
+		isAlreadyEnrolled,
+		contextualHelps: docsContent.contextualHelps
 	};
 
 	// // const selectedYear = url.searchParams.get('year');

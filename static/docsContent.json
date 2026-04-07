@@ -154,7 +154,7 @@
 						}
 					],
 					"helpKeys": [
-						"register_profileVisibility"
+						"onboarding_profileVisibility"
 					]
 				},
 				{
@@ -341,17 +341,17 @@
 			"longContent": "Durante un evento in corso, la sezione della classifica live offre un menu a tendina che elenca tutte le classifiche disponibili. Selezionando una di queste opzioni, la classifica scelta si aggiorna ogni 30s circa per mostrare i piazzamenti in diretta per la prova selezionata, così da poter seguire l'andamento dell'evento dal punto di vista dei risultati preferiti.",
 			"docReference": "leaderboards-live-leaderboard-selection"
 		},
-		"register_profileVisibility": {
+		"onboarding_profileVisibility": {
 			"location": "Sezione: Impostazioni profilo",
 			"name": "Visibilità del profilo",
 			"shortContent": "Solo i profili resi pubblici saranno visibili alla community e nella maggior parte delle sezioni del sito. I profili privati saranno visibili dal proprietario.",
-			"longContent": "Gli utenti hanno la possibilità di scegliere se rendere pubblico o privato il proprio profilo. Questa impostazione è modificabile in qualsiasi momento così come tutte le altre informazioni nella schermata delle impostazioni profilo. I profili pubblici saranno visibili a chiunque nella sezione utenti e in altre parti del sito. I profili privati invece saranno sempre visibili al proprietario dell'account, mentre nome e cognome saranno visibili anche dagli altri membri dei team in cui si partecipa per una questione di reperibilità per le iscrizioni agli eventi.",
-			"docReference": "registration-profile-visibility"
+			"longContent": "Gli utenti hanno la possibilità di scegliere se rendere pubblico o privato il proprio profilo. Questa impostazione è modificabile in qualsiasi momento così come tutte le altre informazioni nella schermata delle impostazioni profilo. I profili pubblici saranno visibili a chiunque nella sezione utenti e in altre parti del sito. I profili privati invece non saranno visibili a nessuno eccezione fatta per il proprietario dell'account. Nome e cognome saranno visibili anche dagli altri membri dei team in cui si partecipa per una questione di identità nelle iscrizioni agli eventi.",
+			"docReference": "onboarding-profile-visibility"
 		},
 		"login_disabledProfile": {
 			"location": "Sezione: Accesso al profilo",
 			"name": "Errori durante l'accesso",
-			"shortContent": "Ci sono diverse problematiche che potrebbero impedire l'accesso al profilo. Se il problema persiste è possibile che il profilo sia stato temporaneamente disabilitato per motivi di sicurezza. In caso di difficoltà con l'accesso, contatta l'assistenza.",
+			"shortContent": "Se non riesci ad accedere al profilo è possibile che tu abbia sbagliato ad inserire le credenziali. Se il problema persiste è possibile che il profilo sia stato temporaneamente disabilitato per motivi di sicurezza.",
 			"longContent": "Se stai riscontrando problemi ad accedere al tuo profilo, assicurati di aver inserito le credenziali corrette ed eventualmente prova a reimpostare la password. Se il problema persiste, potrebbe essere che il profilo è stato temporaneamente disabilitato per motivi di sicurezza, ad esempio se sono in corso verifiche dei contenuti. In questo caso, ti invitiamo a contattare l'assistenza per ulteriori informazioni e supporto.",
 			"docReference": "login-disabled-profile"
 		},

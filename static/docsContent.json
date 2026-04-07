@@ -8,7 +8,7 @@
 		{
 			"question": "Come creo un account per il mio team e invito i membri a partecipare?",
 			"linkLabel": "Team e Utente",
-			"targetId": "user"
+			"targetId": "user-new-team"
 		},
 		{
 			"question": "Come iscrivo il mio team ad un evento e quali sono i requisiti?",

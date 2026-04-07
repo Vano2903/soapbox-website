@@ -7,12 +7,14 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { Eye, EyeOff } from 'lucide-svelte';
+	import ContextualHelp from '$components/contextualHelp/contextualHelp.svelte';
 
 	const { data } = $props();
 
 	const { form, errors, message, constraints, enhance } = superForm(data.form, {
 		validators: zod(loginSchema)
 	});
+	const contextualHelps = $derived(data.contextualHelps);
 
 	const pb = new PocketBase(data.pbUri) as TypedPocketBase;
 	// let error = $state('');
@@ -138,10 +140,13 @@
 			<p class="text-content">{redirectMessage}</p>
 		</div>
 	{/if}
-	<div class="sm:mx-auto sm:w-full sm:max-w-sm">
-		<h2 class="text-content text-center text-2xl/9 font-bold tracking-tight lg:mt-6">
-			Accedi al tuo account
-		</h2>
+	<div class="sm:mx-auto sm:w-full sm:max-w-sm lg:mt-6">
+		<div class="flex items-center justify-center gap-2">
+			<h2 class="text-content text-center text-2xl/9 font-bold tracking-tight">
+				Accedi al tuo account
+			</h2>
+			<ContextualHelp contextualHelp={contextualHelps.login_disabledProfile} />
+		</div>
 	</div>
 
 	<div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">

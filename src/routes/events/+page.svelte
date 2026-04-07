@@ -140,7 +140,12 @@
 			</div>
 		</div>
 
-		<div class="max-w-7xl mx-auto px-4 md:px-6 py-8">
+		<div class="max-w-7xl mx-auto px-4 md:px-6 pb-8 mt-8">
+			<div class="flex items-center gap-2 m-2">
+				<h2 class="text-xl md:text-2xl font-bold">Informazioni evento:</h2>
+				<ContextualHelp contextualHelp={contextualHelps.events_subscriptionInteraction} stopPropagation={true} />
+			</div>
+
 			<div 
 				class="card bg-base-100 shadow-xl mb-8 cursor-pointer hover:shadow-2xl transition duration-300 hover:bg-neutral-100 active:scale-98"
 				onclick={() => (document.getElementById('subscribed-member-list_modal') as HTMLDialogElement)?.showModal()}
@@ -148,7 +153,7 @@
 				role="button"
 				tabindex="0"
 			>
-				<div class="card-body">
+				<div class="card-body pb-2">
 					<div class="flex flex-row items-center xs:justify-between gap-4">
 						<div class="flex flex-row items-center gap-4 justify-between">
 							<div class="hidden xs:flex flex-col items-center border rounded-md p-2 shadow-md min-w-24">

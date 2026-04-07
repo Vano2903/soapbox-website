@@ -8,9 +8,10 @@
 	import { onboardingSchema } from '$lib/schemas/onboardingSchema';
 	import ImageCropper from '$components/imageCropper/imageCropper.svelte';
 	import ProgressBar from '$components/progress/progressBar.svelte';
+	import ContextualHelp from '$components/contextualHelp/contextualHelp.svelte';
 
 	const { data } = $props();
-	const { countryPhoneCodes } = data;
+	const { countryPhoneCodes, contextualHelps } = data;
 
 	const { form, errors, message, constraints, enhance } = superForm(data.form, {
 		dataType: 'json',
@@ -357,9 +358,12 @@
 			</fieldset>
 
 			<fieldset class="fieldset flex-1 flex-col text-base md:flex-row">
-				<legend class="fieldset-legend">Vuoi che il tuo account pubblico?</legend>
+				<div class="flex items-center gap-2">
+					<legend class="fieldset-legend">Vuoi che il tuo account pubblico?</legend>
+					<ContextualHelp contextualHelp={contextualHelps.onboarding_profileVisibility} />
+				</div>
 				<p class="text-base-content mb-2 text-xs/5">
-					Se rendi il tuo account pubblico chiunque potrà vedere le informazioni del tuo profilo e
+					Se rendi il tuo account pubblico chiunque potrà visualizzare il tuo profilo e
 					le tue statistiche da pilota. <br />
 					Se selezioni di no invece il tuo profilo sarà visibile solo a te e ad eventuali membri del
 					tuo team. Puoi sempre cambiare questa opzione in un secondo momento.

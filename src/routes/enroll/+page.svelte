@@ -3,6 +3,8 @@
 	import { superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { enrollSchema } from '$lib/schemas/enrollSchema';
+	import ContextualHelp from '$components/contextualHelp/contextualHelp.svelte';
+	import { CircleHelp } from 'lucide-svelte';
 
 	// retrieve the data from the props
 	const { data } = $props();
@@ -10,6 +12,7 @@
 	const foundEventDerived = $derived(data.foundEvent);
 	const teams = $derived(data.userTeams);
 	const isAlreadyEnrolled = $derived(data.isAlreadyEnrolled);
+	const contextualHelps = $derived(data.contextualHelps);
 
 	// Setup the form
 	const { form, errors, message, constraints, enhance } = superForm(data.form, {
@@ -173,7 +176,14 @@
 
 				<!-- Team Alias -->
 				<fieldset class="fieldset flex-1 text-base">
-					<legend class="fieldset-legend">Nome del team per questo evento</legend>
+					<div class="flex items-center gap-2">
+						<legend class="fieldset-legend">Nome del team per questo evento</legend>
+						<ContextualHelp contextualHelp={contextualHelps.enroll_teamAliasField}>
+							{#snippet iconSnippet()}
+								<CircleHelp class="h-4 w-4 text-gray-600"/>
+							{/snippet}
+						</ContextualHelp>
+					</div>
 					<input
 						{...$constraints.teamAlias}
 						bind:value={$form.teamAlias}

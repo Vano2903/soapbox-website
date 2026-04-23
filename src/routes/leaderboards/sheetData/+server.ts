@@ -8,11 +8,17 @@ const testURL = `'TEST-API'!$B$2:$F$21`;
 
 const categoryValues: string[] = ['SoapBox', 'Pinocchio', 'Trike', 'Junior', 'Altro'];
 const leaderboardsRange = new Map<string, string>([
-	['Creatività', '$B$2:$H$55'],
+	// ['Creatività', '$B$2:$H$55'],
+	// ['Originalità', '$B$2:$K$55'],
+	// ['Stage 1', '$B$2:$H$55'],
+	// ['Stage 2', '$B$2:$H$55'],
+	// ['Finale Velocità', '$B$2:$H$55'],
+	// ['Gran Combinata', '$B$2:$I$55']
+	['Creatività', '$B$2:$F$55'],
 	['Originalità', '$B$2:$K$55'],
 	['Stage 1', '$B$2:$H$55'],
 	['Stage 2', '$B$2:$H$55'],
-	['Finale Velocità', '$B$2:$H$55'],
+	['Finale Velocità', '$B$2:$K$55'],
 	['Gran Combinata', '$B$2:$I$55']
 ]);
 

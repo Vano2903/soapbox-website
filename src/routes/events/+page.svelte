@@ -5,6 +5,7 @@
 	import { CalendarDays, MapPin, UserRoundPlus, FileCheck, Map as MapBase, SquarePen, Route, Ruler, Mountain, TriangleRight, ChartSpline, Download, X, CircleHelp } from 'lucide-svelte';
 	import EntityCard2 from '$components/entityCard/entityCard2.svelte';
 	import ContextualHelp from '$components/contextualHelp/contextualHelp.svelte';
+	import { capitalizeFirstLetter } from '$lib/utils/generic';
 
 	// destructures the data received from the PageLoad and prepares it to be derived (reactive to changes in value)
 	const { data } = $props();
@@ -18,60 +19,103 @@
 	let activeModalTab = $state<CategoryKind>(CategoryKind.SoapBox);
 
 	function downloadParticipantsList() {
-		let content = `Evento: ${foundEventDerived.name} (${foundEventDerived.shortName})\n`;
-		content += `Data evento: ${foundEventDerived?.startDate ? new Date(foundEventDerived?.startDate).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }) : "Non definita"}\n`;
-		content += `Data download: ${new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })}\n`;
-		content += `Totale iscritti: ${eventParticipationsDerived?.length}\n\n`;
-		content += '='.repeat(80) + '\n\n';
+		let contentTxt = `Evento: ${foundEventDerived.name} (${foundEventDerived.shortName})\n`;
+		contentTxt += `Data evento: ${foundEventDerived?.startDate ? new Date(foundEventDerived?.startDate).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }) : "Non definita"}\n`;
+		contentTxt += `Data download: ${new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })}\n`;
+		contentTxt += `Totale iscritti: ${eventParticipationsDerived?.length}\n\n`;
+		contentTxt += '='.repeat(80) + '\n\n';
 
 		// SoapBox category
 		const soapboxParticipations = eventParticipationsDerived.filter((p) => p.category == CategoryKind.SoapBox);
-		content += `CATEGORIA SOAPBOX (${soapboxParticipations.length} Iscritti)\n`;
-		content += '-'.repeat(80) + '\n';
+		contentTxt += `CATEGORIA SOAPBOX (${soapboxParticipations.length} Iscritti)\n`;
+		contentTxt += '-'.repeat(80) + '\n';
 		soapboxParticipations.forEach((participation, index) => {
-			content += `${(index + 1).toString().padStart(2, "0")}. ${participation.expand.team.name}\n`;
+			contentTxt += `${(index + 1).toString().padStart(2, "0")}. ${participation.expand.team.name}\n`;
 			if (participation.expand.team.number != 0) {
-				content += `    Numero: ${participation.expand.team.number}\n`;
+				contentTxt += `    Numero: ${participation.expand.team.number}\n`;
 			}
 			if (participation.teamNameAlias != "" && participation.teamNameAlias != participation.expand.team.name) {
-				content += `    Alias: ${participation.teamNameAlias}\n`;
+				contentTxt += `    Alias: ${participation.teamNameAlias}\n`;
 			}
 			if (participation.participants && participation.participants.length > 0) {
-				content += `    Partecipanti: ${participation.expand.participants.map((p) => `${p.name} ${p.lastName}`).join(', ')}\n`;
+				contentTxt += `    Partecipanti: ${participation.expand.participants.map((p) => `${capitalizeFirstLetter(p.name)} ${capitalizeFirstLetter(p.lastName)}`).join(', ')}\n`;
 			}
-			content += '\n';
+			contentTxt += '\n';
 		});
 
-		content += '\n';
+		contentTxt += '\n';
 
 		// Drift-Trike category
 		const driftTrikeParticipations = eventParticipationsDerived.filter((p) => p.category == CategoryKind.DriftTrike);
-		content += `CATEGORIA DRIFT-TRIKE (${driftTrikeParticipations.length} Iscritti)\n`;
-		content += '-'.repeat(80) + '\n';
+		contentTxt += `CATEGORIA DRIFT-TRIKE (${driftTrikeParticipations.length} Iscritti)\n`;
+		contentTxt += '-'.repeat(80) + '\n';
 		driftTrikeParticipations.forEach((participation, index) => {
-			content += `${(index + 1).toString().padStart(2, "0")}. ${participation.expand.team.name}\n`;
+			contentTxt += `${(index + 1).toString().padStart(2, "0")}. ${participation.expand.team.name}\n`;
 			if (participation.expand.team.number != 0) {
-				content += `    Numero: ${participation.expand.team.number}\n`;
+				contentTxt += `    Numero: ${participation.expand.team.number}\n`;
 			}
 			if (participation.teamNameAlias != "" && participation.teamNameAlias != participation.expand.team.name) {
-				content += `    Alias: ${participation.teamNameAlias}\n`;
+				contentTxt += `    Alias: ${participation.teamNameAlias}\n`;
 			}
 			if (participation.participants && participation.participants.length > 0) {
-				content += `    Partecipanti: ${participation.expand.participants.map((p) => `${p.name} ${p.lastName}`).join(', ')}\n`;
+				contentTxt += `    Partecipanti: ${participation.expand.participants.map((p) => `${capitalizeFirstLetter(p.name)} ${capitalizeFirstLetter(p.lastName)}`).join(', ')}\n`;
 			}
-			content += '\n';
+			contentTxt += '\n';
 		});
 
-		// Create download
-		const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-		const url = URL.createObjectURL(blob);
-		const link = document.createElement('a');
-		link.href = url;
-		link.download = `Iscritti_${foundEventDerived.shortName.replaceAll(" ", "-")}_${new Date().toISOString().split('T')[0]}.txt`;
-		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
-		URL.revokeObjectURL(url);
+		let contentCsv = "";
+		// contentTxt += '\n' + '='.repeat(80) + '\n\n';
+
+		// .csv format summary (for easier import in spreadsheet software)
+		// contentTxt += ".CSV FORMAT SUMMARY (For spreadsheet import)\n";
+		// contentTxt += '-'.repeat(80) + '\n';
+		soapboxParticipations.forEach((participation) => {
+			// const teamId = participation.expand.team.id;
+			const teamNumber = participation.expand.team.number != 0 ? participation.expand.team.number : '';
+			const teamAlias = (participation.teamNameAlias && participation.teamNameAlias != participation.expand.team.name) ? participation.teamNameAlias : participation.expand.team.name;
+			let drivers = participation.expand.participants ? participation.expand.participants.map((p) => `${capitalizeFirstLetter(p.lastName)} ${capitalizeFirstLetter(p.name)}`) : [];
+			if (drivers.length > 4) {
+				drivers[3] = drivers.slice(3).join(" ||| ")
+    			drivers = drivers.slice(0,4)
+			}
+			// content += `${teamId};${teamNumber};${teamAlias};${drivers.join(';')}\n`;
+			contentCsv += `${teamNumber};${teamAlias};${drivers.join(';')}\n`;
+		});
+		contentCsv += ';;;;;;\n';
+		driftTrikeParticipations.forEach((participation) => {
+			// const teamId = participation.expand.team.id;
+			const teamNumber = participation.expand.team.number != 0 ? participation.expand.team.number : '';
+			const teamAlias = (participation.teamNameAlias && participation.teamNameAlias != participation.expand.team.name) ? participation.teamNameAlias : participation.expand.team.name;
+			let drivers = participation.expand.participants ? participation.expand.participants.map((p) => `${capitalizeFirstLetter(p.lastName)} ${capitalizeFirstLetter(p.name)}`) : [];
+			if (drivers.length > 4) {
+				drivers[3] = drivers.slice(3).join(" ||| ")
+    			drivers = drivers.slice(0,4)
+			}
+			// content += `${teamId};${teamNumber};${teamAlias};${drivers.join(';')}\n`;
+			contentCsv += `${teamNumber};${teamAlias};${drivers.join(';')}\n`;
+		});
+
+		// Create download .txt
+		const blobTxt = new Blob([contentTxt], { type: 'text/plain;charset=utf-8' });
+		const urlTxt = URL.createObjectURL(blobTxt);
+		const linkTxt = document.createElement('a');
+		linkTxt.href = urlTxt;
+		linkTxt.download = `Iscritti_${foundEventDerived.shortName.replaceAll(" ", "-")}_${new Date().toISOString().split('T')[0]}.txt`;
+		document.body.appendChild(linkTxt);
+		linkTxt.click();
+		document.body.removeChild(linkTxt);
+		URL.revokeObjectURL(urlTxt);
+
+		// Create download .csv
+		const blobCsv = new Blob([contentCsv], { type: 'text/csv;charset=utf-8' });
+		const urlCsv = URL.createObjectURL(blobCsv);
+		const linkCsv = document.createElement('a');
+		linkCsv.href = urlCsv;
+		linkCsv.download = `Iscritti_${foundEventDerived.shortName.replaceAll(" ", "-")}_${new Date().toISOString().split('T')[0]}.csv`;
+		document.body.appendChild(linkCsv);
+		linkCsv.click();
+		document.body.removeChild(linkCsv);
+		URL.revokeObjectURL(urlCsv);
 	}
 
 	// --- Interactive Map management ---
@@ -208,12 +252,12 @@
 										onclick={downloadParticipantsList}
 										title="Scarica lista iscritti"
 									>
-										<Download class="h-6 w-6" />
+										<Download class="h-4 w-4 md:h-6 md:w-6" />
 									</button>
 								{/if}
 								<form method="dialog">
-									<button class="btn btn-square btn-ghost btn-md md:btn-lg" title="Chiudi">
-										<X class="h-6 w-6" />
+									<button class="btn btn-circle btn-md md:btn-lg" title="Chiudi">
+										<X class="h-6 w-6 md:h-6 md:w-6" />
 									</button>
 								</form>
 							</div>

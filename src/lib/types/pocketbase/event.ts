@@ -13,7 +13,7 @@ export enum EventCategory {
 	Pinocchio = 'Pinocchio',
 	Trike = 'Trike',
 	Junior = 'Junior',
-	Other = 'Other'
+	Other = 'Altro'
 }
 
 export enum EventLeaderboard {

@@ -8,6 +8,30 @@ export enum EventKind {
 	Rally = 'rally'
 }
 
+export enum EventCategory {
+	SoapBox = 'SoapBox',
+	Pinocchio = 'Pinocchio',
+	Trike = 'Trike',
+	Junior = 'Junior',
+	Other = 'Other'
+}
+
+export enum EventLeaderboard {
+	Creativity = 'Creatività',
+	Technical = 'Tecnica',
+	Audience = 'Pubblico',
+	Originality = 'Originalità',
+	PreStage = 'Pre-Stage',
+	Stage1 = 'Stage 1',
+	Stage2 = 'Stage 2',
+	Speed = 'Finale Velocità',
+	Final = 'Gran Combinata'
+}
+
+export type EventAvailableLeaderboards = Partial<
+	Record<EventCategory, EventLeaderboard[]>
+>;
+
 export type EventId = string;
 export interface EventBase {
 	id: EventId;
@@ -21,6 +45,7 @@ export interface EventBase {
 	track?: TrackId;
 	numSubscriptions: number;
 	maxSubscriptions: number | null;
+	availableLeaderboards: EventAvailableLeaderboards;
 	subscriptionsOpen: boolean;
 	onAir: boolean;
 	results: ResultId[];

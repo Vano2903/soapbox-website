@@ -4,16 +4,18 @@
 	import {
 		LucideCalendarCheck,
 		LucideRadio,
-		LucideLock,
-		ExternalLink,
-		Filter
+		LucideLock
 	} from 'lucide-svelte';
 	import { goto } from '$app/navigation';
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
-	import type { EventNonExpand } from '$types/pocketbase/event';
+	import {
+		EventCategory,
+		EventLeaderboard,
+		type EventAvailableLeaderboards,
+		type EventNonExpand
+	} from '$types/pocketbase/event';
 	import { LeaderboardType } from '$types/pocketbase/results';
 	import ContextualHelp from '$components/contextualHelp/contextualHelp.svelte';
-	import { StageKind } from '$types/pocketbase/stage.js';
 
 	// const {
 	// 	championshipsList,
@@ -55,21 +57,32 @@
 	);
 
 	// variables to handle the user choice of wich leaderboard show (if any)
-	const categories = ['SoapBox', 'Pinocchio', 'Trike', 'Altro'];
-	const leaderboards = [
-		// 'Creatività',
-		// 'Tecnica',
-		// 'Pubblico',
-		// 'Originalità',
-		// 'Manche 0',
-		'Manche 1',
-		'Manche 2',
-		'Velocità',
-		'Finale'
-	];
-	let selectedCategory = $state('SoapBox');
+	const leaderboardMap = $derived(
+		(foundEventDerived?.availableLeaderboards ?? {}) as EventAvailableLeaderboards
+	);
+	const categories = $derived(
+		(Object.entries(leaderboardMap)
+			.filter(([, leaderboards]) => (leaderboards?.length ?? 0) > 0)
+			.map(([key]) => key as EventCategory))
+	);
+	let selectedCategory = $state<EventCategory>(EventCategory.SoapBox);
+	$effect(() => {
+		const firstAvailableCategory = categories[0] ?? 'SoapBox';
+		if (!categories.includes(selectedCategory)) {
+			selectedCategory = firstAvailableCategory;
+		}
+	});
 
-	let selectedLeaderboard = $state('Manche 1');
+	const leaderboards = $derived(
+		leaderboardMap[selectedCategory] ?? []
+	);
+	let selectedLeaderboard = $state<EventLeaderboard>(EventLeaderboard.Stage1);
+	$effect(() => {
+		const firstAvailableLeaderboard = leaderboards[0] ?? EventLeaderboard.Stage1;
+		if (!leaderboards.includes(selectedLeaderboard)) {
+			selectedLeaderboard = firstAvailableLeaderboard;
+		}
+	});
 
 	// variables and functions to manage the content of leaderboard sheet, retrieved by a controlled polling on the Google Sheets API
 	let sheetHTML = $state();

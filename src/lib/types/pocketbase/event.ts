@@ -3,6 +3,7 @@ import type { LocationId, Location } from './location'
 import type { ResultId, Result } from './results'
 import type { ChampionshipId, Championship } from './championship';
 import type { TrackId, Track } from './tracks';
+import type { EventNewsId, EventNews } from './eventNews';
 
 export enum EventKind {
 	Rally = 'rally'
@@ -48,6 +49,7 @@ export interface EventBase {
 	availableLeaderboards: EventAvailableLeaderboards;
 	subscriptionsOpen: boolean;
 	onAir: boolean;
+	eventNews?: EventNewsId[];
 	results: ResultId[];
 	cover?: string;
 	poster?: string;
@@ -66,6 +68,7 @@ export interface EventExpand extends EventBase {
 		track: Track;
 		results: Result[];
 		championship: Championship;
+		eventNews?: EventNews[];
 	}
 }
 

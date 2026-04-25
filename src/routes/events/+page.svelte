@@ -2,7 +2,7 @@
 	import { CategoryKind } from '$types/pocketbase/eventParticipation';
 	import { Roles } from '$types/pocketbase/user';
 	import { ToSurfaceInfoExpandArray } from '$types/surfaceUtils.js';
-	import { CalendarDays, MapPin, UserRoundPlus, FileCheck, Map as MapBase, SquarePen, Route, Ruler, Mountain, TriangleRight, ChartSpline, Download, X, CircleHelp } from 'lucide-svelte';
+	import { CalendarDays, MapPin, UserRoundPlus, FileCheck, Map as MapBase, SquarePen, Route, Ruler, Mountain, TriangleRight, ChartSpline, Download, X, CircleHelp, Radio, ChevronDown, ChevronUp } from 'lucide-svelte';
 	import EntityCard2 from '$components/entityCard/entityCard2.svelte';
 	import ContextualHelp from '$components/contextualHelp/contextualHelp.svelte';
 	import { capitalizeFirstLetter } from '$lib/utils/generic';
@@ -17,6 +17,14 @@
 
 	// --- Event participations modal management ---
 	let activeModalTab = $state<CategoryKind>(CategoryKind.SoapBox);
+
+	// --- News section ---
+	let showAllNews = $state(false);
+	const sortedNews = $derived(
+		(foundEventDerived.expand?.eventNews ?? [])
+			.filter((n) => !n.hidden)
+			.sort((a, b) => new Date(b.created).valueOf() - new Date(a.created).valueOf())
+	);
 
 	function downloadParticipantsList() {
 		let contentTxt = `Evento: ${foundEventDerived.name} (${foundEventDerived.shortName})\n`;
@@ -140,6 +148,7 @@
 			}
 		}
 	}
+
 </script>
 
 <main class="pb-16">
@@ -191,7 +200,7 @@
 			</div>
 
 			<div 
-				class="card bg-base-100 shadow-xl mb-8 cursor-pointer hover:shadow-2xl transition duration-300 hover:bg-neutral-100 active:scale-98"
+				class="card bg-base-100 shadow-xl mb-4 cursor-pointer hover:shadow-2xl transition duration-300 hover:bg-neutral-100 active:scale-98"
 				onclick={() => (document.getElementById('subscribed-member-list_modal') as HTMLDialogElement)?.showModal()}
 				onkeypress={(e) => e.key === 'Enter' && (document.getElementById('subscribed-member-list_modal') as HTMLDialogElement)?.showModal()}
 				role="button"
@@ -357,6 +366,63 @@
 					<button>close</button>
 				</form>
 			</div>
+
+			{#if foundEventDerived.onAir}
+				<a
+					href={`/leaderboards?${new URLSearchParams(`championship=${foundChampionshipDerived.name}&event=${foundEventDerived.shortName}`).toString()}`}
+					class="card bg-base-100 shadow-xl mb-8 cursor-pointer hover:shadow-2xl transition duration-300 hover:bg-neutral-100 active:scale-98"
+				>
+					<div class="card-body pb-6">
+						<div class="flex flex-row items-center xs:justify-between gap-2">
+							<div class="flex flex-row items-center gap-4 justify-between">
+								<div class="hidden xs:flex flex-col items-center border border-red-500 rounded-md p-2 shadow-md min-w-24 gap-1">
+									<Radio class="h-6 w-6 md:h-8 md:w-8 text-red-600 animate-pulse" />
+									<span class="text-xs font-bold text-red-600 uppercase tracking-wider">Live</span>
+								</div>
+								<div>
+									<h2 class="card-title text-lg md:text-2xl">Classifica</h2>
+									<p class="text-xs md:text-base text-gray-600">L'evento è live, guarda la classifica in tempo reale</p>
+								</div>
+							</div>
+							<button class="btn btn-primary btn-md md:btn-lg pointer-events-none">
+								<ChartSpline /> Classifica
+							</button>
+						</div>
+					</div>
+				</a>
+			{/if}
+
+			{#if sortedNews.length > 0}
+				<div class="card bg-base-100 shadow-xl mb-8">
+					<div class="card-body">
+						<h2 class="card-title text-lg md:text-2xl">Aggiornamenti</h2>
+						<div class="prose max-w-none p-4 bg-base-200 rounded-lg">
+							{@html sortedNews[0].info}
+						</div>
+						{#if sortedNews.length > 1}
+							<button
+								class="btn btn-ghost btn-sm gap-2 self-start mt-1"
+								onclick={() => (showAllNews = !showAllNews)}
+							>
+								{#if showAllNews}
+									<ChevronUp class="h-4 w-4" /> Nascondi aggiornamenti precedenti
+								{:else}
+									<ChevronDown class="h-4 w-4" /> Vedi tutti gli aggiornamenti ({sortedNews.length - 1})
+								{/if}
+							</button>
+							{#if showAllNews}
+								<div class="space-y-3">
+									{#each sortedNews.slice(1) as newsItem}
+										<div class="prose max-w-none p-4 bg-base-200 rounded-lg">
+											{@html newsItem.info}
+										</div>
+									{/each}
+								</div>
+							{/if}
+						{/if}
+					</div>
+				</div>
+			{/if}
 
 			<hr class="my-8" />
 

@@ -58,7 +58,7 @@ export const load: PageLoad = async ({ data, url, fetch, parent }) => {
 				.collection('events')
 				.getFirstListItem(`id="${researchedEvent.id}"`, {
 					fetch: fetch,
-					expand: 'results,stages,location,track'
+					expand: 'results,stages,location,track,eventNews'
 				});
 		} catch (err) {
 			console.error('Event not found: ', err);

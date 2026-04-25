@@ -13,6 +13,7 @@
 	import { goto } from '$app/navigation';
 	import type { ChampionshipExpand } from '$types/pocketbase/championship.js';
 	import { toEventInfoType } from '$types/pocketbase/event';
+	import { addDays } from '$lib/utils.js';
 
 	const { data } = $props();
 	const {
@@ -269,7 +270,11 @@
 					locatedOnCarousel={true}
 				/>
 				<!-- foundEventDerived?.subscriptionsOpen && (foundEventDerived.maxSubscriptions === 0 || foundEventDerived.numSubscriptions < (foundEventDerived.maxSubscriptions ?? 0)) && (!foundEventDerived.startDate || new Date(foundEventDerived.startDate).valueOf() >= new Date().valueOf()) -->
-				{#if currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen && (currentChampionship.expand.events.at(nextEventIndex)?.maxSubscriptions === 0 || (currentChampionship.expand.events.at(nextEventIndex)?.numSubscriptions ?? 0) < (currentChampionship.expand.events.at(nextEventIndex)?.maxSubscriptions ?? 0)) && (!currentChampionship.expand.events.at(nextEventIndex)?.startDate || new Date(currentChampionship.expand.events.at(nextEventIndex)?.startDate ?? new Date()).valueOf() >= new Date().valueOf())}
+				{#if currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen && 
+				(currentChampionship.expand.events.at(nextEventIndex)?.maxSubscriptions === 0 ||
+				 (currentChampionship.expand.events.at(nextEventIndex)?.numSubscriptions ?? 0) < (currentChampionship.expand.events.at(nextEventIndex)?.maxSubscriptions ?? 0)) &&
+				  (!currentChampionship.expand.events.at(nextEventIndex)?.startDate || 
+				  	new Date(currentChampionship.expand.events.at(nextEventIndex)?.startDate ?? new Date()).valueOf() >= addDays(new Date(), -2).valueOf())}
 					<a
 						class="btn btn-error text-foreground max-w-70"
 						href={`/enroll?${new URLSearchParams(`championship=${currentChampionship.name}&event=${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`).toString()}`}
@@ -507,7 +512,7 @@
 						Ogni curva è una promessa di leggenda.
 					</h2>
 				</div>
-				<div class="flex flex-row justify-end absolute right-4 bottom-4 z-10 gap-2">
+				<div class="flex flex-row justify-end absolute left-4 bottom-4 z-10 gap-2">
 					<button
 						onclick={toggleMute}
 						class="cursor-pointer rounded-full bg-white/80 px-3 py-1 text-sm font-semibold text-black backdrop-blur hover:bg-white tooltip tooltip-top"

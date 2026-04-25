@@ -23,6 +23,9 @@ importers:
       bits-ui:
         specifier: ^1.8.0
         version: 1.8.0(svelte@5.46.0)
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       codice-fiscale-js:
         specifier: ^2.3.23
         version: 2.3.23

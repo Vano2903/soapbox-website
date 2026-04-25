@@ -46,6 +46,7 @@
 		"@tailwindcss/postcss": "^4.1.18",
 		"@types/throttle-debounce": "^5.0.2",
 		"bits-ui": "^1.8.0",
+		"clsx": "^2.1.1",
 		"codice-fiscale-js": "^2.3.23",
 		"daisyui": "^5.5.14",
 		"embla-carousel-autoplay": "^8.6.0",

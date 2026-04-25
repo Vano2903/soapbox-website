@@ -5,6 +5,7 @@ import type { Championship } from './championship';
 import type { Event } from './event';
 import type { Stage } from './stage';
 import type { Location } from './location';
+import type { EventNews } from './eventNews';
 
 export interface TypedPocketBase extends PocketBase {
 	collection(idOrName: string): RecordService;
@@ -16,4 +17,5 @@ export interface TypedPocketBase extends PocketBase {
 	collection(idOrName: 'events'): RecordService<Event>;
 	collection(idOrName: 'stages'): RecordService<Stage>;
 	collection(idOrName: 'locations'): RecordService<Location>;
+	collection(idOrName: 'eventNews'): RecordService<EventNews>;
 }

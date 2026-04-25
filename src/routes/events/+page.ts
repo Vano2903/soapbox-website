@@ -54,12 +54,10 @@ export const load: PageLoad = async ({ data, url, fetch, parent }) => {
 	let foundEvent: EventExpand;
 	if (researchedEvent) {
 		try {
-			foundEvent = await pb
-				.collection('events')
-				.getFirstListItem(`id="${researchedEvent.id}"`, {
-					fetch: fetch,
-					expand: 'results,stages,location,track'
-				});
+			foundEvent = await pb.collection('events').getFirstListItem(`id="${researchedEvent.id}"`, {
+				fetch: fetch,
+				expand: 'results,stages,location,track,news'
+			});
 		} catch (err) {
 			console.error('Event not found: ', err);
 			throw fail(500);
@@ -85,21 +83,22 @@ export const load: PageLoad = async ({ data, url, fetch, parent }) => {
 	// retrieve the event participations
 	let eventParticipations: EventParticipationExpand[];
 	try {
-		eventParticipations = await pb
-			.collection('eventParticipations')
-			.getFullList({
-				fetch: fetch,
-				filter: `event="${foundEvent.id}"`,
-				expand: 'team,participants'
-			});
+		eventParticipations = await pb.collection('eventParticipations').getFullList({
+			fetch: fetch,
+			filter: `event="${foundEvent.id}"`,
+			expand: 'team,participants'
+		});
 	} catch (err) {
 		console.error('Event participations not found: ', err);
 		throw fail(500);
 	}
 
 	eventParticipations = eventParticipations.map((ep) => {
-		ep.expand.team.logoCropped = pb.files.getURL(ep.expand.team, ep.expand.team.logoCropped || '') || createAvatarUrl(ep.expand.team.slug, 'small');
-		ep.expand.team.bannerCropped = pb.files.getURL(ep.expand.team, ep.expand.team.bannerCropped || '') || undefined;
+		ep.expand.team.logoCropped =
+			pb.files.getURL(ep.expand.team, ep.expand.team.logoCropped || '') ||
+			createAvatarUrl(ep.expand.team.slug, 'small');
+		ep.expand.team.bannerCropped =
+			pb.files.getURL(ep.expand.team, ep.expand.team.bannerCropped || '') || undefined;
 		return ep;
 	});
 

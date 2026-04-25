@@ -1,8 +1,9 @@
-import type { StageId, Stage } from './stage'
-import type { LocationId, Location } from './location'
-import type { ResultId, Result } from './results'
+import type { StageId, Stage } from './stage';
+import type { LocationId, Location } from './location';
+import type { ResultId, Result } from './results';
 import type { ChampionshipId, Championship } from './championship';
 import type { TrackId, Track } from './tracks';
+import type { EventNewsId, EventNews } from './eventNews';
 
 export enum EventKind {
 	Rally = 'rally'
@@ -28,9 +29,7 @@ export enum EventLeaderboard {
 	Final = 'Gran Combinata'
 }
 
-export type EventAvailableLeaderboards = Partial<
-	Record<EventCategory, EventLeaderboard[]>
->;
+export type EventAvailableLeaderboards = Partial<Record<EventCategory, EventLeaderboard[]>>;
 
 export type EventId = string;
 export interface EventBase {
@@ -48,6 +47,7 @@ export interface EventBase {
 	availableLeaderboards: EventAvailableLeaderboards;
 	subscriptionsOpen: boolean;
 	onAir: boolean;
+	news?: EventNewsId[];
 	results: ResultId[];
 	cover?: string;
 	poster?: string;
@@ -66,7 +66,8 @@ export interface EventExpand extends EventBase {
 		track: Track;
 		results: Result[];
 		championship: Championship;
-	}
+		news?: EventNews[];
+	};
 }
 
 export interface EventNonExpand extends EventBase {
@@ -119,10 +120,10 @@ export type EventDataType = {
 	shortName: string;
 	fullName: string;
 	isOnAir: boolean;
-}
+};
 
 export type YearDataType = {
-	year: string,
-	current: boolean,
-	eventsList: string[]
-}
+	year: string;
+	current: boolean;
+	eventsList: string[];
+};

@@ -16,7 +16,7 @@ services:
       - traefik
 
   frontend-prod:
-    image: "ghcr.io/vano2903/soapbox-website:sha-6aa5b73"
+    image: "ghcr.io/vano2903/soapbox-website:sha-18369e0"
     container_name: "bruum-frontend-prod"
     restart: "unless-stopped"
     labels:
@@ -32,8 +32,10 @@ services:
       - "traefik.http.routers.bruum-bare-redirect.tls=true"
       - "traefik.http.routers.bruum-bare-redirect.tls.certresolver=httpcert"
       - "traefik.http.routers.bruum-bare-redirect.middlewares=bare-to-www"
-      - "traefik.http.middlewares.bare-to-www.redirectregex.regex=^https://boxrally\\.eu/(.*)"
-      - "traefik.http.middlewares.bare-to-www.redirectregex.replacement=https://www.boxrally.eu/$${1}"
+      - "traefik.http.middlewares.bare-to-www.redirectregex.regex=^https://boxr\
+        ally\\.eu/(.*)"
+      - "traefik.http.middlewares.bare-to-www.redirectregex.replacement=https:/\
+        /www.boxrally.eu/$${1}"
       - "traefik.http.middlewares.bare-to-www.redirectregex.permanent=true"
     depends_on:
       - pb-prod

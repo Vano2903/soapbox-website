@@ -37,7 +37,13 @@ export async function GET({ url }) {
 		error(404, "leaderboard not found")
 	}
 
-	const data = await fetchSheetData((enableTestURL ? testURL : `'Cl. ${leaderboard} [${category.toUpperCase()}]'!${leaderboardsRange.get(leaderboard)}`))
+	let data: any;
+	try {
+		data = await fetchSheetData(enableTestURL ? testURL : `'Cl. ${leaderboard} [${category.toUpperCase()}]'!${leaderboardsRange.get(leaderboard)}`);
+	} catch (err) {
+		console.error('fetchSheetData failed:', err);
+		error(404, `Classifica non trovata: ${leaderboard} [${category}]`);
+	}
 
 	// return new Response(String(formatSheetData(data)))
 	return new Response(String(formatSheetDataFromFullJson(data)))

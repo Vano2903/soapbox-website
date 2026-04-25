@@ -98,6 +98,11 @@
 			let response = await fetch(
 				`/leaderboards/sheetData?category=${selectedCategory}&leaderboard=${selectedLeaderboard}`
 			);
+			if (!response.ok) {
+				console.error('Sheet data not available:', response.status, await response.text());
+				sheetHTML = '';
+				return;
+			}
 			sheetHTML = await response.text();
 		} catch (err) {
 			console.error('Error fetching sheet data:', err);

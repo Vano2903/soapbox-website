@@ -14,12 +14,14 @@ export async function fetchSheetData(RANGE: string) {
 	const json = await res.json();
 	// console.log("[DEBUG] Fetch data:\n", json)
 
-	// if (!json.values) {
-	// 	throw new Error('No values in response');
-	// }
-	// return json.values;
 	if (!json) {
-		throw new Error('No values in response');
+		throw new Error('No response from Google Sheets API');
+	}
+	if (json.error) {
+		throw new Error(`Google Sheets API error ${json.error.code}: ${json.error.message}`);
+	}
+	if (!json.sheets || json.sheets.length === 0) {
+		throw new Error(`Sheet not found for range: ${RANGE}`);
 	}
 	return json;
 }

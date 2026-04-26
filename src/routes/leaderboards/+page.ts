@@ -6,6 +6,7 @@ import type { TypedPocketBase } from '$types/pocketbase/pocketbase';
 import type { ChampionshipExpand } from '$types/pocketbase/championship';
 import { fail } from '@sveltejs/kit';
 import type { Result } from '$types/pocketbase/results';
+import { addDays } from '$lib/utils';
 
 export const load: PageLoad = async ({ data, url, fetch, parent }) => {
 	console.log('Loading championships:\n > data = ', data, '\n > url = ', url);
@@ -14,7 +15,7 @@ export const load: PageLoad = async ({ data, url, fetch, parent }) => {
 
 	// destructures the data received from the PageServerLoad and prepare the variables
 	const { docsContent } = await parent();
-	const { championshipsList, lastOngoingChampionshipIndex } = data;
+	const { championshipsList, lastOngoingChampionshipIndex, onAirEventId } = data;
 
 	// retrieve the selected championship or, if nullish, the last ongoingChampionship available
 	const requestedChampionshipIndex = championshipsList.findIndex((c: { name: string | null }) => {
@@ -59,9 +60,16 @@ export const load: PageLoad = async ({ data, url, fetch, parent }) => {
 				`L'evento "${url.searchParams.get('event')}" non esiste per il campionato "${url.searchParams.get('championship') || championshipsList.at(researchChampionshipIndex)?.name}".`
 			);
 		}
-		requestedEventIndex = foundChampionship.expand.events.findIndex((e) => {
-			return new Date().valueOf() < new Date(e.startDate).valueOf();
-		});
+		// Priority 1: currently on-air event (resolved server-side with auth)
+		if (onAirEventId) {
+			requestedEventIndex = foundChampionship.expand.events.findIndex((e) => e.id === onAirEventId);
+		}
+		// Priority 2: event that started within the last 2 days (same window as homepage)
+		if (requestedEventIndex === -1) {
+			requestedEventIndex = foundChampionship.expand.events.findIndex((e) => {
+				return addDays(new Date(), -2).valueOf() < new Date(e.startDate ?? '').valueOf();
+			});
+		}
 	}
 	const researchEventIndex = requestedEventIndex;
 	const foundEvent = foundChampionship.expand.events.at(researchEventIndex);

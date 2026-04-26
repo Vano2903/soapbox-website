@@ -11,5 +11,13 @@ export const load: PageServerLoad = async ({ locals }) => {
 		throw fail(500);
 	}
 
-	return { championshipsList, lastOngoingChampionshipIndex };
+	let onAirEventId: string | null = null;
+	try {
+		const onAirEvent = await pb.collection('events').getFirstListItem('onAir = true');
+		onAirEventId = onAirEvent.id;
+	} catch {
+		// no onAir event
+	}
+
+	return { championshipsList, lastOngoingChampionshipIndex, onAirEventId };
 };

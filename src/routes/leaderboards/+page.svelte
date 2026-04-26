@@ -1,12 +1,9 @@
 <script lang="ts">
 	import type { ChampionshipNonExpand } from '$types/pocketbase/championship.js';
 	import ElementSelection from '$components/elementSelection/elementSelection.svelte';
-	import {
-		LucideCalendarCheck,
-		LucideRadio,
-		LucideLock
-	} from 'lucide-svelte';
-	import { goto } from '$app/navigation';
+	import { LucideCalendarCheck, LucideRadio, LucideLock } from 'lucide-svelte';
+	import { goto, replaceState } from '$app/navigation';
+	import { onMount } from 'svelte';
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
 	import {
 		EventCategory,
@@ -16,23 +13,10 @@
 	} from '$types/pocketbase/event';
 	import { LeaderboardType } from '$types/pocketbase/results';
 	import ContextualHelp from '$components/contextualHelp/contextualHelp.svelte';
+	import { page } from '$app/stores';
 
-	// const {
-	// 	championshipsList,
-	// 	foundChampionship,
-	// 	foundEvent,
-	// 	warnings
-	// }: {
-	// 	championshipsList: ChampionshipNonExpand[];
-	// 	foundChampionship: ChampionshipExpand;
-	// 	foundEvent: EventNonExpand | undefined;
-	// 	warnings: string[];
-	// } = data;
-
-	// constant that defines how many elements to show on each side of the current element of the ElementSelection component
 	const championshipsListOffset: number = 3;
 
-	// destructures the data received from the PageLoad and prepares it to be derived (reactive to changes in value)
 	const { data } = $props();
 	const championshipsListDerived = $derived(data.championshipsList);
 	const foundChampionshipDerived = $derived(data.foundChampionship);
@@ -41,62 +25,52 @@
 	const warningsDerived = $derived(data.warnings);
 	const contextualHelps = $derived(data.contextualHelps);
 
-	// split results by metadata
+	// Results split by type
 	const stageAndEventResultsDerived = $derived(
-		eventResultsDerived?.filter((result) => {
-			return (
-				result.data.leaderboardType == LeaderboardType.Stage ||
-				result.data.leaderboardType == LeaderboardType.Event
-			);
-		})
+		eventResultsDerived?.filter((r) =>
+			r.data.leaderboardType == LeaderboardType.Stage || r.data.leaderboardType == LeaderboardType.Event
+		)
 	);
 	const championshipResultsDerived = $derived(
-		eventResultsDerived?.filter((result) => {
-			return result.data.leaderboardType == LeaderboardType.Championship;
-		})
+		eventResultsDerived?.filter((r) => r.data.leaderboardType == LeaderboardType.Championship)
 	);
 
-	// variables to handle the user choice of wich leaderboard show (if any)
-	const leaderboardMap = $derived(
-		(foundEventDerived?.availableLeaderboards ?? {}) as EventAvailableLeaderboards
-	);
+	// --- URL-driven selections ---
+	// Championship and event drive the load function via goto(); derive from loaded data.
+	const selectedChampionship = $derived(foundChampionshipDerived?.name ?? '');
+	const selectedEvent = $derived(foundEventDerived?.shortName ?? '');
+
+	// Category and leaderboard are pure UI state — $page store is the source of truth.
+	const leaderboardMap = $derived((foundEventDerived?.availableLeaderboards ?? {}) as EventAvailableLeaderboards);
 	const categories = $derived(
-		(Object.entries(leaderboardMap)
-			.filter(([, leaderboards]) => (leaderboards?.length ?? 0) > 0)
-			.map(([key]) => key as EventCategory))
+		Object.entries(leaderboardMap)
+			.filter(([, lbs]) => (lbs?.length ?? 0) > 0)
+			.map(([key]) => key as EventCategory)
 	);
-	let selectedCategory = $state<EventCategory>(EventCategory.SoapBox);
-	$effect(() => {
-		const firstAvailableCategory = categories[0] ?? 'SoapBox';
-		if (!categories.includes(selectedCategory)) {
-			selectedCategory = firstAvailableCategory;
-		}
+	const selectedCategory = $derived.by((): EventCategory => {
+		const param = $page.url.searchParams.get('category') as EventCategory | null;
+		if (param && categories.includes(param)) return param;
+		return categories[0] ?? EventCategory.SoapBox;
 	});
 
-	const leaderboards = $derived(
-		leaderboardMap[selectedCategory] ?? []
-	);
-	let selectedLeaderboard = $state<EventLeaderboard>(EventLeaderboard.Stage1);
-	$effect(() => {
-		const firstAvailableLeaderboard = leaderboards[0] ?? EventLeaderboard.Stage1;
-		if (!leaderboards.includes(selectedLeaderboard)) {
-			selectedLeaderboard = firstAvailableLeaderboard;
-		}
+	const leaderboards = $derived(leaderboardMap[selectedCategory] ?? []);
+	const selectedLeaderboard = $derived.by((): EventLeaderboard => {
+		const param = $page.url.searchParams.get('leaderboard') as EventLeaderboard | null;
+		if (param && leaderboards.includes(param)) return param;
+		return leaderboards[0] ?? EventLeaderboard.Stage1;
 	});
 
-	// variables and functions to manage the content of leaderboard sheet, retrieved by a controlled polling on the Google Sheets API
+	// --- Sheet polling ---
 	let sheetHTML = $state();
-	async function updateSheet() {
+	// Accept explicit values so callers can pass the new selection before the derived has updated
+	async function updateSheet(category = selectedCategory, leaderboard = selectedLeaderboard) {
 		console.log(
 			new Date().toLocaleTimeString('it-IT', { hour12: false }),
-			'Updating sheet for category:',
-			selectedCategory,
-			'and leaderboard:',
-			selectedLeaderboard
+			'Updating sheet — category:', category, 'leaderboard:', leaderboard
 		);
 		try {
-			let response = await fetch(
-				`/leaderboards/sheetData?category=${selectedCategory}&leaderboard=${selectedLeaderboard}`
+			const response = await fetch(
+				`/leaderboards/sheetData?category=${category}&leaderboard=${leaderboard}`
 			);
 			if (!response.ok) {
 				console.error('Sheet data not available:', response.status, await response.text());
@@ -119,90 +93,63 @@
 	let stopPollingUpdateSheet: (() => void) | undefined;
 	$effect(() => {
 		if (foundEventDerived?.onAir) {
-			console.log(
-				new Date().toLocaleTimeString('it-IT', { hour12: false }),
-				'foundEventDerived (',
-				foundEventDerived.name,
-				') is LIVE now!'
-			);
+			console.log(new Date().toLocaleTimeString('it-IT', { hour12: false }), 'foundEventDerived (', foundEventDerived.name, ') is LIVE now!');
 			if (!stopPollingUpdateSheet) {
-				console.log(
-					new Date().toLocaleTimeString('it-IT', { hour12: false }),
-					'starting new polling update sheet...'
-				);
+				console.log(new Date().toLocaleTimeString('it-IT', { hour12: false }), 'starting new polling update sheet...');
 				stopPollingUpdateSheet = startPollingUpdateSheet();
 			}
 		} else {
-			console.log(
-				new Date().toLocaleTimeString('it-IT', { hour12: false }),
-				'foundEventDerived (',
-				foundEventDerived?.name,
-				') is NOT LIVE now!'
-			);
+			console.log(new Date().toLocaleTimeString('it-IT', { hour12: false }), 'foundEventDerived (', foundEventDerived?.name, ') is NOT LIVE now!');
 			sheetHTML = '';
 			if (stopPollingUpdateSheet) {
 				stopPollingUpdateSheet();
+				stopPollingUpdateSheet = undefined;
 			}
 		}
 	});
 
-	// Functions to handle the selection of championship and event, causing a navigation to the new URL with hydration and updated props
+	// --- Selection handlers ---
+	// Always build URLs from window.location.href so all existing params are preserved.
+	// Championship/event: re-run the load function via goto
 	function selectionYear(year: string) {
-		console.log(
-			new Date().toLocaleTimeString('it-IT', { hour12: false }),
-			'new year selection = {' + year + '}'
-		);
 		const url = new URL(window.location.href);
 		url.searchParams.set('championship', year);
-		goto(url.toString(), {
-			noScroll: true,
-			keepFocus: true,
-			replaceState: true,
-			invalidateAll: true
-		});
+		goto(url.toString(), { noScroll: true, keepFocus: true, replaceState: true, invalidateAll: true });
 	}
 	function selectionEvent(event: string) {
-		console.log(
-			new Date().toLocaleTimeString('it-IT', { hour12: false }),
-			'new event selection = {' + event + '}'
-		);
 		const url = new URL(window.location.href);
 		url.searchParams.set('event', event);
-		goto(url.toString(), {
-			noScroll: true,
-			keepFocus: true,
-			replaceState: true,
-			invalidateAll: true
-		});
+		goto(url.toString(), { noScroll: true, keepFocus: true, replaceState: true, invalidateAll: true });
+	}
+	// Category/leaderboard: update URL only, pass new values directly to updateSheet
+	function selectionCategory(category: EventCategory) {
+		const url = new URL(window.location.href);
+		url.searchParams.set('category', category);
+		url.searchParams.delete('leaderboard');
+		replaceState(url, {});
+		const firstLeaderboard = (leaderboardMap[category] ?? [])[0] ?? EventLeaderboard.Stage1;
+		updateSheet(category, firstLeaderboard);
+	}
+	function selectionLeaderboard(leaderboard: EventLeaderboard) {
+		const url = new URL(window.location.href);
+		url.searchParams.set('leaderboard', leaderboard);
+		replaceState(url, {});
+		updateSheet(selectedCategory, leaderboard);
 	}
 	function enrollRedirect(year: string, event: string) {
-		console.log(
-			new Date().toLocaleTimeString('it-IT', { hour12: false }),
-			'redirect to enroll selection = {' + year + ' | ' + event + '}'
-		);
-		const params = new URLSearchParams(`championship=${year}&event=${event}`);
-		goto(`/enroll?${params.toString()}`);
+		goto(`/enroll?${new URLSearchParams(`championship=${year}&event=${event}`).toString()}`);
 	}
 
-	// Function to transform the championship list into a format suitable for ElementSelection (with extra empty boundaries for cool UI effects)
+	// ElementSelection helper
 	function transformToElementList(championshipList: ChampionshipNonExpand[]) {
-		let elementsList = championshipList.map((v) => {
-			const isOngoing = v.ongoing;
-			const isLive = foundChampionshipDerived.expand.events.some((e) => e.onAir === true);
-
-			return {
-				value: v.name,
-				current: v.name === foundChampionshipDerived.name,
-				disabled: false,
-				icon:
-					isOngoing && isLive
-						? LucideRadio
-						: new Date(v.endDate) > new Date()
-							? null
-							: LucideCalendarCheck,
-				iconProps: isOngoing && isLive ? { color: '#e7000b' } : {}
-			};
-		});
+		const isLive = !!data.onAirEventId && foundChampionshipDerived.expand.events.some((e) => e.id === data.onAirEventId);
+		const elementsList = championshipList.map((v) => ({
+			value: v.name,
+			current: v.name === selectedChampionship,
+			disabled: false,
+			icon: v.ongoing && isLive ? LucideRadio : new Date(v.endDate) > new Date() ? null : LucideCalendarCheck,
+			iconProps: v.ongoing && isLive ? { color: '#e7000b' } : {}
+		}));
 		for (let i = 0; i < Math.min(championshipsListOffset, 3); i++) {
 			elementsList.push({
 				value: (Number(championshipList.at(-1)?.name) + (i + 1)).toString(),
@@ -215,16 +162,17 @@
 		return elementsList;
 	}
 
-	// console.log(foundEventDerived?.endDate);
-	// console.log(foundEventDerived?.startDate);
-	// console.log(
-	// 	new Date(foundEventDerived?.endDate ?? foundEventDerived?.startDate ?? new Date()).valueOf()
-	// );
-	// console.log(new Date().valueOf());
-	// console.log(
-	// 	new Date(foundEventDerived?.endDate ?? foundEventDerived?.startDate ?? new Date()).valueOf() >=
-	// 		new Date().valueOf()
-	// );
+	// Push computed defaults to URL on initial load so refresh preserves the selection.
+	// Uses window.history directly because replaceState() from $app/navigation requires
+	// the router to be initialized, which isn't guaranteed during onMount/hydration.
+	onMount(() => {
+		const url = new URL(window.location.href);
+		if (!url.searchParams.has('championship') && selectedChampionship)
+			url.searchParams.set('championship', selectedChampionship);
+		if (!url.searchParams.has('event') && selectedEvent)
+			url.searchParams.set('event', selectedEvent);
+		window.history.replaceState(history.state, '', url.toString());
+	});
 </script>
 
 <main class="px-5 pb-16 lg:px-15">
@@ -249,7 +197,7 @@
 		<div class="flex flex-row flex-wrap justify-center gap-4">
 			{#each foundChampionshipDerived.expand.events as event}
 				<button
-					class="hover:underline {foundEventDerived?.id === event.id ? 'text-red-600' : ''}"
+					class="hover:underline {event.shortName === selectedEvent ? 'text-red-600' : ''}"
 					onclick={() => selectionEvent(`${event.shortName}`)}
 				>
 					{event.shortName}
@@ -273,8 +221,8 @@
 				</div>
 				<div class="flex flex-row items-center justify-center gap-4">
 					<select
-						bind:value={selectedCategory}
-						onchange={updateSheet}
+						value={selectedCategory}
+						onchange={(e) => selectionCategory(e.currentTarget.value as EventCategory)}
 						class="rounded-xl bg-neutral-100 px-1.5 py-0.5"
 					>
 						{#each categories as category}
@@ -282,8 +230,8 @@
 						{/each}
 					</select>
 					<select
-						bind:value={selectedLeaderboard}
-						onchange={updateSheet}
+						value={selectedLeaderboard}
+						onchange={(e) => selectionLeaderboard(e.currentTarget.value as EventLeaderboard)}
 						class="rounded-xl bg-neutral-100 px-1.5 py-0.5"
 					>
 						{#each leaderboards as leaderboard}

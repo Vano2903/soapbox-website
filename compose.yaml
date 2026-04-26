@@ -10,16 +10,8 @@ services:
       - "traefik.http.routers.bruum-pb-prod.tls.certresolver=httpcert"
       - "traefik.http.routers.bruum-pb-prod.tls=true"
       - "traefik.http.services.bruum-pb-prod.loadbalancer.server.port=8080"
-      - "traefik.http.routers.bruum-pb-prod-backup.rule=Host(`pb.boxrally.eu`) && PathPrefix(`/api/backup`)"
-      - "traefik.http.routers.bruum-pb-prod-backup.entrypoints=https"
-      - "traefik.http.routers.bruum-pb-prod-backup.tls.certresolver=httpcert"
-      - "traefik.http.routers.bruum-pb-prod-backup.tls=true"
-      - "traefik.http.routers.bruum-pb-prod-backup.service=bruum-pb-prod-backup"
-      - "traefik.http.services.bruum-pb-prod-backup.loadbalancer.server.port=8080"
-      - "traefik.http.serversTransports.pb-transport.forwardingTimeouts.responseHeaderTimeout=600s"
-      - "traefik.http.serversTransports.pb-transport.forwardingTimeouts.readIdleTimeout=600s"
-      - "traefik.http.serversTransports.pb-transport.forwardingTimeouts.idleConnTimeout=600s"
-      - "traefik.http.services.bruum-pb-prod-backup.loadbalancer.serverstransport=pb-transport"
+      - "traefik.http.services.bruum-pb-prod.loadbalancer.serverstransport=pb-t\
+        ransport@file"
     volumes:
       - "./pocketdb:/app/pb_data"
     networks:
@@ -72,13 +64,8 @@ services:
       - "traefik.http.routers.bruum-pb-dev.tls.certresolver=httpcert"
       - "traefik.http.routers.bruum-pb-dev.tls=true"
       - "traefik.http.services.bruum-pb-dev.loadbalancer.server.port=8080"
-      - "traefik.http.routers.bruum-pb-dev-backup.rule=Host(`pb.dev.boxrally.eu`) && PathPrefix(`/api/backup`)"
-      - "traefik.http.routers.bruum-pb-dev-backup.entrypoints=https"
-      - "traefik.http.routers.bruum-pb-dev-backup.tls.certresolver=httpcert"
-      - "traefik.http.routers.bruum-pb-dev-backup.tls=true"
-      - "traefik.http.routers.bruum-pb-dev-backup.service=bruum-pb-dev-backup"
-      - "traefik.http.services.bruum-pb-dev-backup.loadbalancer.server.port=8080"
-      - "traefik.http.services.bruum-pb-dev-backup.loadbalancer.serverstransport=pb-transport"
+      - "traefik.http.services.bruum-pb-dev.loadbalancer.serverstransport=pb-tr\
+        ansport@file"
     volumes:
       - "./pocketdb-dev:/app/pb_data"
     networks:

@@ -18,7 +18,7 @@ services:
       - traefik
 
   frontend-prod:
-    image: "ghcr.io/vano2903/soapbox-website:sha-18369e0"
+    image: "ghcr.io/vano2903/soapbox-website:sha-1945e1c"
     container_name: "bruum-frontend-prod"
     restart: "unless-stopped"
     labels:

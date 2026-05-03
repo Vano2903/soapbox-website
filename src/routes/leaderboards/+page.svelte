@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { ChampionshipNonExpand } from '$types/pocketbase/championship.js';
 	import ElementSelection from '$components/elementSelection/elementSelection.svelte';
-	import { LucideCalendarCheck, LucideRadio, LucideLock } from 'lucide-svelte';
+	import { LucideCalendarCheck, LucideRadio, LucideLock, Info, UserRoundPlus } from 'lucide-svelte';
 	import { goto, replaceState } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
@@ -255,50 +255,27 @@
 									eventInfo={foundEventDerived as EventNonExpand}
 									locatedOnCarousel={false}
 								/>
-								{#if foundEventDerived?.subscriptionsOpen && (foundEventDerived.maxSubscriptions === 0 || foundEventDerived.numSubscriptions < (foundEventDerived.maxSubscriptions ?? 0)) && (!foundEventDerived.startDate || new Date(foundEventDerived.startDate).valueOf() >= new Date().valueOf())}
-									<div class="my-2 flex flex-row justify-center lg:my-0 lg:mt-4">
+								<div class="my-2 flex flex-row justify-center lg:my-0 lg:mt-4 gap-4">
+									{#if foundEventDerived?.subscriptionsOpen && (foundEventDerived.maxSubscriptions === 0 || foundEventDerived.numSubscriptions < (foundEventDerived.maxSubscriptions ?? 0)) && (!foundEventDerived.startDate || new Date(foundEventDerived.startDate).valueOf() >= new Date().valueOf())}
 										<a
 											href={`/enroll?${new URLSearchParams(`championship=${foundChampionshipDerived.name}&event=${foundEventDerived.shortName}`).toString()}`}
-											class="btn btn-error text-foreground max-w-70"
-											onclick={() =>
-												enrollRedirect(
-													`${foundChampionshipDerived.name}`,
-													`${foundEventDerived.shortName}`
-												)}
-										>
-											Iscriviti
-										</a>
-									</div>
-									<!-- <div class="mt-2 md:mt-8">
-									{#if event.subscriptionsOpen && (event.maxSubscriptions === 0 || event.numSubscriptions < (event.maxSubscriptions || 0)) && (!event.startDate || new Date(event.startDate).valueOf() >= new Date().valueOf())}
-										<a
-											href={`/enroll?${new URLSearchParams(`championship=${foundChampionshipDerived.name}&event=${event.shortName}`).toString()}`}
 											class="btn btn-error text-foreground max-w-5/12 text-xs md:text-lg"
 										>
-											Iscriviti
+											<UserRoundPlus /> Iscriviti
 										</a>
 									{:else}
 										<button
 											class="btn btn-disabled flex-nowrap text-xs text-nowrap text-gray-600 md:text-lg"
 										>
-											Iscrizioni Chiuse
-										</button>
-									{/if}
-										<p class="mt-2 text-xs text-gray-500 md:text-base">
-											{event.numSubscriptions}{(event.maxSubscriptions ?? 0) > 0
-												? `/${event.maxSubscriptions}`
-												: ''} iscrizioni
-										</p>
-									</div> -->
-								{:else}
-									<div class="my-2 flex flex-row justify-center lg:my-0 lg:mt-4">
-										<button
-											class="btn btn-disabled flex-nowrap text-xs text-nowrap text-gray-600 md:text-lg"
-										>
 											Iscriviti
 										</button>
-									</div>
-								{/if}
+									{/if}
+									<a
+										href={`/events?${new URLSearchParams(`championship=${foundChampionshipDerived.name}&event=${foundEventDerived?.shortName}`).toString()}`}
+										class="btn btn-neutral text-foreground max-w-5/12 text-xs md:text-lg">
+										<Info /> Info
+									</a>
+								</div>
 							</div>
 						</div>
 					</div>

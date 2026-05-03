@@ -2,7 +2,7 @@
 	import { CategoryKind } from '$types/pocketbase/eventParticipation';
 	import { Roles } from '$types/pocketbase/user';
 	import { ToSurfaceInfoExpandArray } from '$types/surfaceUtils.js';
-	import { CalendarDays, MapPin, UserRoundPlus, FileCheck, Map as MapBase, SquarePen, Route, Ruler, Mountain, TriangleRight, ChartSpline, Download, X, Radio, ChevronDown, ChevronUp } from 'lucide-svelte';
+	import { CalendarDays, MapPin, UserRoundPlus, FileCheck, Map as MapBase, SquarePen, Route, Ruler, Mountain, TriangleRight, ChartSpline, Download, X, Radio, ChevronDown, ChevronUp, Trophy } from 'lucide-svelte';
 	import EntityCard2 from '$components/entityCard/entityCard2.svelte';
 	import ContextualHelp from '$components/contextualHelp/contextualHelp.svelte';
 	import { capitalizeFirstLetter } from '$lib/utils/generic';
@@ -367,29 +367,41 @@
 				</form>
 			</div>
 
-			{#if foundEventDerived.onAir}
-				<a
-					href={`/leaderboards?${new URLSearchParams(`championship=${foundChampionshipDerived.name}&event=${foundEventDerived.shortName}`).toString()}`}
-					class="card bg-base-100 shadow-xl mb-8 cursor-pointer hover:shadow-2xl transition duration-300 hover:bg-neutral-100 active:scale-98"
+			{#if foundEventDerived.onAir || (!foundEventDerived.onAir && foundEventDerived.results.length > 0)}
+				<div
+					class="card bg-base-100 shadow-xl mb-8 transition duration-300 active:scale-98"
 				>
 					<div class="card-body pb-6">
 						<div class="flex flex-row items-center xs:justify-between gap-2">
 							<div class="flex flex-row items-center gap-4 justify-between">
 								<div class="hidden xs:flex flex-col items-center border border-red-500 rounded-md p-2 shadow-md min-w-24 gap-1">
-									<Radio class="h-6 w-6 md:h-8 md:w-8 text-red-600 animate-pulse" />
-									<span class="text-xs font-bold text-red-600 uppercase tracking-wider">Live</span>
+									{#if foundEventDerived.onAir}
+										<Radio class="h-6 w-6 md:h-8 md:w-8 text-red-600 animate-pulse" />
+										<span class="text-xs font-bold text-red-600 uppercase tracking-wider">Live</span>
+									{:else}
+										<Trophy class="h-6 w-6 md:h-8 md:w-8 text-red-600 animate-pulse" />
+										<span class="text-xs font-bold text-red-600 uppercase tracking-wider">Ended</span>
+									{/if}
 								</div>
 								<div>
 									<h2 class="card-title text-lg md:text-2xl">Classifica</h2>
-									<p class="text-xs md:text-base text-gray-600">L'evento è live, guarda la classifica in tempo reale</p>
+									<p class="text-xs md:text-base text-gray-600">
+										{#if foundEventDerived.onAir}
+											L'evento è live, guarda la classifica in tempo reale
+										{:else}
+											L'evento è terminato, consulta la classifica finale
+										{/if}
+									</p>
 								</div>
 							</div>
-							<button class="btn btn-primary btn-md md:btn-lg pointer-events-none">
+							<a
+								href={`/leaderboards?${new URLSearchParams(`championship=${foundChampionshipDerived.name}&event=${foundEventDerived.shortName}`).toString()}`}
+								class="btn btn-primary btn-md md:btn-lg cursor-pointer">
 								<ChartSpline /> Classifica
-							</button>
+							</a>
 						</div>
 					</div>
-				</a>
+				</div>
 			{/if}
 
 			{#if sortedNews.length > 0}

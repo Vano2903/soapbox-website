@@ -1,6 +1,8 @@
 @import 'tailwindcss';
 @config '../tailwind.config.ts';
 
+@plugin '@tailwindcss/typography';
+
 @theme {
 	--breakpoint-xs: 28rem;
 }
@@ -162,10 +164,124 @@
 	} */
 
 
-	.toaster > .wrapper > .base > .indicator > .status {
-		width: auto!important; 
-		height: auto!important; 
-		background-color: transparent!important; 
-		box-shadow: none!important; 
+	.toaster>.wrapper>.base>.indicator>.status {
+		width: auto !important;
+		height: auto !important;
+		background-color: transparent !important;
+		box-shadow: none !important;
+	}
+}
+
+/* Improved richtext styling to match PocketBase editor appearance
+	 Applied to elements using the `prose` and `richtext` classes. */
+@layer components {
+
+	.richtext,
+	.richtext :where(*) {
+		font-family: inherit;
+		letter-spacing: 0;
+		line-height: inherit;
+		color: inherit;
+	}
+
+	.richtext {
+		font-family: 'Barlow', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+		font-size: 1.03rem;
+		line-height: 1.42;
+		font-weight: 400;
+		letter-spacing: 0;
+		color: var(--color-base-content);
+		word-break: break-word;
+		background: transparent;
+		border: 0;
+		border-radius: 0;
+		padding: 0;
+		box-shadow: none;
+	}
+
+	.richtext :where(h1, h2, h3, h4, h5, h6) {
+		line-height: 1.15;
+		margin: 1rem 0 0.5rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		color: var(--color-base-content);
+	}
+
+	.richtext h1 {
+		font-size: 1.48rem;
+	}
+
+	.richtext h2 {
+		font-size: 1.28rem;
+	}
+
+	.richtext h3 {
+		font-size: 1.14rem;
+	}
+
+	.richtext p {
+		margin: 0 0 0.85rem;
+		color: var(--color-base-content);
+		font-weight: 400;
+	}
+
+	.richtext ul,
+	.richtext ol {
+		margin: 0 0 0.9rem 1.25rem;
+		padding-left: 0.7rem;
+		list-style-position: outside;
+	}
+
+	.richtext ul {
+		list-style-type: disc;
+	}
+
+	.richtext ol {
+		list-style-type: decimal;
+	}
+
+	.richtext li {
+		margin: 0.14rem 0;
+	}
+
+	.richtext li::marker {
+		color: currentColor;
+	}
+
+	.richtext blockquote {
+		border-left: 3px solid var(--color-primary);
+		padding: 0 0 0 0.9rem;
+		color: var(--color-base-content);
+		background: transparent;
+		margin: 0 0 0.9rem 0;
+		font-style: normal;
+		border-radius: 0;
+	}
+
+	.richtext img {
+		max-width: 100%;
+		height: auto;
+		display: block;
+		margin: 0.5rem 0 1rem 0;
+		border-radius: 6px;
+	}
+
+	.richtext pre,
+	.richtext code {
+		font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', 'Courier New', monospace;
+	}
+
+	.richtext pre {
+		background: var(--color-base-100);
+		padding: 0.8rem 0.9rem;
+		border-radius: 0.35rem;
+		overflow: auto;
+		margin-bottom: 1rem;
+		border: 1px solid var(--color-base-300);
+	}
+
+	.richtext a {
+		color: var(--color-primary);
+		text-decoration: underline;
 	}
 }

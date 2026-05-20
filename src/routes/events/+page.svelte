@@ -417,7 +417,7 @@
 										</span>
 										<div class="flex-1 h-px bg-base-300"></div>
 									</div>
-									<div class="prose max-w-none">
+									<div class="richtext max-w-none">
 										<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 										{@html sortedNews[0].info}
 									</div>
@@ -443,7 +443,7 @@
 														</span>
 														<div class="flex-1 h-px bg-base-300"></div>
 													</div>
-													<div class="prose max-w-none">
+													<div class="richtext max-w-none">
 														<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 														{@html newsItem.info}
 													</div>

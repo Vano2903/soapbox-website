@@ -2,7 +2,7 @@
 	import { CategoryKind } from '$types/pocketbase/eventParticipation';
 	import { Roles } from '$types/pocketbase/user';
 	import { ToSurfaceInfoExpandArray } from '$types/surfaceUtils.js';
-	import { CalendarDays, MapPin, UserRoundPlus, FileCheck, Map as MapBase, SquarePen, Route, Ruler, Mountain, TriangleRight, ChartSpline, Download, X, Radio, ChevronDown, ChevronUp, Trophy } from 'lucide-svelte';
+	import { CalendarDays, MapPin, UserRoundPlus, FileCheck, Map as MapBase, SquarePen, Route, Ruler, Mountain, TriangleRight, ChartSpline, Download, X, Radio, ChevronDown, Trophy } from 'lucide-svelte';
 	import EntityCard2 from '$components/entityCard/entityCard2.svelte';
 	import ContextualHelp from '$components/contextualHelp/contextualHelp.svelte';
 	import { capitalizeFirstLetter } from '$lib/utils/generic';
@@ -405,56 +405,59 @@
 			{/if}
 
 			{#if sortedNews.length > 0}
-				<div class=" mx-auto w-full mb-8">
-					<div class="card bg-base-100 shadow-xl">
-						<div class="card-body news">
-							<h2 class="card-title text-lg md:text-2xl">Aggiornamenti</h2>
-							<div class="space-y-6">
-								<div>
-									<div class="flex items-center gap-3 mb-3">
-										<span class="text-sm font-medium text-base-content/50 shrink-0">
-											{new Date(sortedNews[0].created).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })}
-										</span>
-										<div class="flex-1 h-px bg-base-300"></div>
-									</div>
-									<div class="richtext max-w-none">
-										<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-										{@html sortedNews[0].info}
-									</div>
-								</div>
-								{#if sortedNews.length > 1}
-									<button
-										class="btn btn-ghost btn-sm gap-2 w-full"
-										onclick={() => (showAllNews = !showAllNews)}
-									>
-										{#if showAllNews}
-											<ChevronUp class="h-4 w-4" /> Nascondi aggiornamenti precedenti
-										{:else}
-											<ChevronDown class="h-4 w-4" /> Vedi tutti gli aggiornamenti ({sortedNews.length - 1})
-										{/if}
-									</button>
-									{#if showAllNews}
-										<div class="space-y-6">
-											{#each sortedNews.slice(1) as newsItem}
-												<div>
-													<div class="flex items-center gap-3 mb-3">
-														<span class="text-sm font-medium text-base-content/50 shrink-0">
-															{new Date(newsItem.created).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })}
-														</span>
-														<div class="flex-1 h-px bg-base-300"></div>
-													</div>
-													<div class="richtext max-w-none">
-														<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-														{@html newsItem.info}
-													</div>
-												</div>
-											{/each}
-										</div>
-									{/if}
-								{/if}
-							</div>
+				<div class="flex items-center gap-2 m-2">
+					<h2 class="text-xl md:text-2xl font-bold">Aggiornamenti:</h2>
+					<!-- <ContextualHelp contextualHelp={contextualHelps.events_eventNewsList} stopPropagation={true} /> -->
+				</div>
+				<div class="card bg-base-100 shadow-xl card-body news">
+					<div class="pl-4 inset-shadow-[1px_0px_0px_rgba(0,0,0,0.1)] my-2">
+						<div class="flex items-center gap-3 mb-3">
+							<span class="text-sm font-medium text-base-content/60 shrink-0">
+								{new Date(sortedNews[0].created).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })}
+							</span>
+							<div class="flex-1 h-px bg-gray-200"></div>
+						</div>
+						<div class="pl-2 richtext max-w-none">
+							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+							{@html sortedNews[0].info}
 						</div>
 					</div>
+					{#if sortedNews.length > 1}
+						<button
+							class="btn btn-sm gap-2 min-w-1/2 m-auto"
+							onclick={() => (showAllNews = !showAllNews)}
+						>
+							<span
+								class="inline-flex h-4 w-4 items-center justify-center transition-transform duration-200 ease-out"
+								class:rotate-180={showAllNews}
+							>
+								<ChevronDown class="h-4 w-4" />
+							</span>
+							<span>
+								{#if showAllNews}
+									Nascondi aggiornamenti precedenti
+								{:else}
+									Vedi tutti gli aggiornamenti ({sortedNews.length - 1})
+								{/if}
+							</span>
+						</button>
+						{#if showAllNews}
+							{#each sortedNews.slice(1) as newsItem}
+								<div class="pl-4 inset-shadow-[1px_0px_0px_rgba(0,0,0,0.1)] my-2">
+									<div class="flex items-center gap-3 mb-3">
+										<span class="text-sm font-medium text-base-content/60 shrink-0">
+											{new Date(newsItem.created).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })}
+										</span>
+										<div class="flex-1 h-px bg-gray-200"></div>
+									</div>
+									<div class="pl-2 richtext max-w-none">
+										<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+										{@html newsItem.info}
+									</div>
+								</div>
+							{/each}
+						{/if}
+					{/if}
 				</div>
 			{/if}
 

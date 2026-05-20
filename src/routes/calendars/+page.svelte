@@ -115,7 +115,7 @@
 			{#if foundChampionshipDerived && championshipsEventsDerived.length > 0}
 				{#each championshipsEventsDerived as event, index}
 					<div
-						class="flex h-75 w-60 flex-col overflow-hidden rounded-xl bg-white shadow-md transition duration-300 hover:scale-105 hover:bg-neutral-100 md:h-120 md:w-80"
+						class="event-card flex h-75 w-60 flex-col overflow-hidden rounded-xl bg-white shadow-md transition duration-300 hover:scale-105 hover:bg-neutral-100 md:h-120 md:w-80"
 					>
 						<div class="relative h-1/3">
 							<img
@@ -133,7 +133,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="flex flex-col content-between items-center p-1 text-center">
+						<div class="relative z-10 flex flex-col content-between items-center p-1 text-center">
 							<hr
 								class="mx-auto mt-1.5 mb-2 h-0.75 w-2/3 max-w-70 rounded-sm border-0 bg-red-600 md:mb-4"
 							/>
@@ -142,10 +142,22 @@
 								<h3 class="text-xl font-bold md:px-5 md:text-3xl">{event.name}</h3>
 								<div class="mt-2 text-sm text-gray-500 md:mt-4 md:text-base">
 									<div class="block md:hidden">
-										<p>{formatDate(event.startDate)}</p>
+										{#if event.startDate}
+											<p>dal: {formatDate(event.startDate)}</p>
+										{:else if event.canceled}
+											<p>Evento annullato</p>
+										{:else}
+											<p>&nbsp</p>
+										{/if}
 									</div>
 									<div class="hidden md:block">
-										<p>dal: {formatDate(event.startDate)}</p>
+										{#if event.startDate}
+											<p>dal: {formatDate(event.startDate)}</p>
+										{:else if event.canceled}
+											<p>Evento annullato</p>
+										{:else}
+											<p>&nbsp</p>
+										{/if}
 										{#if event.endDate}
 											<p>al: {formatDate(event.endDate)}</p>
 										{:else}
@@ -193,6 +205,9 @@
 								class="mx-auto mt-2 mb-1.5 h-0.75 w-2/3 max-w-70 rounded-sm border-0 bg-red-600 md:mt-4"
 							/>
 						</div>
+						{#if event.canceled}
+							<div class="event-card-overlay event-card-overlay--canceled" aria-hidden="true"></div>
+						{/if}
 					</div>
 				{/each}
 			{:else}
@@ -258,22 +273,27 @@
 </main>
 
 <style>
+	.event-card {
+		position: relative;
+	}
+
+	.event-card-overlay {
+		position: absolute;
+		inset: 0;
+		background-image: repeating-linear-gradient(
+			135deg,
+			rgba(120, 120, 120, 0.12) 0,
+			rgba(120, 120, 120, 0.12) 10px,
+			rgba(255, 255, 255, 0.08) 10px,
+			rgba(255, 255, 255, 0.08) 22px
+		);
+		opacity: 0.7;
+		pointer-events: none;
+		z-index: 30;
+	}
+
 	button,
 	a {
 		cursor: pointer;
-	}
-
-	.inner {
-		border-radius: 0.5rem 0 0 0;
-		border-top: 4px solid red;
-		border-left: 4px solid red;
-		box-sizing: border-box;
-		height: 100%;
-		width: 100%;
-	}
-
-	.inner.fullborder {
-		border-radius: 0.5rem;
-		border: 2px solid red;
 	}
 </style>

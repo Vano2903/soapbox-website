@@ -184,10 +184,16 @@
 								{/if}
 							</span>
 						</div>
-						<div class="flex items-center gap-2">
-							<CalendarDays class="h-4 w-4 text-red-600 md:h-6 md:w-6" />
-							<span class="text-gray-600">Dal {new Date(foundEventDerived?.startDate ?? new Date()).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
-						</div>
+						{#if !foundEventDerived.canceled}
+							<div class="flex items-center gap-2">
+								<CalendarDays class="h-4 w-4 text-red-600 md:h-6 md:w-6" />
+								{#if foundEventDerived?.startDate}
+									<span class="text-gray-600">Dal {new Date(foundEventDerived?.startDate ?? new Date()).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+								{:else}
+									<span class="text-gray-600">Non Definito</span>
+								{/if}
+							</div>
+						{/if}
 					</div>
 				</div>
 			</div>
@@ -466,7 +472,7 @@
 			<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 				<div class="space-y-8">
 					<!-- Schedule -->
-					{#if foundEventDerived.expand.stages && foundEventDerived.expand.stages.length > 0}
+					{#if foundEventDerived.expand.stages && foundEventDerived.expand.stages.length > 0 && !foundEventDerived.canceled}
 						<div class="card bg-base-100 shadow-xl">
 							<div class="card-body">
 								<h2 class="card-title text-2xl mb-4">Programma</h2>

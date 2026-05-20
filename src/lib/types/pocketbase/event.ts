@@ -39,6 +39,7 @@ export interface EventBase {
 	kind: EventKind;
 	startDate?: Date;
 	endDate?: Date;
+	canceled: boolean;
 	stages?: StageId[];
 	location: LocationId;
 	track?: TrackId;

@@ -19,7 +19,9 @@ const leaderboardsRange = new Map<string, string>([
 	['Stage 1', '$B$2:$H$55'],
 	['Stage 2', '$B$2:$H$55'],
 	['Finale Velocità', '$B$2:$K$55'],
-	['Gran Combinata', '$B$2:$I$55']
+	['Gran Combinata', '$B$2:$I$55'],
+	['Campionato senza Scarti', '$B$2:$H$60'],
+	['Campionato con Scarti', '$B$2:$H$60']
 ]);
 
 export async function GET({ url }) {

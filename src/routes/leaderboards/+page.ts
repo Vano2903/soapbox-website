@@ -7,6 +7,7 @@ import type { ChampionshipExpand } from '$types/pocketbase/championship';
 import { fail } from '@sveltejs/kit';
 import type { Result } from '$types/pocketbase/results';
 import { addDays } from '$lib/utils';
+import { DefaultEventAvailableLeaderboards, ToEventAvailableCategoriesArray } from '$lib/utils/eventUtils';
 
 export const load: PageLoad = async ({ data, url, fetch, parent }) => {
 	console.log('Loading championships:\n > data = ', data, '\n > url = ', url);
@@ -116,11 +117,51 @@ export const load: PageLoad = async ({ data, url, fetch, parent }) => {
 		});
 	}
 
+	if (foundEvent && ToEventAvailableCategoriesArray(foundEvent.availableLeaderboards).length === 0) {
+		console.log(`Available leaderboards = `, foundEvent.availableLeaderboards);
+		console.log(`Event "${foundEvent.shortName}" does not have availableLeaderboards configured, using default ones.`);
+		foundEvent.availableLeaderboards = DefaultEventAvailableLeaderboards;
+	}
+
+	// retrieve the selected category or, if nullish, the first category available for the selected event.
+	const availableCategories = ToEventAvailableCategoriesArray(foundEvent?.availableLeaderboards);
+	let requestedCategoryIndex = availableCategories.findIndex((category) => {
+		return category === url.searchParams.get('category')
+	});
+	if (requestedCategoryIndex === -1) {
+		if (url.searchParams.get('category')) {
+			warnings.push(
+				`La categoria "${url.searchParams.get('category')}" non è disponibile per l'evento "${url.searchParams.get('event') || foundEvent?.shortName}".`
+			);
+		}
+		requestedCategoryIndex = 0;
+	}
+	const foundCategory = availableCategories[requestedCategoryIndex];
+
+	// retrieve the selected leaderboard or, if nullish, the first leaderboard available for the selected category.
+	const availableLeaderboards = foundEvent?.availableLeaderboards?.[foundCategory];
+	let requestedLeaderboardIndex = availableLeaderboards?.findIndex((leaderboard) => {
+		return leaderboard === url.searchParams.get('leaderboard')
+	}) ?? -1;
+	if (requestedLeaderboardIndex === -1) {
+		if (url.searchParams.get('leaderboard')) {
+			warnings.push(
+				`La classifica "${url.searchParams.get('leaderboard')}" non è disponibile per la categoria "${foundCategory}" dell'evento "${url.searchParams.get('event') || foundEvent?.shortName}".`
+			);
+		}
+		requestedLeaderboardIndex = 0;
+	}
+	const foundLeaderboard = availableLeaderboards?.[requestedLeaderboardIndex];
+
+
+
 	return {
 		championshipsList,
 		foundChampionship,
 		foundEvent,
 		eventResults,
+		foundCategory,
+		foundLeaderboard,
 		warnings,
 		contextualHelps: docsContent.contextualHelps
 	};

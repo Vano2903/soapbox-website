@@ -2,7 +2,7 @@
 	import type { ChampionshipNonExpand } from '$types/pocketbase/championship.js';
 	import ElementSelection from '$components/elementSelection/elementSelection.svelte';
 	import { LucideCalendarCheck, LucideRadio, LucideLock, Info, UserRoundPlus } from 'lucide-svelte';
-	import { goto, replaceState } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
 	import {
@@ -13,7 +13,7 @@
 	} from '$types/pocketbase/event';
 	import { LeaderboardType } from '$types/pocketbase/results';
 	import ContextualHelp from '$components/contextualHelp/contextualHelp.svelte';
-	import { page } from '$app/stores';
+	import { DefaultEventAvailableLeaderboards } from '$lib/utils/eventUtils.js';
 
 	const championshipsListOffset: number = 3;
 
@@ -22,6 +22,9 @@
 	const foundChampionshipDerived = $derived(data.foundChampionship);
 	const foundEventDerived = $derived(data.foundEvent);
 	const eventResultsDerived = $derived(data.eventResults);
+	const foundCategoryDerived = $derived(data.foundCategory);
+	const foundLeaderboardDerived = $derived(data.foundLeaderboard);
+	const championshipsIdsWithOnAirEvents = $derived(data.championshipsIdsWithOnAirEvents);
 	const warningsDerived = $derived(data.warnings);
 	const contextualHelps = $derived(data.contextualHelps);
 
@@ -36,29 +39,30 @@
 	);
 
 	// --- URL-driven selections ---
-	// Championship and event drive the load function via goto(); derive from loaded data.
-	const selectedChampionship = $derived(foundChampionshipDerived?.name ?? '');
-	const selectedEvent = $derived(foundEventDerived?.shortName ?? '');
-
-	// Category and leaderboard are pure UI state — $page store is the source of truth.
-	const leaderboardMap = $derived((foundEventDerived?.availableLeaderboards ?? {}) as EventAvailableLeaderboards);
+	const leaderboardMap = $derived((foundEventDerived?.availableLeaderboards ?? DefaultEventAvailableLeaderboards) as EventAvailableLeaderboards);
 	const categories = $derived(
 		Object.entries(leaderboardMap)
-			.filter(([, lbs]) => (lbs?.length ?? 0) > 0)
+			.filter(([, leaderboards]) => (leaderboards?.length ?? 0) > 0)
 			.map(([key]) => key as EventCategory)
 	);
-	const selectedCategory = $derived.by((): EventCategory => {
-		const param = $page.url.searchParams.get('category') as EventCategory | null;
-		if (param && categories.includes(param)) return param;
-		return categories[0] ?? EventCategory.SoapBox;
-	});
+
+	const selectedChampionship = $derived(foundChampionshipDerived?.name ?? '');
+	const selectedEvent = $derived(foundEventDerived?.shortName ?? '');
+	let selectedCategory = $derived(foundCategoryDerived ?? '');
+	let selectedLeaderboard = $derived(foundLeaderboardDerived ?? '');
+
+	// let selectedCategory = $derived.by((): EventCategory => {
+	// 	const param = $page.url.searchParams.get('category') as EventCategory | null;
+	// 	if (param && categories.includes(param)) return param;
+	// 	return categories[0] ?? EventCategory.SoapBox;
+	// });
 
 	const leaderboards = $derived(leaderboardMap[selectedCategory] ?? []);
-	const selectedLeaderboard = $derived.by((): EventLeaderboard => {
-		const param = $page.url.searchParams.get('leaderboard') as EventLeaderboard | null;
-		if (param && leaderboards.includes(param)) return param;
-		return leaderboards[0] ?? EventLeaderboard.Stage1;
-	});
+	// let selectedLeaderboard = $derived.by((): EventLeaderboard => {
+	// 	const param = $page.url.searchParams.get('leaderboard') as EventLeaderboard | null;
+	// 	if (param && leaderboards.includes(param)) return param;
+	// 	return leaderboards[0] ?? EventLeaderboard.Stage1;
+	// });
 
 	// --- Sheet polling ---
 	let sheetHTML = $state();
@@ -85,8 +89,11 @@
 
 	const pollingInterval = 30000;
 	function startPollingUpdateSheet() {
-		updateSheet();
-		const interval = setInterval(updateSheet, pollingInterval);
+		updateSheet(selectedCategory, selectedLeaderboard);
+		const interval = setInterval(() => {
+			console.log("updateSheet() called from startPollingUpdateSheet.\n| Using default category:", selectedCategory, "and leaderboard:", selectedLeaderboard);
+			updateSheet(selectedCategory, selectedLeaderboard);
+		}, pollingInterval);
 		return () => clearInterval(interval);
 	}
 
@@ -109,8 +116,6 @@
 	});
 
 	// --- Selection handlers ---
-	// Always build URLs from window.location.href so all existing params are preserved.
-	// Championship/event: re-run the load function via goto
 	function selectionYear(year: string) {
 		const url = new URL(window.location.href);
 		url.searchParams.set('championship', year);
@@ -121,23 +126,27 @@
 		url.searchParams.set('event', event);
 		goto(url.toString(), { noScroll: true, keepFocus: true, replaceState: true, invalidateAll: true });
 	}
-	// Category/leaderboard: update URL only, pass new values directly to updateSheet
-	function selectionCategory(category: EventCategory) {
+	function selectionCategory(category: string) {
 		const url = new URL(window.location.href);
-		url.searchParams.set('category', category);
-		url.searchParams.delete('leaderboard');
-		replaceState(url, {});
-		const firstLeaderboard = (leaderboardMap[category] ?? [])[0] ?? EventLeaderboard.Stage1;
-		updateSheet(category, firstLeaderboard);
+		selectedCategory = category as EventCategory;
+
+		// enforce leaderboard validity when changing category
+		if (!leaderboardMap[selectedCategory]?.includes(selectedLeaderboard as EventLeaderboard)) {
+			selectedLeaderboard = (leaderboardMap[selectedCategory] ?? [])[0] ?? EventLeaderboard.Stage1;
+			url.searchParams.set('leaderboard', selectedLeaderboard);
+		}
+
+		url.searchParams.set('category', selectedCategory);
+		updateSheet(selectedCategory, selectedLeaderboard);
+		goto(url.toString(), { noScroll: true, keepFocus: true, replaceState: true, invalidateAll: true });
 	}
-	function selectionLeaderboard(leaderboard: EventLeaderboard) {
+	function selectionLeaderboard(leaderboard: string) {
 		const url = new URL(window.location.href);
-		url.searchParams.set('leaderboard', leaderboard);
-		replaceState(url, {});
-		updateSheet(selectedCategory, leaderboard);
-	}
-	function enrollRedirect(year: string, event: string) {
-		goto(`/enroll?${new URLSearchParams(`championship=${year}&event=${event}`).toString()}`);
+		selectedLeaderboard = leaderboard as EventLeaderboard;
+
+		url.searchParams.set('leaderboard', selectedLeaderboard);
+		updateSheet(selectedCategory, selectedLeaderboard);
+		goto(url.toString(), { noScroll: true, keepFocus: true, replaceState: true, invalidateAll: true });
 	}
 
 	// ElementSelection helper
@@ -167,12 +176,18 @@
 	// the router to be initialized, which isn't guaranteed during onMount/hydration.
 	onMount(() => {
 		const url = new URL(window.location.href);
-		if (!url.searchParams.has('championship') && selectedChampionship)
+		
+		// force url to track selected championship, event, category and leaderboard.
 			url.searchParams.set('championship', selectedChampionship);
-		if (!url.searchParams.has('event') && selectedEvent)
 			url.searchParams.set('event', selectedEvent);
+		url.searchParams.set('category', selectedCategory);
+		url.searchParams.set('leaderboard', selectedLeaderboard);
+		
 		window.history.replaceState(history.state, '', url.toString());
+		console.log('Initial URL set to:', url.toString());
 	});
+
+	console.log('Loading championships:\n > data = ', data);
 </script>
 
 <main class="px-5 pb-16 lg:px-15">

@@ -9,14 +9,14 @@ import type { Result } from '$types/pocketbase/results';
 import { addDays } from '$lib/utils';
 import { DefaultEventAvailableLeaderboards, ToEventAvailableCategoriesArray } from '$lib/utils/eventUtils';
 
-export const load: PageLoad = async ({ data, url, fetch, parent }) => {
+export const load: PageLoad = async ({ data, url, parent }) => {
 	console.log('Loading championships:\n > data = ', data, '\n > url = ', url);
 	const warnings: string[] = [];
 	const pb = new pocketbase(env.PUBLIC_PB_INSTANCE) as TypedPocketBase;
 
 	// destructures the data received from the PageServerLoad and prepare the variables
 	const { docsContent } = await parent();
-	const { championshipsList, lastOngoingChampionshipIndex, onAirEventId } = data;
+	const { championshipsList, lastOngoingChampionshipIndex, championshipsIdsWithOnAirEvents } = data;
 
 	// retrieve the selected championship or, if nullish, the last ongoingChampionship available
 	const requestedChampionshipIndex = championshipsList.findIndex((c: { name: string | null }) => {
@@ -62,9 +62,11 @@ export const load: PageLoad = async ({ data, url, fetch, parent }) => {
 			);
 		}
 		// Priority 1: currently on-air event (resolved server-side with auth)
-		if (onAirEventId) {
-			requestedEventIndex = foundChampionship.expand.events.findIndex((e) => e.id === onAirEventId);
-		}
+		requestedEventIndex = foundChampionship.expand.events.sort((a, b) => {
+			if (new Date(a.startDate) < new Date(b.startDate)) return -1;
+			else if (new Date(a.startDate) > new Date(b.startDate)) return +1;
+			return 0;
+		}).findIndex((e) => e.onAir);
 		// Priority 2: event that started within the last 2 days (same window as homepage)
 		if (requestedEventIndex === -1) {
 			requestedEventIndex = foundChampionship.expand.events.findIndex((e) => {
@@ -157,6 +159,7 @@ export const load: PageLoad = async ({ data, url, fetch, parent }) => {
 
 	return {
 		championshipsList,
+		championshipsIdsWithOnAirEvents,
 		foundChampionship,
 		foundEvent,
 		eventResults,

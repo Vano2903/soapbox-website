@@ -11,13 +11,16 @@ export const load: PageServerLoad = async ({ locals }) => {
 		throw fail(500);
 	}
 
-	let onAirEventId: string | null = null;
+	let championshipsIdsWithOnAirEvents: string[] = [];
 	try {
-		const onAirEvent = await pb.collection('events').getFirstListItem('onAir = true');
-		onAirEventId = onAirEvent.id;
+		const liveEvents = await pb.collection('events').getFullList({
+			filter: 'onAir = true'
+		});
+
+		championshipsIdsWithOnAirEvents = [...new Set(liveEvents.flatMap((event) => event.championships))];
 	} catch {
-		// no onAir event
+		// no onAir events
 	}
 
-	return { championshipsList, lastOngoingChampionshipIndex, onAirEventId };
+	return { championshipsList, lastOngoingChampionshipIndex, championshipsIdsWithOnAirEvents };
 };

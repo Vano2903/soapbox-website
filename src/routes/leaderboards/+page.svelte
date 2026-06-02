@@ -151,13 +151,17 @@
 
 	// ElementSelection helper
 	function transformToElementList(championshipList: ChampionshipNonExpand[]) {
-		const isLive = !!data.onAirEventId && foundChampionshipDerived.expand.events.some((e) => e.id === data.onAirEventId);
+		const liveChampionshipIds = championshipsIdsWithOnAirEvents ?? [];
 		const elementsList = championshipList.map((v) => ({
 			value: v.name,
 			current: v.name === selectedChampionship,
 			disabled: false,
-			icon: v.ongoing && isLive ? LucideRadio : new Date(v.endDate) > new Date() ? null : LucideCalendarCheck,
-			iconProps: v.ongoing && isLive ? { color: '#e7000b' } : {}
+			icon: liveChampionshipIds.includes(v.id)
+				? LucideRadio
+				: new Date(v.endDate) > new Date()
+					? null
+					: LucideCalendarCheck,
+			iconProps: liveChampionshipIds.includes(v.id) ? { color: '#e7000b' } : {}
 		}));
 		for (let i = 0; i < Math.min(championshipsListOffset, 3); i++) {
 			elementsList.push({
@@ -178,8 +182,8 @@
 		const url = new URL(window.location.href);
 		
 		// force url to track selected championship, event, category and leaderboard.
-			url.searchParams.set('championship', selectedChampionship);
-			url.searchParams.set('event', selectedEvent);
+		url.searchParams.set('championship', selectedChampionship);
+		url.searchParams.set('event', selectedEvent);
 		url.searchParams.set('category', selectedCategory);
 		url.searchParams.set('leaderboard', selectedLeaderboard);
 		

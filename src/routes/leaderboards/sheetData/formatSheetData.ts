@@ -59,6 +59,20 @@ export function formatSheetDataFromFullJson(json: any): string {
 	const rows = json.sheets[0].data[0].rowData ?? [];
 	const html: string[] = ['<table class="table-auto border-collapse w-full">'];
 
+	// Build colgroup with column widths
+	const colgroup: string[] = ['<colgroup>'];
+	if (json.sheets[0].data[0].columnMetadata) {
+		for (let c = 0; c < json.sheets[0].data[0].columnMetadata.length; c++) {
+			const meta = json.sheets[0].data[0].columnMetadata[c];
+			if (!hiddenColumns.has(c)) {
+				const width = meta?.pixelSize ?? 100;
+				colgroup.push(`<col style="width: ${width}px;">`);
+			}
+		}
+	}
+	colgroup.push('</colgroup>');
+	html.push(colgroup.join(''));
+
 	const prevCellStyles = [];
 
 	for (let r = 0; r < rows.length; r++) {
@@ -170,7 +184,8 @@ export function formatSheetDataFromFullJson(json: any): string {
 
 	html.push('</table>');
 	// Enforce thick bottom border on the last row since empty rows are trimmed
-	html.push('<style>table tr:last-child td { border-bottom: 3px solid black !important; }</style>');
+	// Also use fixed table layout to respect column widths
+	html.push('<style>table { table-layout: fixed; } table tr:last-child td { border-bottom: 3px solid black !important; }</style>');
 	return html.join('\n');
 }
 

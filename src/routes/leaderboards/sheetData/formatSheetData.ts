@@ -30,6 +30,28 @@ export function formatSheetDataFromFullJson(json: any): string {
 		}
 	}
 
+	// 1. Pre-calculate Hidden Elements for O(1) Lookups
+	const hiddenColumns = new Set<number>();
+	if (json.sheets[0].data[0].columnMetadata) {
+		for (let c = 0; c < json.sheets[0].data[0].columnMetadata.length; c++) {
+			const meta = json.sheets[0].data[0].columnMetadata[c];
+			// Catches both hiddenByUser and hiddenByFilter
+			if (meta?.hiddenByUser || meta?.hiddenByFilter) {
+				hiddenColumns.add(c);
+			}
+		}
+	}
+
+	const hiddenRows = new Set<number>();
+	if (json.sheets[0].data[0].rowMetadata) {
+		for (let r = 0; r < json.sheets[0].data[0].rowMetadata.length; r++) {
+			const meta = json.sheets[0].data[0].rowMetadata[r];
+			if (meta?.hiddenByUser || meta?.hiddenByFilter) {
+				hiddenRows.add(r);
+			}
+		}
+	}
+
 	// console.log(merges)
 
 	const dataStartRow = json.sheets[0].data[0].startRow;
@@ -40,11 +62,23 @@ export function formatSheetDataFromFullJson(json: any): string {
 	const prevCellStyles = [];
 
 	for (let r = 0; r < rows.length; r++) {
+
+		// Skip hidden rows
+		if (hiddenRows.has(r)) {
+			continue;
+		}
+
 		const row = rows[r]?.values ?? [];
 		const htmlRow: string[] = ['<tr>'];
 		let skipRow = false;
 
 		for (let c = 0; c < row.length; c++) {
+
+			// Skip hidden columns
+			if (hiddenColumns.has(c)) {
+				continue;
+			}
+
 			const cell = row[c];
 
 			// Check for merged cell

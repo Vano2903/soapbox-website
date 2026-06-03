@@ -70,7 +70,7 @@ export function formatSheetDataFromFullJson(json: any): string {
 
 		const row = rows[r]?.values ?? [];
 		const htmlRow: string[] = ['<tr>'];
-		let skipRow = false;
+		let hasContent = false; // Track if row has any non-empty cells
 
 		for (let c = 0; c < row.length; c++) {
 
@@ -86,16 +86,14 @@ export function formatSheetDataFromFullJson(json: any): string {
 
 			if (merges.has(`${r + (dataStartRow ?? 0)},${c + (dataStartColumn ?? 0)}`)) continue;
 
-			// this do not skip empty row
-			// const value = cell?.formattedValue ?? (cell?.userEnteredValue ? "" : null);
-			// const content = value === null ? "" : escapeHtml(value);
-
-			// if content == null -> Skip the row (empty row)
+			// Get cell content
 			const value = cell?.formattedValue ?? (cell?.userEnteredValue ? null : '');
-			const content = value === null ? null : escapeHtml(value);
-			if (content === null) {
-				skipRow = true;
-				continue;
+			const content = value === null ? '' : escapeHtml(value); // Empty string for empty cells, not null
+
+			// Track if row has at least one non-empty cell
+			// Only count actual visible content (formattedValue), not just formulas (userEnteredValue)
+			if (cell?.formattedValue) {
+				hasContent = true;
 			}
 
 			const styleParts: string[] = [];
@@ -164,12 +162,15 @@ export function formatSheetDataFromFullJson(json: any): string {
 		}
 
 		htmlRow.push('</tr>');
-		if (!skipRow) {
+		// Only skip if row has no content at all
+		if (hasContent) {
 			html.push(htmlRow.join('\n'));
 		}
 	}
 
 	html.push('</table>');
+	// Enforce thick bottom border on the last row since empty rows are trimmed
+	html.push('<style>table tr:last-child td { border-bottom: 3px solid black !important; }</style>');
 	return html.join('\n');
 }
 

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { ChampionshipExpand } from '$types/pocketbase/championship';
-	import { OldEventKind, type EventInfoType, type EventNonExpand } from '$types/pocketbase/event';
-	// import type { EventInfoType2 } from '$types/waitingEventInfo';
+	import { type EventNonExpand } from '$types/pocketbase/event';
 
 	let {
 		championshipInfo,
@@ -61,7 +60,8 @@
 							? `/${eventInfo.maxSubscriptions}`
 							: ''} iscrizioni
 					{:else}
-						Iscrizioni chiuse
+						Iscrizioni chiuse<br>
+						{eventInfo.numSubscriptions} iscritti
 					{/if}
 				</span>
 			</p>
@@ -78,7 +78,7 @@
 	</div>
 {:else}
 	<div class="rect items-center text-center">
-		<hr class="mx-auto mt-2 mb-8 h-0.75 w-1/3 max-w-70 rounded-sm border-0 bg-red-600" />
+		<hr class="mx-auto mt-2 mb-4 h-0.75 w-5/12 max-w-70 rounded-full border-0 bg-red-600" />
 
 		<div>
 			<p class="text-gray-600">Campionato {championshipInfo.name}</p>
@@ -109,14 +109,15 @@
 							? `/${eventInfo.maxSubscriptions}`
 							: ''} iscrizioni
 					{:else}
-						Iscrizioni chiuse
+						Iscrizioni chiuse<br>
+						{eventInfo.numSubscriptions} iscritti
 					{/if}
 				</span>
 			</p>
 		</div>
 
 		<!--<button class="btn btn-error text-foreground max-w-70">Iscriviti</button>-->
-		<hr class="mx-auto mt-8 mb-2 h-0.75 w-1/3 max-w-70 rounded-sm border-0 bg-red-600" />
+		<hr class="mx-auto mt-4 mb-2 h-0.75 w-5/12 max-w-70 rounded-full border-0 bg-red-600" />
 
 		<!-- class="w-32 cursor-pointer rounded bg-red-600 px-4 py-2 font-bold text-white hover:bg-red-800" -->
 	</div>

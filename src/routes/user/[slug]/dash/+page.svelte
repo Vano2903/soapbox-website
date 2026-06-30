@@ -1,11 +1,8 @@
 <script lang="ts">
 	import EntityCard from '$components/entityCard/entityCard.svelte';
-	import type { TypedPocketBase } from '$types/pocketbase/pocketbase.js';
 	import type { Team } from '$types/pocketbase/team.js';
-	import type { UserNonExpand } from '$types/pocketbase/user.js';
-	import { Crown, TicketsPlane } from 'lucide-svelte';
-	import PocketBase, { type RecordModel } from 'pocketbase';
-	import { onMount } from 'svelte';
+	import { type UserNonExpand } from '$types/pocketbase/user.js';
+	import { Crown } from 'lucide-svelte';
 
 	interface Props {
 		data: {
@@ -84,11 +81,47 @@
 
 		<div class="w-full">
 			<!-- notizie -->
+			<!--
 			<div class="flex w-full flex-col items-start justify-between">
 				<p class="mt-4 text-xl font-bold md:text-3xl">NOTIZIE:</p>
 				<p class="mt-2 text-gray-600">Non ci sono notizie al momento.</p>
 			</div>
+			-->
+
+			<!--
+				Sono costretto a fare il check con la stringa e non con UserVisiblityKind.Private perché il file del db è stato modificato eccessivamente e non trova più il tipo sbagliato.
+				Evidentemente tra una modifica e l'altra mi ero già accorto di qualche errore ed è stato fatto uno step intermedio. Ora però mi ritrovo questa feature vincolata a tutte le modifiche strutturali delle pagine utente, che invece devono ancora essere completate.
+				Rilascio questa feature con controllo "sporco" per non bloccare il lavoro, ma una volta aggiornato il db e le pagine utente, bisognerà fare un style per sistemare la user visibility di questo controllo.
+			-->
+			{#if user.visibility == "private"}
+			<div class="flex w-full flex-col items-start justify-between">
+				<p class="mt-4 text-xl font-bold md:text-3xl">INFORMAZIONI:</p>
+					<div class="mt-2 block w-full">
+						<div class="rounded-lg bg-gray-200 p-4 transition-colors group-hover:bg-gray-300">
+							<div class="flex items-center space-x-3">
+								<div class="shrink-0">
+									<img src="/images/icons/eye-off.png" alt="Team Logo" class="size-16 rounded-full ring-1" />
+								</div>
+								<div class="min-w-0 flex-1">
+									<div class="min-w-0">
+										<div class="flex min-w-0 items-center space-x-2">
+											<div class="min-w-0 flex-1">
+												<div class="flex items-center space-x-2">
+													<p class="text-lg font-bold transition duration-300">
+														Visibilità del profilo
+													</p>
+												</div>
+											</div>
+										</div>
+									</div>
+									<p class="mt-1 text-sm text-gray-700"><span class="font-semibold">Hai impostato il tuo profilo come privato: il tuo profilo non sarà visibile a nessun utente in nessuna sezione del sito.</span><br>Nonostante ciò, tutte le funzionalità, come lapartecipazione a team, le iscrizioni ad eventi, ecc. saranno fruibili correttamente.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+			</div>
 			<div class="divider"></div>
+			{/if}
 			<div>
 				<div class="flex w-full flex-col items-start justify-between">
 					<p class="mt-4 mb-2 text-xl font-bold md:text-3xl">TEAMS:</p>

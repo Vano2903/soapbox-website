@@ -432,6 +432,7 @@
 							</dialog>
 
 							<div class="w-full space-y-2">
+								<p class="mb-2 text-xs text-gray-500">Eventuali utenti privati non sono visualizzati in questa lista.</p>
 								{#each members as member}
 									<EntityCard
 										title={member.name + ' ' + member.lastName}

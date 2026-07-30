@@ -17,12 +17,12 @@
 	<div class="rect">
 		<div>
 			<span class=" h-12 flex-wrap items-end pb-1 text-base/6 text-red-600 xl:pb-2">
-				{#if eventInfo.subscriptionsOpen}
+				{#if eventInfo.subscriptionsOpen || eventInfo.canceled}
 					<span class="text-4xl font-bold lg:text-5xl xl:text-6xl">Prossimo</span><br />
 					<span class="text-4xl font-bold lg:text-5xl xl:text-6xl">Evento</span>
 				{:else}
-					<span class="text-4xl font-bold lg:text-5xl xl:text-6xl">Momenti</span><br />
-					<span class="text-4xl font-bold lg:text-5xl xl:text-6xl">Speciali</span>
+					<span class="text-4xl font-bold lg:text-5xl xl:text-6xl">Evento</span><br />
+					<span class="text-4xl font-bold lg:text-5xl xl:text-6xl">in Diretta</span>
 				{/if}
 			</span>
 
@@ -37,22 +37,33 @@
 			<p class="pb-2 text-2xl lg:pb-4 xl:pb-6 xl:text-3xl">
 				{eventInfo.name}
 			</p>
-			<p class="text-gray-700 xl:text-lg">
-				Data: {eventInfo.startDate
-					? new Date(eventInfo.startDate).toLocaleDateString()
-					: 'Da definirsi'}
-			</p>
-			<p class="pb-6 text-gray-700 tabular-nums xl:pb-6 xl:text-lg">
-				Ora: {eventInfo.startDate
-					? (new Date(eventInfo.startDate).getHours() < 10
-							? '0' + new Date(eventInfo.startDate).getHours()
-							: new Date(eventInfo.startDate).getHours()) +
-						':' +
-						(new Date(eventInfo.startDate).getMinutes() < 10
-							? '0' + new Date(eventInfo.startDate).getMinutes()
-							: new Date(eventInfo.startDate).getMinutes())
-					: 'Da definirsi'}
-			</p>
+			{#if eventInfo.canceled}
+				<p class="text-gray-500 xl:text-lg line-through">
+					{eventInfo.startDate
+						? new Date(eventInfo.startDate).toLocaleDateString()
+						: 'Da definirsi'}
+				</p>
+				<p class="pb-6 text-gray-700 xl:pb-6 xl:text-lg">
+					Evento Cancellato
+				</p>
+			{:else}
+				<p class="text-gray-700 xl:text-lg">
+					Data: <span class={eventInfo.canceled ? 'line-through' : ''}>{eventInfo.startDate
+						? new Date(eventInfo.startDate).toLocaleDateString()
+						: 'Da definirsi'}</span>
+				</p>
+				<p class="pb-6 text-gray-700 tabular-nums xl:pb-6 xl:text-lg">
+					Ora: {eventInfo.startDate
+						? (new Date(eventInfo.startDate).getHours() < 10
+								? '0' + new Date(eventInfo.startDate).getHours()
+								: new Date(eventInfo.startDate).getHours()) +
+							':' +
+							(new Date(eventInfo.startDate).getMinutes() < 10
+								? '0' + new Date(eventInfo.startDate).getMinutes()
+								: new Date(eventInfo.startDate).getMinutes())
+						: 'Da definirsi'}
+				</p>
+			{/if}
 			<p class="pb-2 text-gray-700 tabular-nums xl:text-lg">
 				<span>
 					{#if eventInfo.subscriptionsOpen}
@@ -86,22 +97,33 @@
 			<p class="pb-4 text-2xl">
 				{eventInfo.name}
 			</p>
-			<p class="text-gray-700">
-				Data: {eventInfo.startDate
-					? new Date(eventInfo.startDate).toLocaleDateString()
-					: 'Da definirsi'}
-			</p>
-			<p class="pb-6 text-gray-700 tabular-nums">
-				Ora: {eventInfo.startDate
-					? (new Date(eventInfo.startDate).getHours() < 10
-							? '0' + new Date(eventInfo.startDate).getHours()
-							: new Date(eventInfo.startDate).getHours()) +
-						':' +
-						(new Date(eventInfo.startDate).getMinutes() < 10
-							? '0' + new Date(eventInfo.startDate).getMinutes()
-							: new Date(eventInfo.startDate).getMinutes())
-					: 'Da definirsi'}
-			</p>
+			{#if eventInfo.canceled}
+				<p class="text-gray-500 xl:text-lg line-through">
+					{eventInfo.startDate
+						? new Date(eventInfo.startDate).toLocaleDateString()
+						: 'Da definirsi'}
+				</p>
+				<p class="pb-6 text-gray-700 xl:pb-6 xl:text-lg">
+					Evento Cancellato
+				</p>
+			{:else}
+				<p class="text-gray-700">
+					Data: {eventInfo.startDate
+						? new Date(eventInfo.startDate).toLocaleDateString()
+						: 'Da definirsi'}
+				</p>
+				<p class="pb-6 text-gray-700 tabular-nums">
+					Ora: {eventInfo.startDate
+						? (new Date(eventInfo.startDate).getHours() < 10
+								? '0' + new Date(eventInfo.startDate).getHours()
+								: new Date(eventInfo.startDate).getHours()) +
+							':' +
+							(new Date(eventInfo.startDate).getMinutes() < 10
+								? '0' + new Date(eventInfo.startDate).getMinutes()
+								: new Date(eventInfo.startDate).getMinutes())
+						: 'Da definirsi'}
+				</p>
+			{/if}
 			<p class="pb-2 text-gray-700 tabular-nums xl:pb-8 xl:text-lg">
 				<span>
 					{#if eventInfo.subscriptionsOpen}

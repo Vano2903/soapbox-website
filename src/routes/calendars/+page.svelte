@@ -69,9 +69,16 @@
 		return elementsList;
 	}
 
-	function formatDate(date: Date | (Date | undefined)) {
+	function formatDate(date: Date | (Date | undefined), withTime: boolean = true) {
 		if (!date) {
 			return null;
+		}
+		if (!withTime) {
+			return new Date(date).toLocaleDateString('it-IT', {
+				year: 'numeric',
+				month: '2-digit',
+				day: '2-digit'
+			});
 		}
 		return new Date(date).toLocaleDateString('it-IT', {
 			year: 'numeric',
@@ -115,7 +122,7 @@
 			{#if foundChampionshipDerived && championshipsEventsDerived.length > 0}
 				{#each championshipsEventsDerived as event, index}
 					<div
-						class="event-card flex h-75 w-60 flex-col overflow-hidden rounded-xl bg-white shadow-md transition duration-300 hover:scale-105 hover:bg-neutral-100 md:h-120 md:w-80"
+						class="event-card flex h-90 w-60 flex-col overflow-hidden rounded-xl bg-white shadow-md transition duration-300 hover:scale-105 hover:bg-neutral-100 md:h-120 md:w-80"
 					>
 						<div class="relative h-1/3">
 							<img
@@ -138,23 +145,22 @@
 								class="mx-auto mt-1.5 mb-2 h-0.75 w-2/3 max-w-70 rounded-sm border-0 bg-red-600 md:mb-4"
 							/>
 							<div>
-								<p class="text-base text-gray-600 md:text-xl">— {event.shortName} —</p>
-								<h3 class="text-xl font-bold md:px-5 md:text-3xl">{event.name}</h3>
-								<div class="mt-2 text-sm text-gray-500 md:mt-4 md:text-base">
-									<div class="block md:hidden">
+								<div class="min-h-31 flex flex-col justify-around">
+								<div>
+									<p class="text-base text-gray-600 md:text-xl">— {event.shortName} —</p>
+									<h3 class="text-xl font-bold md:px-5 md:text-3xl">{event.name}</h3>
+								</div>
+								<div class="text-sm text-gray-500 mt-4 md:text-base">
+									{#if event.canceled}
 										{#if event.startDate}
-											<p>dal: {formatDate(event.startDate)}</p>
-										{:else if event.canceled}
-											<p>Evento annullato</p>
+											<p class="line-through">{formatDate(event.startDate, false)}</p>
 										{:else}
 											<p>&nbsp</p>
 										{/if}
-									</div>
-									<div class="hidden md:block">
+										<p>Evento Cancellato</p>
+									{:else}
 										{#if event.startDate}
 											<p>dal: {formatDate(event.startDate)}</p>
-										{:else if event.canceled}
-											<p>Evento annullato</p>
 										{:else}
 											<p>&nbsp</p>
 										{/if}
@@ -163,7 +169,8 @@
 										{:else}
 											<p>&nbsp</p>
 										{/if}
-									</div>
+									{/if}
+								</div>
 								</div>
 								<div class="mt-2 md:mt-8">
 									{#if event.subscriptionsOpen && (event.maxSubscriptions === 0 || event.numSubscriptions < (event.maxSubscriptions || 0)) && (!event.startDate || new Date(event.startDate).valueOf() >= new Date().valueOf())}

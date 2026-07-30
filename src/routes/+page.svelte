@@ -4,7 +4,7 @@
 	import Carousel3 from '$components/carousel/carousel3.svelte';
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
 	import { fade } from 'svelte/transition';
-	import { VolumeX, Volume2, ChevronLeft, ChevronRight, UserRoundPlus, MonitorPlay, Info, ExternalLink } from 'lucide-svelte';
+	import { VolumeX, Volume2, ChevronLeft, ChevronRight, UserRoundPlus, MonitorPlay, Info, ExternalLink, Trophy } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import type { SponsorLogos, SponsorSlider } from '$types/SponsorSlider.js';
 	import type { CarouselPageType } from '$types/carouselPage.js';
@@ -270,32 +270,36 @@
 					locatedOnCarousel={true}
 				/>
 				<!-- foundEventDerived?.subscriptionsOpen && (foundEventDerived.maxSubscriptions === 0 || foundEventDerived.numSubscriptions < (foundEventDerived.maxSubscriptions ?? 0)) && (!foundEventDerived.startDate || new Date(foundEventDerived.startDate).valueOf() >= new Date().valueOf()) -->
-				{#if currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen && 
+				{#if !currentChampionship.expand.events.at(nextEventIndex)?.canceled &&
+				 currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen && 
 				(currentChampionship.expand.events.at(nextEventIndex)?.maxSubscriptions === 0 ||
-				 (currentChampionship.expand.events.at(nextEventIndex)?.numSubscriptions ?? 0) < (currentChampionship.expand.events.at(nextEventIndex)?.maxSubscriptions ?? 0)) &&
-				  (!currentChampionship.expand.events.at(nextEventIndex)?.startDate || 
-				  	new Date(currentChampionship.expand.events.at(nextEventIndex)?.startDate ?? new Date()).valueOf() >= addDays(new Date(), -2).valueOf())}
+				   (currentChampionship.expand.events.at(nextEventIndex)?.numSubscriptions ?? 0) < (currentChampionship.expand.events.at(nextEventIndex)?.maxSubscriptions ?? 0))}
+					<!-- {#if !currentChampionship.expand.events.at(nextEventIndex)?.startDate || 
+				  	 new Date(currentChampionship.expand.events.at(nextEventIndex)?.startDate ?? new Date()).valueOf() >= addDays(new Date(), -2).valueOf()} -->
 					<a
 						class="btn btn-error text-foreground max-w-70"
 						href={`/enroll?${new URLSearchParams(`championship=${currentChampionship.name}&event=${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`).toString()}`}
 					>
 						<UserRoundPlus class="h-5 w-5"/> Iscriviti
 					</a>
+				{:else if !currentChampionship.expand.events.at(nextEventIndex)?.canceled &&
+				 currentChampionship.expand.events.at(nextEventIndex)?.onAir}
 					<a
-						href={`/events?${new URLSearchParams(`championship=${currentChampionship.name}&event=${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`).toString()}`}
-						class="btn btn-neutral text-foreground max-w-70">
-						<Info class="h-5 w-5"/> Info
+						class="btn btn-error text-foreground max-w-70"
+						href={`/enroll?${new URLSearchParams(`championship=${currentChampionship.name}&event=${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`).toString()}`}
+					>
+						<Trophy class="h-5 w-5"/> Classifiche
 					</a>
 				{:else}
 					<button class="btn btn-disabled flex-nowrap text-nowrap text-gray-600">
 						<UserRoundPlus class="h-5 w-5"/> Iscriviti
 					</button>
+				{/if}
 					<a
 						href={`/events?${new URLSearchParams(`championship=${currentChampionship.name}&event=${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`).toString()}`}
 						class="btn btn-neutral text-foreground max-w-70">
 						<Info class="h-5 w-5"/> Info
 					</a>
-				{/if}
 				<!-- <button
 					class="btn btn-error text-foreground max-w-70"
 					onclick={currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen
@@ -324,22 +328,33 @@
 			</h1>
 			<div class="flex flex-row justify-center gap-4 sm:gap-8">
 				<div class="flex max-w-1/3 flex-col justify-center">
-					{#if currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen}
+					{#if currentChampionship.expand.events.at(nextEventIndex)?.canceled}
+						<p class="pb-4 text-right text-base/5">
+							<span class="xs:hidden">L'evento è stato cancellato.</span>
+							<span class="xs:block hidden">Il prossimo evento è stato cancellato.</span>
+						</p>
+						<p class="pb-4 text-right text-base/5">
+							<span class="xs:hidden">Maggiori informazioni nella pagina dedicata.</span>
+							<span class="xs:block hidden">
+								Se vuoi ottenere maggiori info, puoi andare a vedere la pagina informativa.
+							</span>
+						</p>
+					{:else if currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen}
 						<p class="pb-4 text-right text-base/5">
 							<span class="xs:hidden">Le iscrizioni all’evento sono aperte!</span>
 							<span class="xs:block hidden">Sono aperte le iscrizioni per il prossimo evento!</span>
 						</p>
 						<p class="pb-4 text-right text-base/5">
-							<span class="xs:hidden"> Registrati prima che terminino i posti. </span>
+							<span class="xs:hidden">Registrati prima che terminino i posti.</span>
 							<span class="xs:block hidden">
 								Compila la tua partecipazione prima che esauriscano i posti disponibili.
 							</span>
 						</p>
 					{:else}
 						<p class="pb-4 text-right text-base/5">
-							<span class="xs:hidden">Le iscrizioni sono ancora chiuse</span>
+							<span class="xs:hidden">Le iscrizioni sono chiuse</span>
 							<span class="xs:block hidden"
-								>Ancora non ci sono iscrizioni aperte per gli eventi.</span
+								>Non ci sono iscrizioni aperte per gli eventi.</span
 							>
 						</p>
 						<p class="pb-4 text-right text-base/5">
@@ -351,6 +366,16 @@
 						</p>
 					{/if}
 					<div class="flex flex-col xs:flex-row justify-end gap-2 items-end">
+						{#if currentChampionship.expand.events.at(nextEventIndex)?.canceled}
+							<button class="btn btn-disabled flex-nowrap text-nowrap text-gray-600">
+								<UserRoundPlus class="h-5 w-5"/> Iscriviti
+							</button>
+							<a
+								href={`/events?${new URLSearchParams(`championship=${currentChampionship.name}&event=${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`).toString()}`}
+								class="btn btn-neutral text-foreground max-w-22">
+								<Info class="h-5 w-5"/> Info
+							</a>
+						{:else}
 						<button
 							class="btn btn-error text-foreground max-w-22"
 							onclick={currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen
@@ -370,8 +395,9 @@
 						<a
 							href={`/events?${new URLSearchParams(`championship=${currentChampionship.name}&event=${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`).toString()}`}
 							class="btn btn-neutral text-foreground max-w-22">
-							Info
+								<Info class="h-5 w-5"/> Info
 						</a>
+						{/if}
 					</div>
 				</div>
 				<div class="flex flex-col justify-center">

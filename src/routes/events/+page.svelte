@@ -184,16 +184,22 @@
 								{/if}
 							</span>
 						</div>
-						{#if !foundEventDerived.canceled}
-							<div class="flex items-center gap-2">
-								<CalendarDays class="h-4 w-4 text-red-600 md:h-6 md:w-6" />
+						<div class="flex items-center gap-2">
+							<CalendarDays class="h-4 w-4 text-red-600 md:h-6 md:w-6" />
+							{#if foundEventDerived?.canceled}
+								{#if foundEventDerived?.startDate}
+									<span class="text-gray-600 line-through">{new Date(foundEventDerived?.startDate ?? new Date()).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+								{:else}
+									<span class="text-gray-600">Cancellato</span>
+								{/if}
+							{:else}
 								{#if foundEventDerived?.startDate}
 									<span class="text-gray-600">Dal {new Date(foundEventDerived?.startDate ?? new Date()).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
 								{:else}
 									<span class="text-gray-600">Non Definito</span>
 								{/if}
-							</div>
-						{/if}
+							{/if}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -472,30 +478,39 @@
 			<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 				<div class="space-y-8">
 					<!-- Schedule -->
-					{#if foundEventDerived.expand.stages && foundEventDerived.expand.stages.length > 0 && !foundEventDerived.canceled}
+					{#if foundEventDerived.expand.stages && foundEventDerived.expand.stages.length > 0}
 						<div class="card bg-base-100 shadow-xl">
 							<div class="card-body">
 								<h2 class="card-title text-2xl mb-4">Programma</h2>
 								<div class="space-y-3">
-									{#each foundEventDerived.expand.stages as stage}
+									{#if foundEventDerived.canceled}
 										<div class="flex gap-4 p-4 rounded-lg bg-base-200 hover:bg-base-300 transition-colors">
-											<div class="text-primary font-bold text-lg min-w-15">
-												<div class="flex flex-col justify-center items-center">
-													{#if stage.startTime}
-														<span>{new Date(stage.startTime).getDate().toString().padStart(2, '0')}/{(new Date(stage.startTime).getMonth() + 1).toString().padStart(2, '0')}</span>
-														<span>{new Date(stage.startTime).getHours().toString().padStart(2, '0')}:{new Date(stage.startTime).getMinutes().toString().padStart(2, '0')}</span>
-													{:else}
-														<span>Non</span>
-														<span>definito</span>
-													{/if}
-												</div>
-											</div>
 											<div class="flex-1">
-												<h3 class="font-semibold mb-1">{stage.name}</h3>
-												<p class="text-sm text-base-content/70">{stage.description}</p>
+												<h3 class="font-semibold mb-1">Evento cancellato:</h3>
+												<p class="text-sm text-base-content/70">L'evento è stato cancellato, e il programma non è più disponibile. Per maggior informazioni leggi gli eventuali aggiornamenti pubblicati nella sezione in alto.</p>
 											</div>
 										</div>
-									{/each}
+									{:else}
+										{#each foundEventDerived.expand.stages as stage}
+											<div class="flex gap-4 p-4 rounded-lg bg-base-200 hover:bg-base-300 transition-colors">
+												<div class="text-primary font-bold text-lg min-w-15">
+													<div class="flex flex-col justify-center items-center">
+														{#if stage.startTime}
+															<span>{new Date(stage.startTime).getDate().toString().padStart(2, '0')}/{(new Date(stage.startTime).getMonth() + 1).toString().padStart(2, '0')}</span>
+															<span>{new Date(stage.startTime).getHours().toString().padStart(2, '0')}:{new Date(stage.startTime).getMinutes().toString().padStart(2, '0')}</span>
+														{:else}
+															<span>Non</span>
+															<span>definito</span>
+														{/if}
+													</div>
+												</div>
+												<div class="flex-1">
+													<h3 class="font-semibold mb-1">{stage.name}</h3>
+													<p class="text-sm text-base-content/70">{stage.description}</p>
+												</div>
+											</div>
+										{/each}
+									{/if}
 								</div>
 							</div>
 						</div>
@@ -756,8 +771,6 @@
 	.tooltip-unbold.tooltip::before {
 		font-weight: 400;
 	}
-
-
 	.news :global { 
 		h1 {
 			font-size: var(--text-2xl);
@@ -769,7 +782,7 @@
 			font-size: var(--text-lg);
 		}
 		a {
-			color: var(--color-blue-600);
+			color: var(--color-red-600);
 			text-decoration-line: underline;
 		}
 	}

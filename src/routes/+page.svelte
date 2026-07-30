@@ -46,10 +46,10 @@
 	function resultsRedirect(year: string, event: string) {
 		console.log(
 			new Date().toLocaleTimeString('it-IT', { hour12: false }),
-			'redirect to enroll selection = {' + year + ' | ' + event + '}'
+			'redirect to leaderboards selection = {' + year + ' | ' + event + '}'
 		);
 		const params = new URLSearchParams(`championship=${year}&event=${event}`);
-		goto(`/championships?${params.toString()}`);
+		goto(`/leaderboards?${params.toString()}`);
 	}
 
 	// --- Tabulated walkthroug Management ---
@@ -358,10 +358,14 @@
 							>
 						</p>
 						<p class="pb-4 text-right text-base/5">
-							<span class="xs:hidden">Intanto puoi guardarti i momenti speciali.</span>
+							<span class="xs:hidden">Nel mentre puoi guardare questi risultati</span>
 							<span class="xs:block hidden">
-								Nel frattempo puoi andare a guardare i momenti speciali che abbiamo scelto apposta
-								per te.
+								Nel frattempo puoi andare a guardare le classifiche dell'evento 
+								{#if currentChampionship.expand.events.at(nextEventIndex)?.onAir}
+									in diretta!
+								{:else}
+									che abbiamo appena concluso.
+								{/if}.
 							</span>
 						</p>
 					{/if}
@@ -387,10 +391,10 @@
 								: () =>
 										resultsRedirect(
 											`${currentChampionship.name}`,
-											`${currentChampionship.expand.events.at(nextEventIndex === -1 ? -1 : nextEventIndex - 1)?.shortName}`
+												`${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`
 										)}
 						>
-							{#if currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen}Iscriviti{:else}Guarda{/if}
+								{#if currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen}<UserRoundPlus class="h-5 w-5"/> Iscriviti{:else}<Trophy class="h-5 w-5"/> Classifiche{/if}
 						</button>
 						<a
 							href={`/events?${new URLSearchParams(`championship=${currentChampionship.name}&event=${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`).toString()}`}

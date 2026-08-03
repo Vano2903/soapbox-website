@@ -93,14 +93,17 @@ export const load: PageLoad = async ({ data, url, fetch, parent }) => {
 		throw fail(500);
 	}
 
-	eventParticipations = eventParticipations.map((ep) => {
-		ep.expand.team.logoCropped =
-			pb.files.getURL(ep.expand.team, ep.expand.team.logoCropped || '') ||
-			createAvatarUrl(ep.expand.team.slug, 'small');
-		ep.expand.team.bannerCropped =
-			pb.files.getURL(ep.expand.team, ep.expand.team.bannerCropped || '') || undefined;
-		return ep;
-	});
+	eventParticipations = eventParticipations
+		.filter((ep) => !!ep.expand.team)
+		.map((ep) => {
+			ep.expand.team.logoCropped =
+				pb.files.getURL(ep.expand.team, ep.expand.team.logoCropped || '') ||
+				createAvatarUrl(ep.expand.team.slug, 'small');
+
+			ep.expand.team.bannerCropped =
+				pb.files.getURL(ep.expand.team, ep.expand.team.bannerCropped || '') || undefined;
+			return ep;
+		});
 
 	return {
 		championshipsList,

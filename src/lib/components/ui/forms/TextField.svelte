@@ -67,7 +67,8 @@
 	});
 
 	// Fire the user's `onInput` callback (debounced if requested) on value change.
-	let lastFired = $state<string | null | undefined>(undefined);
+	// Seeded with the initial value so a prefilled field doesn't fire on mount.
+	let lastFired = $state<string | null | undefined>(value);
 	$effect(() => {
 		const current = value;
 		if (current === lastFired) return;

@@ -1,22 +1,32 @@
 import { type Handle, error } from '@sveltejs/kit';
 import { env } from '$env/dynamic/public';
 import { createPocketBaseInstance } from '$lib/utils/pocketbase';
+import { createLogger } from '$lib/utils/logger';
+
+const log = createLogger('hooks:pocketbase');
 
 const pocketbase: Handle = async ({ event, resolve }) => {
 	try {
 		if (!event.locals.pb) {
 			event.locals.pb = createPocketBaseInstance(env.PUBLIC_PB_INSTANCE);
 		} else {
-			console.log('pocketbaese instance already exists in locals');
+			log.debug('reusing PocketBase instance already present in locals');
 		}
 
 		event.locals.pb.health.check().catch((err) => {
-			console.log('not reachable, creating new instance', err);
+			log.warn('PocketBase health check failed, creating a new instance', {
+				instance: env.PUBLIC_PB_INSTANCE,
+				path: event.url.pathname,
+				error: err instanceof Error ? err.message : err
+			});
 			const pb = createPocketBaseInstance(env.PUBLIC_PB_INSTANCE);
 			event.locals.pb = pb;
 		});
 	} catch (err) {
-		console.error('Error initializing PocketBase:', err);
+		log.error('failed to initialize PocketBase client', {
+			instance: env.PUBLIC_PB_INSTANCE,
+			error: err instanceof Error ? err.message : err
+		});
 		error(500, 'Failed to initialize PocketBase');
 	}
 	// 	event.locals.pb.health.check().catch(() => {

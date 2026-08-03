@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { OldEventKind, type EventInfoType, type EventNonExpand } from '$types/pocketbase/event';
+	import type { EventNonExpand } from '$types/pocketbase/event';
 	import type { OrganizationStatType } from '$types/organizationStat.js';
 	import Carousel3 from '$components/carousel/carousel3.svelte';
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
@@ -10,46 +10,56 @@
 	import type { CarouselPageType } from '$types/carouselPage.js';
 	import type { TabsPageType } from '$types/tabsPage.js';
 	import type { TimelineType } from '$types/timeline.js';
-	import { goto } from '$app/navigation';
 	import type { ChampionshipExpand } from '$types/pocketbase/championship.js';
-	import { toEventInfoType } from '$types/pocketbase/event';
-	import { addDays } from '$lib/utils.js';
+	import type { Event } from '$types/pocketbase/event';
+	import { enrollHref, eventInfoHref, resultsHref } from '$lib/utils/nextEvent';
+	import { createLogger } from '$lib/utils/logger';
+
+	const log = createLogger('homepage');
 
 	const { data } = $props();
 	const {
 		currentChampionship,
-		nextEventIndex,
+		nextEvent,
+		previousEvent,
+		enrollable,
 		organizationStats,
 		carouselImages,
 		tabs,
 		sponsorLogos,
 		timeline
 	}: {
-		currentChampionship: ChampionshipExpand;
-		nextEventIndex: number;
+		currentChampionship: ChampionshipExpand | null;
+		nextEvent: Event | null;
+		previousEvent: Event | null;
+		enrollable: boolean;
 		organizationStats: OrganizationStatType[];
 		carouselImages: CarouselPageType[];
 		tabs: TabsPageType;
 		sponsorLogos: SponsorLogos;
 		timeline: TimelineType;
-	} = data;
+	} = $derived(data);
 
 	// --- Waiting event Management ---
-	function enrollRedirect(year: string, event: string) {
-		console.log(
-			new Date().toLocaleTimeString('it-IT', { hour12: false }),
-			'redirect to enroll selection = {' + year + ' | ' + event + '}'
-		);
-		const params = new URLSearchParams(`championship=${year}&event=${event}`);
-		goto(`/enroll?${params.toString()}`);
-	}
-	function resultsRedirect(year: string, event: string) {
-		console.log(
-			new Date().toLocaleTimeString('it-IT', { hour12: false }),
-			'redirect to enroll selection = {' + year + ' | ' + event + '}'
-		);
-		const params = new URLSearchParams(`championship=${year}&event=${event}`);
-		goto(`/championships?${params.toString()}`);
+	// Shared link targets so desktop (carousel aside) and mobile ("Aspettando
+	// l'Evento") always behave the same. When the season is over, the box falls
+	// back to the last event and the results link.
+	const displayedEvent = $derived(nextEvent ?? previousEvent);
+	const championshipName = $derived(currentChampionship?.name ?? '');
+	const enrollLink = $derived(enrollable && nextEvent ? enrollHref(championshipName, nextEvent) : null);
+	const infoLink = $derived(displayedEvent ? eventInfoHref(championshipName, displayedEvent) : null);
+	const watchLink = $derived(resultsHref(championshipName, previousEvent));
+
+	// log.debug('event box state', {
+	// 	championship: $state.snapshot(championshipName) || 'none',
+	// 	displayedEvent: $state.snapshot(displayedEvent)?.shortName ?? 'none',
+	// 	enrollLink,
+	// 	infoLink,
+	// 	watchLink
+	// });
+
+	function logEventBoxNavigation(target: string, href: string | null) {
+		log.info(`event box: navigating to ${target}`, { href });
 	}
 
 	// --- Tabulated walkthroug Management ---
@@ -260,133 +270,132 @@
 	<div class="carousel">
 		<!-- <Carousel /> -->
 		<Carousel3 pages={carouselImages} classes="max-h-100 object-cover md:max-h-full" />
-		<aside
-			class="absolute z-10 box-border hidden h-9/10 max-h-90 w-2/5 max-w-110 rounded-l-xl bg-white py-2 pl-2 md:block lg:h-7/8 lg:max-h-110 lg:w-3/10 xl:max-h-130"
-		>
-			<div class="inner p-2 lg:p-4">
-				<EventInfoBox
-					championshipInfo={currentChampionship}
-					eventInfo={currentChampionship.expand.events.at(nextEventIndex) as EventNonExpand}
-					locatedOnCarousel={true}
-				/>
-				<!-- foundEventDerived?.subscriptionsOpen && (foundEventDerived.maxSubscriptions === 0 || foundEventDerived.numSubscriptions < (foundEventDerived.maxSubscriptions ?? 0)) && (!foundEventDerived.startDate || new Date(foundEventDerived.startDate).valueOf() >= new Date().valueOf()) -->
-				{#if currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen && 
-				(currentChampionship.expand.events.at(nextEventIndex)?.maxSubscriptions === 0 ||
-				 (currentChampionship.expand.events.at(nextEventIndex)?.numSubscriptions ?? 0) < (currentChampionship.expand.events.at(nextEventIndex)?.maxSubscriptions ?? 0)) &&
-				  (!currentChampionship.expand.events.at(nextEventIndex)?.startDate || 
-				  	new Date(currentChampionship.expand.events.at(nextEventIndex)?.startDate ?? new Date()).valueOf() >= addDays(new Date(), -2).valueOf())}
-					<a
-						class="btn btn-error text-foreground max-w-70"
-						href={`/enroll?${new URLSearchParams(`championship=${currentChampionship.name}&event=${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`).toString()}`}
-					>
-						<UserRoundPlus class="h-5 w-5"/> Iscriviti
-					</a>
-					<a
-						href={`/events?${new URLSearchParams(`championship=${currentChampionship.name}&event=${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`).toString()}`}
-						class="btn btn-neutral text-foreground max-w-70">
-						<Info class="h-5 w-5"/> Info
-					</a>
-				{:else}
-					<button class="btn btn-disabled flex-nowrap text-nowrap text-gray-600">
-						<UserRoundPlus class="h-5 w-5"/> Iscriviti
-					</button>
-					<a
-						href={`/events?${new URLSearchParams(`championship=${currentChampionship.name}&event=${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`).toString()}`}
-						class="btn btn-neutral text-foreground max-w-70">
-						<Info class="h-5 w-5"/> Info
-					</a>
-				{/if}
-				<!-- <button
-					class="btn btn-error text-foreground max-w-70"
-					onclick={currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen
-						? () =>
-								enrollRedirect(
-									`${currentChampionship.name}`,
-									`${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`
-								)
-						: () =>
-								resultsRedirect(
-									`${currentChampionship.name}`,
-									`${currentChampionship.expand.events.at(nextEventIndex === -1 ? -1 : nextEventIndex - 1)?.shortName}`
-								)}
-				>
-					{#if currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen}Iscriviti{:else}Guarda{/if}
-				</button> -->
-			</div>
-		</aside>
+		{#if currentChampionship && displayedEvent}
+			<aside
+				data-testid="event-box-desktop"
+				class="absolute z-10 box-border hidden h-9/10 max-h-90 w-2/5 max-w-110 rounded-l-xl bg-white py-2 pl-2 md:block lg:h-7/8 lg:max-h-110 lg:w-3/10 xl:max-h-130"
+			>
+				<div class="inner p-2 lg:p-4">
+					<EventInfoBox
+						championshipInfo={currentChampionship}
+						eventInfo={displayedEvent as EventNonExpand}
+						locatedOnCarousel={true}
+					/>
+					{#if enrollLink}
+						<a
+							class="btn btn-error text-foreground max-w-70"
+							href={enrollLink}
+							onclick={() => logEventBoxNavigation('enroll', enrollLink)}
+						>
+							<UserRoundPlus class="h-5 w-5"/> Iscriviti
+						</a>
+					{:else if previousEvent}
+						<a
+							class="btn btn-error text-foreground max-w-70"
+							href={watchLink}
+							onclick={() => logEventBoxNavigation('results', watchLink)}
+						>
+							<MonitorPlay class="h-5 w-5"/> Guarda
+						</a>
+					{:else}
+						<button class="btn btn-disabled flex-nowrap text-nowrap text-gray-600">
+							<UserRoundPlus class="h-5 w-5"/> Iscriviti
+						</button>
+					{/if}
+					{#if infoLink}
+						<a
+							href={infoLink}
+							class="btn btn-neutral text-foreground max-w-70"
+							onclick={() => logEventBoxNavigation('event info', infoLink)}
+						>
+							<Info class="h-5 w-5"/> Info
+						</a>
+					{/if}
+				</div>
+			</aside>
+		{/if}
 	</div>
 	<div>
 		<!-- Aspettando l'Evento -->
-		<div class="md:hidden">
-			<hr class="mx-4 mt-2 mb-6 h-1 w-auto rounded-sm border-0 bg-red-600 md:hidden lg:mt-0" />
-			<h1 class="pb-4 text-center text-5xl font-bold">
-				Aspettando l’<span class="text-red-600">EVENTO</span>!
-			</h1>
-			<div class="flex flex-row justify-center gap-4 sm:gap-8">
-				<div class="flex max-w-1/3 flex-col justify-center">
-					{#if currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen}
-						<p class="pb-4 text-right text-base/5">
-							<span class="xs:hidden">Le iscrizioni all’evento sono aperte!</span>
-							<span class="xs:block hidden">Sono aperte le iscrizioni per il prossimo evento!</span>
-						</p>
-						<p class="pb-4 text-right text-base/5">
-							<span class="xs:hidden"> Registrati prima che terminino i posti. </span>
-							<span class="xs:block hidden">
-								Compila la tua partecipazione prima che esauriscano i posti disponibili.
-							</span>
-						</p>
-					{:else}
-						<p class="pb-4 text-right text-base/5">
-							<span class="xs:hidden">Le iscrizioni sono ancora chiuse</span>
-							<span class="xs:block hidden"
-								>Ancora non ci sono iscrizioni aperte per gli eventi.</span
-							>
-						</p>
-						<p class="pb-4 text-right text-base/5">
-							<span class="xs:hidden">Intanto puoi guardarti i momenti speciali.</span>
-							<span class="xs:block hidden">
-								Nel frattempo puoi andare a guardare i momenti speciali che abbiamo scelto apposta
-								per te.
-							</span>
-						</p>
-					{/if}
-					<div class="flex flex-col xs:flex-row justify-end gap-2 items-end">
-						<button
-							class="btn btn-error text-foreground max-w-22"
-							onclick={currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen
-								? () =>
-										enrollRedirect(
-											`${currentChampionship.name}`,
-											`${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`
-										)
-								: () =>
-										resultsRedirect(
-											`${currentChampionship.name}`,
-											`${currentChampionship.expand.events.at(nextEventIndex === -1 ? -1 : nextEventIndex - 1)?.shortName}`
-										)}
-						>
-							{#if currentChampionship.expand.events.at(nextEventIndex)?.subscriptionsOpen}Iscriviti{:else}Guarda{/if}
-						</button>
-						<a
-							href={`/events?${new URLSearchParams(`championship=${currentChampionship.name}&event=${currentChampionship.expand.events.at(nextEventIndex)?.shortName}`).toString()}`}
-							class="btn btn-neutral text-foreground max-w-22">
-							Info
-						</a>
+		{#if currentChampionship && displayedEvent}
+			<div class="md:hidden" data-testid="event-box-mobile">
+				<hr class="mx-4 mt-2 mb-6 h-1 w-auto rounded-sm border-0 bg-red-600 md:hidden lg:mt-0" />
+				<h1 class="pb-4 text-center text-5xl font-bold">
+					Aspettando l’<span class="text-red-600">EVENTO</span>!
+				</h1>
+				<div class="flex flex-row justify-center gap-4 sm:gap-8">
+					<div class="flex max-w-1/3 flex-col justify-center">
+						{#if enrollLink}
+							<p class="pb-4 text-right text-base/5">
+								<span class="xs:hidden">Le iscrizioni all’evento sono aperte!</span>
+								<span class="xs:block hidden">Sono aperte le iscrizioni per il prossimo evento!</span>
+							</p>
+							<p class="pb-4 text-right text-base/5">
+								<span class="xs:hidden"> Registrati prima che terminino i posti. </span>
+								<span class="xs:block hidden">
+									Compila la tua partecipazione prima che esauriscano i posti disponibili.
+								</span>
+							</p>
+						{:else}
+							<p class="pb-4 text-right text-base/5">
+								<span class="xs:hidden">Le iscrizioni sono ancora chiuse</span>
+								<span class="xs:block hidden"
+									>Ancora non ci sono iscrizioni aperte per gli eventi.</span
+								>
+							</p>
+							<p class="pb-4 text-right text-base/5">
+								<span class="xs:hidden">Intanto puoi guardarti i momenti speciali.</span>
+								<span class="xs:block hidden">
+									Nel frattempo puoi andare a guardare i momenti speciali che abbiamo scelto apposta
+									per te.
+								</span>
+							</p>
+						{/if}
+						<div class="flex flex-col xs:flex-row justify-end gap-2 items-end">
+							{#if enrollLink}
+								<a
+									class="btn btn-error text-foreground max-w-22"
+									href={enrollLink}
+									onclick={() => logEventBoxNavigation('enroll', enrollLink)}
+								>
+									Iscriviti
+								</a>
+							{:else if previousEvent}
+								<a
+									class="btn btn-error text-foreground max-w-22"
+									href={watchLink}
+									onclick={() => logEventBoxNavigation('results', watchLink)}
+								>
+									Guarda
+								</a>
+							{:else}
+								<button class="btn btn-disabled max-w-22 text-gray-600">Iscriviti</button>
+							{/if}
+							{#if infoLink}
+								<a
+									href={infoLink}
+									class="btn btn-neutral text-foreground max-w-22"
+									onclick={() => logEventBoxNavigation('event info', infoLink)}
+								>
+									Info
+								</a>
+							{/if}
+						</div>
 					</div>
-				</div>
-				<div class="flex flex-col justify-center">
-					<div class="box-border rounded-xl bg-neutral-100 p-2">
-						<div class="inner fullborder p-1 lg:p-4">
-							<EventInfoBox
-								championshipInfo={currentChampionship}
-								eventInfo={currentChampionship.expand.events.at(nextEventIndex) as EventNonExpand}
-								locatedOnCarousel={false}
-							/>
+					<div class="flex flex-col justify-center">
+						<div class="box-border rounded-xl bg-neutral-100 p-2">
+							<div class="inner fullborder p-1 lg:p-4">
+								<EventInfoBox
+									championshipInfo={currentChampionship}
+									eventInfo={displayedEvent as EventNonExpand}
+									locatedOnCarousel={false}
+								/>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		{/if}
 
 		<!-- Noi siamo BoxRally -->
 		<div class="mt-12 md:mt-0">

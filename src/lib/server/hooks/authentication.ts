@@ -1,6 +1,10 @@
 import { type Handle } from '@sveltejs/kit';
+import { ClientResponseError } from 'pocketbase';
 import { type User } from '$types/pocketbase/user';
 import { createAvatarUrl } from '$lib/utils/avatar';
+import { createLogger } from '$lib/utils/logger';
+
+const log = createLogger('hooks:authentication');
 
 // function createRandomString(length: number = 8): string {
 // 	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -53,16 +57,31 @@ const authentication: Handle = async ({ event, resolve }) => {
 	if (pb.authStore.isValid) {
 		const [, error] = await goCatch(pb.collection('users').authRefresh());
 
-		// Clear auth store if token refresh fails
 		if (error) {
-			console.log('ERROR CLEAR', error);
-			pb.authStore.clear();
-			event.cookies.set('pb_auth', '', {
-				expires: new Date(0),
-				path: '/'
+			const status = error instanceof ClientResponseError ? error.status : undefined;
+
+			// Only an explicit rejection means the token is actually invalid.
+			// A network failure (status 0) or a PB 5xx must NOT log the user out:
+			// the cookie is still valid, so keep the session from its record.
+			if (status === 401 || status === 403 || status === 404) {
+				log.warn('auth token rejected by PocketBase, clearing session', {
+					status,
+					path: event.url.pathname
+				});
+				pb.authStore.clear();
+				event.cookies.set('pb_auth', '', {
+					expires: new Date(0),
+					path: '/'
+				});
+				event.locals.user = undefined;
+				return await resolve(event);
+			}
+
+			log.error('authRefresh failed but token not rejected — keeping session', {
+				status: status ?? 'network error',
+				path: event.url.pathname,
+				error: error.message
 			});
-			event.locals.user = undefined;
-			return await resolve(event);
 		}
 
 		// console.log('authStore after refresh', pb.authStore.record);

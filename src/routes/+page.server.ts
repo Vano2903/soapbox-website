@@ -4,10 +4,16 @@ import pocketbase from 'pocketbase';
 import { env } from '$env/dynamic/public';
 import type { TypedPocketBase } from '$types/pocketbase/pocketbase';
 import type { ChampionshipExpand } from '$types/pocketbase/championship';
-import { fail } from '@sveltejs/kit';
-import { addDays } from '$lib/utils';
+import { resolveHomepageEventState, type HomepageEventState } from '$lib/utils/nextEvent';
+import { createLogger } from '$lib/utils/logger';
 
-export const load: PageServerLoad = async () => {
+const log = createLogger('homepage:load');
+
+export type HomepageEventData = HomepageEventState & {
+	currentChampionship: ChampionshipExpand | null;
+};
+
+export const load: PageServerLoad = async (): Promise<HomepageEventData> => {
 	const pb = new pocketbase(env.PUBLIC_PB_INSTANCE) as TypedPocketBase;
 
 	const [currentChampionship, err] = (await goCatch(
@@ -15,24 +21,40 @@ export const load: PageServerLoad = async () => {
 			.collection('championships')
 			.getFirstListItem('ongoing=true', { sort: '-startDate', expand: 'events' })
 	)) as [ChampionshipExpand, undefined] | [undefined, Error];
+
+	// No ongoing championship is a data state, not a crash: render the homepage
+	// without the event box instead of a 500.
 	if (err || !currentChampionship) {
-		console.error('Error fetching championship: ', err);
-		throw fail(500);
+		log.error(
+			'no ongoing championship found (championships with ongoing=true); homepage renders without the event box',
+			{ pbInstance: env.PUBLIC_PB_INSTANCE, error: err?.message ?? 'empty result' }
+		);
+		return { currentChampionship: null, nextEvent: null, previousEvent: null, enrollable: false };
 	}
-	console.log(currentChampionship);
 
-	currentChampionship.expand.events.sort((a, b) => {
-		let cmp = 0;
-		if (new Date(a.startDate) < new Date(b.startDate)) cmp = -1;
-		else if (new Date(a.startDate) > new Date(b.startDate)) cmp = +1;
-		return cmp;
+	const events = currentChampionship.expand?.events ?? [];
+	log.info('ongoing championship loaded', {
+		name: currentChampionship.name,
+		events: events.length
 	});
-	const nextEventIndex = currentChampionship.expand.events.findIndex((e) => {
-		return addDays(new Date(), -2).valueOf() < new Date(e.startDate).valueOf();
-	});
-	console.log(
-		'events.at(' + nextEventIndex + ') = ' + currentChampionship.expand.events.at(nextEventIndex)
-	);
 
-	return { currentChampionship, nextEventIndex };
+	if (events.length === 0) {
+		log.warn(`championship "${currentChampionship.name}" has no events attached`);
+	}
+
+	const state = resolveHomepageEventState(currentChampionship);
+	log.info('next-event state resolved', {
+		nextEvent: state.nextEvent
+			? `${state.nextEvent.shortName} (${state.nextEvent.startDate ?? 'no date'})`
+			: 'none — season over',
+		previousEvent: state.previousEvent?.shortName ?? 'none',
+		enrollable: state.enrollable,
+		subscriptionsOpen: state.nextEvent?.subscriptionsOpen ?? false,
+		canceled: state.nextEvent?.canceled ?? false,
+		subscriptions: state.nextEvent
+			? `${state.nextEvent.numSubscriptions}/${state.nextEvent.maxSubscriptions || '∞'}`
+			: 'n/a'
+	});
+
+	return { currentChampionship, ...state };
 };

@@ -1,20 +1,24 @@
 import type { PageLoad } from './$types';
-import type { ChampionshipExpand } from '$types/pocketbase/championship';
+import type { HomepageEventData } from './+page.server';
 import type { OrganizationStatType } from '$types/organizationStat';
 import type { CarouselPageType } from '$types/carouselPage';
 import type { TabsPageType } from '$types/tabsPage';
-import {
-	Eye,
-	Hammer,
-	MapPinned,
-	Trophy,
-	Heart
-} from 'lucide-svelte';
+import { Eye, Hammer, MapPinned, Trophy, Heart } from 'lucide-svelte';
 import type { SponsorLogos } from '$types/SponsorSlider';
 import type { TimelineType } from '$types/timeline';
 
-export const load: PageLoad = async ({ data }): Promise<{ currentChampionship: ChampionshipExpand; nextEventIndex: number; organizationStats: OrganizationStatType[]; carouselImages: CarouselPageType[]; tabs: TabsPageType, sponsorLogos: SponsorLogos, timeline: TimelineType }> => {
-	const { currentChampionship, nextEventIndex } = data;
+export const load: PageLoad = async ({
+	data
+}): Promise<
+	HomepageEventData & {
+		organizationStats: OrganizationStatType[];
+		carouselImages: CarouselPageType[];
+		tabs: TabsPageType;
+		sponsorLogos: SponsorLogos;
+		timeline: TimelineType;
+	}
+> => {
+	const { currentChampionship, nextEvent, previousEvent, enrollable } = data;
 
 	const organizationStats = [
 		{ value: 982, subject: 'curve', context: 'affrontate' },
@@ -103,30 +107,37 @@ export const load: PageLoad = async ({ data }): Promise<{ currentChampionship: C
 			},
 			Crea: {
 				text: 'Bastano legno, bulloni e un pizzico di follia. Costruire il proprio mezzo è più che un gesto tecnico: è l’inizio di un’avventura. Ogni squadra è un’officina di sogni, dove l’arte prende forma tra mani sporche e idee brillanti. L’iscrizione? Semplice. Il risultato? Indimenticabile.',
-				image: { url: '/images/tabs/fugadaalcatraz.jpg', alt: 'Soapbox prigione che salta dopo la rampa' }
+				image: {
+					url: '/images/tabs/fugadaalcatraz.jpg',
+					alt: 'Soapbox prigione che salta dopo la rampa'
+				}
 			},
 			Corri: {
 				text: 'Non ci basta scendere, ci mettiamo il cuore. Le nostre piste sono vere strade di montagna, dure e magnifiche. Le curve non perdonano, il legno canta e i freni urlano. Ma ci si lancia insieme, con l’anima in gola e lo sguardo fisso all’orizzonte. Qui si corre davvero.',
-				image: { url: '/images/tabs/neverland.jpg', alt: 'Soapbox di capitan uncino che salta dopo la rampa' }
+				image: {
+					url: '/images/tabs/neverland.jpg',
+					alt: 'Soapbox di capitan uncino che salta dopo la rampa'
+				}
 			},
 			Vinci: {
 				text: 'Vincere non è solo un trofeo, è arrivare in fondo con gli amici che ti aspettano al traguardo. È rompere qualcosa e ricostruirla insieme. È condividere una risata, una foto, un abbraccio. Il premio è esserci stati e aver lasciato una traccia su quell’asfalto vissuto.',
-				image: { url: '/images/tabs/theironwire.jpg', alt: 'Soapbox gru di bob l\'aggiustatutto che salta al bilico' }
+				image: {
+					url: '/images/tabs/theironwire.jpg',
+					alt: "Soapbox gru di bob l'aggiustatutto che salta al bilico"
+				}
 			},
 			Ama: {
 				text: 'BoxRally è cura quotidiana, amore per un gioco serio fatto di sfide, dettagli e persone. È l’adrenalina che non svanisce, l’attesa per la prossima tappa, l’orgoglio di essere parte di qualcosa che pulsa. Non siamo solo appassionati: siamo legati da un’energia che non si spegne mai.',
-				image: { url: '/images/tabs/santapollonia.jpg', alt: 'Soapbox dentifricio che salta al bilico' }
+				image: {
+					url: '/images/tabs/santapollonia.jpg',
+					alt: 'Soapbox dentifricio che salta al bilico'
+				}
 			}
 		}
-	}
+	};
 
 	const sponsorLogos: SponsorLogos = {
-		main: [
-			'pedretti.png',
-			'italian_optic.png',
-			'baby_bazar.png',
-			'ronzoni.jpeg'
-		],
+		main: ['pedretti.png', 'italian_optic.png', 'baby_bazar.png', 'ronzoni.jpeg'],
 		secondary: [
 			'abf.png',
 			'bcc_milano.png',
@@ -294,5 +305,15 @@ export const load: PageLoad = async ({ data }): Promise<{ currentChampionship: C
 		}
 	};
 
-	return { currentChampionship, nextEventIndex, organizationStats, carouselImages, tabs, sponsorLogos, timeline }
+	return {
+		currentChampionship,
+		nextEvent,
+		previousEvent,
+		enrollable,
+		organizationStats,
+		carouselImages,
+		tabs,
+		sponsorLogos,
+		timeline
+	};
 };

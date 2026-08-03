@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Menu } from 'lucide-svelte';
+	import { Menu } from '@lucide/svelte';
 	import UserButton from './UserButton.svelte';
 	import { on } from 'svelte/events';
 

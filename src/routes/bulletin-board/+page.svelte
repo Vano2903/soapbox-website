@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { ChampionshipNonExpand } from '$types/pocketbase/championship.js';
 	import ElementSelection from '$components/elementSelection/elementSelection.svelte';
-	import { LucideCalendarCheck, LucideRadio, LucideLock } from 'lucide-svelte';
+	import { LucideCalendarCheck, LucideRadio, LucideLock } from '@lucide/svelte';
 	import { goto } from '$app/navigation';
 	import { DocumentCategory } from '$types/pocketbase/document.js';
 
@@ -76,8 +76,9 @@
 	<header class="flex flex-col items-center space-y-2 px-8 py-15 text-center">
 		<span class="text-5xl font-bold"> Bacheca </span>
 		<p class="text-neutral-500">
-			La nostra board è come il vecchio tabellone di paese: ogni foglio racconta un pezzo del campionato.
-			Avvisi, regole e info utili, ma sempre con la stessa dose di entusiasmo che ci facorrere giù per le strade.
+			La nostra board è come il vecchio tabellone di paese: ogni foglio racconta un pezzo del
+			campionato. Avvisi, regole e info utili, ma sempre con la stessa dose di entusiasmo che ci
+			facorrere giù per le strade.
 		</p>
 	</header>
 
@@ -95,7 +96,7 @@
 	<div class="space-y-8">
 		{#if championshipDocumentsDerived && championshipDocumentsDerived.length > 0}
 			{#if regulationAndModuleDocumentsDerived && regulationAndModuleDocumentsDerived.length > 0}
-				<h2 class="mb-2 mt-4 text-center text-2xl font-bold md:text-3xl">Regolamenti e Moduli</h2>
+				<h2 class="mt-4 mb-2 text-center text-2xl font-bold md:text-3xl">Regolamenti e Moduli</h2>
 			{/if}
 			<section class="flex flex-wrap justify-center gap-4">
 				{#each regulationAndModuleDocumentsDerived as document}
@@ -140,11 +141,13 @@
 					</div>
 				{/each}
 			</section>
-			{#if (regulationAndModuleDocumentsDerived && regulationAndModuleDocumentsDerived.length > 0) && (comunicationAndInvestigationDocumentsDerived && comunicationAndInvestigationDocumentsDerived.length > 0)}
-				<hr class="mx-auto border rounded-sm">
+			{#if regulationAndModuleDocumentsDerived && regulationAndModuleDocumentsDerived.length > 0 && comunicationAndInvestigationDocumentsDerived && comunicationAndInvestigationDocumentsDerived.length > 0}
+				<hr class="mx-auto rounded-sm border" />
 			{/if}
 			{#if comunicationAndInvestigationDocumentsDerived && comunicationAndInvestigationDocumentsDerived.length > 0}
-				<h2 class="mb-2 mt-4 text-center text-2xl font-bold md:text-3xl">Comunicazioni e Investigazioni</h2>
+				<h2 class="mt-4 mb-2 text-center text-2xl font-bold md:text-3xl">
+					Comunicazioni e Investigazioni
+				</h2>
 			{/if}
 			<section class="flex flex-wrap justify-center gap-4">
 				{#each comunicationAndInvestigationDocumentsDerived as document}

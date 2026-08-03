@@ -1,7 +1,17 @@
 <script lang="ts">
 	import type { TypedPocketBase } from '$types/pocketbase/pocketbase';
 	import type { UserPublicInfo } from '$types/pocketbase/user';
-	import { ArrowUpDown, ArrowDown, ArrowUp, Search, SlidersHorizontal, X, User, ChevronRight, ChevronLeft } from 'lucide-svelte';
+	import {
+		ArrowUpDown,
+		ArrowDown,
+		ArrowUp,
+		Search,
+		SlidersHorizontal,
+		X,
+		User,
+		ChevronRight,
+		ChevronLeft
+	} from '@lucide/svelte';
 	import type { ListResult } from 'pocketbase';
 	import EntityCard2 from '$components/entityCard/entityCard2.svelte';
 	import { createAvatarUrl } from '$lib/utils/avatar';
@@ -32,8 +42,10 @@
 	let lastNameEnabled = $state(true);
 	let usernameEnabled = $state(true);
 	let strictSearchEnabled = $state(false);
-	
-	let activeFieldCount = $derived([nameEnabled, lastNameEnabled, usernameEnabled].filter(Boolean).length);
+
+	let activeFieldCount = $derived(
+		[nameEnabled, lastNameEnabled, usernameEnabled].filter(Boolean).length
+	);
 	const bannedUsernames = ['admin', 'root', 'superuser', 'user', 'guest', 'test', 'users', 'dash'];
 
 	// --- Sort state & options ---
@@ -43,7 +55,7 @@
 	const sortOptions: { label: string; field: string }[] = [
 		{ label: 'Username', field: 'nick' },
 		{ label: 'Nome', field: 'name' },
-		{ label: 'Cognome', field: 'lastName' },
+		{ label: 'Cognome', field: 'lastName' }
 		// { label: 'Data creazione', field: 'created' }
 	];
 
@@ -96,7 +108,7 @@
 		fetchNewPage(1, researchField);
 	}
 
-	function pageRange () {
+	function pageRange() {
 		const radius = 2;
 		const start = Math.max(1, paginatedUsers.page - radius);
 		const end = Math.min(paginatedUsers.totalPages, paginatedUsers.page + radius);
@@ -158,10 +170,10 @@
 		</div>
 	{/if}
 
-	<div class="mx-auto w-full max-w-3xl mt-2">
+	<div class="mx-auto mt-2 w-full max-w-3xl">
 		<div class="flex items-center gap-2">
-			<label class="input flex-1 flex items-center gap-2">
-				<Search class="h-4 w-4 text-base-content/40" />
+			<label class="input flex flex-1 items-center gap-2">
+				<Search class="text-base-content/40 h-4 w-4" />
 				<input
 					autocomplete="off"
 					type="text"
@@ -175,12 +187,15 @@
 					oninput={() => fetchNewPage(1, researchField)}
 				/>
 				{#if researchField.length > 0}
-					<button onclick={clearSearch} class="ml-auto text-base-content/40 hover:text-base-content transition-colors">
+					<button
+						onclick={clearSearch}
+						class="text-base-content/40 hover:text-base-content ml-auto transition-colors"
+					>
 						<X class="h-4 w-4" />
 					</button>
 				{/if}
 			</label>
-			
+
 			<button
 				onclick={() => (showAdvanced = !showAdvanced)}
 				class="btn btn-ghost btn-sm relative"
@@ -190,7 +205,8 @@
 			>
 				<SlidersHorizontal class="h-4 w-4" />
 				{#if activeFieldCount < 3}
-					<span class="badge badge-xs badge-error absolute -top-1 -right-1">{activeFieldCount}</span>
+					<span class="badge badge-xs badge-error absolute -top-1 -right-1">{activeFieldCount}</span
+					>
 				{/if}
 			</button>
 
@@ -198,19 +214,21 @@
 		</div>
 
 		{#if showAdvanced}
-			<div class="mt-2 rounded-lg border border-base-300 bg-base-100 p-4 space-y-4">
+			<div class="border-base-300 bg-base-100 mt-2 space-y-4 rounded-lg border p-4">
 				<div>
-					<span class="text-xs font-semibold uppercase tracking-wider text-base-content/50">Cerca in</span>
+					<span class="text-base-content/50 text-xs font-semibold tracking-wider uppercase"
+						>Cerca in</span
+					>
 					<div class="mt-2 flex flex-wrap gap-2">
-						<label class="flex items-center gap-2 cursor-pointer">
+						<label class="flex cursor-pointer items-center gap-2">
 							<input type="checkbox" class="checkbox checkbox-sm" bind:checked={usernameEnabled} />
 							<span class="text-sm">Username</span>
 						</label>
-						<label class="flex items-center gap-2 cursor-pointer">
+						<label class="flex cursor-pointer items-center gap-2">
 							<input type="checkbox" class="checkbox checkbox-sm" bind:checked={nameEnabled} />
 							<span class="text-sm">Nome</span>
 						</label>
-						<label class="flex items-center gap-2 cursor-pointer">
+						<label class="flex cursor-pointer items-center gap-2">
 							<input type="checkbox" class="checkbox checkbox-sm" bind:checked={lastNameEnabled} />
 							<span class="text-sm">Cognome</span>
 						</label>
@@ -220,15 +238,21 @@
 				<div class="flex items-center justify-between">
 					<div>
 						<span class="text-sm font-medium">Ricerca rigorosa</span>
-						<p class="text-xs text-base-content/50">Cerca solo corrispondenze esatte</p>
+						<p class="text-base-content/50 text-xs">Cerca solo corrispondenze esatte</p>
 					</div>
-					<input type="checkbox" class="toggle toggle-sm toggle-primary" bind:checked={strictSearchEnabled} />
+					<input
+						type="checkbox"
+						class="toggle toggle-sm toggle-primary"
+						bind:checked={strictSearchEnabled}
+					/>
 				</div>
 
 				<hr class="border-base-200" />
 
 				<div>
-					<span class="text-xs font-semibold uppercase tracking-wider text-base-content/50">Ordinamento</span>
+					<span class="text-base-content/50 text-xs font-semibold tracking-wider uppercase"
+						>Ordinamento</span
+					>
 					<div class="mt-2 flex flex-wrap items-center gap-2">
 						{#each sortOptions as option}
 							<button
@@ -259,24 +283,27 @@
 		{/if}
 	</div>
 
-	<hr>
+	<hr />
 
 	<div class="mx-auto w-full max-w-md">
 		<div class="flex items-center justify-around">
-			<span class="text-sm text-base-content/50">
+			<span class="text-base-content/50 text-sm">
 				{#if paginatedUsers.totalItems === 0}
 					Nessun utente trovato
 				{:else}
-					{paginatedUsers.totalItems} utent{paginatedUsers.totalItems === 1 ? 'e' : 'i'} trovat{paginatedUsers.totalItems === 1 ? 'o' : 'i'}
+					{paginatedUsers.totalItems} utent{paginatedUsers.totalItems === 1 ? 'e' : 'i'} trovat{paginatedUsers.totalItems ===
+					1
+						? 'o'
+						: 'i'}
 				{/if}
 			</span>
 			{#if !showAdvanced}
 				<button
 					onclick={() => (showAdvanced = true)}
-					class="flex items-center gap-1 text-xs text-base-content/50 hover:text-base-content transition-colors"
+					class="text-base-content/50 hover:text-base-content flex items-center gap-1 text-xs transition-colors"
 				>
 					<ArrowUpDown class="h-3 w-3" />
-					{sortOptions.find(o => o.field === sortField)?.label}
+					{sortOptions.find((o) => o.field === sortField)?.label}
 					{#if sortOrder === 'asc'}
 						<ArrowUp class="h-3 w-3" />
 					{:else}
@@ -289,12 +316,14 @@
 
 	<div class="mx-5 lg:mx-15">
 		{#if expandedUsers.length === 0}
-			<div class="flex flex-col items-center justify-center rounded-xl border border-base-300 bg-base-100 py-16 px-6 text-center">
-				<div class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-base-200">
-					<User class="h-8 w-8 text-base-content/30" />
+			<div
+				class="border-base-300 bg-base-100 flex flex-col items-center justify-center rounded-xl border px-6 py-16 text-center"
+			>
+				<div class="bg-base-200 mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+					<User class="text-base-content/30 h-8 w-8" />
 				</div>
 				<h3 class="text-base font-semibold">Nessun utente trovato</h3>
-				<p class="mt-1 text-sm text-base-content/50">
+				<p class="text-base-content/50 mt-1 text-sm">
 					{#if researchField.length > 0 || strictSearchEnabled}
 						Prova a modificare la ricerca o cambia i filtri
 					{:else}
@@ -307,7 +336,6 @@
 					</button>
 				{/if}
 			</div>
-
 		{:else}
 			<div class="space-y-2">
 				{#each expandedUsers as user}
@@ -319,11 +347,19 @@
 					>
 						{#snippet backgroundSnippet()}
 							{#if user.bannerCropped}
-								<img src={user.bannerCropped} alt="Banner di {user.name}" class="h-full w-auto min-w-full object-cover object-left"/>
+								<img
+									src={user.bannerCropped}
+									alt="Banner di {user.name}"
+									class="h-full w-auto min-w-full object-cover object-left"
+								/>
 							{/if}
 						{/snippet}
 						{#snippet picture()}
-							<img src={user.avatarCropped} alt="Avatar di {user.nick}" class="h-14 w-14 rounded-full object-cover" />
+							<img
+								src={user.avatarCropped}
+								alt="Avatar di {user.nick}"
+								class="h-14 w-14 rounded-full object-cover"
+							/>
 						{/snippet}
 					</EntityCard2>
 				{/each}
@@ -359,10 +395,10 @@
 				{#if pageRange()[0] > 1}
 					<button
 						class="btn btn-ghost btn-sm btn-square"
-						onclick={() => fetchNewPage(1, researchField)}
-					>1</button>
+						onclick={() => fetchNewPage(1, researchField)}>1</button
+					>
 					{#if pageRange()[0] > 2}
-						<span class="text-base-content px-1 btn-sm btn-square flex items-center">…</span>
+						<span class="text-base-content btn-sm btn-square flex items-center px-1">…</span>
 					{/if}
 				{/if}
 
@@ -370,18 +406,19 @@
 					<button
 						class="btn btn-ghost btn-sm btn-square"
 						class:btn-active={p === paginatedUsers.page}
-						onclick={() => fetchNewPage(p, researchField)}
-					>{p}</button>
+						onclick={() => fetchNewPage(p, researchField)}>{p}</button
+					>
 				{/each}
 
 				{#if pageRange()[pageRange().length - 1] < paginatedUsers.totalPages}
 					{#if pageRange()[pageRange().length - 1] < paginatedUsers.totalPages - 1}
-						<span class="text-base-content px-1 btn-sm btn-square flex items-center">…</span>
+						<span class="text-base-content btn-sm btn-square flex items-center px-1">…</span>
 					{/if}
 					<button
 						class="btn btn-ghost btn-sm btn-square"
 						onclick={() => fetchNewPage(paginatedUsers.totalPages, researchField)}
-					>{paginatedUsers.totalPages}</button>
+						>{paginatedUsers.totalPages}</button
+					>
 				{/if}
 
 				<button

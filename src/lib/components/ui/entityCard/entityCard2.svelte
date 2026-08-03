@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type Icon as IconType } from 'lucide-svelte';
+	import { type Icon as IconType } from '@lucide/svelte';
 	import type { Snippet } from 'svelte';
 
 	interface Props {
@@ -39,20 +39,24 @@
 <div class="group block w-full">
 	<div
 		class="
-			relative
-			flex items-center gap-3
-			rounded-xl border border-base-300 bg-base-300 p-4
-			transition-transform duration-300
-			overflow-hidden
-			{disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-neutral-300 hover:shadow-md active:scale-99 hover:scale-102'}
+			border-base-300
+			bg-base-300 relative flex
+			items-center gap-3 overflow-hidden rounded-xl border
+			p-4 transition-transform
+			duration-300
+			{disabled
+			? 'cursor-not-allowed opacity-50'
+			: 'hover:scale-102 hover:bg-neutral-300 hover:shadow-md active:scale-99'}
 		"
 	>
 		{#if backgroundSnippet}
 			<div class="absolute inset-0 z-0">
-				<div class="absolute inset-y-0 left-0 w-full md:w-2/3 max-w-125">
+				<div class="absolute inset-y-0 left-0 w-full max-w-125 md:w-2/3">
 					{@render backgroundSnippet()}
 				</div>
-				<div class="absolute inset-0 max-w-126 bg-linear-to-r from-transparent via-base-300/60 to-base-300 to-99% group-hover:via-neutral-300/60 group-hover:to-neutral-300"></div>
+				<div
+					class="via-base-300/60 to-base-300 absolute inset-0 max-w-126 bg-linear-to-r from-transparent to-99% group-hover:via-neutral-300/60 group-hover:to-neutral-300"
+				></div>
 			</div>
 		{/if}
 		<a
@@ -60,19 +64,19 @@
 			class="relative z-10 flex min-w-0 flex-1 items-center gap-3"
 			class:pointer-events-none={disabled}
 		>
-			<div
-				class="shrink-0 rounded-full ring-1 ring-black"
-			>
+			<div class="shrink-0 rounded-full ring-1 ring-black">
 				{@render picture()}
 			</div>
 
-			<div class="min-w-0 flex-1 flex flex-col sm:flex-row sm:items-center sm:gap-2">
+			<div class="flex min-w-0 flex-1 flex-col sm:flex-row sm:items-center sm:gap-2">
 				<div class="min-w-0 shrink-0">
-					<div class="flex items-center gap-2 mb-0.5">
-						<p class="truncate text-lg/tight font-bold text-outline">
+					<div class="mb-0.5 flex items-center gap-2">
+						<p class="text-outline truncate text-lg/tight font-bold">
 							{title}
 							{#if !disabled}
-								<span class="block h-0.5 max-w-0 bg-primary transition-all duration-500 group-hover:max-w-full"></span>
+								<span
+									class="bg-primary block h-0.5 max-w-0 transition-all duration-500 group-hover:max-w-full"
+								></span>
 							{/if}
 						</p>
 						{#if iconSnippet}
@@ -81,14 +85,16 @@
 							</div>
 						{/if}
 					</div>
-					<p class="truncate font-semibold text-primary text-outline">
+					<p class="text-primary text-outline truncate font-semibold">
 						@{slug}
 					</p>
 				</div>
 
 				{#if description}
-					<div class="flex-1 min-w-0">
-						<p class="text-sm text-base-content/70 line-clamp-1 sm:line-clamp-2 sm:ml-4 text-outline">
+					<div class="min-w-0 flex-1">
+						<p
+							class="text-base-content/70 text-outline line-clamp-1 text-sm sm:ml-4 sm:line-clamp-2"
+						>
 							{description}
 						</p>
 					</div>
@@ -106,7 +112,7 @@
 
 <style>
 	.text-outline {
-		text-shadow: 
+		text-shadow:
 			-1px -1px 1px rgba(242, 242, 242, 0.4),
 			1px -1px 1px rgba(242, 242, 242, 0.4),
 			-1px 1px 1px rgba(242, 242, 242, 0.4),

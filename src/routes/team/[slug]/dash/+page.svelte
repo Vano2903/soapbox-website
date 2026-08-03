@@ -4,7 +4,7 @@
 	import type { TypedPocketBase } from '$types/pocketbase/pocketbase.js';
 	import type { Team, TeamInvitationNonExpand, TeamNonexpand } from '$types/pocketbase/team.js';
 	import type { UserNonExpand } from '$types/pocketbase/user.js';
-	import { Crown, Users, UserX } from 'lucide-svelte';
+	import { Crown, Users, UserX } from '@lucide/svelte';
 	import PocketBase, { ClientResponseError, type RecordModel } from 'pocketbase';
 	import { onMount } from 'svelte';
 	import { env } from '$env/dynamic/public';
@@ -474,7 +474,7 @@
 					{:else if currentTab === 'invites'}
 						<p class="mt-4 w-full text-3xl font-bold">INVITI:</p>
 
-						<div class="flex w-full justify-end items-center gap-2">
+						<div class="flex w-full items-center justify-end gap-2">
 							<ContextualHelp contextualHelp={contextualHelps.invites_optionalParameters} />
 							<button
 								class=" btn btn-primary"

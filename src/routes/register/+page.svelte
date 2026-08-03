@@ -5,7 +5,7 @@
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { superForm } from 'sveltekit-superforms';
 	import { goto } from '$app/navigation';
-	import { Eye, EyeOff } from 'lucide-svelte';
+	import { Eye, EyeOff } from '@lucide/svelte';
 	// import { render } from 'svelte/server';
 
 	const { data } = $props();
@@ -172,7 +172,9 @@
 				</fieldset>
 
 				<div>
-					<button aria-label="Registrati" type="submit" class="btn btn-primary w-full">Registrati</button>
+					<button aria-label="Registrati" type="submit" class="btn btn-primary w-full"
+						>Registrati</button
+					>
 				</div>
 			</form>
 			{#if $message}

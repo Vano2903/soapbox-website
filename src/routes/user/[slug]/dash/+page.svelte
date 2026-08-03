@@ -3,7 +3,7 @@
 	import type { TypedPocketBase } from '$types/pocketbase/pocketbase.js';
 	import type { Team } from '$types/pocketbase/team.js';
 	import type { UserNonExpand } from '$types/pocketbase/user.js';
-	import { Crown, TicketsPlane } from 'lucide-svelte';
+	import { Crown, TicketsPlane } from '@lucide/svelte';
 	import PocketBase, { type RecordModel } from 'pocketbase';
 	import { onMount } from 'svelte';
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ChevronRight, ChevronLeft, type Icon as IconType } from 'lucide-svelte';
+	import { ChevronRight, ChevronLeft, type Icon as IconType } from '@lucide/svelte';
 	import type { Snippet } from 'svelte';
 
 	interface Props {

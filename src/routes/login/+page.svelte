@@ -6,7 +6,7 @@
 	import { superForm } from 'sveltekit-superforms';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { Eye, EyeOff } from 'lucide-svelte';
+	import { Eye, EyeOff } from '@lucide/svelte';
 	import ContextualHelp from '$components/contextualHelp/contextualHelp.svelte';
 
 	const { data } = $props();

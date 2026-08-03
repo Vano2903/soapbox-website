@@ -4,7 +4,7 @@
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { enrollSchema } from '$lib/schemas/enrollSchema';
 	import ContextualHelp from '$components/contextualHelp/contextualHelp.svelte';
-	import { CircleHelp } from 'lucide-svelte';
+	import { CircleQuestionMark } from '@lucide/svelte';
 
 	// retrieve the data from the props
 	const { data } = $props();
@@ -180,7 +180,7 @@
 						<legend class="fieldset-legend">Nome del team per questo evento</legend>
 						<ContextualHelp contextualHelp={contextualHelps.enroll_teamAliasField}>
 							{#snippet iconSnippet()}
-								<CircleHelp class="h-4 w-4 text-gray-600"/>
+								<CircleQuestionMark class="h-4 w-4 text-gray-600" />
 							{/snippet}
 						</ContextualHelp>
 					</div>
@@ -215,8 +215,7 @@
 							Ho letto e accetto <a
 								class="text-gray-600 underline hover:text-red-600"
 								href="/documents/waiver-of-liability.pdf"
-								target="_blank"
-								>la liberatoria per la partecipazione</a
+								target="_blank">la liberatoria per la partecipazione</a
 							> all'evento
 						</label>
 					</div>

@@ -3,7 +3,7 @@ import type { HomepageEventData } from './+page.server';
 import type { OrganizationStatType } from '$types/organizationStat';
 import type { CarouselPageType } from '$types/carouselPage';
 import type { TabsPageType } from '$types/tabsPage';
-import { Eye, Hammer, MapPinned, Trophy, Heart } from 'lucide-svelte';
+import { Eye, Hammer, MapPinned, Trophy, Heart } from '@lucide/svelte';
 import type { SponsorLogos } from '$types/SponsorSlider';
 import type { TimelineType } from '$types/timeline';
 

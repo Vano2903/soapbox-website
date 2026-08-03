@@ -1,4 +1,4 @@
-import type { Icon as IconType } from "lucide-svelte";
+import type { Icon as IconType } from '@lucide/svelte';
 
 export type TabsPageType = {
 	headers: TabsPageHeader[];
@@ -18,4 +18,4 @@ export type TabsPageContent = {
 export type TabsImageContent = {
 	url: string;
 	alt: string;
-}
+};

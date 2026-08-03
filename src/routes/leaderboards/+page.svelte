@@ -1,7 +1,13 @@
 <script lang="ts">
 	import type { ChampionshipNonExpand } from '$types/pocketbase/championship.js';
 	import ElementSelection from '$components/elementSelection/elementSelection.svelte';
-	import { LucideCalendarCheck, LucideRadio, LucideLock, Info, UserRoundPlus } from 'lucide-svelte';
+	import {
+		LucideCalendarCheck,
+		LucideRadio,
+		LucideLock,
+		Info,
+		UserRoundPlus
+	} from '@lucide/svelte';
 	import { goto, replaceState } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
@@ -27,8 +33,10 @@
 
 	// Results split by type
 	const stageAndEventResultsDerived = $derived(
-		eventResultsDerived?.filter((r) =>
-			r.data.leaderboardType == LeaderboardType.Stage || r.data.leaderboardType == LeaderboardType.Event
+		eventResultsDerived?.filter(
+			(r) =>
+				r.data.leaderboardType == LeaderboardType.Stage ||
+				r.data.leaderboardType == LeaderboardType.Event
 		)
 	);
 	const championshipResultsDerived = $derived(
@@ -41,7 +49,9 @@
 	const selectedEvent = $derived(foundEventDerived?.shortName ?? '');
 
 	// Category and leaderboard are pure UI state — $page store is the source of truth.
-	const leaderboardMap = $derived((foundEventDerived?.availableLeaderboards ?? {}) as EventAvailableLeaderboards);
+	const leaderboardMap = $derived(
+		(foundEventDerived?.availableLeaderboards ?? {}) as EventAvailableLeaderboards
+	);
 	const categories = $derived(
 		Object.entries(leaderboardMap)
 			.filter(([, lbs]) => (lbs?.length ?? 0) > 0)
@@ -66,7 +76,10 @@
 	async function updateSheet(category = selectedCategory, leaderboard = selectedLeaderboard) {
 		console.log(
 			new Date().toLocaleTimeString('it-IT', { hour12: false }),
-			'Updating sheet — category:', category, 'leaderboard:', leaderboard
+			'Updating sheet — category:',
+			category,
+			'leaderboard:',
+			leaderboard
 		);
 		try {
 			const response = await fetch(
@@ -93,13 +106,26 @@
 	let stopPollingUpdateSheet: (() => void) | undefined;
 	$effect(() => {
 		if (foundEventDerived?.onAir) {
-			console.log(new Date().toLocaleTimeString('it-IT', { hour12: false }), 'foundEventDerived (', foundEventDerived.name, ') is LIVE now!');
+			console.log(
+				new Date().toLocaleTimeString('it-IT', { hour12: false }),
+				'foundEventDerived (',
+				foundEventDerived.name,
+				') is LIVE now!'
+			);
 			if (!stopPollingUpdateSheet) {
-				console.log(new Date().toLocaleTimeString('it-IT', { hour12: false }), 'starting new polling update sheet...');
+				console.log(
+					new Date().toLocaleTimeString('it-IT', { hour12: false }),
+					'starting new polling update sheet...'
+				);
 				stopPollingUpdateSheet = startPollingUpdateSheet();
 			}
 		} else {
-			console.log(new Date().toLocaleTimeString('it-IT', { hour12: false }), 'foundEventDerived (', foundEventDerived?.name, ') is NOT LIVE now!');
+			console.log(
+				new Date().toLocaleTimeString('it-IT', { hour12: false }),
+				'foundEventDerived (',
+				foundEventDerived?.name,
+				') is NOT LIVE now!'
+			);
 			sheetHTML = '';
 			if (stopPollingUpdateSheet) {
 				stopPollingUpdateSheet();
@@ -114,12 +140,22 @@
 	function selectionYear(year: string) {
 		const url = new URL(window.location.href);
 		url.searchParams.set('championship', year);
-		goto(url.toString(), { noScroll: true, keepFocus: true, replaceState: true, invalidateAll: true });
+		goto(url.toString(), {
+			noScroll: true,
+			keepFocus: true,
+			replaceState: true,
+			invalidateAll: true
+		});
 	}
 	function selectionEvent(event: string) {
 		const url = new URL(window.location.href);
 		url.searchParams.set('event', event);
-		goto(url.toString(), { noScroll: true, keepFocus: true, replaceState: true, invalidateAll: true });
+		goto(url.toString(), {
+			noScroll: true,
+			keepFocus: true,
+			replaceState: true,
+			invalidateAll: true
+		});
 	}
 	// Category/leaderboard: update URL only, pass new values directly to updateSheet
 	function selectionCategory(category: EventCategory) {
@@ -142,12 +178,19 @@
 
 	// ElementSelection helper
 	function transformToElementList(championshipList: ChampionshipNonExpand[]) {
-		const isLive = !!data.onAirEventId && foundChampionshipDerived.expand.events.some((e) => e.id === data.onAirEventId);
+		const isLive =
+			!!data.onAirEventId &&
+			foundChampionshipDerived.expand.events.some((e) => e.id === data.onAirEventId);
 		const elementsList = championshipList.map((v) => ({
 			value: v.name,
 			current: v.name === selectedChampionship,
 			disabled: false,
-			icon: v.ongoing && isLive ? LucideRadio : new Date(v.endDate) > new Date() ? null : LucideCalendarCheck,
+			icon:
+				v.ongoing && isLive
+					? LucideRadio
+					: new Date(v.endDate) > new Date()
+						? null
+						: LucideCalendarCheck,
 			iconProps: v.ongoing && isLive ? { color: '#e7000b' } : {}
 		}));
 		for (let i = 0; i < Math.min(championshipsListOffset, 3); i++) {
@@ -255,7 +298,7 @@
 									eventInfo={foundEventDerived as EventNonExpand}
 									locatedOnCarousel={false}
 								/>
-								<div class="my-2 flex flex-row justify-center lg:my-0 lg:mt-4 gap-4">
+								<div class="my-2 flex flex-row justify-center gap-4 lg:my-0 lg:mt-4">
 									{#if foundEventDerived?.subscriptionsOpen && (foundEventDerived.maxSubscriptions === 0 || foundEventDerived.numSubscriptions < (foundEventDerived.maxSubscriptions ?? 0)) && (!foundEventDerived.startDate || new Date(foundEventDerived.startDate).valueOf() >= new Date().valueOf())}
 										<a
 											href={`/enroll?${new URLSearchParams(`championship=${foundChampionshipDerived.name}&event=${foundEventDerived.shortName}`).toString()}`}
@@ -272,7 +315,8 @@
 									{/if}
 									<a
 										href={`/events?${new URLSearchParams(`championship=${foundChampionshipDerived.name}&event=${foundEventDerived?.shortName}`).toString()}`}
-										class="btn btn-neutral text-foreground max-w-5/12 text-xs md:text-lg">
+										class="btn btn-neutral text-foreground max-w-5/12 text-xs md:text-lg"
+									>
 										<Info /> Info
 									</a>
 								</div>

@@ -16,10 +16,10 @@ import {
 	SquarePen,
 	Map,
 	Crown,
-	CircleHelp,
+	CircleQuestionMark,
 	Route
-} from 'lucide-svelte';
-import type { ComponentType } from 'svelte';
+} from '@lucide/svelte';
+import type { Component } from 'svelte';
 
 export const docsIcons = {
 	// Category or pages icons
@@ -42,14 +42,17 @@ export const docsIcons = {
 	Map: Map,
 	Crown: Crown,
 	// Default or fallback icons
-	CircleHelp: CircleHelp,
-	Route: Route,
+	CircleQuestionMark: CircleQuestionMark,
+	Route: Route
 } as const;
 
 export type DocsIconKey = keyof typeof docsIcons;
-export type LucideComponent = ComponentType;
+export type LucideComponent = Component;
 
-export function resolveDocsIcon(icon: unknown, fallback: DocsIconKey = 'CircleHelp'): LucideComponent {
+export function resolveDocsIcon(
+	icon: unknown,
+	fallback: DocsIconKey = 'CircleQuestionMark'
+): LucideComponent {
 	if (typeof icon === 'string' && icon in docsIcons) {
 		return docsIcons[icon as DocsIconKey] as LucideComponent;
 	}

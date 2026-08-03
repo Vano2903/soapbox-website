@@ -4,7 +4,16 @@
 	import Carousel3 from '$components/carousel/carousel3.svelte';
 	import EventInfoBox from '$components/eventInfoBox/eventInfoBox.svelte';
 	import { fade } from 'svelte/transition';
-	import { VolumeX, Volume2, ChevronLeft, ChevronRight, UserRoundPlus, MonitorPlay, Info, ExternalLink } from 'lucide-svelte';
+	import {
+		VolumeX,
+		Volume2,
+		ChevronLeft,
+		ChevronRight,
+		UserRoundPlus,
+		MonitorPlay,
+		Info,
+		ExternalLink
+	} from '@lucide/svelte';
 	import { onMount } from 'svelte';
 	import type { SponsorLogos, SponsorSlider } from '$types/SponsorSlider.js';
 	import type { CarouselPageType } from '$types/carouselPage.js';
@@ -46,8 +55,12 @@
 	// back to the last event and the results link.
 	const displayedEvent = $derived(nextEvent ?? previousEvent);
 	const championshipName = $derived(currentChampionship?.name ?? '');
-	const enrollLink = $derived(enrollable && nextEvent ? enrollHref(championshipName, nextEvent) : null);
-	const infoLink = $derived(displayedEvent ? eventInfoHref(championshipName, displayedEvent) : null);
+	const enrollLink = $derived(
+		enrollable && nextEvent ? enrollHref(championshipName, nextEvent) : null
+	);
+	const infoLink = $derived(
+		displayedEvent ? eventInfoHref(championshipName, displayedEvent) : null
+	);
 	const watchLink = $derived(resultsHref(championshipName, previousEvent));
 
 	// log.debug('event box state', {
@@ -287,7 +300,7 @@
 							href={enrollLink}
 							onclick={() => logEventBoxNavigation('enroll', enrollLink)}
 						>
-							<UserRoundPlus class="h-5 w-5"/> Iscriviti
+							<UserRoundPlus class="h-5 w-5" /> Iscriviti
 						</a>
 					{:else if previousEvent}
 						<a
@@ -295,11 +308,11 @@
 							href={watchLink}
 							onclick={() => logEventBoxNavigation('results', watchLink)}
 						>
-							<MonitorPlay class="h-5 w-5"/> Guarda
+							<MonitorPlay class="h-5 w-5" /> Guarda
 						</a>
 					{:else}
 						<button class="btn btn-disabled flex-nowrap text-nowrap text-gray-600">
-							<UserRoundPlus class="h-5 w-5"/> Iscriviti
+							<UserRoundPlus class="h-5 w-5" /> Iscriviti
 						</button>
 					{/if}
 					{#if infoLink}
@@ -308,7 +321,7 @@
 							class="btn btn-neutral text-foreground max-w-70"
 							onclick={() => logEventBoxNavigation('event info', infoLink)}
 						>
-							<Info class="h-5 w-5"/> Info
+							<Info class="h-5 w-5" /> Info
 						</a>
 					{/if}
 				</div>
@@ -328,7 +341,9 @@
 						{#if enrollLink}
 							<p class="pb-4 text-right text-base/5">
 								<span class="xs:hidden">Le iscrizioni all’evento sono aperte!</span>
-								<span class="xs:block hidden">Sono aperte le iscrizioni per il prossimo evento!</span>
+								<span class="xs:block hidden"
+									>Sono aperte le iscrizioni per il prossimo evento!</span
+								>
 							</p>
 							<p class="pb-4 text-right text-base/5">
 								<span class="xs:hidden"> Registrati prima che terminino i posti. </span>
@@ -351,7 +366,7 @@
 								</span>
 							</p>
 						{/if}
-						<div class="flex flex-col xs:flex-row justify-end gap-2 items-end">
+						<div class="xs:flex-row flex flex-col items-end justify-end gap-2">
 							{#if enrollLink}
 								<a
 									class="btn btn-error text-foreground max-w-22"
@@ -521,10 +536,10 @@
 						Ogni curva è una promessa di leggenda.
 					</h2>
 				</div>
-				<div class="flex flex-row justify-end absolute left-4 bottom-4 z-10 gap-2">
+				<div class="absolute bottom-4 left-4 z-10 flex flex-row justify-end gap-2">
 					<button
 						onclick={toggleMute}
-						class="cursor-pointer rounded-full bg-white/80 px-3 py-1 text-sm font-semibold text-black backdrop-blur hover:bg-white tooltip tooltip-top"
+						class="tooltip tooltip-top cursor-pointer rounded-full bg-white/80 px-3 py-1 text-sm font-semibold text-black backdrop-blur hover:bg-white"
 						data-tip="{isHighlightMuted ? 'Unmute' : 'Mute'} Video"
 					>
 						{#if isHighlightMuted}
@@ -536,7 +551,7 @@
 					<a
 						href="https://www.youtube.com/watch?v=fUBB9sdClnE"
 						target="_blank"
-						class="cursor-pointer rounded-full bg-white/80 px-3 py-1 text-sm font-semibold text-black backdrop-blur hover:bg-white tooltip tooltip-top"
+						class="tooltip tooltip-top cursor-pointer rounded-full bg-white/80 px-3 py-1 text-sm font-semibold text-black backdrop-blur hover:bg-white"
 						data-tip="Watch on YouTube"
 					>
 						<ExternalLink />

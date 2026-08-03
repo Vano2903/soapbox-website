@@ -2,7 +2,7 @@
 	import EntityCard from '$components/entityCard/entityCard.svelte';
 	import type { Team } from '$types/pocketbase/team';
 	import type { UserNonExpand } from '$types/pocketbase/user';
-	import { Crown, ExternalLink } from 'lucide-svelte';
+	import { Crown, ExternalLink } from '@lucide/svelte';
 	interface Props {
 		data: {
 			team: Team;

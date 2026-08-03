@@ -1,7 +1,13 @@
 <script lang="ts">
 	import type { ChampionshipNonExpand } from '$types/pocketbase/championship.js';
 	import ElementSelection from '$components/elementSelection/elementSelection.svelte';
-	import { LucideCalendarCheck, LucideRadio, LucideLock, UserRoundPlus, Info } from 'lucide-svelte';
+	import {
+		LucideCalendarCheck,
+		LucideRadio,
+		LucideLock,
+		UserRoundPlus,
+		Info
+	} from '@lucide/svelte';
 	import { goto } from '$app/navigation';
 
 	// constant that defines how many elements to show on each side of the current element of the ElementSelection component
@@ -119,7 +125,7 @@
 					>
 						<div class="relative h-1/3">
 							<img
-								src={event.cover ?? "/images/calendars/eventCover.png"}
+								src={event.cover ?? '/images/calendars/eventCover.png'}
 								alt={event.name}
 								class="h-full w-full object-cover"
 							/>
@@ -175,7 +181,8 @@
 										</a>
 										<a
 											href={`/events?${new URLSearchParams(`championship=${foundChampionshipDerived.name}&event=${event.shortName}`).toString()}`}
-											class="btn btn-neutral text-foreground max-w-5/12 text-xs md:text-lg">
+											class="btn btn-neutral text-foreground max-w-5/12 text-xs md:text-lg"
+										>
 											<Info /> Info
 										</a>
 									{:else}
@@ -186,7 +193,8 @@
 										</button>
 										<a
 											href={`/events?${new URLSearchParams(`championship=${foundChampionshipDerived.name}&event=${event.shortName}`).toString()}`}
-											class="btn btn-neutral text-foreground max-w-5/12 text-xs md:text-lg">
+											class="btn btn-neutral text-foreground max-w-5/12 text-xs md:text-lg"
+										>
 											<Info /> Info
 										</a>
 									{/if}

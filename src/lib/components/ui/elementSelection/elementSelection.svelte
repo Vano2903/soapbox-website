@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ChevronRight, ChevronLeft, type Icon as IconType } from 'lucide-svelte';
+	import { ChevronRight, ChevronLeft, type Icon as IconType } from '@lucide/svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 

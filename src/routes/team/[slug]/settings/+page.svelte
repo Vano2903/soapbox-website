@@ -21,7 +21,7 @@
 		submit: submitCheckUsername,
 		enhance: submitEnhance
 	} = superForm(
-		{ username: '' },
+		{ slug: '' },
 		{
 			invalidateAll: false,
 			applyAction: false,
@@ -30,7 +30,7 @@
 				if (!$form.slug) cancel();
 			},
 			onUpdated({ form }) {
-				$errors.slug = form.errors.username;
+				$errors.slug = form.errors.slug;
 			}
 		}
 	);

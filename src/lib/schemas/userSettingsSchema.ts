@@ -1,10 +1,12 @@
 import { GenderKind, UserVisiblityKind } from '$types/pocketbase/user';
 import CodiceFiscale from 'codice-fiscale-js';
 import { z } from 'zod/v3';
+import { cropAreaSchema, croppedImageSchema, originalImageSchema } from './imageFile';
 
-// const MEGA5 = 5000000;
-const MEGA2 = 2000000;
-const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+const MAX_AVATAR_ORIGINAL = 5_000_000;
+const MAX_AVATAR_CROPPED = 2_000_000;
+const MAX_BANNER_ORIGINAL = 8_000_000;
+const MAX_BANNER_CROPPED = 3_000_000;
 
 export const userSettingsSchema = z.object({
 	name: z.string({
@@ -27,16 +29,7 @@ export const userSettingsSchema = z.object({
 			message: 'La data di nascita non può essere futura'
 		}),
 	gender: z.nativeEnum(GenderKind, {
-		errorMap: (gender) => {
-			switch (gender.code) {
-				case 'invalid_type':
-					return { message: 'Il sesso è richiesto, scegliere tra uno dei seguenti' };
-				case 'invalid_enum_value':
-					return { message: 'Il sesso è richiesto, scegliere tra uno dei seguenti' };
-				default:
-					return { message: 'Il sesso è richiesto, scegliere tra uno dei seguenti' };
-			}
-		}
+		errorMap: () => ({ message: 'Il sesso è richiesto, scegliere tra uno dei seguenti' })
 	}),
 	prefix: z.string({
 		required_error: 'Il prefisso è obbligatorio',
@@ -48,112 +41,33 @@ export const userSettingsSchema = z.object({
 	}),
 	fiscalCode: z.optional(z.string()).refine(
 		(val) => {
-			if (!val) return true; // Skip validation if value is not provided
-			console.log('checking cf', val, CodiceFiscale.check(val.toUpperCase()));
+			if (!val) return true;
 			return CodiceFiscale.check(val.toUpperCase());
 		},
-		{
-			message: 'Il codice fiscale inserito non è valido'
-		}
+		{ message: 'Il codice fiscale inserito non è valido' }
 	),
 	nick: z
 		.string({
 			required_error: 'Il nome utente è obbligatorio',
 			invalid_type_error: 'Il nome utente deve essere una stringa'
 		})
-		.min(3, {
-			message: 'Il nome utente deve avere almeno 3 caratteri'
-		})
-		.max(100, {
-			message: 'Il nome utente deve avere al massimo 100 caratteri'
-		})
-		.regex(/^[a-z0-9-]+$/, {
-			message: 'Il nome utente può contenere solo minuscole, numeri e trattini'
-		}),
+		.min(3, 'Il nome utente deve avere almeno 3 caratteri')
+		.max(100, 'Il nome utente deve avere al massimo 100 caratteri')
+		.regex(/^[a-z0-9-]+$/, 'Il nome utente può contenere solo minuscole, numeri e trattini'),
 	visibility: z.nativeEnum(UserVisiblityKind, {
-		errorMap: (gender) => {
-			switch (gender.code) {
-				case 'invalid_type':
-					return {
-						message: `La visibilità dell'account è richiesta, scegliere tra uno dei seguenti`
-					};
-				case 'invalid_enum_value':
-					return {
-						message: `La visibilità dell'account è richiesta, scegliere tra uno dei seguenti`
-					};
-				default:
-					return {
-						message: `La visibilità dell'account è richiesta, scegliere tra uno dei seguenti`
-					};
-			}
-		}
+		errorMap: () => ({
+			message: `La visibilità dell'account è richiesta, scegliere tra uno dei seguenti`
+		})
 	}),
-	avatarOriginal: z.optional(
-		z
-			.any()
-			.refine((file) => file?.size <= MEGA2, 'Il file deve essere di dimensioni inferiori a 2MB')
-			.refine(
-				(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-				'Solo formati .jpg, .jpeg, .png e .webp sono supportati'
-			)
-	),
-	avatarCroppedInfo: z.optional(
-		z.object({
-			x: z.number().min(0),
-			y: z.number().min(0),
-			width: z.number().min(0),
-			height: z.number().min(0)
-		})
-	),
-	avatarCropped: z.optional(
-		z
-			.any()
-			.refine(
-				(file) => file?.size <= MEGA2,
-				'Il file croppato deve essere di dimensioni inferiori a 2MB'
-			)
-			.refine(
-				(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-				'Solo formati .jpg, .jpeg, .png e .webp sono supportati'
-			)
-	),
-	bannerOriginal: z.optional(
-		z
-			.any()
-			.refine((file) => file?.size <= MEGA2, 'Il file deve essere di dimensioni inferiori a 2MB')
-			.refine(
-				(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-				'Solo formati .jpg, .jpeg, .png e .webp sono supportati'
-			)
-	),
-	bannerCroppedInfo: z.optional(
-		z.object({
-			x: z.number().min(0),
-			y: z.number().min(0),
-			width: z.number().min(0),
-			height: z.number().min(0)
-		})
-	),
-	bannerCropped: z.optional(
-		z
-			.any()
-			.refine(
-				(file) => file?.size <= MEGA2,
-				'Il file croppato deve essere di dimensioni inferiori a 2MB'
-			)
-			.refine(
-				(file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-				'Solo formati .jpg, .jpeg, .png e .webp sono supportati'
-			)
-	),
+	avatarOriginal: originalImageSchema(MAX_AVATAR_ORIGINAL),
+	avatarCroppedInfo: cropAreaSchema,
+	avatarCropped: croppedImageSchema(MAX_AVATAR_CROPPED),
+	bannerOriginal: originalImageSchema(MAX_BANNER_ORIGINAL),
+	bannerCroppedInfo: cropAreaSchema,
+	bannerCropped: croppedImageSchema(MAX_BANNER_CROPPED),
 	bio: z.optional(
 		z
-			.string({
-				required_error: 'La biografia è obbligatoria',
-				invalid_type_error: 'La biografia deve essere una stringa'
-			})
-			.max(500, {
-				message: 'La biografia deve avere al massimo 500 caratteri'
-			})
+			.string({ invalid_type_error: 'La biografia deve essere una stringa' })
+			.max(500, 'La biografia deve avere al massimo 500 caratteri')
 	)
 });

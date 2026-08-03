@@ -6,9 +6,11 @@ import (
 	"image"
 	_ "image/jpeg"
 	_ "image/png"
+	"io"
 	"log"
 	"net/http"
 	"os"
+	"slices"
 	"strings"
 	"sync"
 	"time"
@@ -108,7 +110,7 @@ func scrapeGroup(url string) (Group, error) {
 	return group, nil
 }
 
-func main() {
+func main2() {
 	years := []int{2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015}
 	baseUrl := "https://www.boxrally.eu/boxrally/gallery/"
 	sectionUrl := baseUrl + "default.asp?section=%d"
@@ -202,4 +204,114 @@ func main() {
 	f.Write(responseJson)
 
 	fmt.Println("Done")
+}
+
+func downloadImage(url string, filepath string) error {
+	newUrl := strings.Replace(url, "www.boxrally.eu", "win.boxrally.eu", 1)
+	resp, err := http.Get(newUrl)
+	if err != nil {
+		return fmt.Errorf("error getting image: %w", err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("status code error: %d %s", resp.StatusCode, resp.Status)
+	}
+
+	out, err := os.Create(filepath)
+	if err != nil {
+		return fmt.Errorf("error creating file: %w", err)
+	}
+	defer out.Close()
+
+	_, err = io.Copy(out, resp.Body)
+	if err != nil {
+		return fmt.Errorf("error saving image: %w", err)
+	}
+
+	return nil
+}
+
+func main() {
+	file := "response.json"
+	data, err := os.ReadFile(file)
+	if err != nil {
+		log.Fatalf("failed to read file: %v", err)
+	}
+
+	var response Response
+	err = json.Unmarshal(data, &response)
+	if err != nil {
+		log.Fatalf("failed to unmarshal JSON: %v", err)
+	}
+
+	years := make([]string, 0)
+	for _, year := range response.AvailableYears {
+		years = append(years, fmt.Sprintf("%d", year))
+	}
+	slices.Sort(years)
+	fmt.Printf("Available years: %v\n", years)
+
+	wg := sync.WaitGroup{}
+
+	for i := range response.Sections {
+		wg.Add(1)
+		// bar.
+		go func(section Section) {
+			defer wg.Done()
+			totalImages := 0
+			for _, group := range section.Groups {
+				totalImages += len(group.Images)
+			}
+			downloaded := 0
+			for _, group := range section.Groups {
+				for _, img := range group.Images {
+					// Download image
+					dir := fmt.Sprintf("images/%d/%s", section.Year, group.Name)
+					err := os.MkdirAll(dir, os.ModePerm)
+					if err != nil {
+						log.Fatalf("failed to create directory: %v", err)
+					}
+					filepath := fmt.Sprintf("%s/%s", dir, strings.Split(img.Full, "/")[len(strings.Split(img.Full, "/"))-1])
+					err = downloadImage(img.Full, filepath)
+					if err != nil {
+						log.Printf("failed to download image: %v", err)
+					} else {
+						// fmt.Printf("Downloaded %s\n", filepath)
+					}
+					downloaded++
+					fmt.Printf("Year %d: Downloaded %d/%d images\r", section.Year, downloaded, totalImages)
+				}
+			}
+		}(response.Sections[i])
+		// break
+
+		// // Update at random speed so bars move differently for a demo:
+		// delay := time.Duration(5+rand.IntN(40)) * time.Millisecond
+		// bar.WriteAbove(fmt.Sprintf("\t\t\tBar %d delay is %v", i+1, delay))
+		// go func(b *progressbar.State) {
+		// 	UpdateBar(b, delay)
+		// 	wg.Done()
+		// }(bar)
+	}
+	wg.Wait()
+	// progressbar.MultiBarEnd(mbar)
+
+	// for _, section := range response.Sections {
+	// 	for _, group := range section.Groups {
+	// 		for _, img := range group.Images {
+	// 			dir := fmt.Sprintf("images/%d/%s", section.Year, group.Name)
+	// 			err := os.MkdirAll(dir, os.ModePerm)
+	// 			if err != nil {
+	// 				log.Fatalf("failed to create directory: %v", err)
+	// 			}
+	// 			filepath := fmt.Sprintf("%s/%s", dir, strings.Split(img.Full, "image=")[1])
+	// 			err = downloadImage(img.Full, filepath)
+	// 			if err != nil {
+	// 				log.Printf("failed to download image: %v", err)
+	// 			} else {
+	// 				fmt.Printf("Downloaded %s\n", filepath)
+	// 			}
+	// 		}
+	// 	}
+	// }
 }

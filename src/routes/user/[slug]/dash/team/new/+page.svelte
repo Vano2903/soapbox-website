@@ -1,18 +1,18 @@
 <script lang="ts">
-	import SuperDebug, { fieldProxy, fileProxy, superForm } from 'sveltekit-superforms';
-	import { debounce } from 'throttle-debounce';
+	import { fileProxy, superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { teamSchema } from '$lib/schemas/teamSchema';
-	import ImageCropper from '$components/imageCropper/imageCropper.svelte';
+	import { env } from '$env/dynamic/public';
+	import { TextField, TextareaField, ImageField } from '$components/forms';
+
 	const { data } = $props();
 
-	const { form, errors, message, constraints, enhance } = superForm(data.form, {
+	const { form, errors, message, constraints, enhance, submitting } = superForm(data.form, {
 		dataType: 'json',
 		validators: zod(teamSchema)
 	});
 
-	// --- username
-	const teamDomain = 'boxrally.eu/t/';
+	const teamDomain = env.PUBLIC_BASE_URL + '/team/';
 
 	const {
 		delayed,
@@ -33,23 +33,19 @@
 		}
 	);
 
-	const checkSlug = debounce(200, submitCheckSlug);
-
-	// --- images
-	// const logotest = fileProxy(form, 'logoTest');
 	const logo = fileProxy(form, 'logoOriginal');
-	const logoCropped = $state(fileProxy(form, 'logoCropped'));
+	const logoCropped = fileProxy(form, 'logoCropped');
 	const banner = fileProxy(form, 'bannerOriginal');
-	const bannerCropped = $state(fileProxy(form, 'bannerCropped'));
-	const bioProxy = fieldProxy(form, 'bio');
-	let crop = $state({ x: 0, y: 0 });
-	let zoom = $state(1);
-	let slug = fieldProxy(form, 'slug');
+	const bannerCropped = fileProxy(form, 'bannerCropped');
+
+	function slugify(raw: string) {
+		return raw.trimStart().replaceAll(' ', '-').toLowerCase();
+	}
 </script>
 
 <main class="mx-auto max-w-2xl px-4 py-8">
 	<h1 class="text-primary mb-8 text-3xl font-bold">Crea il tuo team</h1>
-	<!-- <SuperDebug  data={$form} /> -->
+
 	<form
 		method="POST"
 		class="flex flex-col space-y-8"
@@ -57,133 +53,67 @@
 		use:enhance
 		action="?/createTeam"
 	>
-		<!-- Contact Information Section -->
-		<div class="border-base-content space-y-6 border-b pb-8">
-			<!-- <div class="flex flex-col gap-4 md:flex-row"> -->
-			<fieldset class="fieldset flex-1 text-base">
-				<legend class="fieldset-legend">Nome completo del team</legend>
-				<input
-					{...$constraints.name}
-					class:input-error={$errors.name}
-					class:input-success={$form.name && 'name' in $errors && !$errors.name}
-					type="text"
-					aria-invalid={$errors.name ? 'true' : undefined}
-					bind:value={$form.name}
-					class="input w-full"
-					name="name"
-					placeholder="Mario"
-				/>
-				{#if $errors.name}
-					<p class="fieldset-label text-error">{$errors.name}</p>
-				{/if}
-			</fieldset>
-			<!-- </div> -->
+		<section class="border-base-content space-y-6 border-b pb-8">
+			<TextField
+				name="name"
+				label="Nome completo del team"
+				placeholder="Box Rally Italia"
+				bind:value={$form.name}
+				errors={$errors.name}
+				constraints={$constraints.name}
+			/>
 
-			<fieldset class="fieldset flex-1 text-base">
-				<legend class="fieldset-legend">Username per il team</legend>
+			<TextField
+				name="slug"
+				label="Username per il team"
+				placeholder="box-rally-italia"
+				prefix={teamDomain}
+				form="check"
+				autocomplete="username"
+				bind:value={$form.slug}
+				errors={$errors.slug}
+				constraints={$constraints.slug}
+				transform={slugify}
+				debounceMs={200}
+				onInput={() => submitCheckSlug()}
+				delayed={$delayed}
+				hint="L'username sará usato per creare una pagina pubblica per il tuo team. Solo lettere minuscole, numeri e trattini."
+			/>
+			<input type="hidden" name="slug" value={$form.slug} />
 
-				<label
-					class="input w-full"
-					class:input-error={$errors.slug}
-					class:input-success={$form.slug && 'slug' in $errors && !$errors.slug && !$delayed}
-				>
-					<!-- class:input-success={$form.slug && 'slug' in $errors} -->
-					<span class="label">{teamDomain}</span>
-					<input
-						{...$constraints.slug}
-						autocomplete="username"
-						type="text"
-						form="check"
-						name="slug"
-						id="slug"
-						bind:value={
-							() => $slug,
-							(n) => {
-								$slug = n.trimStart().replaceAll(' ', '-').toLowerCase();
-							}
-						}
-						aria-invalid={$errors.slug ? 'true' : undefined}
-						placeholder="mario-rossi"
-						oninput={checkSlug}
-					/>
-				</label>
-
-				<input type="hidden" name="slug" value={$form.slug} />
-				<p class="text-base-content mb-2 text-xs/5">
-					L'username sará usato per creare una pagina pubblica per il tuo team.
-					<br />
-					Non usare spazi o caratteri speciali, solo lettere, numeri e trattini.
-					<br />
-					Ad esempio il team con username <strong>asd-team</strong> avrà come pagina
-					<span class="font-bold italic">{`https://${teamDomain}asd-team`}</span>
-				</p>
-
-				{#if $delayed}
-					<div>
-						<span>verifica disponibilità</span>
-						<span class="loading loading-spinner loading-sm"></span>
-					</div>
-				{:else if $errors.slug}
-					<ul class="fieldset-label text-error flex-col items-start">
-						{#each $errors.slug as error}
-							<li>
-								{error}
-							</li>
-						{/each}
-					</ul>
-				{/if}
-			</fieldset>
-
-			<ImageCropper
-				name="logoOriginal"
-				bind:value={$logo}
-				label="Carica un logo per il tuo team"
-				constraints={{ required: false }}
-				errors={$errors.logoOriginal}
-				bind:cropped={$logoCropped}
-				bind:pixels={$form.logoCroppedInfo}
-				{crop}
-				{zoom}
+			<ImageField
+				name="logo"
+				label="Logo del team"
 				shape="round"
+				bind:original={$logo}
+				bind:cropped={$logoCropped}
+				bind:cropArea={$form.logoCroppedInfo}
+				errors={$errors.logoOriginal ?? $errors.logoCropped}
 			/>
 
-			<ImageCropper
+			<ImageField
 				name="banner"
-				bind:value={$banner}
-				label="Carica un immagine di sfondo (banner) per la pagina del tuo team"
-				constraints={{ required: false }}
-				errors={$errors.bannerOriginal}
-				bind:cropped={$bannerCropped}
-				bind:pixels={$form.bannerCroppedInfo}
-				{crop}
-				{zoom}
+				label="Immagine di sfondo (banner) per la pagina del team"
 				shape="rect"
+				bind:original={$banner}
+				bind:cropped={$bannerCropped}
+				bind:cropArea={$form.bannerCroppedInfo}
+				errors={$errors.bannerOriginal ?? $errors.bannerCropped}
 			/>
-		</div>
+		</section>
 
-		<!-- Personal Information Section -->
-		<fieldset class="fieldset flex-1 text-base">
-			<legend class="fieldset-legend">Descrizione del team</legend>
-			<textarea
-				{...$constraints.bio}
-				class:textarea-error={$errors.bio}
-				class:textarea-success={$form.bio && 'bio' in $errors && !$errors.bio}
-				aria-invalid={$errors.bio ? 'true' : undefined}
-				bind:value={$bioProxy}
-				class="textarea h-24 w-full"
-				placeholder="Bio"
-				name="bio"
-				id="bio"
-			></textarea>
+		<TextareaField
+			name="bio"
+			label="Descrizione del team"
+			placeholder="Bio"
+			rows={4}
+			bind:value={$form.bio}
+			errors={$errors.bio}
+			constraints={$constraints.bio}
+		/>
 
-			{#if $errors.bio}
-				<p class="fieldset-label text-error">{$errors.bio}</p>
-			{/if}
-		</fieldset>
-
-		<!-- Submit Button -->
-		<button disabled={$delayed} type="submit" class="btn btn-primary w-full">
-			<!-- class="mt-8 w-full rounded-lg bg-red-600 py-3 font-medium text-white transition-colors hover:bg-red-700 focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:outline-none" -->
+		<button disabled={$delayed || $submitting} type="submit" class="btn btn-primary w-full">
+			{#if $submitting}<span class="loading loading-spinner"></span>{/if}
 			Crea il tuo team
 		</button>
 
@@ -200,16 +130,3 @@
 
 	<form id="check" method="POST" action="?/checkUsername" use:submitEnhance></form>
 </main>
-
-<style>
-	.disabled-input {
-		border-color: var(--color-base-200);
-		background-color: var(--color-base-200);
-		color: var(--color-base-content/40);
-		&::placeholder {
-			color: var(--color-base-content/20);
-		}
-		cursor: not-allowed;
-		box-shadow: none;
-	}
-</style>

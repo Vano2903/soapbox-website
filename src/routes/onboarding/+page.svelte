@@ -1,19 +1,21 @@
 <script lang="ts">
-	import { GenderKind } from '$types/pocketbase/user.js';
+	import { GenderKind, UserVisiblityKind } from '$types/pocketbase/user.js';
 	import CodiceFiscale from 'codice-fiscale-js';
-	import { untrack } from 'svelte';
-	import SuperDebug, { dateProxy, fieldProxy, fileProxy, superForm } from 'sveltekit-superforms';
-	import { debounce } from 'throttle-debounce';
+	import { dateProxy, superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { onboardingSchema } from '$lib/schemas/onboardingSchema';
-	import ImageCropper from '$components/imageCropper/imageCropper.svelte';
-	import ProgressBar from '$components/progress/progressBar.svelte';
 	import ContextualHelp from '$components/contextualHelp/contextualHelp.svelte';
+	import {
+		TextField,
+		SelectField,
+		RadioGroupField,
+		DateField
+	} from '$components/forms';
 
 	const { data } = $props();
 	const { countryPhoneCodes, contextualHelps } = data;
 
-	const { form, errors, message, constraints, enhance } = superForm(data.form, {
+	const { form, errors, message, constraints, enhance, submitting } = superForm(data.form, {
 		dataType: 'json',
 		validators: zod(onboardingSchema)
 	});
@@ -37,65 +39,42 @@
 		}
 	);
 
-	const checkUsername = debounce(200, submitCheckUsername);
-
 	let fiscalCode = $state('');
-	// let username = $state('');
 	const proxyDate = dateProxy(form, 'birthDate', { format: 'date' });
-
-	let prefixes = $state(countryPhoneCodes);
-	let gender = $state() as GenderKind;
-
-	// const avatar = fileProxy(form, 'avatarOriginal');
-	// const avatarCropped = $state(fileProxy(form, 'avatarCropped'));
-	// const banner = fileProxy(form, 'bannerOriginal');
-	// const bannerCropped = $state(fileProxy(form, 'bannerCropped'));
-	// const bioProxy = fieldProxy(form, 'bio');
-	let crop = $state({ x: 0, y: 0 });
-	let zoom = $state(1);
-
-	// let steps = ['Generalitá', 'Informazioni Social', 'Conferma'];
-	// let currentActive = $state(1);
-	// let progressBar = $state();
-
-	// const handleProgress = (stepIncrement: number) => {
-	// 	progressBar.handleProgress(stepIncrement);
-	// };
-
-	// $effect(() => {
-	// 	username = username.trimStart().replaceAll(' ', '-').toLowerCase();
-	// 	untrack(() => {
-	// 		$form.username = username;
-	// 	});
-	// });
 
 	$effect(() => {
 		$form.fiscalCode = fiscalCode;
-
+		if (!fiscalCode) return;
 		try {
 			const cf = new CodiceFiscale(fiscalCode.toUpperCase());
 			$proxyDate = cf.birthday.toISOString().split('T')[0];
-			if (cf.gender === 'M') {
-				gender = GenderKind.Male;
-			} else {
-				gender = GenderKind.Female;
-			}
-			$form.gender = gender;
-		} catch (error) {}
+			$form.gender = cf.gender === 'M' ? GenderKind.Male : GenderKind.Female;
+		} catch {
+			// ignore — invalid CF
+		}
 	});
 
-	// let files = $state<FileList | null | undefined>(undefined);
-
-	// function clear() {
-	// 	files = new DataTransfer().files; // null or undefined does not work
-	// }
-
 	const userDomain = 'boxrally.eu/u/';
+
+	const genderOptions = [
+		{ value: GenderKind.Male, label: 'Maschio' },
+		{ value: GenderKind.Female, label: 'Femmina' },
+		{ value: GenderKind.Other, label: 'Altro' },
+		{ value: GenderKind.NotDisclosed, label: 'Preferisco non dichiarare' }
+	];
+
+	const visibilityOptions = [
+		{ value: UserVisiblityKind.Public, label: 'Pubblico' },
+		{ value: UserVisiblityKind.Private, label: 'Privato' }
+	];
+
+	function slugify(raw: string) {
+		return raw.trimStart().replaceAll(' ', '-').toLowerCase();
+	}
 </script>
 
 <main class="mx-auto max-w-2xl px-4 py-8">
 	<h1 class="text-primary mb-8 text-3xl font-bold">Completa il tuo profilo</h1>
-	<!-- <SuperDebug data={$form} /> -->
 
 	<form
 		method="POST"
@@ -104,333 +83,124 @@
 		use:enhance
 		action="?/onboard"
 	>
-		<!-- Contact Information Section -->
-		<div class="border-base-content space-y-6 border-b pb-8">
+		<section class="border-base-content space-y-6 border-b pb-8">
 			<h2 class="text-primary text-lg font-semibold">Informazioni di Contatto</h2>
+
 			<div class="flex flex-col gap-4 md:flex-row">
-				<fieldset class="fieldset flex-1 text-base">
-					<legend class="fieldset-legend">Nome</legend>
-					<input
-						{...$constraints.name}
-						class:input-error={$errors.name}
-						class:input-success={$form.name && 'name' in $errors && !$errors.name}
-						type="text"
-						aria-invalid={$errors.name ? 'true' : undefined}
-						bind:value={$form.name}
-						class="input w-full"
-						name="name"
-						placeholder="Mario"
-					/>
-					{#if $errors.name}
-						<p class="fieldset-label text-error">{$errors.name}</p>
-					{/if}
-				</fieldset>
-				<fieldset class="fieldset flex-1 text-base">
-					<legend class="fieldset-legend">Cognome</legend>
-					<input
-						{...$constraints.lastName}
-						class:input-error={$errors.lastName}
-						class:input-success={$form.lastName && 'lastName' in $errors && !$errors.lastName}
-						type="text"
-						aria-invalid={$errors.lastName ? 'true' : undefined}
-						bind:value={$form.lastName}
-						class="input w-full"
-						name="lastName"
-						placeholder="Rossi"
-					/>
-					{#if $errors.lastName}
-						<p class="fieldset-label text-error">{$errors.lastName}</p>
-					{/if}
-				</fieldset>
+				<TextField
+					name="name"
+					label="Nome"
+					placeholder="Mario"
+					bind:value={$form.name}
+					errors={$errors.name}
+					constraints={$constraints.name}
+				/>
+				<TextField
+					name="lastName"
+					label="Cognome"
+					placeholder="Rossi"
+					bind:value={$form.lastName}
+					errors={$errors.lastName}
+					constraints={$constraints.lastName}
+				/>
 			</div>
 
-			<div class="flex flex-col space-y-2 md:flex-row">
-				<fieldset class="fieldset flex-1 text-base">
-					<legend class="fieldset-legend">Telefono</legend>
-					<div class="flex flex-1 flex-col gap-4 md:flex-row" id="phoneNumber">
-						<select
-							class="select w-full md:max-w-1/3"
-							name="prefix"
-							id="prefix"
-							autocomplete="tel-country-code"
-							bind:value={$form.prefix}
-						>
-							{#each prefixes as prefix}
-								<option selected={prefix.default} value={prefix.dial_code}>
-									{prefix.emoji}
-									{prefix.name} ({prefix.dial_code})
-								</option>
-							{/each}
-						</select>
-						<input
-							{...$constraints.phone}
-							class:input-error={$errors.phone}
-							class:input-success={$form.phone && 'phone' in $errors && !$errors.phone}
-							type="text"
-							alt="phone"
-							name="phone"
-							autocomplete="tel-national"
-							placeholder="Numero di telefono"
-							class="input w-full"
-							bind:value={$form.phone}
-							aria-invalid={$errors.phone ? 'true' : undefined}
-						/>
-					</div>
-					{#if $errors.phone}
-						<p class="fieldset-label text-error">{$errors.phone}</p>
-					{/if}
-				</fieldset>
+			<div class="flex flex-col gap-4 md:flex-row">
+				<SelectField
+					name="prefix"
+					label="Prefisso"
+					bind:value={$form.prefix}
+					errors={$errors.prefix}
+					options={countryPhoneCodes}
+					optionValue={(p) => p.dial_code}
+					optionLabel={(p) => `${p.emoji} ${p.name} (${p.dial_code})`}
+					autocomplete="tel-country-code"
+				/>
+				<TextField
+					name="phone"
+					label="Numero di telefono"
+					placeholder="Numero di telefono"
+					autocomplete="tel-national"
+					bind:value={$form.phone}
+					errors={$errors.phone}
+					constraints={$constraints.phone}
+				/>
 			</div>
-		</div>
+		</section>
 
-		<!-- Personal Information Section -->
-		<div class="border-base-content space-y-6 border-b pb-8">
-			<div class="mb-4">
+		<section class="border-base-content space-y-6 border-b pb-8">
+			<div>
 				<h2 class="text-primary text-lg font-semibold">Informazioni Personali</h2>
 				<p class="text-base-content text-sm">
 					Inserisci il codice fiscale o inserisci a mano il sesso e data di nascita
 				</p>
 			</div>
 
-			<fieldset class="fieldset flex-1 text-base">
-				<legend class="fieldset-legend">Codice Fiscale</legend>
-				<input
-					{...$constraints.fiscalCode}
-					class:input-error={$errors.fiscalCode}
-					class:input-success={$form.fiscalCode && 'fiscalCode' in $errors && !$errors.fiscalCode}
-					type="text"
-					id="fiscalCode"
-					alt="fiscalCode"
-					name="fiscalCode"
-					placeholder="Codice Fiscale"
-					class="input w-full"
-					bind:value={fiscalCode}
-					aria-invalid={$errors.fiscalCode ? 'true' : undefined}
-				/>
-				{#if $errors.fiscalCode}
-					<p class="fieldset-label text-error">{$errors.fiscalCode}</p>
-				{/if}
-			</fieldset>
-
-			<fieldset class="fieldset flex-1 flex-col text-base md:flex-row">
-				<legend class="fieldset-legend">Genere</legend>
-
-				<div class="flex items-center gap-2">
-					<input
-						type="radio"
-						class="radio"
-						alt="maschio"
-						bind:group={$form.gender}
-						name="gender"
-						id="gender-maschio"
-						value="male"
-					/>
-					<label for="gender-maschio">Maschio</label>
-				</div>
-				<div class="flex items-center gap-2">
-					<input
-						type="radio"
-						class="radio"
-						alt="femmina"
-						bind:group={$form.gender}
-						name="gender"
-						id="gender-femmina"
-						value="female"
-					/>
-					<label for="gender-femmina">Femmina</label>
-				</div>
-
-				<div class="flex items-center gap-2">
-					<input
-						type="radio"
-						class="radio"
-						alt="altro"
-						bind:group={$form.gender}
-						name="gender"
-						id="gender-altro"
-						value="other"
-					/>
-					<label for="gender-altro">Altro</label>
-				</div>
-
-				<div class="flex items-center gap-2">
-					<input
-						type="radio"
-						alt="preferisco non dichiarare"
-						class="radio"
-						bind:group={$form.gender}
-						name="gender"
-						id="gender-not-disclosed"
-						value="not-disclosed"
-					/>
-					<label for="gender-not-disclosed">Preferisco non Dichiarare</label>
-				</div>
-
-				{#if $errors.gender}
-					<p class="fieldset-label text-error">{$errors.gender}</p>
-				{/if}
-			</fieldset>
-
-			<fieldset class="fieldset flex-1 text-base">
-				<legend class="fieldset-legend">Data di Nascita</legend>
-				<input
-					{...$constraints.birthDate}
-					class:input-error={$errors.birthDate}
-					class:input-success={$form.birthDate && 'birthDate' in $errors && !$errors.birthDate}
-					readonly={!!$form.fiscalCode}
-					min={$constraints.birthDate?.min?.toString().slice(0, 10)}
-					id="birthDate"
-					name="birthDate"
-					type="date"
-					autocomplete="bday"
-					class="input w-full"
-					class:disabled-input={$form.fiscalCode}
-					bind:value={$proxyDate}
-					aria-invalid={$errors.birthDate ? 'true' : undefined}
-				/>
-				{#if $errors.birthDate}
-					<p class="fieldset-label text-error">{$errors.birthDate}</p>
-				{/if}
-			</fieldset>
-		</div>
-
-		<!-- Social Information Section -->
-		<div class="space-y-6">
-			<h2 class="text-primary text-lg font-semibold">Informazioni Sociali</h2>
-
-			<fieldset class="fieldset flex-1 text-base">
-				<legend class="fieldset-legend">Username</legend>
-
-				<label
-					class="input w-full"
-					class:input-error={$errors.username}
-					class:input-success={$form.username &&
-						'username' in $errors &&
-						!$errors.username &&
-						!$delayed}
-				>
-					<!-- class:input-success={$form.username && 'username' in $errors} -->
-					<span class="label">{userDomain}</span>
-					<input
-						{...$constraints.username}
-						autocomplete="username"
-						type="text"
-						form="check"
-						name="username"
-						id="username"
-						bind:value={
-							() => $form.username,
-							(n) => ($form.username = n.trimStart().replaceAll(' ', '-').toLowerCase())
-						}
-						aria-invalid={$errors.username ? 'true' : undefined}
-						placeholder="mario-rossi"
-						oninput={checkUsername}
-					/>
-					<!-- class:input-error={$errors.username}
-						class:input-success={$form.username && 'username' in $errors} -->
-				</label>
-
-				<input type="hidden" name="username" value={$form.username} />
-				<p class="text-base-content mb-2 text-xs/5">
-					Il nickname sará usato per creare il tuo URL personalizzato con la quale potrai
-					condividere il profilo.
-				</p>
-
-				{#if $delayed}
-					<span class="loading loading-spinner loading-sm"></span>
-				{:else if $errors.username}
-					<!-- ❌ -->
-					<!-- <p class="fieldset-label text-error">Username errors:</p> -->
-					<ul class="fieldset-label text-error flex-col items-start">
-						{#each $errors.username as error}
-							<li>
-								{error}
-							</li>
-						{/each}
-					</ul>
-					<!-- {:else if $form.username && 'username' in $errors}
-					✅ -->
-				{/if}
-
-				<!-- rounded-lg border border-gray-300 px-4 py-2 focus:border-red-600 focus:ring-2 focus:ring-red-600" -->
-				<!-- {#if $errors.username}
-				{/if} -->
-			</fieldset>
-
-			<fieldset class="fieldset flex-1 flex-col text-base md:flex-row">
-				<div class="flex items-center gap-2">
-					<legend class="fieldset-legend">Vuoi che il tuo account pubblico?</legend>
-					<ContextualHelp contextualHelp={contextualHelps.onboarding_profileVisibility} />
-				</div>
-				<p class="text-base-content mb-2 text-xs/5">
-					Se rendi il tuo account pubblico chiunque potrà visualizzare il tuo profilo e
-					le tue statistiche da pilota. <br />
-					Se selezioni di no invece il tuo profilo sarà visibile solo a te e ad eventuali membri del
-					tuo team. Puoi sempre cambiare questa opzione in un secondo momento.
-				</p>
-
-				<div class="flex items-center gap-2">
-					<input
-						type="radio"
-						class="radio"
-						alt="pubblico"
-						bind:group={$form.visibility}
-						name="visibility"
-						id="visibility-public"
-						value="public"
-					/>
-					<label for="visibility-public">Pubblico</label>
-				</div>
-				<div class="flex items-center gap-2">
-					<input
-						type="radio"
-						class="radio"
-						alt="privato"
-						bind:group={$form.visibility}
-						name="visibility"
-						id="visibility-private"
-						value="private"
-					/>
-					<label for="visibility-private">Privato</label>
-				</div>
-
-				{#if $errors.visibility}
-					<p class="fieldset-label text-error">{$errors.visibility}</p>
-				{/if}
-			</fieldset>
-
-			<!-- <ImageCropper
-				name="avatarOriginal"
-				bind:value={$avatar}
-				label="Carica un logo per il tuo team"
-				constraints={{ required: false }}
-				errors={$errors.avatarOriginal}
-				bind:cropped={$avatarCropped}
-				bind:pixels={$form.avatarCroppedInfo}
-				{crop}
-				{zoom}
-				shape="round"
+			<TextField
+				name="fiscalCode"
+				label="Codice Fiscale"
+				placeholder="RSSMRA80A01H501U"
+				bind:value={fiscalCode}
+				errors={$errors.fiscalCode}
+				constraints={$constraints.fiscalCode}
 			/>
 
-			<ImageCropper
-				name="banner"
-				bind:value={$banner}
-				label="Carica un immagine di sfondo (banner) per la tua pagina"
-				constraints={{ required: false }}
-				errors={$errors.bannerOriginal}
-				bind:cropped={$bannerCropped}
-				bind:pixels={$form.bannerCroppedInfo}
-				{crop}
-				{zoom}
-				shape="rect"
-			/> -->
+			<RadioGroupField
+				name="gender"
+				label="Genere"
+				value={$form.gender}
+				setValue={(v) => ($form.gender = v)}
+				errors={$errors.gender}
+				options={genderOptions}
+			/>
 
-			<!-- Submit Button -->
-			<button disabled={$delayed} type="submit" class="btn btn-primary w-full">
-				<!-- class="mt-8 w-full rounded-lg bg-red-600 py-3 font-medium text-white transition-colors hover:bg-red-700 focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:outline-none" -->
+			<DateField
+				name="birthDate"
+				label="Data di Nascita"
+				bind:value={$proxyDate}
+				errors={$errors.birthDate}
+				constraints={$constraints.birthDate}
+				min={$constraints.birthDate?.min?.toString().slice(0, 10)}
+				readonly={!!$form.fiscalCode}
+			/>
+		</section>
+
+		<section class="space-y-6">
+			<h2 class="text-primary text-lg font-semibold">Informazioni Sociali</h2>
+
+			<TextField
+				name="username"
+				label="Username"
+				placeholder="mario-rossi"
+				prefix={userDomain}
+				form="check"
+				autocomplete="username"
+				bind:value={$form.username}
+				errors={$errors.username}
+				constraints={$constraints.username}
+				transform={slugify}
+				debounceMs={200}
+				onInput={() => submitCheckUsername()}
+				delayed={$delayed}
+				hint="Il nickname sará usato per creare il tuo URL personalizzato con la quale potrai condividere il profilo."
+			/>
+			<input type="hidden" name="username" value={$form.username} />
+
+			<RadioGroupField
+				name="visibility"
+				label="Vuoi che il tuo account sia pubblico?"
+				hint="Se pubblico, chiunque potrà vedere il tuo profilo e le tue statistiche. Se privato, sarà visibile solo a te e ai membri del tuo team."
+				value={$form.visibility}
+				setValue={(v) => ($form.visibility = v)}
+				errors={$errors.visibility}
+				options={visibilityOptions}
+			/>
+
+			<button disabled={$delayed || $submitting} type="submit" class="btn btn-primary w-full">
+				{#if $submitting}<span class="loading loading-spinner"></span>{/if}
 				Completa registrazione
 			</button>
-		</div>
+		</section>
 
 		{#if $message}
 			<div
@@ -444,17 +214,13 @@
 	</form>
 
 	<form id="check" method="POST" action="?/checkUsername" use:submitEnhance></form>
-</main>
 
-<style>
-	.disabled-input {
-		border-color: var(--color-base-200);
-		background-color: var(--color-base-200);
-		color: var(--color-base-content/40);
-		&::placeholder {
-			color: var(--color-base-content/20);
-		}
-		cursor: not-allowed;
-		box-shadow: none;
-	}
-</style>
+	<!-- ContextualHelp opens a modal whose markup includes `<form method="dialog">`;
+	     embedding it inside the main `<form>` triggers `node_invalid_placement_ssr`
+	     and breaks hydration. We render the help trigger as a sibling and rely on
+	     it being visually close enough to the visibility question above. -->
+	<div class="mt-3 flex items-center gap-2 text-sm">
+		<span>Hai dubbi sulla visibilità dell'account?</span>
+		<ContextualHelp contextualHelp={contextualHelps.onboarding_profileVisibility} />
+	</div>
+</main>

@@ -27,20 +27,18 @@ export const load: PageServerLoad = async ({ locals, parent }) => {
 
 	locals.team = team;
 
-	team.logo = pb.files.getURL(team, team.logo || '') || '';
-	team.logoCropped = team.logoCropped || '';
-	team.banner = pb.files.getURL(team, team.banner || '') || '';
-	team.bannerCropped = pb.files.getURL(team, team.bannerCropped || '') || '';
 	const fileUrls = {
-		logoOriginal: team.logo,
-		logoCropped: team.logoCropped,
-		bannerOriginal: team.banner,
-		bannerCropped: team.bannerCropped
+		logoOriginal: pb.files.getURL(team, team.logo || '') || '',
+		logoCropped: pb.files.getURL(team, team.logoCropped || '') || '',
+		bannerOriginal: pb.files.getURL(team, team.banner || '') || '',
+		bannerCropped: pb.files.getURL(team, team.bannerCropped || '') || ''
 	};
+
+	const { logo, logoCropped, banner, bannerCropped, ...teamMinusFiles } = team;
 
 	const form = await superValidate(
 		{
-			...team,
+			...teamMinusFiles,
 			logoCroppedInfo: team.logoCrop,
 			bannerCroppedInfo: team.bannerCrop
 		},
